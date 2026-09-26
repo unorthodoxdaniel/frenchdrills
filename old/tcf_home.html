@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCF · Accueil</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #1a1a2e; --ink-mid: #4a4a6a; --ink-soft: #8888aa;
+    --bg: #f7f6f2; --card: #ffffff; --accent: #c94a4a;
+    --border: #e8e6e0;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; }
+
+  /* ── Site Nav ── */
+  .site-nav {
+    position: sticky; top: 0; z-index: 200;
+    background: var(--ink); display: flex; align-items: center;
+    padding: 0 24px; height: 44px; border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .nav-logo {
+    font-family: 'Crimson Pro', serif; font-size: 1.1rem; font-weight: 600;
+    color: var(--accent); text-decoration: none; letter-spacing: -0.02em;
+    margin-right: 24px; flex-shrink: 0;
+  }
+  .nav-links { display: flex; gap: 4px; align-items: center; }
+  .nav-link {
+    font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 500;
+    color: rgba(255,255,255,0.65); text-decoration: none;
+    padding: 6px 12px; border-radius: 4px; transition: color 0.15s, background 0.15s;
+  }
+  .nav-link:hover { color: #fff; background: rgba(255,255,255,0.08); }
+  .nav-link.active { color: #fff; background: rgba(255,255,255,0.12); }
+
+  /* ── Hero ── */
+  .hero {
+    max-width: 680px; margin: 0 auto;
+    padding: 64px 24px 40px;
+    text-align: center;
+  }
+  .hero-eyebrow {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 16px;
+  }
+  .hero-title {
+    font-family: 'Crimson Pro', serif; font-size: clamp(2.4rem, 5vw, 3.4rem);
+    font-weight: 600; line-height: 1.1; color: var(--ink); letter-spacing: -0.02em;
+    margin-bottom: 16px;
+  }
+  .hero-sub {
+    font-size: 1rem; color: var(--ink-mid); line-height: 1.65; max-width: 480px; margin: 0 auto 40px;
+  }
+
+  /* ── Score bar ── */
+  .score-bar {
+    display: inline-flex; gap: 20px; background: var(--card);
+    border: 1px solid var(--border); border-radius: 10px;
+    padding: 14px 28px; margin-bottom: 56px; flex-wrap: wrap; justify-content: center;
+  }
+  .score-item { text-align: center; }
+  .score-val {
+    font-family: 'Crimson Pro', serif; font-size: 1.6rem; font-weight: 600; color: var(--accent); line-height: 1;
+  }
+  .score-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); margin-top: 4px; }
+  .score-divider { width: 1px; background: var(--border); align-self: stretch; }
+
+  /* ── Tool cards ── */
+  .tools-grid {
+    max-width: 900px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px; padding: 0 24px 80px;
+  }
+  .tool-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 28px 26px; text-decoration: none; color: inherit;
+    transition: box-shadow 0.2s, border-color 0.2s; display: block;
+  }
+  .tool-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.09); border-color: var(--accent); }
+  .tool-icon {
+    width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center;
+    justify-content: center; font-size: 1.3rem; margin-bottom: 18px;
+  }
+  .icon-red { background: #fff0f0; }
+  .icon-blue { background: #eff6ff; }
+  .icon-green { background: #f0fdf4; }
+  .icon-purple { background: #faf5ff; }
+  .tool-name {
+    font-family: 'Crimson Pro', serif; font-size: 1.32rem; font-weight: 600; margin-bottom: 8px;
+  }
+  .tool-desc { font-size: 0.85rem; color: var(--ink-mid); line-height: 1.55; }
+  .tool-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
+  .tool-tag {
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 4px; background: var(--bg); color: var(--ink-soft);
+    border: 1px solid var(--border);
+  }
+  .tool-arrow { float: right; color: var(--ink-soft); font-size: 1rem; margin-top: 2px; }
+
+  /* ── Stats section ── */
+  .stats-section { max-width: 900px; margin: 0 auto; padding: 0 24px 60px; }
+  .section-title {
+    font-family: 'Crimson Pro', serif; font-size: 1.3rem; font-weight: 600;
+    margin-bottom: 16px; color: var(--ink);
+  }
+  .progress-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .progress-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 18px 20px;
+  }
+  .prog-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 8px; }
+  .prog-score { font-family: 'Crimson Pro', serif; font-size: 1.5rem; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  .prog-bar-outer { height: 5px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+  .prog-bar-inner { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.8s ease; }
+  .prog-note { font-size: 0.72rem; color: var(--ink-soft); margin-top: 6px; }
+  .prog-trend { display: inline-block; font-size: 0.65rem; font-weight: 700; padding: 2px 6px; border-radius: 3px; margin-left: 6px; }
+  .trend-up { background: #dcfce7; color: #16a34a; }
+  .trend-stable { background: #fef9c3; color: #ca8a04; }
+
+  /* ── Tip box ── */
+  .tip-section { max-width: 900px; margin: 0 auto; padding: 0 24px 80px; }
+  .tip-box {
+    background: #fffbeb; border: 1px solid #fde68a; border-left: 4px solid #f59e0b;
+    border-radius: 8px; padding: 18px 22px;
+  }
+  .tip-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #92400e; margin-bottom: 8px; }
+  .tip-text { font-size: 0.88rem; color: #78350f; line-height: 1.6; }
+
+  @media (max-width: 600px) {
+    .hero { padding: 40px 16px 24px; }
+    .tools-grid, .stats-section, .tip-section { padding-left: 14px; padding-right: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a class="nav-logo" href="tcf_home.html">TCF</a>
+  <div class="nav-links">
+    <a href="tcf_home.html" class="nav-link active">Accueil</a>
+    <a href="tcf_feed.html" class="nav-link">Lecture EE</a>
+    <a href="tcf_navigator.html" class="nav-link">Navigateur</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <p class="hero-eyebrow">TCF Canada · Suite d'entraînement</p>
+  <h1 class="hero-title">Préparation<br>TCF Canada</h1>
+  <p class="hero-sub">Outils de révision pour les quatre compétences — CE, CO, EE, EO — avec fiches de vocabulaire, sujets d'expression et stratégies de passation.</p>
+
+  <div class="score-bar">
+    <div class="score-item">
+      <div class="score-val">591</div>
+      <div class="score-label">CE · T20</div>
+    </div>
+    <div class="score-divider"></div>
+    <div class="score-item">
+      <div class="score-val">C1+</div>
+      <div class="score-label">Niveau actuel</div>
+    </div>
+    <div class="score-divider"></div>
+    <div class="score-item">
+      <div class="score-val">600</div>
+      <div class="score-label">Objectif C2</div>
+    </div>
+    <div class="score-divider"></div>
+    <div class="score-item">
+      <div class="score-val">414</div>
+      <div class="score-label">CO · T18</div>
+    </div>
+  </div>
+</div>
+
+<div class="tools-grid">
+  <a href="tcf_feed.html" class="tool-card">
+    <div class="tool-icon icon-red">📖</div>
+    <span class="tool-arrow">→</span>
+    <div class="tool-name">Lecture EE</div>
+    <div class="tool-desc">Parcourez les 515 sujets Tâche 3 EE avec leurs documents sources. Mode flash ou défilement, filtres par thème et fréquence.</div>
+    <div class="tool-tags"><span class="tool-tag">Tâche 3 EE</span><span class="tool-tag">515 sujets</span><span class="tool-tag">Jan 2022 → Juin 2026</span></div>
+  </a>
+
+  <a href="tcf_navigator.html" class="tool-card">
+    <div class="tool-icon icon-blue">🗺️</div>
+    <span class="tool-arrow">→</span>
+    <div class="tool-name">Navigateur</div>
+    <div class="tool-desc">Tous les types de tâches EE et EO avec aide-mémoire intégrée. Pour/Contre/Nuance pour l'oral, checklist de questions pour les jeux de rôle.</div>
+    <div class="tool-tags"><span class="tool-tag">T1 EE</span><span class="tool-tag">T2 EE</span><span class="tool-tag">T2 EO</span><span class="tool-tag">T3 EO</span></div>
+  </a>
+
+  <div class="tool-card" style="opacity:0.55;cursor:default;" title="Bientôt disponible">
+    <div class="tool-icon icon-green">🎧</div>
+    <div class="tool-name">Compréhension Orale</div>
+    <div class="tool-desc">Analyse des résultats CO, thèmes récurrents et stratégies par catégorie de questions. (En construction)</div>
+    <div class="tool-tags"><span class="tool-tag">CO</span><span class="tool-tag">Bientôt</span></div>
+  </div>
+
+  <div class="tool-card" style="opacity:0.55;cursor:default;" title="Bientôt disponible">
+    <div class="tool-icon icon-purple">🃏</div>
+    <div class="tool-name">Vocabulaire Anki</div>
+    <div class="tool-desc">Lacunes confirmées T17–T20 à importer dans le deck TCF Vocabulary+. Export CSV et .apkg. (En construction)</div>
+    <div class="tool-tags"><span class="tool-tag">Anki</span><span class="tool-tag">Bientôt</span></div>
+  </div>
+</div>
+
+<div class="stats-section">
+  <h2 class="section-title">Progression CE</h2>
+  <div class="progress-grid">
+    <div class="progress-card">
+      <div class="prog-label">Test 20 <span class="prog-trend trend-up">C1+</span></div>
+      <div class="prog-score">591 / 699</div>
+      <div class="prog-bar-outer"><div class="prog-bar-inner" style="width:84.5%"></div></div>
+      <div class="prog-note">~3 erreurs = C2 (600). Gap : 9 pts.</div>
+    </div>
+    <div class="progress-card">
+      <div class="prog-label">Test 19 <span class="prog-trend trend-up">C1+</span></div>
+      <div class="prog-score">509 / 699</div>
+      <div class="prog-bar-outer"><div class="prog-bar-inner" style="width:72.8%"></div></div>
+      <div class="prog-note">3e score consécutif C1+</div>
+    </div>
+    <div class="progress-card">
+      <div class="prog-label">Test 18 <span class="prog-trend trend-up">C1+</span></div>
+      <div class="prog-score">504 / 699</div>
+      <div class="prog-bar-outer"><div class="prog-bar-inner" style="width:72.1%"></div></div>
+      <div class="prog-note">2e score consécutif C1+</div>
+    </div>
+    <div class="progress-card">
+      <div class="prog-label">Test 17 <span class="prog-trend trend-up">C1+</span></div>
+      <div class="prog-score">519 / 699</div>
+      <div class="prog-bar-outer"><div class="prog-bar-inner" style="width:74.2%"></div></div>
+      <div class="prog-note">Premier score C1+</div>
+    </div>
+  </div>
+</div>
+
+<div class="tip-section">
+  <div class="tip-box">
+    <div class="tip-label">Règle instinct CE</div>
+    <div class="tip-text">Ne changez votre réponse que si une phrase ancre précise dans le texte la contredit explicitement. Les changements impulsifs coûtent des points (T16 : Q24, Q28, Q30, Q35 ; T17 : Q35). Votre premier instinct est fiable.</div>
+  </div>
+</div>
+
+</body>
+</html>

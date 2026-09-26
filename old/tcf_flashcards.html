@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCF Tâche 3 — Flashcards</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f7f6f2;
+    --surface: #ffffff;
+    --text-primary: #1a1a18;
+    --text-secondary: #6b6b65;
+    --text-tertiary: #9e9e96;
+    --border: rgba(26,26,24,0.12);
+    --border-strong: rgba(26,26,24,0.22);
+    --radius: 12px;
+    --radius-sm: 7px;
+    --pred-bg: #e8f5e2;  --pred-text: #2d5a1e;  --pred-accent: #4a8a30;
+    --adj-bg:  #e2eef9;  --adj-text:  #1a3f6b;  --adj-accent:  #2c6aad;
+    --verb-bg: #fdeee6;  --verb-text: #7a300a;  --verb-accent: #c2501a;
+    --conn-bg: #ede5f8;  --conn-text: #3d1a6e;  --conn-accent: #6e3ab5;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #151513;
+      --surface: #1e1e1b;
+      --text-primary: #f0ede6;
+      --text-secondary: #a0a09a;
+      --text-tertiary: #686862;
+      --border: rgba(240,237,230,0.1);
+      --border-strong: rgba(240,237,230,0.2);
+      --pred-bg: #1a2e14;  --pred-text: #8ecf72;  --pred-accent: #6db850;
+      --adj-bg:  #101e30;  --adj-text:  #7ab5e8;  --adj-accent:  #5a9fd4;
+      --verb-bg: #2a150a;  --verb-text: #f0926a;  --verb-accent: #e07045;
+      --conn-bg: #1a0f2e;  --conn-text: #c09aec;  --conn-accent: #a070d8;
+    }
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 0 0 4rem;
+    line-height: 1.5;
+  }
+
+  header {
+    padding: 2rem 1.5rem 1.5rem;
+    max-width: 680px;
+    margin: 0 auto;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  header h1 {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+  header span {
+    font-size: 13px;
+    color: var(--text-tertiary);
+  }
+
+  .main {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 1.25rem;
+    align-items: center;
+  }
+
+  select {
+    font-size: 13px;
+    font-family: inherit;
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text-primary);
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 24px;
+  }
+
+  .mode-group {
+    display: flex;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .mode-btn {
+    font-size: 13px;
+    font-family: inherit;
+    padding: 6px 14px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.12s, color 0.12s;
+  }
+  .mode-btn + .mode-btn { border-left: 1px solid var(--border); }
+  .mode-btn.active {
+    background: var(--text-primary);
+    color: var(--bg);
+  }
+
+  .icon-btn {
+    font-size: 13px;
+    font-family: inherit;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.12s;
+  }
+  .icon-btn:hover { color: var(--text-primary); }
+
+  .pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 1.25rem;
+  }
+  .pill {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 11px;
+    border-radius: 20px;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: opacity 0.15s;
+    user-select: none;
+  }
+  .pill:not(.active) { opacity: 0.38; }
+  .pill.active { opacity: 1; }
+
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1.25rem;
+  }
+  .progress-track {
+    flex: 1;
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--text-secondary);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+  }
+  .progress-label {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    min-width: 50px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .card-scene {
+    perspective: 1200px;
+    height: 280px;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .card-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.42s cubic-bezier(0.4,0,0.2,1);
+  }
+  .card-inner.flipped { transform: rotateY(180deg); }
+
+  .card-face {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1.75rem;
+    border-top-width: 3px;
+  }
+  .card-back { transform: rotateY(180deg); }
+
+  .card-cat {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+  .card-type {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-bottom: 1rem;
+  }
+  .card-main {
+    font-size: clamp(17px, 3vw, 22px);
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.35;
+    color: var(--text-primary);
+  }
+  .card-gender {
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-top: 0.5rem;
+    font-style: italic;
+  }
+  .card-hint {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-top: 1.25rem;
+    letter-spacing: 0.03em;
+  }
+  .card-note {
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-top: 0.75rem;
+    font-style: italic;
+    line-height: 1.55;
+    max-width: 92%;
+  }
+  .card-example {
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+    line-height: 1.55;
+    max-width: 95%;
+  }
+
+  .nav-row {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+  }
+  .nav-btn {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px 18px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: background 0.12s;
+    white-space: nowrap;
+  }
+  .nav-btn:hover { background: var(--bg); }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; pointer-events: none; }
+  .nav-btn.primary {
+    flex: 1;
+    background: var(--text-primary);
+    color: var(--bg);
+    border-color: transparent;
+  }
+  .nav-btn.primary:hover { opacity: 0.88; background: var(--text-primary); }
+
+  .done-screen {
+    display: none;
+    text-align: center;
+    padding: 3.5rem 1rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    margin-bottom: 1rem;
+  }
+  .done-screen h2 { font-size: 20px; font-weight: 600; margin-bottom: 0.5rem; }
+  .done-screen p { font-size: 14px; color: var(--text-secondary); margin-bottom: 1.5rem; }
+
+  svg.icon {
+    width: 14px; height: 14px;
+    stroke: currentColor; stroke-width: 2;
+    fill: none; stroke-linecap: round; stroke-linejoin: round;
+    vertical-align: middle; flex-shrink: 0;
+  }
+
+  @media (max-width: 480px) {
+    .main { padding: 0 1rem; }
+    header { padding: 1.5rem 1rem 1.25rem; }
+    .card-scene { height: 300px; }
+    .card-face { padding: 1.5rem 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>TCF Tâche 3 — Flashcards</h1>
+  <span id="hdr-count">166 cards</span>
+</header>
+
+<div class="main">
+
+  <div class="controls">
+    <div class="mode-group" role="group" aria-label="Direction">
+      <button class="mode-btn active" id="btn-fr-en" onclick="setMode('fr-en')">FR → EN</button>
+      <button class="mode-btn" id="btn-en-fr" onclick="setMode('en-fr')">EN → FR</button>
+    </div>
+    <select id="cat-select" onchange="filterCat()" aria-label="Category">
+      <option value="ALL">All categories</option>
+      <option value="PREDICATE">Predicates</option>
+      <option value="ADJECTIVE">Adjectives</option>
+      <option value="VERB">Verbs</option>
+      <option value="CONNECTOR">Connectors</option>
+    </select>
+    <select id="type-select" onchange="filterType()" aria-label="Type"></select>
+    <button class="icon-btn" onclick="shuffle()" aria-label="Shuffle">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+      Shuffle
+    </button>
+  </div>
+
+  <div class="pills" id="pills"></div>
+
+  <div class="progress-row">
+    <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+    <div class="progress-label" id="prog-label">1 / 166</div>
+  </div>
+
+  <div class="card-scene" id="card-scene" onclick="flipCard()" role="button" aria-label="Flip card" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')flipCard()">
+    <div class="card-inner" id="card-inner">
+      <div class="card-face card-front">
+        <div class="card-cat" id="front-cat"></div>
+        <div class="card-type" id="front-type"></div>
+        <div class="card-main" id="front-main">Loading…</div>
+        <div class="card-gender" id="front-gender"></div>
+        <div class="card-hint">tap to reveal</div>
+      </div>
+      <div class="card-face card-back">
+        <div class="card-cat" id="back-cat"></div>
+        <div class="card-type" id="back-type"></div>
+        <div class="card-main" id="back-main"></div>
+        <div class="card-gender" id="back-gender"></div>
+        <div class="card-note" id="back-note"></div>
+        <div class="card-example" id="back-example"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-row" id="nav-row">
+    <button class="nav-btn" id="prev-btn" onclick="prev()" disabled aria-label="Previous card">
+      <svg class="icon" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Prev
+    </button>
+    <button class="nav-btn primary" onclick="flipCard()">
+      <svg class="icon" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.54"/></svg>
+      Flip
+    </button>
+    <button class="nav-btn" id="next-btn" onclick="next()" aria-label="Next card">
+      Next <svg class="icon" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+
+  <div class="done-screen" id="done-screen">
+    <h2>Deck complete</h2>
+    <p>You went through all <span id="done-count"></span> cards.</p>
+    <button class="nav-btn primary" style="margin:0 auto;display:flex;" onclick="restart()">
+      <svg class="icon" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.54"/></svg>
+      Restart
+    </button>
+  </div>
+
+</div>
+
+<script>
+const CARDS = [
+["PREDICATE","Type 1 — State","se retrouver + adj","to end up (in a state)","—","Primary verb. Use with modal: pourrait se retrouver","En travaillant sans encadrement, on pourrait se retrouver isolé."],
+["PREDICATE","Type 1 — State","se sentir + adj","to feel (a state)","—","Alternate to se retrouver. Rotate to avoid repetition in same paragraph.","Sans soutien, on finit par se sentir dépassé."],
+["PREDICATE","Type 1 — State","devenir + adj","to become (a state)","—","Alternate. Signals a gradual shift into the state.","Sans filet de sécurité, on risque de devenir vulnérable."],
+["PREDICATE","Type 1 — State","se trouver + adj","to find oneself (in a state)","—","Alternate. More formal register than se retrouver.","On se trouve démuni face à un système complexe."],
+["PREDICATE","Type 1 — State","être amené(e) à","to be led to / to end up doing","amené → amenée (f)","Use before an infinitive. Signals external pressure.","On est amenée à faire des compromis qu'on n'aurait pas choisis."],
+["PREDICATE","Type 1 — State","pourrait se retrouver","could end up","—","Modal layer on Type 1. Softens the claim — B2/C1 register.","Un adolescent pourrait se retrouver perdu sans encadrement."],
+["PREDICATE","Type 1 — State","risque de devenir","risks becoming","—","Stronger modal — warns of negative probability.","On risque de devenir dépendant si aucune limite n'est posée."],
+["PREDICATE","Type 2 — Possession (neg)","perdre","to lose","—","Primary negative verb. Core of possession cluster.","On perd ses repères quand tout change trop vite."],
+["PREDICATE","Type 2 — Possession (neg)","manquer de","to lack","—","Alternate. Signals absence rather than active loss.","On manque de motivation quand les efforts ne sont pas reconnus."],
+["PREDICATE","Type 2 — Possession (neg)","se voir privé(e) de","to find oneself deprived of","privé → privée (f)","Formal. Agreement on privé.","Elle se voit privée de congés malgré l'épuisement."],
+["PREDICATE","Type 2 — Possession (neg)","souffrir d'un manque de","to suffer from a lack of","—","Emphasises impact of the absence.","On souffre d'un manque de reconnaissance dans certains secteurs."],
+["PREDICATE","Type 2 — Possession (neg)","voir + noun + diminuer","to see [something] decrease","—","Subject watches something decline. Slightly detached/formal.","On voit sa motivation diminuer face à des conditions précaires."],
+["PREDICATE","Type 2 — Possession (pos)","acquérir","to acquire / to gain","—","Primary positive verb. Use for skills, experience, habits.","On acquiert de nouvelles compétences grâce à la formation."],
+["PREDICATE","Type 2 — Possession (pos)","développer","to develop","—","Alternate. Works for capacities and qualities over time.","On développe une discipline mentale grâce au sport régulier."],
+["PREDICATE","Type 2 — Possession (pos)","renforcer","to strengthen / to reinforce","—","Alternate. Best for things already present that grow stronger.","On renforce sa confiance en soi grâce à des projets collectifs."],
+["PREDICATE","Type 2 — Possession (pos)","gagner en","to gain in / to grow in","—","Fixed collocation: gagner en + noun (no article).","On gagne en autonomie lorsqu'on est bien accompagné."],
+["PREDICATE","Type 2 — Possession","pourrait perdre / risque de perdre","could lose / risks losing","—","Modal on Type 2. Types 1 & 2 most need modals — sound like facts without.","On risque de perdre le fil de ses relations à force de tout vivre en ligne."],
+["PREDICATE","Type 3a — Forced behaviour","être obligé(e) de","to be forced to / to have to","obligé → obligée (f)","No modal needed — obligation is already certain.","On est obligée de faire des compromis faute de moyens."],
+["PREDICATE","Type 3a — Forced behaviour","se voir contraint(e) de","to find oneself forced to","contraint → contrainte (f)","More formal than être obligé. Agreement on contraint.","Elle se voit contrainte de renoncer aux soins faute de budget."],
+["PREDICATE","Type 3a — Forced behaviour","n'avoir pas le choix de","to have no choice but to","—","Strongest form — eliminates any sense of agency.","Ils n'ont pas le choix de dépendre d'un réseau défaillant."],
+["PREDICATE","Type 3a — Forced behaviour","devoir","to have to / must","—","Simplest forced behaviour verb. Works in all slots.","Un habitant rural doit posséder une voiture pour accéder aux services."],
+["PREDICATE","Type 3b — Drifted behaviour (neg)","finir par décrocher","to end up dropping out / disengaging","—","Gradual internal drift. à force de + gerund sets it up well.","On finit par décrocher quand aucun effort n'est reconnu."],
+["PREDICATE","Type 3b — Drifted behaviour (neg)","renoncer à","to give up on","—","Signals voluntary but pressured abandonment.","On renonce à ses ambitions face à un environnement trop compétitif."],
+["PREDICATE","Type 3b — Drifted behaviour (neg)","éviter de","to avoid doing","—","Signals avoidance as a learned behaviour.","On évite de demander de l'aide par peur d'être jugé."],
+["PREDICATE","Type 3b — Drifted behaviour (neg)","avoir tendance à s'isoler","to tend to isolate oneself","—","Describes a direction, not a fixed state. Softer than se retrouver isolé.","On a tendance à s'isoler quand le travail envahit la vie privée."],
+["PREDICATE","Type 3b — Drifted behaviour (neg)","se replier sur soi","to withdraw into oneself","—","Stronger than s'isoler — implies emotional withdrawal.","Face aux critiques constantes, on finit par se replier sur soi."],
+["PREDICATE","Type 3b — Drifted behaviour (pos)","finir par s'épanouir","to end up thriving / flourishing","—","Positive drift. Shows gradual positive arc.","Avec le bon accompagnement, on finit par s'épanouir même tardivement."],
+["PREDICATE","Type 3b — Drifted behaviour (pos)","s'investir davantage dans","to invest more in / to commit more to","—","Shows growing engagement once direction is found.","On s'investit davantage dans sa formation une fois sa voie trouvée."],
+["PREDICATE","Type 3b — Drifted behaviour (pos)","chercher à se dépasser","to seek to push oneself / to strive","—","High register. Implies internal motivation and ambition.","Une étudiante étrangère qui cherche à se dépasser malgré les obstacles."],
+["PREDICATE","Type 3b — Drifted behaviour","pourrait finir par / risque de finir par","could end up / risks ending up","—","Modal on 3b. Softens the drift claim.","On risque de finir par décrocher si rien ne change."],
+["PREDICATE","Type 4 — Capacity (neg)","avoir du mal à","to struggle to / to have difficulty doing","—","Most common capacity negative. Natural in speech.","On a du mal à se concentrer dans un open space bruyant."],
+["PREDICATE","Type 4 — Capacity (neg)","n'arrive plus à","to no longer manage to","—","Signals lost capacity — previously could, now can't.","On n'arrive plus à déconnecter après des mois de télétravail intense."],
+["PREDICATE","Type 4 — Capacity (neg)","peiner à","to struggle to / to have trouble doing","—","More formal than avoir du mal à. Written register.","On peine à convaincre les recruteurs sans expérience pratique."],
+["PREDICATE","Type 4 — Capacity (neg)","ne pas parvenir à","to fail to / to be unable to","—","Strongest negative capacity. Signals complete inability.","On ne parvient pas à accéder à ses droits faute de compétences numériques."],
+["PREDICATE","Type 4 — Capacity (neg)","ne pas bénéficier des mêmes conditions","to not benefit from the same conditions","—","Use for inequality arguments — access, fairness, rights.","Elle ne bénéficie pas des mêmes conditions qu'un candidat masculin."],
+["PREDICATE","Type 4 — Capacity (pos)","parvenir enfin à","to finally manage to","—","The enfin signals breakthrough after difficulty.","Grâce à la télémédecine, on parvient enfin à accéder à un médecin."],
+["PREDICATE","Type 4 — Capacity (pos)","arriver mieux à","to manage better to / to be better able to","—","Comparative positive capacity. Shows improvement.","On arrive mieux à concilier vie pro et perso avec le télétravail."],
+["PREDICATE","Type 4 — Capacity (pos)","bénéficier de","to benefit from","—","Access to an advantage or resource. Key for rights/health arguments.","On bénéficie enfin d'un suivi médical adapté grâce aux nouvelles technologies."],
+["PREDICATE","Type 4 — Capacity (pos)","pouvoir enfin concilier","to finally be able to balance / reconcile","—","Concilier = to balance two things. Common in work-life arguments.","Une mère peut enfin concilier ses obligations familiales et ses ambitions."],
+["PREDICATE","Type 4 — Capacity (pos)","pourrait enfin bénéficier de","could finally benefit from","—","Modal on positive Type 4. Used for policy/rights recommendations.","Avec un accès universel, on pourrait enfin bénéficier d'un système équitable."],
+["PREDICATE","Escalation tail","ce qui pourrait rapidement devenir problématique","which could quickly become problematic","—","Slot 2 add-on only. Follows any Type 1 or 2 negative predicate.","On perd confiance en soi, ce qui pourrait rapidement devenir problématique."],
+["PREDICATE","Escalation tail","ce qui pourrait rapidement devenir néfaste","which could quickly become harmful","—","Stronger than problématique. Use for health/environment arguments.","On manque de soins, ce qui pourrait rapidement devenir néfaste pour tous."],
+["PREDICATE","Escalation tail","ce qui pourrait rapidement devenir difficile à surmonter","which could quickly become hard to overcome","—","Best for personal/psychological states.","On se sent isolé, ce qui pourrait rapidement devenir difficile à surmonter."],
+["PREDICATE","Escalation tail","ce qui pourrait rapidement devenir une source d'anxiété","which could quickly become a source of anxiety","—","Best for stress/social/technology arguments.","On perd ses repères, ce qui pourrait devenir une source d'anxiété durable."],
+["ADJECTIVE","Negative — State","isolé / isolée","isolated","isolé (m) → isolée (f) | isolés → isolées","Core social cluster adjective. Most common in slot 2 & 3.","On se retrouve isolé sans réseau professionnel."],
+["ADJECTIVE","Negative — State","épuisé / épuisée","exhausted / burnt out","épuisé → épuisée | épuisés → épuisées","Core stress/work cluster. Signals complete depletion.","Une infirmière qui se retrouve épuisée après des mois sans congés."],
+["ADJECTIVE","Negative — State","dépassé / dépassée","overwhelmed","dépassé → dépassée | dépassés → dépassées","Time/technology cluster. Overwhelmed by volume or speed.","On se sent dépassé par le flux d'informations constantes."],
+["ADJECTIVE","Negative — State","démuni / démunie","helpless / without resources","démuni → démunie | démunis → démunies","Government/money/immigration cluster. Financial or systemic helplessness.","On se retrouve démuni face à un système administratif opaque."],
+["ADJECTIVE","Negative — State","perdu / perdue","lost","perdu → perdue | perdus → perdues","Immigration/education cluster. Loss of bearings or direction.","Un immigré qui se retrouve perdu entre deux cultures."],
+["ADJECTIVE","Negative — State","dépendant / dépendante","dependent","dépendant → dépendante | dépendants → dépendantes","Technology cluster. Signals unhealthy reliance.","On risque de devenir dépendant des plateformes numériques."],
+["ADJECTIVE","Negative — State","stressé / stressée","stressed","stressé → stressée | stressés → stressées","Stress cluster. More everyday register than épuisé.","On se retrouve stressé quand les délais sont trop courts."],
+["ADJECTIVE","Negative — State","vulnérable","vulnerable","invariable — same m/f/pl","Government/social/health cluster. Signals exposure to risk.","Des populations vulnérables que le système néglige."],
+["ADJECTIVE","Negative — State","dépaysé / dépaysée","disoriented / out of one's element","dépaysé → dépaysée | dépaysés → dépaysées","Immigration cluster. Cultural displacement, not just being lost.","Une expatriée qui se retrouve dépaysée loin de ses repères culturels."],
+["ADJECTIVE","Negative — State","complexé / complexée","self-conscious / insecure about appearance","complexé → complexée | complexés → complexées","Social/media cluster. Insecurity from comparison.","Une adolescente qui se sent complexée par les images retouchées en ligne."],
+["ADJECTIVE","Negative — State","précaire","precarious / financially unstable","invariable — same m/f/pl","Money/government cluster. Systemic financial instability.","Un travailleur dans une situation précaire sans protection sociale."],
+["ADJECTIVE","Negative — State","endetté / endettée","indebted / in debt","endetté → endettée | endettés → endettées","Money/health cluster. Concrete financial consequence.","Des patients qui se voient endettés pour financer leurs traitements."],
+["ADJECTIVE","Negative — State","découragé / découragée","discouraged / disheartened","découragé → découragée | découragés → découragées","Learning cluster. Loss of motivation after effort.","Une étudiante étrangère qui se retrouve découragée par la barrière linguistique."],
+["ADJECTIVE","Negative — State","submergé / submergée","overwhelmed / swamped","submergé → submergée | submergés → submergées","Technology cluster. Overwhelmed by volume of digital input.","On se sent submergé par la quantité d'informations à traiter chaque jour."],
+["ADJECTIVE","Negative — State","déconnecté / déconnectée","disconnected (from real life)","déconnecté → déconnectée | déconnectés → déconnectées","Technology cluster. Ironic — cut off from real life by being too online.","On devient déconnecté de la réalité à force de tout vivre en ligne."],
+["ADJECTIVE","Negative — Environment","nocif / nocive","harmful / toxic","nocif (m) → nocive (f) — irregular fem","Environment cluster. Note irregular feminine.","Des pratiques industrielles nocives pour toute la chaîne alimentaire."],
+["ADJECTIVE","Negative — Environment","irréversible","irreversible","invariable — same m/f/pl","Environment cluster. Strongest consequence word for climate arguments.","Les effets du réchauffement risquent de devenir irréversibles sans action urgente."],
+["ADJECTIVE","Negative — Government","inégalitaire","unequal / creating inequality","invariable — same m/f/pl","Government/health cluster. Describes systems, not people.","Un système de santé inégalitaire ne profite qu'aux plus aisés."],
+["ADJECTIVE","Negative — Government","insuffisant / insuffisante","inadequate / insufficient","insuffisant → insuffisante | insuffisants → insuffisantes","Government/health cluster. Describes provision or policy as failing.","Une politique de remboursement insuffisante pour les maladies chroniques."],
+["ADJECTIVE","Positive — State","épanoui / épanouie","fulfilled / thriving","épanoui → épanouie | épanouis → épanouies","Education/work/social cluster. High-register positive state.","Une femme qui se sent épanouie depuis qu'elle a changé de carrière."],
+["ADJECTIVE","Positive — State","valorisé / valorisée","valued / recognised","valorisé → valorisée | valorisés → valorisées","Work/learning cluster. Feeling of being appreciated.","Un adulte qui se sent valorisé après une nouvelle certification."],
+["ADJECTIVE","Positive — State","autonome","autonomous / self-sufficient","invariable — same m/f/pl","Education/work cluster. Independence as a positive outcome.","On devient plus autonome grâce à une formation adaptée."],
+["ADJECTIVE","Positive — State","mieux équipé / mieux équipée","better equipped","équipé → équipée | équipés → équipées","Education/work cluster. Practical readiness.","On se retrouve mieux équipée pour affronter le marché du travail."],
+["ADJECTIVE","Positive — State","soulagé / soulagée","relieved","soulagé → soulagée | soulagés → soulagées","Health/stress cluster. Release from pressure or burden.","On se sent soulagé quand un diagnostic arrive enfin."],
+["ADJECTIVE","Positive — Environment","durable","sustainable","invariable — same m/f/pl","Environment cluster. Applies to policies, habits, development.","Des politiques de transport durables permettraient de réduire les émissions."],
+["VERB","TIME cluster","faire perdre du temps","to waste someone's time","—","Primary negative. Subject = the thing causing the loss.","Les réunions inutiles font perdre un temps précieux aux équipes."],
+["VERB","TIME cluster","accaparer","to monopolise / to take up all of","—","Subject = the thing that takes over attention or time.","Les démarches administratives accaparent une part croissante du temps libre."],
+["VERB","TIME cluster","empiéter sur","to encroach on / to eat into","—","Use when one domain invades another — work invading personal time.","Les réunions du soir empiètent sur la vie familiale."],
+["VERB","TIME cluster","mobiliser","to take up / to mobilise","—","Neutral. Can be positive or negative.","Ce projet mobilise une énergie considérable sans résultat visible."],
+["VERB","TIME cluster","optimiser","to optimise","—","Primary positive. Signals efficient use of time.","Le télétravail permet d'optimiser son temps en supprimant les trajets."],
+["VERB","TIME cluster","libérer du temps","to free up time","—","Positive alternate. Concise, direct.","Des outils bien choisis peuvent libérer du temps pour des tâches à plus haute valeur."],
+["VERB","STRESS cluster","alourdir la pression","to increase the pressure / to add to the burden","—","Primary negative. More elevated than augmenter le stress.","L'accumulation de responsabilités alourdit considérablement la pression sur les équipes."],
+["VERB","STRESS cluster","peser sur","to weigh on / to bear down on","—","Alternate. Subject = the burden. Object = the person.","Une pression administrative de plus en plus lourde pèse sur les enseignants."],
+["VERB","STRESS cluster","user","to wear out / to erode (gradually)","—","Signals slow gradual depletion over time. More dramatic than épuiser.","Des conditions dégradées usent les individus bien avant l'épuisement déclaré."],
+["VERB","STRESS cluster","fragiliser","to weaken / to make fragile","—","Signals vulnerability created over time. Works for people and systems.","L'insécurité de l'emploi fragilise des milliers de travailleurs."],
+["VERB","STRESS cluster","réduire le stress","to reduce stress","—","Primary positive. Straightforward and versatile.","Une pratique sportive régulière permet de réduire le stress du quotidien."],
+["VERB","MONEY cluster","grever le budget","to strain the budget / to be a heavy financial burden","—","Primary negative. More formal and vivid than coûter cher.","L'obligation de posséder une voiture grève considérablement le budget familial."],
+["VERB","MONEY cluster","pénaliser","to penalise / to put at a disadvantage","—","Signals unfair financial consequence. Strong in inequality arguments.","Les frais de garde pénalisent les parents souhaitant reprendre une formation."],
+["VERB","MONEY cluster","exclure","to exclude","—","Signals access denied by cost. Key for rights/equality arguments.","Le coût des soins dentaires exclut de fait une partie de la population."],
+["VERB","MONEY cluster","aggraver les inégalités","to worsen inequalities","—","Compound phrase. Use as a cluster-level negative outcome.","Sans régulation, la privatisation des services aggrave les inégalités existantes."],
+["VERB","MONEY cluster","économiser","to save (money)","—","Primary positive. Simple and versatile.","Le télétravail permet d'économiser sur les frais de transport quotidiens."],
+["VERB","MONEY cluster","alléger","to lighten / to ease (financial burden)","—","Positive alternate. More formal than réduire.","Des aides ciblées pourraient alléger les charges des familles les plus modestes."],
+["VERB","PRODUCTIVITY cluster","entraver l'efficacité","to hinder efficiency","—","Primary negative. Formal. Works for systems and individuals.","Une charge administrative excessive entrave l'efficacité des chercheurs."],
+["VERB","PRODUCTIVITY cluster","freiner","to slow down / to hinder","—","Alternate. Slightly less formal than entraver.","Les interruptions constantes freinent la capacité à produire un travail de qualité."],
+["VERB","PRODUCTIVITY cluster","compromettre","to compromise / to jeopardise","—","Strong alternate. Signals that quality or outcome is at risk.","Un environnement bruyant compromet la qualité du travail produit."],
+["VERB","PRODUCTIVITY cluster","disperser","to scatter / to fragment (attention)","—","Specific to attention and focus fragmentation.","La multiplication des outils numériques disperse l'attention au lieu de la renforcer."],
+["VERB","PRODUCTIVITY cluster","améliorer la productivité","to improve productivity","—","Primary positive. Safe and versatile.","Un cadre de travail adapté peut améliorer significativement la productivité."],
+["VERB","LEARNING cluster","inhiber","to inhibit / to suppress","—","Primary negative. Signals suppression of natural curiosity or growth.","Un environnement trop compétitif risque d'inhiber la curiosité naturelle des élèves."],
+["VERB","LEARNING cluster","décourager","to discourage","—","Alternate. More accessible register than inhiber.","La barrière linguistique peut décourager les étudiants étrangers dès les premières semaines."],
+["VERB","LEARNING cluster","faciliter l'apprentissage","to facilitate learning","—","Primary positive. Core learning cluster phrase.","Des outils numériques bien choisis facilitent l'apprentissage à tout âge."],
+["VERB","LEARNING cluster","stimuler","to stimulate","—","Alternate positive. Signals active engagement and motivation.","Les jeux éducatifs stimulent davantage certains enfants que les méthodes classiques."],
+["VERB","LEARNING cluster","renforcer","to strengthen / to reinforce","—","Alternate positive. For skills or qualities already present.","Des projets collaboratifs renforcent la confiance en soi des apprenants."],
+["VERB","SOCIAL cluster","isoler","to isolate","—","Primary negative. Direct and versatile.","Le télétravail peut isoler les employés du reste de l'équipe."],
+["VERB","SOCIAL cluster","couper de","to cut off from","—","Alternate. Signals severance from a community or group.","L'absence de structure professionnelle coupe progressivement un retraité de tout réseau."],
+["VERB","SOCIAL cluster","fragiliser les relations","to weaken relationships","—","Compound. Signals gradual erosion of social bonds.","La distance géographique finit par fragiliser même les liens les plus solides."],
+["VERB","SOCIAL cluster","distancer","to distance / to create distance between","—","Alternate. More formal. Signals growing emotional or physical gap.","Les réseaux sociaux rapprochent en ligne mais distancent dans la vraie vie."],
+["VERB","SOCIAL cluster","tisser des liens","to build / to weave social ties","—","Primary positive. Vivid and high-register. Tisser = to weave.","Des espaces communs bien conçus permettent de tisser de vrais liens de quartier."],
+["VERB","SOCIAL cluster","fédérer","to unite / to bring together around a common cause","—","High-register positive. Implies shared identity or goal.","Le sport peut fédérer des individus d'origines très différentes."],
+["VERB","SOCIAL cluster","rapprocher","to bring closer / to bond","—","Alternate positive. Common and versatile.","Contrairement à ce qu'on pense, la technologie peut rapprocher les familles éloignées."],
+["VERB","PROBLEMS cluster","provoquer","to cause / to trigger","—","Primary negative. Neutral causation — most versatile.","Des décisions prises à la hâte peuvent provoquer des effets secondaires imprévus."],
+["VERB","PROBLEMS cluster","aggraver","to worsen / to aggravate","—","Primary negative. Signals an existing problem made worse.","Sans cadre légal, la situation risque d'aggraver des inégalités déjà profondes."],
+["VERB","PROBLEMS cluster","générer","to generate / to produce (negative outcomes)","—","Alternate. Slightly more formal than provoquer.","L'austérité génère des tensions sociales durables dans les populations précaires."],
+["VERB","PROBLEMS cluster","déclencher","to trigger / to set off","—","Alternate. Signals a specific moment of onset — more dramatic.","Un secteur non réglementé peut déclencher des crises à répétition."],
+["VERB","PROBLEMS cluster","alimenter","to fuel / to feed (a problem)","—","Alternate. Implies ongoing supply of a negative dynamic.","L'absence de régulation alimente des dérives de plus en plus difficiles à corriger."],
+["VERB","PROBLEMS cluster","prévenir","to prevent","—","Primary positive. Anticipatory action.","Des mesures préventives permettraient d'éviter des conséquences coûteuses."],
+["VERB","PROBLEMS cluster","atténuer","to mitigate / to reduce the impact of","—","Positive alternate. Signals partial solution — honest and nuanced.","Un accompagnement adapté peut atténuer les effets les plus néfastes de la transition."],
+["VERB","TECHNOLOGY cluster","conditionner","to condition / to shape behaviour","—","Primary negative. Implies manipulation without awareness.","Les plateformes conditionnent progressivement les habitudes de consommation."],
+["VERB","TECHNOLOGY cluster","détourner de","to divert from / to distract from","—","Alternate. Signals redirection of attention away from something valuable.","Les notifications constantes détournent les adolescents de toute tâche longue."],
+["VERB","TECHNOLOGY cluster","modeler","to shape / to mould","—","Alternate. More gradual and deep than conditionner.","L'algorithme modèle les opinions des utilisateurs sans qu'ils en aient conscience."],
+["VERB","TECHNOLOGY cluster","déplacer","to displace / to move out of a role","—","Use for automation displacing workers.","L'automatisation déplace des milliers de travailleurs vers des emplois moins qualifiés."],
+["VERB","TECHNOLOGY cluster","faciliter","to facilitate / to make easier","—","Primary positive. Safe and versatile across all topics.","Les outils numériques facilitent l'accès à l'information pour tous."],
+["VERB","TECHNOLOGY cluster","automatiser","to automate","—","Neutral — can be framed positive or negative.","Automatiser les tâches répétitives libère du temps pour des activités à plus haute valeur."],
+["VERB","ENVIRONMENT cluster","polluer","to pollute","—","Primary negative. Foundational environment verb.","Les transports individuels polluent davantage que les transports collectifs."],
+["VERB","ENVIRONMENT cluster","détériorer l'environnement","to deteriorate / to damage the environment","—","Primary negative compound. More formal than polluer.","Des pratiques agricoles intensives détériorent les sols sur le long terme."],
+["VERB","ENVIRONMENT cluster","contaminer","to contaminate","—","Alternate. Specific to soil, water, food chain.","Des déchets industriels mal gérés risquent de contaminer les nappes phréatiques."],
+["VERB","ENVIRONMENT cluster","épuiser les ressources","to exhaust / to deplete resources","—","Alternate. Key for sustainability arguments.","Une consommation sans limite risque d'épuiser des ressources non renouvelables."],
+["VERB","ENVIRONMENT cluster","menacer","to threaten","—","Alternate. Signals danger to ecosystems or species.","La déforestation menace des écosystèmes entiers et la biodiversité qui en dépend."],
+["VERB","ENVIRONMENT cluster","rejeter (dans)","to release / to discharge into (environment)","—","Technical. Rejeter dans l'atmosphère / les océans.","Des millions de tonnes de CO₂ sont rejetées dans l'atmosphère chaque année."],
+["VERB","ENVIRONMENT cluster","préserver","to preserve / to protect","—","Primary positive. Broad and safe.","Il est urgent de préserver les écosystèmes menacés par l'activité humaine."],
+["VERB","ENVIRONMENT cluster","sensibiliser à","to raise awareness about","—","Positive alternate. About changing minds and behaviours.","Des campagnes bien conçues peuvent sensibiliser le public aux enjeux climatiques."],
+["VERB","ENVIRONMENT cluster","réduire les émissions","to reduce emissions","—","Positive compound. Key phrase for climate/transport arguments.","Des politiques durables permettraient de réduire significativement les émissions."],
+["VERB","GOV/HEALTH cluster","aggraver les inégalités","to worsen inequalities","—","Primary negative. Systemic/policy level.","Sans régulation, le système de santé risque d'aggraver les inégalités d'accès aux soins."],
+["VERB","GOV/HEALTH cluster","négliger","to neglect","—","Primary negative. Signals deliberate or systemic inaction.","Un État qui néglige ses services publics perd la confiance de ses citoyens."],
+["VERB","GOV/HEALTH cluster","exclure","to exclude","—","Alternate. Signals people shut out of a system.","Un système trop coûteux exclut de facto les populations les plus précaires."],
+["VERB","GOV/HEALTH cluster","priver de","to deprive of","—","Alternate. Signals removal of a right or access.","Des délais d'attente trop longs privent les patients d'un diagnostic rapide."],
+["VERB","GOV/HEALTH cluster","sous-financer","to underfund","—","Specific to public services. Signals systemic neglect.","Sous-financer la santé publique revient à punir les plus vulnérables."],
+["VERB","GOV/HEALTH cluster","abandonner","to abandon / to leave without support","—","Strong alternate. Emotional force — implies moral failure.","Des politiques d'austérité qui abandonnent les citoyens sans filet de sécurité."],
+["VERB","GOV/HEALTH cluster","garantir","to guarantee / to ensure","—","Primary positive. Core verb for rights and access arguments.","L'État devrait garantir un accès équitable aux soins pour tous ses citoyens."],
+["VERB","GOV/HEALTH cluster","assurer l'accès à","to ensure access to","—","Positive compound. Use for rights/services arguments.","Il est essentiel d'assurer l'accès à une alimentation saine indépendamment des revenus."],
+["VERB","GOV/HEALTH cluster","prendre en charge","to cover / to take charge of","—","Positive alternate. Common in health/social policy contexts.","Les soins primaires devraient être entièrement pris en charge par l'État."],
+["VERB","GOV/HEALTH cluster","encadrer","to regulate / to provide a framework for","—","Positive alternate. Signals structured oversight — not banning, governing.","Il serait préférable d'encadrer l'usage des écrans plutôt que de l'interdire."],
+["VERB","GOV/HEALTH cluster","mettre en place","to put in place / to implement","—","Positive alternate. For policies, programmes, measures.","Des mesures concrètes devraient être mises en place pour réduire les déserts médicaux."],
+["CONNECTOR","Setup phrase","à force de + infinitive","by dint of / by constantly doing","—","Sets up drift or gradual consequence. à force de + verb → on finit par…","À force de tout gérer seul, on finit par s'épuiser complètement."],
+["CONNECTOR","Setup phrase","lorsqu'on + verb","when one / whenever someone","—","Slot 2 opener. Introduces the triggering situation neutrally.","Lorsqu'on travaille sans limites claires, on risque de perdre ses repères."],
+["CONNECTOR","Setup phrase","en effet","indeed / in fact","—","Slot 2 signal word. Introduces the explanation of the slot 1 claim.","En effet, lorsqu'on est mal accompagné, on peut rapidement se retrouver perdu."],
+["CONNECTOR","Scope qualifier","indépendamment de","regardless of / independently of","—","Universalises a rights or access argument. Strongest scope qualifier.","L'accès aux soins devrait être garanti, indépendamment du niveau de revenus."],
+["CONNECTOR","Scope qualifier","quel(le) que soit","whatever / regardless of what","—","Agrees with noun: quel que soit l'âge / quelle que soit la situation.","Cette protection devrait s'appliquer, quel que soit le statut professionnel."],
+["CONNECTOR","Scope qualifier","à condition de / à condition que","on the condition that / provided that","—","à condition de + infinitive. à condition que + subjunctive.","Le télétravail peut améliorer la qualité de vie, à condition d'être bien encadré."],
+["CONNECTOR","Scope qualifier","sans pour autant","without necessarily / without going so far as to","—","Introduces a nuance that limits the main claim. High-register.","On peut encadrer l'usage des écrans sans pour autant l'interdire totalement."],
+["CONNECTOR","Scope qualifier","pour peu que + subjonctif","provided that / as long as","—","Conditional nuance. Signals the positive outcome depends on a condition.","Pour peu que les conditions soient réunies, ce modèle peut fonctionner."],
+["CONNECTOR","Example signal","c'est le cas de","this is the case for / take the example of","—","Introduces slot 3. Rotate with par exemple and il suffit de penser à.","C'est le cas d'un travailleur indépendant qui ne bénéficie d'aucune protection sociale."],
+["CONNECTOR","Example signal","il suffit de penser à","one only needs to think of","—","Rotation for c'est le cas de. Slightly more rhetorical.","Il suffit de penser aux jeunes diplômés qui peinent à trouver un premier emploi."],
+["CONNECTOR","Example signal","par exemple","for example","—","Simplest example signal. Rotate — never use twice in same paragraph.","Par exemple, un adolescent peut perdre confiance à cause des réseaux sociaux."],
+["CONNECTOR","Causation","ce qui","which (consequence clause)","—","Links a state to its consequence. ce qui pourrait… or ce qui entraîne…","On perd ses repères, ce qui pourrait rapidement devenir une source d'anxiété."],
+["CONNECTOR","Causation","entraîner","to lead to / to bring about","—","Causation verb. Subject causes the outcome. More formal than provoquer.","Un manque de sommeil entraîne une baisse significative de la concentration."],
+["CONNECTOR","Comparison","contrairement à","contrary to / unlike","—","Introduces a contrast. Often used to set up a nuance or counter-argument.","Contrairement à ce qu'on pense souvent, la technologie peut renforcer les liens."],
+["CONNECTOR","Comparison","par rapport à","compared to / in relation to","—","Neutral comparison. Can be positive or negative.","Par rapport aux générations précédentes, les jeunes sont plus exposés aux écrans."],
+["CONNECTOR","Comparison","autant… autant","just as… so too / on one hand… on the other","—","Parallel structure for two-sided argument. High register.","Autant la technologie peut rapprocher les gens, autant elle peut les isoler."],
+["CONNECTOR","Double emphasis","non seulement… mais aussi","not only… but also","—","Escalates an argument by adding a second layer.","Les réseaux sociaux ne font pas seulement perdre du temps, mais génèrent aussi de l'anxiété."],
+["CONNECTOR","Restriction nuance","ne signifie pas que","does not mean that","—","Restricting nuance. Limits the scope of a previous claim.","Encadrer l'usage numérique ne signifie pas priver les enfants de tout accès."],
+["CONNECTOR","Restriction nuance","ne garantit pas","does not guarantee","—","Honest limitation — outcome is uncertain. Use in nuance slot.","Un diplôme ne garantit pas l'accès à un emploi stable dans tous les secteurs."],
+["CONNECTOR","Restriction nuance","ne suffit pas de","it is not enough to","—","Signals that the proposed solution is incomplete alone.","Il ne suffit pas de sensibiliser — des mesures concrètes sont indispensables."],
+["CONNECTOR","Amplifying nuance","va bien au-delà de","goes well beyond","—","Amplifies an argument — shows it has larger scope than expected.","L'impact du numérique va bien au-delà de la simple communication."],
+["CONNECTOR","Amplifying nuance","ne se limite pas à","is not limited to","—","Opens up a broader consequence than the obvious one.","Le problème ne se limite pas à une question de coût — c'est aussi une question d'accès."],
+["CONNECTOR","Amplifying nuance","non seulement possible mais aussi rentable","not only possible but also profitable","—","Template for showing a solution is both feasible and beneficial.","Cette transition est non seulement possible mais aussi rentable à long terme."],
+];
+
+const CAT = {
+  PREDICATE:  { bg:"#e8f5e2", text:"#2d5a1e", accent:"#4a8a30" },
+  ADJECTIVE:  { bg:"#e2eef9", text:"#1a3f6b", accent:"#2c6aad" },
+  VERB:       { bg:"#fdeee6", text:"#7a300a", accent:"#c2501a" },
+  CONNECTOR:  { bg:"#ede5f8", text:"#3d1a6e", accent:"#6e3ab5" },
+};
+
+let deck=[], idx=0, flipped=false, mode="fr-en", selCat="ALL", selType="ALL";
+
+function buildDeck() {
+  deck = CARDS.filter(c => (selCat==="ALL"||c[0]===selCat) && (selType==="ALL"||c[1]===selType));
+  idx=0; flipped=false;
+}
+
+function shuffle() {
+  for(let i=deck.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]];}
+  idx=0; flipped=false; render();
+}
+
+function setMode(m) {
+  mode=m;
+  document.getElementById("btn-fr-en").classList.toggle("active",m==="fr-en");
+  document.getElementById("btn-en-fr").classList.toggle("active",m==="en-fr");
+  flipped=false;
+  document.getElementById("card-inner").classList.remove("flipped");
+  render();
+}
+
+function filterCat() {
+  selCat=document.getElementById("cat-select").value;
+  selType="ALL"; updateTypeSelect(); buildDeck(); render();
+}
+function filterType() { selType=document.getElementById("type-select").value; buildDeck(); render(); }
+
+function updateTypeSelect() {
+  const src = selCat==="ALL" ? CARDS : CARDS.filter(c=>c[0]===selCat);
+  const types = ["ALL",...new Set(src.map(c=>c[1]))];
+  document.getElementById("type-select").innerHTML = types.map(t=>`<option value="${t}">${t==="ALL"?"All types":t}</option>`).join("");
+}
+
+function flipCard() {
+  if(!deck.length) return;
+  flipped=!flipped;
+  document.getElementById("card-inner").classList.toggle("flipped",flipped);
+}
+
+function next() {
+  if(idx>=deck.length-1){showDone();return;}
+  idx++; flipped=false; document.getElementById("card-inner").classList.remove("flipped"); render();
+}
+function prev() {
+  if(idx===0) return;
+  idx--; flipped=false; document.getElementById("card-inner").classList.remove("flipped"); render();
+}
+function restart() {
+  idx=0; flipped=false;
+  document.getElementById("done-screen").style.display="none";
+  document.getElementById("card-scene").style.display="block";
+  document.getElementById("nav-row").style.display="flex";
+  render();
+}
+function showDone() {
+  document.getElementById("card-scene").style.display="none";
+  document.getElementById("nav-row").style.display="none";
+  document.getElementById("done-count").textContent=deck.length;
+  document.getElementById("done-screen").style.display="block";
+}
+
+function render() {
+  const total=deck.length;
+  document.getElementById("hdr-count").textContent=`${total} card${total!==1?"s":""}`;
+  document.getElementById("prog-label").textContent=total?`${idx+1} / ${total}`:"0 / 0";
+  document.getElementById("prog-fill").style.width=total?`${((idx+1)/total)*100}%`:"0%";
+  document.getElementById("prev-btn").disabled=idx===0;
+  document.getElementById("next-btn").disabled=!total;
+
+  if(!total){
+    document.getElementById("front-main").textContent="No cards match.";
+    ["front-cat","front-type","front-gender","back-cat","back-type","back-main","back-gender","back-note","back-example"].forEach(id=>document.getElementById(id).textContent="");
+    return;
+  }
+
+  const [cat,type,fr,en,gender,notes,example]=deck[idx];
+  const col=CAT[cat]||{bg:"#eee",text:"#333",accent:"#666"};
+
+  document.getElementById("front-cat").textContent=cat;
+  document.getElementById("front-cat").style.color=col.accent;
+  document.getElementById("front-type").textContent=type;
+  document.getElementById("back-cat").textContent=cat;
+  document.getElementById("back-cat").style.color=col.accent;
+  document.getElementById("back-type").textContent=type;
+
+  const faces=document.querySelectorAll(".card-face");
+  faces.forEach(f=>f.style.borderTopColor=col.accent);
+
+  if(mode==="fr-en"){
+    document.getElementById("front-main").textContent=fr;
+    document.getElementById("front-gender").textContent=gender!=="—"?gender:"";
+    document.getElementById("back-main").textContent=en;
+    document.getElementById("back-gender").textContent=gender!=="—"?gender:"";
+  } else {
+    document.getElementById("front-main").textContent=en;
+    document.getElementById("front-gender").textContent="";
+    document.getElementById("back-main").textContent=fr;
+    document.getElementById("back-gender").textContent=gender!=="—"?gender:"";
+  }
+  document.getElementById("back-note").textContent=notes;
+  document.getElementById("back-example").textContent=example;
+}
+
+function buildPills() {
+  const wrap=document.getElementById("pills");
+  Object.entries(CAT).forEach(([cat,col])=>{
+    const count=CARDS.filter(c=>c[0]===cat).length;
+    const p=document.createElement("span");
+    p.className="pill active";
+    p.textContent=`${cat} · ${count}`;
+    p.style.background=col.bg; p.style.color=col.text; p.style.borderColor=col.accent;
+    p.onclick=()=>{ document.getElementById("cat-select").value=cat; filterCat(); };
+    wrap.appendChild(p);
+  });
+}
+
+buildPills(); updateTypeSelect(); buildDeck(); shuffle();
+</script>
+</body>
+</html>

@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+<title>Les Temps — French Tense Drill</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1209;
+    --paper: #f5efe0;
+    --aged: #e8dcc8;
+    --red: #c0392b;
+    --gold: #b8860b;
+    --faded: #8a7a5e;
+    --green: #2d6a4f;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Courier Prime', monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px 60px;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(180,160,120,0.15) 28px),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 40px;
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 24px;
+    width: 100%;
+    max-width: 700px;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-style: italic;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  header p {
+    color: var(--faded);
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  /* ── TENSE SELECTOR ── */
+  .mode-selector {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 32px;
+    max-width: 700px;
+    width: 100%;
+  }
+
+  .mode-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 8px 18px;
+    border: 1.5px solid var(--faded);
+    background: transparent;
+    color: var(--faded);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+
+  .mode-btn:hover { border-color: var(--ink); color: var(--ink); background: var(--aged); }
+  .mode-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  /* ── STATS ── */
+  .stats {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    max-width: 700px;
+    width: 100%;
+    margin-bottom: 20px;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--faded);
+  }
+
+  .stats strong {
+    color: var(--ink);
+    font-size: 1.1rem;
+    display: block;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .progress-bar {
+    max-width: 700px;
+    width: 100%;
+    height: 3px;
+    background: var(--aged);
+    margin-bottom: 24px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--gold);
+    transition: width 0.4s ease;
+    border-radius: 2px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: white;
+    border: 1px solid var(--aged);
+    max-width: 700px;
+    width: 100%;
+    padding: 40px 40px 32px;
+    box-shadow: 4px 4px 0 var(--aged);
+    position: relative;
+    margin-bottom: 24px;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 12px; left: 12px;
+    right: -12px; bottom: -12px;
+    border: 1px solid var(--aged);
+    z-index: -1;
+  }
+
+  /* ── NOBLE HINT ── */
+  .noble-hint {
+    font-style: italic;
+    color: var(--faded);
+    font-size: 0.88rem;
+    line-height: 1.7;
+    border-left: 3px solid var(--gold);
+    padding-left: 16px;
+    margin-bottom: 28px;
+    min-height: 44px;
+  }
+
+  /* tense label */
+  .tense-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--faded);
+    margin-bottom: 6px;
+  }
+
+  /* english sentence — the big display */
+  .english-sentence {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    line-height: 1.35;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .question-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--faded);
+    margin-bottom: 28px;
+    display: block;
+  }
+
+  /* french answer */
+  .answer-reveal {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.4rem, 3.5vw, 2rem);
+    font-style: italic;
+    color: var(--red);
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    margin-bottom: 12px;
+  }
+
+  .answer-reveal.show { opacity: 1; }
+
+  /* stem highlight */
+  .stem {
+    background: rgba(184,134,11,0.12);
+    color: var(--gold);
+    font-style: normal;
+    padding: 1px 5px;
+    border-radius: 2px;
+    font-size: 0.92em;
+    border-bottom: 1.5px solid var(--gold);
+  }
+
+  /* breakdown */
+  .breakdown {
+    background: var(--aged);
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    font-size: 0.85rem;
+    line-height: 1.85;
+    opacity: 0;
+    display: none;
+    transition: opacity 0.3s;
+  }
+
+  .breakdown.show { opacity: 1; display: block; }
+  .breakdown .chunk { color: var(--red); font-style: italic; }
+
+  /* ── CONTROLS ── */
+  .controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--aged);
+  }
+
+  .primary-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 13px 30px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+    flex: 1;
+    min-width: 150px;
+  }
+
+  .primary-btn:hover { background: var(--red); }
+
+  .secondary-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 13px 20px;
+    background: transparent;
+    color: var(--ink);
+    border: 1.5px solid var(--ink);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+
+  .secondary-btn:hover { background: var(--aged); }
+
+  .audio-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    border: 1.5px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+
+  .audio-btn:hover { background: var(--ink); color: var(--paper); }
+  .audio-btn svg { width: 13px; height: 13px; fill: currentColor; }
+
+  /* feedback */
+  .feedback-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 14px;
+  }
+
+  .btn-correct {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 22px;
+    border: 1.5px solid var(--green);
+    background: transparent;
+    color: var(--green);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+
+  .btn-correct:hover { background: var(--green); color: var(--paper); }
+
+  .btn-wrong {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 22px;
+    border: 1.5px solid var(--red);
+    background: transparent;
+    color: var(--red);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+
+  .btn-wrong:hover { background: var(--red); color: var(--paper); }
+
+  /* ── INTRO PANEL ── */
+  .noble-intro {
+    background: var(--ink);
+    color: var(--paper);
+    max-width: 700px;
+    width: 100%;
+    padding: 28px 32px;
+    margin-bottom: 28px;
+  }
+
+  .noble-intro h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-style: italic;
+    margin-bottom: 16px;
+    color: var(--gold);
+  }
+
+  .noble-intro-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 580px) { .noble-intro-grid { grid-template-columns: 1fr; } }
+
+  .noble-intro-block p {
+    font-size: 0.8rem;
+    line-height: 1.75;
+    color: rgba(245,239,224,0.75);
+  }
+
+  .noble-intro-block strong { color: var(--paper); }
+
+  .noble-intro-block h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  @keyframes flash-correct {
+    0%   { background: white; }
+    30%  { background: #d4f5e2; }
+    100% { background: white; }
+  }
+
+  @keyframes flash-wrong {
+    0%   { background: white; }
+    30%  { background: #fde8e8; }
+    100% { background: white; }
+  }
+
+  .card.flash-correct { animation: flash-correct 0.5s ease; }
+  .card.flash-wrong   { animation: flash-wrong 0.5s ease; }
+
+  footer {
+    max-width: 700px;
+    width: 100%;
+    text-align: center;
+    margin-top: 24px;
+    color: var(--faded);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    line-height: 1.8;
+    border-top: 1px solid var(--aged);
+    padding-top: 20px;
+  }
+
+.back-home{display:inline-flex;align-items:center;gap:7px;font-family:"Courier Prime",monospace;font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--faded);text-decoration:none;padding:8px 0;border-bottom:1px solid transparent;transition:color 0.2s,border-color 0.2s;margin-bottom:20px;align-self:flex-start;}
+.back-home:hover{color:var(--ink);border-bottom-color:var(--ink);}
+.back-home svg{width:12px;height:12px;fill:currentColor;}
+</style>
+</head>
+<body>
+<a href="f-index.html" class="back-home"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Home</a>
+
+<header>
+  <h1>Les Temps</h1>
+  <p>Tense Recognition Drill — Noble Method</p>
+</header>
+
+<div class="noble-intro">
+  <h2>How this works...</h2>
+  <div class="noble-intro-grid">
+    <div class="noble-intro-block">
+      <h3>Imparfait</h3>
+      <p>The "<strong>used to / was doing</strong>" tense. Irregular verbs just swap in a new stem — the endings <strong>never change</strong>. Learn the stem, the rest is free.</p>
+    </div>
+    <div class="noble-intro-block">
+      <h3>Futur Proche</h3>
+      <p>The "<strong>going to</strong>" future. Just <strong>aller + infinitive</strong>. You already know aller — this tense costs almost nothing new.</p>
+    </div>
+    <div class="noble-intro-block">
+      <h3>Futur Simple</h3>
+      <p>The "<strong>will</strong>" future. Irregular verbs swap their stem but keep the <strong>same endings</strong>. Learn the stem once, use it forever.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Tense selector -->
+<div class="mode-selector">
+  <button class="mode-btn active" id="tab-imp" onclick="setTense('imp')">Imparfait</button>
+  <button class="mode-btn" id="tab-fp" onclick="setTense('fp')">Futur Proche</button>
+  <button class="mode-btn" id="tab-fs" onclick="setTense('fs')">Futur Simple</button>
+  <button class="mode-btn" id="tab-mix" onclick="setTense('mix')">🎲 All Mixed</button>
+</div>
+
+<div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+
+<div class="stats">
+  <div><strong id="stat-seen">0</strong> Seen</div>
+  <div><strong id="stat-correct">0</strong> Correct</div>
+  <div><strong id="stat-streak">0</strong> Streak</div>
+</div>
+
+<!-- Card -->
+<div class="card" id="main-card">
+  <div class="noble-hint" id="noble-hint">Loading your first sentence...</div>
+
+  <div class="tense-label" id="tense-label">Imparfait</div>
+  <div class="english-sentence" id="english-sentence">—</div>
+  <span class="question-label">English — what's the French?</span>
+
+  <div class="answer-reveal" id="answer-reveal"></div>
+  <div class="breakdown" id="breakdown"></div>
+
+  <div style="text-align:center; margin-bottom: 4px;">
+    <button class="audio-btn" id="audio-btn" onclick="speakFrench()" style="display:none">
+      <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.97z"/></svg>
+      Hear it
+    </button>
+  </div>
+
+  <div class="controls">
+    <button class="secondary-btn" id="reveal-btn" onclick="revealAnswer()">Reveal</button>
+    <button class="primary-btn" id="next-btn" onclick="nextQ()" style="display:none">Next →</button>
+    <button class="secondary-btn" id="breakdown-btn" onclick="toggleBreakdown()" style="display:none">Break it down</button>
+  </div>
+
+  <div class="feedback-row" id="feedback-row" style="display:none">
+    <button class="btn-correct" onclick="mark(true)">✓ Got it</button>
+    <button class="btn-wrong" onclick="mark(false)">✗ Missed it</button>
+  </div>
+</div>
+
+<footer>
+  Audio uses your browser's speech synthesis (French voice).<br>
+  The <span style="background:rgba(184,134,11,0.15);color:var(--gold);padding:1px 5px;border-bottom:1.5px solid var(--gold);font-size:0.85em;">stem</span> is highlighted in every answer. Use "Break it down" to see the full logic.
+</footer>
+
+<script>
+// ─────────────────────────────────────────────
+//  DATA
+// ─────────────────────────────────────────────
+
+const data = {
+  imp: [
+    { en: "I was tired.", fr: "J'étais fatigué.", stem: "ét", stemPos: [2,5], verb: "être → ét-", hint: "être drops its infinitive entirely in the imparfait. The stem is ét— (think été, summer — same root). Then the usual -ais ending glues on." },
+    { en: "She was happy.", fr: "Elle était heureuse.", stem: "ét", stemPos: [4,7], verb: "être → ét-", hint: "Same ét— stem for all persons. Elle ét-ait — the -ait is the third-person imparfait ending. The stem never wavers." },
+    { en: "We were in Paris.", fr: "Nous étions à Paris.", stem: "éti", stemPos: [5,8], verb: "être → ét-", hint: "Nous étions — ét + ions (the we-ending). Once you know the stem, the endings are identical for every imparfait verb." },
+    { en: "They were ready.", fr: "Ils étaient prêts.", stem: "ét", stemPos: [4,7], verb: "être → ét-", hint: "Ils ét-aient — -aient is the they-ending. Ét— holds firm. You're just swapping the ending." },
+    { en: "I had an idea.", fr: "J'avais une idée.", stem: "av", stemPos: [2,4], verb: "avoir → av-", hint: "avoir's imparfait stem is av—. Much closer to the infinitive than être. J'av-ais — clean and logical." },
+    { en: "He had a car.", fr: "Il avait une voiture.", stem: "av", stemPos: [3,5], verb: "avoir → av-", hint: "Il av-ait. Same av— stem, -ait ending. You'll find avoir in this form constantly in storytelling." },
+    { en: "They had time.", fr: "Ils avaient du temps.", stem: "av", stemPos: [4,6], verb: "avoir → av-", hint: "Ils av-aient — the -aient ending is for ils/elles in the imparfait. Still the same av— stem." },
+    { en: "I used to do sport.", fr: "Je faisais du sport.", stem: "fais", stemPos: [3,7], verb: "faire → fais-", hint: "faire's imparfait stem is fais— (same as the nous present: nous faisons). Je fais-ais — two 'ais' sounds in a row, but it flows smoothly when spoken." },
+    { en: "She used to make coffee.", fr: "Elle faisait du café.", stem: "fais", stemPos: [4,8], verb: "faire → fais-", hint: "Elle fais-ait. The stem fais— is completely stable. Once you lock it in, all six persons fall into place." },
+    { en: "We used to cook together.", fr: "Nous faisions la cuisine ensemble.", stem: "fais", stemPos: [5,9], verb: "faire → fais-", hint: "Nous faisions — fais + ions. The stem never changes in the imparfait, only the ending does." },
+    { en: "He always said that.", fr: "Il disait toujours ça.", stem: "dis", stemPos: [3,6], verb: "dire → dis-", hint: "dire's imparfait stem is dis— (the nous present is nous disons — strip the -ons). Il dis-ait." },
+    { en: "I used to say the same thing.", fr: "Je disais la même chose.", stem: "dis", stemPos: [3,6], verb: "dire → dis-", hint: "Je dis-ais. Knowing the nous-present (disons) gives you the imparfait stem almost for free. That's the system." },
+    { en: "I used to come here often.", fr: "Je venais souvent ici.", stem: "ven", stemPos: [3,6], verb: "venir → ven-", hint: "venir's imparfait stem is ven— (nous venons → chop the -ons). Je ven-ais." },
+    { en: "She used to come every day.", fr: "Elle venait tous les jours.", stem: "ven", stemPos: [4,7], verb: "venir → ven-", hint: "Elle ven-ait. Same formula: take the nous-present, remove -ons, add the imparfait ending." },
+    { en: "I used to take the bus.", fr: "Je prenais le bus.", stem: "pren", stemPos: [3,7], verb: "prendre → pren-", hint: "prendre's imparfait stem is pren— (nous prenons). Je pren-ais. The -dre disappears completely." },
+    { en: "He used to take notes.", fr: "Il prenait des notes.", stem: "pren", stemPos: [3,7], verb: "prendre → pren-", hint: "Il pren-ait. The d in prendre vanishes — the stem pren— is clean and easy to remember." },
+    { en: "I used to see my friends.", fr: "Je voyais mes amis.", stem: "voy", stemPos: [3,6], verb: "voir → voy-", hint: "voir is sneaky — its nous-present is nous voyons, so the imparfait stem is voy—. Je voy-ais." },
+    { en: "We used to see each other every week.", fr: "Nous nous voyions chaque semaine.", stem: "voy", stemPos: [8,11], verb: "voir → voy-", hint: "Nous voyions — voy + ions. The stem is voy— because that's what nous voyons gives you." },
+    { en: "I knew the answer.", fr: "Je savais la réponse.", stem: "sav", stemPos: [3,6], verb: "savoir → sav-", hint: "savoir's imparfait stem is sav— (nous savons). Je sav-ais. In English we say 'knew' — in French it's a smooth, regular-looking -ais ending." },
+    { en: "She knew where it was.", fr: "Elle savait où c'était.", stem: "sav", stemPos: [4,7], verb: "savoir → sav-", hint: "Elle sav-ait. And notice c'était at the end — the ét— stem of être appearing in the same sentence!" },
+  ],
+  fp: [
+    { en: "I'm going to eat.", fr: "Je vais manger.", stem: "vais", stemPos: [3,7], verb: "aller + infinitive", hint: "Futur proche = aller (conjugated) + infinitive. Je vais = I am going. Bolt on the infinitive. Done." },
+    { en: "She's going to call.", fr: "Elle va appeler.", stem: "va", stemPos: [4,6], verb: "aller + infinitive", hint: "Elle va — third person singular of aller. Then the infinitive. No stem changes, no new endings to learn." },
+    { en: "We're going to leave.", fr: "Nous allons partir.", stem: "allons", stemPos: [5,11], verb: "aller + infinitive", hint: "Nous allons — you almost certainly know this already. Bolt on partir. This tense costs almost nothing if you know aller." },
+    { en: "They're going to arrive.", fr: "Ils vont arriver.", stem: "vont", stemPos: [4,8], verb: "aller + infinitive", hint: "Ils vont is the one slightly irregular aller form to note. Then the infinitive. Simple." },
+    { en: "I'm going to sleep.", fr: "Je vais dormir.", stem: "vais", stemPos: [3,7], verb: "aller + infinitive", hint: "Je vais + dormir. The infinitive never changes in futur proche — that's its great beauty." },
+    { en: "He's going to work tomorrow.", fr: "Il va travailler demain.", stem: "va", stemPos: [3,5], verb: "aller + infinitive", hint: "Il va travailler. Notice demain (tomorrow) — a natural time signal that often travels with this tense." },
+    { en: "You're going to love this.", fr: "Tu vas adorer ça.", stem: "vas", stemPos: [3,6], verb: "aller + infinitive", hint: "Tu vas — second person singular of aller. Then adorer. The word order mirrors English perfectly." },
+    { en: "I'm going to try.", fr: "Je vais essayer.", stem: "vais", stemPos: [3,7], verb: "aller + infinitive", hint: "Je vais essayer. This is genuinely the easiest future in French — it mirrors 'going to' in English almost word for word." },
+    { en: "We're going to see.", fr: "Nous allons voir.", stem: "allons", stemPos: [5,11], verb: "aller + infinitive", hint: "Nous allons voir. The infinitive voir stays unchanged. You're simply stacking two verbs." },
+    { en: "She's going to come back.", fr: "Elle va revenir.", stem: "va", stemPos: [4,6], verb: "aller + infinitive", hint: "Elle va revenir. Note revenir = re + venir. Futur proche handles all compound verbs the same way." },
+    { en: "I'm going to need help.", fr: "Je vais avoir besoin d'aide.", stem: "vais", stemPos: [3,7], verb: "aller + avoir", hint: "Je vais avoir besoin — 'I'm going to have need of.' Avoir here is the infinitive, not a conjugated form." },
+    { en: "He's going to be late.", fr: "Il va être en retard.", stem: "va", stemPos: [3,5], verb: "aller + être", hint: "Il va être — être as an infinitive, bolted onto va. Even être costs nothing in futur proche." },
+  ],
+  fs: [
+    { en: "I will be ready.", fr: "Je serai prêt.", stem: "ser", stemPos: [3,6], verb: "être → ser-", hint: "être's futur simple stem is ser—. Je ser-ai — the -ai ending is always first person singular in futur simple." },
+    { en: "It will be fine.", fr: "Ce sera bien.", stem: "ser", stemPos: [3,6], verb: "être → ser-", hint: "Ce sera — ser + a (third person singular). The stem ser— holds completely steady across all persons." },
+    { en: "We will be there.", fr: "Nous serons là.", stem: "ser", stemPos: [5,8], verb: "être → ser-", hint: "Nous serons — ser + ons. The futur simple endings (-ai, -as, -a, -ons, -ez, -ont) are the same for every verb, irregular or not." },
+    { en: "I will have time.", fr: "J'aurai du temps.", stem: "aur", stemPos: [2,5], verb: "avoir → aur-", hint: "avoir's futur stem is aur—. J'aur-ai. A small word, a new stem — but the -ai ending is the same as every other futur simple." },
+    { en: "He will have the results.", fr: "Il aura les résultats.", stem: "aur", stemPos: [3,6], verb: "avoir → aur-", hint: "Il aur-a. Third person singular futur simple ends in -a, no accent." },
+    { en: "I will go tomorrow.", fr: "J'irai demain.", stem: "ir", stemPos: [2,4], verb: "aller → ir-", hint: "aller's futur stem is ir— — just two letters. J'ir-ai. Aller completely drops its identity and becomes ir— in the future." },
+    { en: "She will go to Paris.", fr: "Elle ira à Paris.", stem: "ir", stemPos: [4,6], verb: "aller → ir-", hint: "Elle ir-a. Very short stem, but once you know it, all six forms of aller's future fall into place instantly." },
+    { en: "I will do that.", fr: "Je ferai ça.", stem: "fer", stemPos: [3,6], verb: "faire → fer-", hint: "faire's futur stem is fer—. Je fer-ai. The -ai ending rhymes with the English word 'I' — handy for remembering first person." },
+    { en: "We will make it work.", fr: "Nous ferons en sorte que ça marche.", stem: "fer", stemPos: [5,8], verb: "faire → fer-", hint: "Nous fer-ons. Same fer— stem throughout. The endings carry all the person-information." },
+    { en: "I will come early.", fr: "Je viendrai tôt.", stem: "viendr", stemPos: [3,9], verb: "venir → viendr-", hint: "venir's futur stem is viendr— (the infinitive expands). Je viendr-ai. Say the pattern aloud: viendr-ai, viendr-as, viendr-a..." },
+    { en: "She will come with us.", fr: "Elle viendra avec nous.", stem: "viendr", stemPos: [4,10], verb: "venir → viendr-", hint: "Elle viendr-a. This stem is shared with tenir: je tiendrai, elle tiendra. Two verbs, one stem to learn." },
+    { en: "I will keep my word.", fr: "Je tiendrai parole.", stem: "tiendr", stemPos: [3,9], verb: "tenir → tiendr-", hint: "tenir follows the same pattern as venir: tiendr— stem. Je tiendr-ai. These two verbs are twins in the future." },
+    { en: "I will see.", fr: "Je verrai.", stem: "verr", stemPos: [3,7], verb: "voir → verr-", hint: "voir doubles its r in the future: verr—. Je verr-ai. The doubled-r gives it a distinctive rolling sound." },
+    { en: "We will see what happens.", fr: "Nous verrons ce qui se passe.", stem: "verr", stemPos: [5,9], verb: "voir → verr-", hint: "'On verra' (we'll see) is one of the most common French expressions — now you know exactly where it comes from." },
+    { en: "I will know soon.", fr: "Je saurai bientôt.", stem: "saur", stemPos: [3,7], verb: "savoir → saur-", hint: "savoir's futur stem is saur—. Je saur-ai. Notice the similarity to avoir's aur— — both irregular, both the same family of sounds." },
+    { en: "I will be able to help.", fr: "Je pourrai aider.", stem: "pourr", stemPos: [3,8], verb: "pouvoir → pourr-", hint: "pouvoir doubles its r in the future: pourr—. Je pourr-ai. Another double-r future, like verr— from voir." },
+    { en: "He will be able to come.", fr: "Il pourra venir.", stem: "pourr", stemPos: [3,8], verb: "pouvoir → pourr-", hint: "Il pourr-a. The double-r in pourr— makes this form very recognisable by ear." },
+    { en: "I will want to leave.", fr: "Je voudrai partir.", stem: "voudr", stemPos: [3,8], verb: "vouloir → voudr-", hint: "vouloir's futur stem is voudr—. Je voudr-ai. You may already know voudrais (I would like) — same family, different ending." },
+    { en: "I will have to work.", fr: "Je devrai travailler.", stem: "devr", stemPos: [3,7], verb: "devoir → devr-", hint: "devoir's futur stem is devr— (drop the -oir). Je devr-ai. This is how necessity sounds in the future tense." },
+    { en: "I will receive a message.", fr: "Je recevrai un message.", stem: "recevr", stemPos: [3,9], verb: "recevoir → recevr-", hint: "recevoir → recevr— (drop the -oir, keep the rest). Je recevr-ai. apercevoir follows the exact same logic." },
+    { en: "I will notice him.", fr: "Je l'apercevrai.", stem: "apercevr", stemPos: [5,13], verb: "apercevoir → apercevr-", hint: "apercevoir mirrors recevoir: apercevr— stem. Je l'apercevr-ai. Once you know one -cevoir verb, you know them all." },
+  ]
+};
+
+// ─────────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────────
+
+let tense = 'imp';
+let currentQ = null;
+let stats = { seen: 0, correct: 0, streak: 0 };
+let queues = { imp: [], fp: [], fs: [] };
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function getNext(t) {
+  if (!queues[t] || queues[t].length === 0) queues[t] = shuffle(data[t]);
+  return queues[t].pop();
+}
+
+// ─────────────────────────────────────────────
+//  RENDER
+// ─────────────────────────────────────────────
+
+const tenseNames = { imp: 'Imparfait', fp: 'Futur Proche', fs: 'Futur Simple' };
+
+function highlightStem(fr, stemPos) {
+  if (!stemPos) return fr;
+  return fr.slice(0, stemPos[0])
+    + `<span class="stem">${fr.slice(stemPos[0], stemPos[1])}</span>`
+    + fr.slice(stemPos[1]);
+}
+
+function loadQ() {
+  const t = tense === 'mix' ? ['imp','fp','fs'][Math.floor(Math.random()*3)] : tense;
+  currentQ = getNext(t);
+  currentQ._tense = t;
+
+  document.getElementById('noble-hint').textContent = currentQ.hint;
+  document.getElementById('tense-label').textContent = tenseNames[t];
+  document.getElementById('english-sentence').textContent = currentQ.en;
+
+  const ar = document.getElementById('answer-reveal');
+  ar.innerHTML = highlightStem(currentQ.fr, currentQ.stemPos);
+  ar.classList.remove('show');
+
+  const bd = document.getElementById('breakdown');
+  bd.classList.remove('show');
+  setTimeout(() => { bd.style.display = 'none'; }, 10);
+
+  document.getElementById('reveal-btn').style.display = '';
+  document.getElementById('next-btn').style.display = 'none';
+  document.getElementById('breakdown-btn').style.display = 'none';
+  document.getElementById('audio-btn').style.display = 'none';
+  document.getElementById('feedback-row').style.display = 'none';
+}
+
+function revealAnswer() {
+  document.getElementById('answer-reveal').classList.add('show');
+  document.getElementById('reveal-btn').style.display = 'none';
+  document.getElementById('next-btn').style.display = '';
+  document.getElementById('breakdown-btn').style.display = '';
+  document.getElementById('audio-btn').style.display = 'inline-flex';
+  document.getElementById('feedback-row').style.display = 'flex';
+  stats.seen++;
+  updateStats();
+  setTimeout(speakFrench, 350);
+}
+
+function toggleBreakdown() {
+  const bd = document.getElementById('breakdown');
+  const t = currentQ._tense;
+
+  if (bd.classList.contains('show')) {
+    bd.classList.remove('show');
+    setTimeout(() => { bd.style.display = 'none'; }, 300);
+    return;
+  }
+
+  let html = '';
+  if (t === 'imp') {
+    html = `<span class="chunk">${currentQ.stem}—</span> stem (from ${currentQ.verb}) + imparfait ending → <strong>${currentQ.fr}</strong>`;
+  } else if (t === 'fp') {
+    html = `<span class="chunk">aller</span> (conjugated: ${currentQ.stem}) + <span class="chunk">infinitive</span> → <strong>${currentQ.fr}</strong>`;
+  } else {
+    html = `Irregular stem: <span class="chunk">${currentQ.stem}—</span> (${currentQ.verb}) + futur simple ending → <strong>${currentQ.fr}</strong>`;
+  }
+
+  bd.innerHTML = html;
+  bd.style.display = 'block';
+  setTimeout(() => bd.classList.add('show'), 10);
+}
+
+function mark(correct) {
+  if (correct) { stats.correct++; stats.streak++; flashCard('correct'); }
+  else { stats.streak = 0; flashCard('wrong'); }
+  updateStats();
+  setTimeout(nextQ, 420);
+}
+
+function nextQ() { loadQ(); }
+
+function flashCard(type) {
+  const card = document.getElementById('main-card');
+  card.classList.remove('flash-correct','flash-wrong');
+  void card.offsetWidth;
+  card.classList.add('flash-'+type);
+  setTimeout(() => card.classList.remove('flash-'+type), 600);
+}
+
+function updateStats() {
+  document.getElementById('stat-seen').textContent = stats.seen;
+  document.getElementById('stat-correct').textContent = stats.correct;
+  document.getElementById('stat-streak').textContent = stats.streak;
+  const pct = stats.seen > 0 ? (stats.correct / stats.seen) * 100 : 0;
+  document.getElementById('progress').style.width = pct + '%';
+}
+
+function setTense(t) {
+  tense = t;
+  ['imp','fp','fs','mix'].forEach(id => {
+    document.getElementById('tab-'+id).classList.remove('active');
+  });
+  document.getElementById('tab-'+t).classList.add('active');
+  loadQ();
+}
+
+// ─────────────────────────────────────────────
+//  SPEECH
+// ─────────────────────────────────────────────
+
+function speakFrench() {
+  if (!currentQ || !window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(currentQ.fr);
+  utt.lang = 'fr-FR';
+  utt.rate = 0.82;
+  const voices = speechSynthesis.getVoices();
+  const frVoice = voices.find(v => v.lang.startsWith('fr'));
+  if (frVoice) utt.voice = frVoice;
+  speechSynthesis.speak(utt);
+}
+
+window.speechSynthesis && (window.speechSynthesis.onvoiceschanged = () => {});
+window.onload = () => setTimeout(loadQ, 200);
+</script>
+</body>
+</html>

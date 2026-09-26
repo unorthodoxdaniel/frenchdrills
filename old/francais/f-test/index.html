@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Les Phrases — French Sentence Drill</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1209;
+    --paper: #f5efe0;
+    --aged: #e8dcc8;
+    --red: #c0392b;
+    --gold: #b8860b;
+    --faded: #8a7a5e;
+    --green: #2d6a4f;
+    --blue: #1a4a6b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Courier Prime', monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(180,160,120,0.15) 28px),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 32px;
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 24px;
+    width: 100%;
+    max-width: 780px;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-style: italic;
+    letter-spacing: -0.02em;
+  }
+
+  header p {
+    color: var(--faded);
+    font-size: 0.82rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  /* ── Filter bar ── */
+  .filter-bar {
+    display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+    max-width: 780px; width: 100%; margin-bottom: 12px;
+  }
+
+  .filter-label {
+    width: 100%; text-align: center; font-size: 0.72rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--faded); margin-bottom: 4px;
+  }
+
+  .pill {
+    font-family: 'Courier Prime', monospace; font-size: 0.72rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 5px 13px; border: 1.5px solid var(--aged);
+    background: transparent; color: var(--faded); cursor: pointer;
+    border-radius: 2px; transition: all 0.2s;
+  }
+  .pill:hover { border-color: var(--gold); color: var(--gold); }
+  .pill.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  /* ── Mode tabs ── */
+  .mode-bar {
+    display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+    max-width: 780px; width: 100%; margin-bottom: 24px;
+  }
+
+  .mode-tab {
+    font-family: 'Courier Prime', monospace; font-size: 0.78rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 9px 20px; border: 1.5px solid var(--faded);
+    background: transparent; color: var(--faded); cursor: pointer;
+    border-radius: 2px; transition: all 0.2s;
+  }
+  .mode-tab.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .mode-tab:hover:not(.active) { border-color: var(--ink); color: var(--ink); background: var(--aged); }
+
+  /* ── Stats ── */
+  .stats {
+    display: flex; gap: 24px; justify-content: center;
+    max-width: 780px; width: 100%; margin-bottom: 16px;
+    font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faded);
+  }
+  .stat strong { color: var(--ink); font-size: 1.1rem; display: block; font-family: 'Playfair Display', serif; }
+
+  .progress-bar {
+    max-width: 780px; width: 100%; height: 3px; background: var(--aged);
+    margin-bottom: 24px; border-radius: 2px; overflow: hidden;
+  }
+  .progress-fill { height: 100%; background: var(--gold); transition: width 0.4s ease; }
+
+  /* ── Card ── */
+  .card {
+    background: white; border: 1px solid var(--aged);
+    max-width: 780px; width: 100%; padding: 40px 44px;
+    box-shadow: 4px 4px 0 var(--aged); position: relative; margin-bottom: 24px;
+  }
+  .card::before {
+    content: ''; position: absolute; top: 12px; left: 12px;
+    right: -12px; bottom: -12px; border: 1px solid var(--aged); z-index: -1;
+  }
+
+  @keyframes flash-correct { 0%{background:white} 30%{background:#d4f5e2} 100%{background:white} }
+  @keyframes flash-wrong   { 0%{background:white} 30%{background:#fde8e8} 100%{background:white} }
+  .card.flash-correct { animation: flash-correct 0.5s ease; }
+  .card.flash-wrong   { animation: flash-wrong 0.5s ease; }
+
+  /* ── Meta tags ── */
+  .meta-row {
+    display: flex; gap: 10px; align-items: center; margin-bottom: 20px; flex-wrap: wrap;
+  }
+  .tense-tag {
+    font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 3px 10px; border: 1px solid var(--gold); color: var(--gold);
+    border-radius: 2px; font-family: 'Courier Prime', monospace;
+  }
+  .topic-tag {
+    font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 3px 10px; border: 1px solid var(--aged); color: var(--faded);
+    border-radius: 2px; font-family: 'Courier Prime', monospace;
+  }
+
+  /* ── Prompt ── */
+  .prompt-label {
+    font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--faded); margin-bottom: 10px;
+  }
+
+  .sentence-display {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.3rem, 3vw, 1.85rem);
+    line-height: 1.5; color: var(--ink); margin-bottom: 24px;
+    font-style: italic;
+  }
+
+  /* ── Input ── */
+  .input-wrap { margin-bottom: 16px; }
+
+  .type-input {
+    font-family: 'Playfair Display', serif; font-size: 1.35rem; font-style: italic;
+    border: none; border-bottom: 2px solid var(--ink);
+    background: transparent; color: var(--ink); padding: 8px 4px;
+    width: 100%; outline: none;
+  }
+  .type-input::placeholder { color: var(--aged); }
+  .type-input:disabled { opacity: 0.6; }
+
+  .gap-input {
+    font-family: 'Playfair Display', serif; font-size: 1.1em; font-style: italic;
+    border: none; border-bottom: 2px solid var(--gold); background: transparent;
+    color: var(--ink); padding: 2px 6px; outline: none; min-width: 100px;
+    text-align: center;
+  }
+
+  /* ── Hint ── */
+  .hint-box {
+    font-size: 0.83rem; color: var(--faded); font-style: italic;
+    border-left: 3px solid var(--gold); padding-left: 14px;
+    line-height: 1.7; margin-bottom: 20px;
+  }
+
+  /* ── Answer block ── */
+  .answer-block {
+    margin-top: 16px; padding: 18px 20px;
+    background: var(--aged); border-left: 3px solid var(--green);
+    opacity: 0; transition: opacity 0.35s; display: none;
+  }
+  .answer-block.show { opacity: 1; display: block; }
+  .answer-block .correct-fr {
+    font-family: 'Playfair Display', serif; font-size: 1.2rem;
+    font-style: italic; color: var(--green); margin-bottom: 6px;
+  }
+  .answer-block .notes {
+    font-size: 0.82rem; color: var(--faded); line-height: 1.75;
+  }
+  .answer-block .notes strong { color: var(--ink); }
+
+  /* ── Result badge ── */
+  .result-badge {
+    font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 5px 14px; border-radius: 2px; display: none;
+    font-family: 'Courier Prime', monospace; margin-bottom: 12px;
+  }
+  .result-badge.correct { background: #d4edda; color: var(--green); display: inline-block; }
+  .result-badge.wrong   { background: #fde8e8; color: var(--red);   display: inline-block; }
+  .result-badge.partial { background: #fff3cd; color: #856404;       display: inline-block; }
+
+  /* ── Controls ── */
+  .controls {
+    display: flex; gap: 10px; justify-content: flex-start;
+    flex-wrap: wrap; margin-top: 20px; padding-top: 20px;
+    border-top: 1px solid var(--aged);
+  }
+
+  .btn-primary {
+    font-family: 'Courier Prime', monospace; font-size: 0.82rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 12px 28px; background: var(--ink); color: var(--paper);
+    border: none; cursor: pointer; transition: all 0.2s; border-radius: 2px;
+  }
+  .btn-primary:hover { background: var(--red); }
+
+  .btn-secondary {
+    font-family: 'Courier Prime', monospace; font-size: 0.82rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 12px 20px; background: transparent; color: var(--ink);
+    border: 1.5px solid var(--ink); cursor: pointer; transition: all 0.2s; border-radius: 2px;
+  }
+  .btn-secondary:hover { background: var(--aged); }
+
+  .btn-speak {
+    font-family: 'Courier Prime', monospace; font-size: 0.75rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 8px 16px; background: transparent; color: var(--faded);
+    border: 1.5px solid var(--aged); cursor: pointer; transition: all 0.2s; border-radius: 2px;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-speak:hover { border-color: var(--ink); color: var(--ink); }
+  .btn-speak svg { width: 12px; height: 12px; fill: currentColor; }
+
+  /* ── Empty state ── */
+  .empty-state {
+    text-align: center; padding: 40px 20px; color: var(--faded); font-style: italic;
+  }
+
+  /* ── Free write ── */
+  .free-prompt {
+    font-family: 'Playfair Display', serif; font-size: 1.1rem;
+    color: var(--blue); font-style: italic; margin-bottom: 8px; line-height: 1.5;
+  }
+  .free-context {
+    font-size: 0.8rem; color: var(--faded); margin-bottom: 20px; line-height: 1.6;
+  }
+
+  footer {
+    max-width: 780px; width: 100%; text-align: center; margin-top: 24px;
+    color: var(--faded); font-size: 0.72rem; letter-spacing: 0.08em; line-height: 1.8;
+    border-top: 1px solid var(--aged); padding-top: 18px;
+  }
+
+  .kbd-hint {
+    font-size: 0.68rem; color: var(--faded); letter-spacing: 0.08em;
+    margin-left: auto; align-self: center;
+  }
+  kbd {
+    background: var(--aged); border: 1px solid var(--faded);
+    border-radius: 2px; padding: 1px 5px; font-size: 0.75em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Les Phrases</h1>
+  <p>French Sentence Drill — TCF / Conversational Level</p>
+</header>
+
+<!-- Tense filter -->
+<div class="filter-bar">
+  <div class="filter-label">Tense</div>
+  <button class="pill active" data-tense="all"              onclick="setTense('all',this)">All</button>
+  <button class="pill"        data-tense="présent"          onclick="setTense('présent',this)">Présent</button>
+  <button class="pill"        data-tense="passé composé"    onclick="setTense('passé composé',this)">Passé composé</button>
+  <button class="pill"        data-tense="imparfait"        onclick="setTense('imparfait',this)">Imparfait</button>
+  <button class="pill"        data-tense="futur"            onclick="setTense('futur',this)">Futur</button>
+  <button class="pill"        data-tense="conditionnel"     onclick="setTense('conditionnel',this)">Conditionnel</button>
+  <button class="pill"        data-tense="subjonctif"       onclick="setTense('subjonctif',this)">Subjonctif</button>
+  <button class="pill"        data-tense="plus-que-parfait" onclick="setTense('plus-que-parfait',this)">Plus-que-parfait</button>
+</div>
+
+<!-- Topic filter -->
+<div class="filter-bar" style="margin-bottom:12px;">
+  <div class="filter-label">Topic</div>
+  <button class="pill active" data-topic="all"        onclick="setTopic('all',this)">All</button>
+  <button class="pill"        data-topic="daily life" onclick="setTopic('daily life',this)">Daily life</button>
+  <button class="pill"        data-topic="opinion"    onclick="setTopic('opinion',this)">Opinion</button>
+  <button class="pill"        data-topic="argument"   onclick="setTopic('argument',this)">Argument</button>
+  <button class="pill"        data-topic="work"       onclick="setTopic('work',this)">Work</button>
+  <button class="pill"        data-topic="emotion"    onclick="setTopic('emotion',this)">Emotion</button>
+  <button class="pill"        data-topic="society"    onclick="setTopic('society',this)">Society</button>
+  <button class="pill"        data-topic="travel"     onclick="setTopic('travel',this)">Travel</button>
+  <button class="pill"        data-topic="oral"       onclick="setTopic('oral',this)">🎙 Oral</button>
+</div>
+
+<!-- Register filter -->
+<div class="filter-bar" style="margin-bottom:20px;">
+  <div class="filter-label">Register</div>
+  <button class="pill active" data-register="all"     onclick="setRegister('all',this)">All</button>
+  <button class="pill"        data-register="spoken"  onclick="setRegister('spoken',this)">Spoken</button>
+  <button class="pill"        data-register="written" onclick="setRegister('written',this)">Written</button>
+</div>
+
+<!-- Mode tabs -->
+<div class="mode-bar">
+  <button class="mode-tab active" onclick="setMode('translate',this)">→ Translate</button>
+  <button class="mode-tab"        onclick="setMode('gapfill',this)">Gap Fill</button>
+  <button class="mode-tab"        onclick="setMode('listen',this)">Hear &amp; Write</button>
+  <button class="mode-tab"        onclick="setMode('freewrite',this)">Free Write</button>
+</div>
+
+<!-- Stats -->
+<div class="stats">
+  <div><strong id="stat-seen">0</strong> Seen</div>
+  <div><strong id="stat-correct">0</strong> Correct</div>
+  <div><strong id="stat-streak">0</strong> Streak</div>
+  <div><strong id="stat-pool">0</strong> In pool</div>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+
+<!-- Main card -->
+<div class="card" id="main-card">
+  <div id="drill-area"><!-- populated by drill.js --></div>
+</div>
+
+<footer>
+  Press <kbd>Enter</kbd> to check · <kbd>→</kbd> to skip · Browser speech synthesis for audio.<br>
+  Sentences cover TCF B1–B2 range. Edit <code>sentences.json</code> to add more.
+</footer>
+
+<script src="drill.js"></script>
+</body>
+</html>

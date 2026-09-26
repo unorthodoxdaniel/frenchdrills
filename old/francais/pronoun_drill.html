@@ -1,0 +1,170 @@
+
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root { --ink:#1a1209; --paper:#f5efe0; --aged:#e8dcc8; --red:#c0392b; --gold:#b8860b; --faded:#8a7a5e; --green:#2d6a4f; }
+* { box-sizing:border-box; margin:0; padding:0; }
+.wrap { font-family:'Courier Prime',monospace; background:var(--paper); color:var(--ink); padding:2rem 1rem; min-height:400px; background-image:repeating-linear-gradient(0deg,transparent,transparent 27px,rgba(180,160,120,0.15) 28px); }
+.stage-label { font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--faded); margin-bottom:0.3rem; }
+.stage-title { font-family:'Playfair Display',serif; font-size:22px; font-style:italic; color:var(--ink); margin-bottom:0.2rem; font-weight:400; }
+.stage-sub { font-size:13px; color:var(--faded); margin-bottom:1.25rem; letter-spacing:0.04em; }
+.noble-note { font-style:italic; color:var(--faded); font-size:13px; line-height:1.8; border-left:3px solid var(--gold); padding-left:14px; margin-bottom:1.5rem; }
+.card { background:white; border:1px solid var(--aged); padding:2rem; box-shadow:4px 4px 0 var(--aged); position:relative; margin-bottom:1.5rem; }
+.card::before { content:''; position:absolute; top:10px; left:10px; right:-10px; bottom:-10px; border:1px solid var(--aged); z-index:-1; }
+.item-counter { font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--faded); margin-bottom:0.5rem; }
+.say-aloud { font-size:11px; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); margin-bottom:0.75rem; font-weight:700; }
+.prompt-en { font-family:'Playfair Display',serif; font-size:19px; font-style:italic; color:var(--ink); margin-bottom:1.25rem; line-height:1.5; }
+.answer-row { display:flex; align-items:center; gap:10px; }
+.answer-area { flex:1; min-height:48px; border:none; border-bottom:2px solid var(--aged); padding:0.6rem 0.25rem; font-family:'Courier Prime',monospace; font-size:15px; color:var(--ink); background:transparent; cursor:pointer; display:flex; align-items:center; transition:border-color 0.2s; }
+.answer-area:hover { border-color:var(--ink); }
+.answer-area.revealed { cursor:default; border-color:var(--gold); }
+.hint { font-size:12px; color:var(--aged); font-style:italic; }
+.reveal-text { font-family:'Playfair Display',serif; font-size:20px; font-style:italic; color:var(--red); }
+.speak-btn { flex-shrink:0; width:36px; height:36px; border-radius:2px; border:1.5px solid var(--ink); background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:13px; color:var(--ink); transition:background 0.15s; }
+.speak-btn:hover { background:var(--ink); color:var(--paper); }
+.speak-btn:disabled { opacity:0.25; cursor:not-allowed; }
+.speak-btn.speaking { background:var(--red); color:white; border-color:var(--red); }
+.breakdown { margin-top:1rem; padding-top:1rem; border-top:1px solid var(--aged); }
+.breakdown-row { display:flex; gap:8px; align-items:baseline; margin-bottom:5px; }
+.bd-fr { font-family:'Playfair Display',serif; font-size:14px; font-style:italic; color:var(--red); min-width:150px; }
+.bd-en { font-size:13px; color:var(--faded); }
+.tip { margin-top:0.75rem; padding:0.6rem 1rem; background:var(--aged); font-size:13px; color:var(--faded); line-height:1.6; font-style:italic; }
+.tip strong { color:var(--ink); font-style:normal; }
+.btn-row { display:flex; gap:10px; margin-top:1.25rem; flex-wrap:wrap; }
+button { font-family:'Courier Prime',monospace; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; padding:10px 22px; border-radius:2px; cursor:pointer; border:1.5px solid var(--ink); background:transparent; color:var(--ink); transition:background 0.15s; }
+button:hover { background:var(--aged); }
+button.primary { background:var(--ink); color:var(--paper); }
+button.primary:hover { background:var(--red); border-color:var(--red); }
+.score-area { margin-top:1rem; font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:var(--faded); }
+.score-num { font-family:'Playfair Display',serif; font-size:18px; color:var(--ink); font-style:italic; }
+.progress-bar { height:3px; background:var(--aged); margin-bottom:1.5rem; }
+.progress-fill { height:3px; background:var(--gold); transition:width 0.4s ease; }
+.stage-nav { display:flex; gap:6px; margin-bottom:1.25rem; }
+.stage-dot { width:8px; height:8px; border-radius:50%; background:var(--aged); transition:background 0.2s; }
+.done-card { text-align:center; padding:2.5rem 1.5rem; }
+.done-title { font-family:'Playfair Display',serif; font-size:26px; font-style:italic; color:var(--ink); margin-bottom:0.5rem; }
+.done-sub { font-size:13px; color:var(--faded); margin-bottom:1.5rem; line-height:1.8; }
+.voice-note { font-size:11px; color:var(--aged); margin-top:0.5rem; font-style:italic; }
+</style>
+<div class="wrap" id="app"></div>
+<script>
+const stages=[
+  { title:"Direct objects", sub:"le, la, les — replacing the thing being acted on", note:"The pronoun slots in right before the verb. Say each sentence out loud — your mouth needs to learn this, not just your brain.",
+    items:[
+      {en:"I see him.",fr:"Je le vois.",parts:[["Je","I"],["le","him"],["vois","see"]],tip:null},
+      {en:"I see her.",fr:"Je la vois.",parts:[["Je","I"],["la","her"],["vois","see"]],tip:null},
+      {en:"I see them.",fr:"Je les vois.",parts:[["Je","I"],["les","them"],["vois","see"]],tip:null},
+      {en:"I love it. (e.g. the film — masc.)",fr:"Je l'aime.",parts:[["Je","I"],["l'","it (le → l' before vowel)"],["aime","love"]],tip:"le and la both shorten to l' before a vowel. Je l'aime, not Je le aime."},
+      {en:"I don't see it.",fr:"Je ne le vois pas.",parts:[["Je ne","I (neg. start)"],["le","it"],["vois","see"],["pas","not"]],tip:"Negation wraps around the verb — the pronoun stays glued just before the verb, inside the ne...pas sandwich."},
+    ]
+  },
+  { title:"Indirect objects", sub:"lui, leur — to him / to her / to them", note:"lui covers both 'to him' and 'to her'. leur is the plural. Both sit before the verb just like direct object pronouns.",
+    items:[
+      {en:"I speak to him.",fr:"Je lui parle.",parts:[["Je","I"],["lui","to him"],["parle","speak"]],tip:null},
+      {en:"I speak to them.",fr:"Je leur parle.",parts:[["Je","I"],["leur","to them"],["parle","speak"]],tip:null},
+      {en:"I give him the book.",fr:"Je lui donne le livre.",parts:[["Je","I"],["lui","to him"],["donne","give"],["le livre","the book"]],tip:null},
+      {en:"I give it to him.",fr:"Je le lui donne.",parts:[["Je","I"],["le","it"],["lui","to him"],["donne","give"]],tip:"Two pronouns: direct (le) comes before indirect (lui). The order is fixed: le/la/les always before lui/leur."},
+    ]
+  },
+  { title:"Y — there / to it", sub:"Replacing a place or idea introduced with à", note:"y means 'there' or 'to it / about it'. If you said à quelque chose or à un endroit, y replaces it. Goes before the verb like all the others.",
+    items:[
+      {en:"I'm going there.",fr:"J'y vais.",parts:[["J'","I"],["y","there"],["vais","am going"]],tip:"je + y → J'y. The apostrophe is just for smooth pronunciation."},
+      {en:"I'm staying there.",fr:"J'y reste.",parts:[["J'","I"],["y","there"],["reste","am staying"]],tip:null},
+      {en:"I'm thinking about it.",fr:"J'y pense.",parts:[["J'","I"],["y","about it"],["pense","am thinking"]],tip:"penser à → y replaces the à + thing. Je pense à ça → J'y pense."},
+      {en:"I don't want to go there.",fr:"Je ne veux pas y aller.",parts:[["Je ne","I (neg.)"],["veux pas","don't want"],["y","there"],["aller","to go"]],tip:"With an infinitive, y sits right before that infinitive. The action it belongs to is aller, so it hugs aller."},
+    ]
+  },
+  { title:"En — of it / some / from there", sub:"Replacing de + something, or expressing quantity", note:"en is a workhorse. It replaces de + a thing, expresses 'some', and can carry a number with it. Always before the verb.",
+    items:[
+      {en:"I want some.",fr:"J'en veux.",parts:[["J'","I"],["en","some"],["veux","want"]],tip:null},
+      {en:"I have some.",fr:"J'en ai.",parts:[["J'","I"],["en","some"],["ai","have"]],tip:null},
+      {en:"I have two (of them).",fr:"J'en ai deux.",parts:[["J'","I"],["en","of them"],["ai","have"],["deux","two"]],tip:"en carries the quantity with it. The number comes after the verb — en stays before it."},
+      {en:"I don't want any.",fr:"Je n'en veux pas.",parts:[["Je n'","I (neg.)"],["en","any"],["veux","want"],["pas","not"]],tip:"Same ne...pas sandwich — en stays inside it, before the verb."},
+    ]
+  },
+  { title:"Mixing it all", sub:"Stacking pronouns — the real test", note:"When two pronouns meet, order matters: direct (le/la/les) before indirect (lui/leur), and y and en always come last.",
+    items:[
+      {en:"I give it to him.",fr:"Je le lui donne.",parts:[["Je","I"],["le","it (direct)"],["lui","to him (indirect)"],["donne","give"]],tip:"Direct (le) before indirect (lui). Fixed order."},
+      {en:"I'm giving it to them.",fr:"Je le leur donne.",parts:[["Je","I"],["le","it"],["leur","to them"],["donne","giving"]],tip:null},
+      {en:"I'm going to give it to him.",fr:"Je vais le lui donner.",parts:[["Je vais","I am going to"],["le","it"],["lui","to him"],["donner","give"]],tip:"With aller + infinitive, the pronouns go before the infinitive (donner), not before vais."},
+      {en:"I want to give him some.",fr:"Je veux lui en donner.",parts:[["Je veux","I want to"],["lui","to him"],["en","some"],["donner","give"]],tip:"lui (indirect) before en. Indirect pronouns come before y and en."},
+      {en:"I'm going to give him some.",fr:"Je vais lui en donner.",parts:[["Je vais","I am going to"],["lui","to him"],["en","some"],["donner","give"]],tip:null},
+      {en:"I'm thinking about it.",fr:"J'y pense.",parts:[["J'","I"],["y","about it"],["pense","am thinking"]],tip:"Revisiting this one — it should feel more automatic now."},
+      {en:"I'm thinking about it a lot.",fr:"J'y pense beaucoup.",parts:[["J'","I"],["y","about it"],["pense","think"],["beaucoup","a lot"]],tip:"Adverbs come after the verb — pronoun position never changes."},
+    ]
+  },
+  { title:"Final challenge", sub:"Long structures — stay calm, find the verb", note:"These are the hardest patterns. Pause before answering. Find the verb first, then ask: where do my pronouns go relative to it?",
+    items:[
+      {en:"I'm going to give it to them there.",fr:"Je vais le leur donner là-bas.",parts:[["Je vais","I am going to"],["le","it"],["leur","to them"],["donner","give"],["là-bas","there"]],tip:"Three elements stacking: le (direct) + leur (indirect) + infinitive. là-bas comes at the end — it's an adverb, not a pronoun."},
+      {en:"I don't want to give him any.",fr:"Je ne veux pas lui en donner.",parts:[["Je ne","I (neg.)"],["veux pas","don't want"],["lui","to him"],["en","any"],["donner","give"]],tip:"Negation wraps veux. The pronouns (lui en) belong to donner, so they sit before donner — outside the ne...pas wrap."},
+    ]
+  }
+];
+let frVoice=null;
+function loadVoice(){const v=speechSynthesis.getVoices();frVoice=v.find(x=>x.lang.startsWith('fr'))||null;}
+if('speechSynthesis'in window){speechSynthesis.onvoiceschanged=loadVoice;loadVoice();}
+function speak(text,btn){
+  if(!('speechSynthesis'in window))return;
+  speechSynthesis.cancel();
+  const utt=new SpeechSynthesisUtterance(text);
+  utt.lang='fr-FR';utt.rate=0.88;
+  if(frVoice)utt.voice=frVoice;
+  if(btn){btn.classList.add('speaking');utt.onend=()=>btn.classList.remove('speaking');utt.onerror=()=>btn.classList.remove('speaking');}
+  speechSynthesis.speak(utt);
+}
+let stageIdx=0,itemIdx=0,revealed=false,correct=0,total=0;
+function totalItems(){return stages.reduce((a,s)=>a+s.items.length,0);}
+function doneItems(){return stages.slice(0,stageIdx).reduce((a,s)=>a+s.items.length,0)+itemIdx;}
+function progress(){return Math.round((doneItems()/totalItems())*100);}
+function render(){
+  const app=document.getElementById('app');
+  if(stageIdx>=stages.length){renderDone(app);return;}
+  const stage=stages[stageIdx];
+  const item=stage.items[itemIdx];
+  const globalNum=doneItems()+1;
+  let dots=stages.map((s,i)=>`<div class="stage-dot" style="${i<stageIdx?'background:var(--gold)':i===stageIdx?'background:var(--ink)':''}"></div>`).join('');
+  let html=`<div class="progress-bar"><div class="progress-fill" style="width:${progress()}%"></div></div>
+  <div class="stage-nav">${dots}</div>
+  <p class="stage-label">Part ${stageIdx+1} of ${stages.length}</p>
+  <p class="stage-title">${stage.title}</p>
+  <p class="stage-sub">${stage.sub}</p>
+  <div class="noble-note">${stage.note}</div>
+  <div class="card">
+    <p class="item-counter">Sentence ${globalNum} of ${totalItems()}</p>
+    <p class="say-aloud">▶ say out loud</p>
+    <p class="prompt-en">${item.en}</p>
+    <div class="answer-row">`;
+  if(!revealed){
+    html+=`<div class="answer-area" onclick="reveal()"><span class="hint">— tap to reveal —</span></div><button class="speak-btn" disabled style="opacity:0.25">▶</button>`;
+  } else {
+    html+=`<div class="answer-area revealed"><span class="reveal-text">${item.fr}</span></div><button class="speak-btn" id="spkbtn" onclick="speakCurrent(this)">▶</button>`;
+  }
+  html+=`</div>`;
+  if(revealed){
+    html+=`<div class="breakdown">`;
+    item.parts.forEach(([fr,en])=>html+=`<div class="breakdown-row"><span class="bd-fr">${fr}</span><span class="bd-en">= ${en}</span></div>`);
+    html+=`</div>`;
+    if(item.tip)html+=`<div class="tip"><strong>Note:</strong> ${item.tip}</div>`;
+    html+=`<p class="voice-note">Audio quality depends on your device's French voice.</p>`;
+  }
+  html+=`</div>`;
+  if(revealed)html+=`<div class="btn-row"><button class="primary" onclick="mark(true)">Got it ✓</button><button onclick="mark(false)">Recycle — see again</button></div>`;
+  if(total>0)html+=`<div class="score-area">Score: <span class="score-num">${correct}/${total}</span></div>`;
+  app.innerHTML=html;
+}
+function speakCurrent(btn){speak(stages[stageIdx].items[itemIdx].fr,btn);}
+function reveal(){revealed=true;total++;render();setTimeout(()=>{const b=document.getElementById('spkbtn');if(b)speakCurrent(b);},150);}
+function mark(ok){
+  if(ok)correct++;else stages[stageIdx].items.push(stages[stageIdx].items[itemIdx]);
+  itemIdx++;revealed=false;
+  if(itemIdx>=stages[stageIdx].items.length){stageIdx++;itemIdx=0;}
+  render();
+}
+function renderDone(app){
+  const p=total>0?Math.round((correct/total)*100):0;
+  const msg=p>=85?"Excellent — these patterns are moving into long-term memory.":p>=65?"Good progress. Run it again and the weaker ones will click.":"Keep going — each run it'll feel less effortful. That's the Noble method working.";
+  app.innerHTML=`<div class="card done-card"><p class="done-title">All 26 done!</p><p class="done-sub">${correct} out of ${total} — ${p}%<br><br>${msg}</p><div class="btn-row" style="justify-content:center"><button class="primary" onclick="restart()">Run it again ↗</button></div></div>`;
+}
+function restart(){stageIdx=0;itemIdx=0;revealed=false;correct=0;total=0;render();}
+render();
+</script>

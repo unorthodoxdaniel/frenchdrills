@@ -1,0 +1,2435 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCF Vocabulaire — Drill par Thème</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f5f0e8;
+    --cream-dark: #ede7d9;
+    --ink: #1a1209;
+    --ink-light: #3d3a2e;
+    --ink-faint: #7a7060;
+    --gold: #b8952a;
+    --gold-light: #d4b04a;
+    --gold-pale: #f0e4b8;
+    --red: #8b2a2a;
+    --green: #2a5c3a;
+    --rule: #c8bfa0;
+    --shadow: rgba(26,26,20,0.08);
+    --blue: #2a4a7a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+  }
+
+  /* MASTHEAD */
+  .masthead {
+    text-align: center;
+    padding-bottom: 28px;
+    border-bottom: 2px solid var(--rule);
+    margin-bottom: 36px;
+  }
+  .masthead-label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  .masthead h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2.4rem;
+    font-weight: 400;
+    line-height: 1.15;
+    margin-bottom: 6px;
+  }
+  .masthead h1 em { font-style: italic; color: var(--ink-light); }
+  .masthead-sub {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--ink-faint);
+  }
+
+  /* CATEGORY SELECTOR */
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+  .cat-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    background: var(--cream-dark);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 10px 14px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .cat-btn:hover { border-color: var(--gold); color: var(--ink); }
+  .cat-btn.active { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+  .cat-btn .cat-name { font-size: 12px; font-weight: 700; }
+  .cat-btn .cat-count { font-size: 10px; opacity: 0.7; }
+
+  /* FILTER ROW */
+  .filter-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .filter-label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .diff-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 2px;
+    border: 1px solid var(--rule);
+    background: none;
+    color: var(--ink-faint);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .diff-btn:hover { border-color: var(--gold); color: var(--ink); }
+  .diff-btn.active { background: var(--gold); color: var(--cream); border-color: var(--gold); }
+  .diff-btn.essential { --col: #2a5c3a; }
+  .diff-btn.essential.active { background: var(--green); border-color: var(--green); }
+  .diff-btn.intermediate { --col: var(--gold); }
+  .diff-btn.intermediate.active { background: var(--gold); border-color: var(--gold); }
+  .diff-btn.advanced.active { background: var(--blue); border-color: var(--blue); }
+
+  /* SCORE BAR */
+  .score-bar {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 14px 20px;
+    background: var(--cream-dark);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    margin-bottom: 28px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    flex-wrap: wrap;
+  }
+  .score-item { display: flex; align-items: center; gap: 8px; color: var(--ink-faint); }
+  .score-val { color: var(--ink); font-weight: 700; font-size: 15px; }
+  .score-streak .score-val { color: var(--gold); }
+  .score-bar .divider { width: 1px; height: 20px; background: var(--rule); }
+
+  /* WORD CARD */
+  .word-card {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 36px 40px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 12px var(--shadow);
+    position: relative;
+  }
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 6px;
+  }
+  .q-number {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .diff-badge {
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 2px;
+    border: 1px solid;
+  }
+  .diff-badge.essential { color: var(--green); border-color: var(--green); background: #f0f7f2; }
+  .diff-badge.intermediate { color: #7a6010; border-color: var(--gold); background: var(--gold-pale); }
+  .diff-badge.advanced { color: var(--blue); border-color: var(--blue); background: #eef2fa; }
+
+  .word-fr {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .word-type {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--ink-faint);
+  }
+
+  .play-word-btn {
+    background: none;
+    border: 1.5px solid var(--rule);
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--ink-faint);
+    font-size: 14px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .play-word-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* Translation reveal */
+  .translation-area {
+    margin: 20px 0 24px;
+  }
+  .reveal-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    background: none;
+    border: 1px dashed var(--rule);
+    border-radius: 2px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+    text-align: center;
+  }
+  .reveal-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .translation-reveal {
+    display: none;
+    background: var(--cream-dark);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 16px 20px;
+  }
+  .translation-reveal.open { display: block; }
+  .translation-en {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-style: italic;
+    color: var(--ink-light);
+    margin-bottom: 6px;
+  }
+
+  /* Sentence */
+  .sentence-block {
+    border-top: 1px solid var(--rule);
+    padding-top: 20px;
+    margin-top: 4px;
+  }
+  .sentence-label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .sentence-fr {
+    font-family: 'EB Garamond', serif;
+    font-size: 1.1rem;
+    color: var(--ink);
+    line-height: 1.7;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .sentence-fr .sentence-text { flex: 1; }
+  .play-sentence-btn {
+    background: none;
+    border: 1.5px solid var(--rule);
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--ink-faint);
+    font-size: 12px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .play-sentence-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .sentence-en {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--ink-faint);
+    margin-left: 0;
+    display: none;
+  }
+  .sentence-en.show { display: block; }
+  .toggle-sen-en {
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-top: 4px;
+    transition: color 0.2s;
+  }
+  .toggle-sen-en:hover { color: var(--gold); }
+
+  /* Action row */
+  .action-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+  .btn-know {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cream);
+    background: var(--green);
+    border: none;
+    border-radius: 2px;
+    padding: 11px 22px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-know:hover { opacity: 0.85; }
+  .btn-review {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--red);
+    background: none;
+    border: 1.5px solid var(--red);
+    border-radius: 2px;
+    padding: 10px 22px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-review:hover { background: var(--red); color: var(--cream); }
+  .btn-skip {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    background: none;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 10px 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-left: auto;
+  }
+  .btn-skip:hover { border-color: var(--ink-faint); color: var(--ink); }
+
+  /* Audio indicator */
+  .audio-playing {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+  .audio-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--gold);
+    animation: pulse 0.6s ease-in-out infinite alternate;
+  }
+  .audio-dot:nth-child(2) { animation-delay: 0.2s; }
+  .audio-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes pulse { from { opacity: 0.3; } to { opacity: 1; } }
+
+  /* Progress bar */
+  .progress-wrap {
+    background: var(--rule);
+    border-radius: 2px;
+    height: 3px;
+    margin-bottom: 28px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--gold);
+    transition: width 0.4s ease;
+    border-radius: 2px;
+  }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--ink-faint);
+    font-style: italic;
+  }
+  .empty-state h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--ink-light);
+    margin-bottom: 10px;
+  }
+
+  /* Session complete */
+  .session-complete {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 48px 40px;
+    text-align: center;
+    box-shadow: 0 2px 12px var(--shadow);
+  }
+  .session-complete h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+    margin-bottom: 12px;
+  }
+  .session-complete p {
+    font-family: 'EB Garamond', serif;
+    font-size: 1rem;
+    color: var(--ink-faint);
+    margin-bottom: 24px;
+  }
+  .restart-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--cream);
+    background: var(--ink);
+    border: none;
+    border-radius: 2px;
+    padding: 12px 28px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .restart-btn:hover { background: var(--ink-light); }
+
+  /* Noble intro */
+  .noble-intro {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 22px 28px;
+    margin-bottom: 32px;
+    border-radius: 2px;
+  }
+  .noble-intro p {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.92rem;
+    line-height: 1.85;
+    color: rgba(245,240,232,0.8);
+  }
+  .noble-intro strong { color: var(--cream); }
+
+  /* MODE TABS */
+  .mode-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1.5px solid var(--rule);
+    margin-bottom: 32px;
+  }
+  .mode-tab {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1.5px;
+    padding: 10px 26px;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .mode-tab:hover { color: var(--ink); }
+  .mode-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  /* GLOSSARY */
+  .gloss-cat-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+  .gloss-cat-pill {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 99px;
+    border: 1px solid var(--rule);
+    background: none;
+    color: var(--ink-faint);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .gloss-cat-pill:hover { border-color: var(--gold); color: var(--ink); }
+  .gloss-cat-pill.active { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+
+  .gloss-section { margin-bottom: 48px; }
+  .gloss-section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--rule);
+    margin-bottom: 0;
+  }
+  .gloss-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--ink);
+  }
+  .gloss-section-en {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .gloss-section-count {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    margin-left: auto;
+    letter-spacing: 0.1em;
+  }
+
+  /* Diff group label inside glossary */
+  .gloss-diff-label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding: 14px 0 6px;
+    border-bottom: 1px solid var(--rule);
+    opacity: 0.7;
+  }
+
+  /* Each word row */
+  .gloss-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 0;
+    border-bottom: 1px solid var(--rule);
+    padding: 12px 0;
+    transition: background 0.15s;
+  }
+  .gloss-row:hover { background: rgba(184,149,42,0.04); }
+
+  .gloss-left {
+    padding-right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    border-right: 1px solid var(--rule);
+  }
+  .gloss-fr {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 400;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .gloss-play {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--ink-faint);
+    font-size: 11px;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.15s;
+    flex-shrink: 0;
+  }
+  .gloss-play:hover { color: var(--gold); }
+  .gloss-type {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+  }
+  .gloss-en {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.88rem;
+    color: var(--ink-light);
+    margin-top: 2px;
+  }
+
+  .gloss-right {
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+  }
+  .gloss-sentence {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.97rem;
+    color: var(--ink);
+    line-height: 1.55;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .gloss-sentence-text { flex: 1; }
+  .gloss-sen-en {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 0.84rem;
+    color: var(--ink-faint);
+    line-height: 1.5;
+  }
+  .gloss-diff-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    margin-right: 4px;
+    vertical-align: middle;
+    flex-shrink: 0;
+    margin-top: 7px;
+  }
+  .gloss-diff-dot.essential { background: var(--green); }
+  .gloss-diff-dot.intermediate { background: var(--gold); }
+  .gloss-diff-dot.advanced { background: var(--blue); }
+
+  /* Gloss filter row */
+  .gloss-filter-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .gloss-filter-row .filter-label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .gloss-legend {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .gloss-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  /* ── LISTEN MODE ── */
+  .listen-setup {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 32px 36px;
+    box-shadow: 0 2px 12px var(--shadow);
+    margin-bottom: 24px;
+  }
+  .listen-setup h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    margin-bottom: 6px;
+  }
+  .listen-setup p {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.92rem;
+    color: var(--ink-faint);
+    margin-bottom: 20px;
+    line-height: 1.7;
+  }
+  .listen-cat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .listen-cat-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 12px;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    background: var(--cream-dark);
+    color: var(--ink-faint);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .listen-cat-btn:hover { border-color: var(--gold); color: var(--ink); }
+  .listen-cat-btn.active { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+  .listen-cat-btn .lcat-name { font-size: 11px; font-weight: 700; }
+  .listen-cat-btn .lcat-count { font-size: 9px; opacity: 0.7; }
+  .listen-options {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule);
+  }
+  .listen-opt-label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .listen-speed-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    background: none;
+    color: var(--ink-faint);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .listen-speed-btn.active { background: var(--gold); color: var(--cream); border-color: var(--gold); }
+  .listen-speed-btn:hover:not(.active) { border-color: var(--gold); color: var(--ink); }
+  .listen-start-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--cream);
+    background: var(--ink);
+    border: none;
+    border-radius: 2px;
+    padding: 14px 32px;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%;
+    margin-top: 8px;
+  }
+  .listen-start-btn:hover { background: var(--ink-light); }
+  .listen-start-btn:disabled { background: var(--rule); cursor: default; }
+  .listen-player { display: none; background: #fff; border: 1px solid var(--rule); border-radius: 2px; box-shadow: 0 2px 20px var(--shadow); overflow: hidden; }
+  .listen-player.active { display: block; }
+  .player-header { background: var(--ink); color: var(--cream); padding: 18px 28px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .player-cat-name { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-style: italic; font-weight: 400; }
+  .player-counter { font-family: 'Courier Prime', monospace; font-size: 11px; letter-spacing: 0.1em; color: rgba(245,240,232,0.6); }
+  .player-progress-wrap { height: 3px; background: rgba(255,255,255,0.15); }
+  .player-progress-fill { height: 100%; background: var(--gold); transition: width 0.5s ease; }
+  .player-card { padding: 36px 40px; min-height: 220px; display: flex; flex-direction: column; justify-content: center; }
+  .player-stage { font-family: 'Courier Prime', monospace; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; height: 14px; }
+  .player-main { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 400; color: var(--ink); line-height: 1.3; margin-bottom: 10px; min-height: 2.4rem; }
+  .player-sub { font-family: 'EB Garamond', serif; font-size: 1.05rem; color: var(--ink-faint); font-style: italic; line-height: 1.6; min-height: 1.6rem; }
+  .player-type { font-family: 'EB Garamond', serif; font-size: 0.85rem; color: var(--ink-faint); font-style: italic; margin-top: 4px; }
+  .player-speaking { display: flex; align-items: center; gap: 8px; margin-top: 16px; font-family: 'Courier Prime', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); opacity: 0; transition: opacity 0.3s; }
+  .player-speaking.visible { opacity: 1; }
+  .speak-bar { width: 3px; border-radius: 2px; background: var(--gold); animation: speakbar 0.5s ease-in-out infinite alternate; }
+  .speak-bar:nth-child(1) { height: 8px; animation-delay: 0s; }
+  .speak-bar:nth-child(2) { height: 14px; animation-delay: 0.1s; }
+  .speak-bar:nth-child(3) { height: 10px; animation-delay: 0.2s; }
+  .speak-bar:nth-child(4) { height: 16px; animation-delay: 0.15s; }
+  .speak-bar:nth-child(5) { height: 8px; animation-delay: 0.05s; }
+  @keyframes speakbar { from { transform: scaleY(0.4); opacity:0.5; } to { transform: scaleY(1); opacity:1; } }
+  .player-controls { padding: 20px 28px 28px; border-top: 1px solid var(--rule); display: flex; flex-direction: column; gap: 16px; }
+  .player-btns { display: flex; align-items: center; justify-content: center; gap: 16px; }
+  .ctrl-btn { font-family: 'Courier Prime', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; border: 1.5px solid var(--rule); border-radius: 2px; background: none; color: var(--ink-faint); cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 20px; }
+  .ctrl-btn:hover { border-color: var(--gold); color: var(--ink); }
+  .ctrl-btn .ctrl-icon { font-size: 20px; line-height: 1; }
+  .ctrl-btn .ctrl-label { font-size: 9px; opacity: 0.7; }
+  .ctrl-play { width: 72px; height: 72px; border-radius: 50%; background: var(--ink); color: var(--cream); border: none; font-size: 26px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s, transform 0.1s; flex-shrink: 0; }
+  .ctrl-play:hover { background: var(--ink-light); }
+  .ctrl-play:active { transform: scale(0.95); }
+  .player-meta { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .player-speed-row { display: flex; gap: 8px; align-items: center; }
+  .player-speed-label { font-family: 'Courier Prime', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); }
+  .pspeed-btn { font-family: 'Courier Prime', monospace; font-size: 9px; letter-spacing: 0.1em; padding: 4px 10px; border: 1px solid var(--rule); border-radius: 2px; background: none; color: var(--ink-faint); cursor: pointer; transition: all 0.15s; }
+  .pspeed-btn.active { background: var(--gold-pale); color: var(--ink); border-color: var(--gold); }
+  .pspeed-btn:hover:not(.active) { border-color: var(--ink-faint); }
+  .player-stop-btn { font-family: 'Courier Prime', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); background: none; border: 1px solid var(--rule); border-radius: 2px; padding: 5px 12px; cursor: pointer; transition: all 0.2s; }
+  .player-stop-btn:hover { border-color: var(--red); color: var(--red); }
+
+  .listen-voices {
+    border-top: 1px solid var(--rule);
+    padding-top: 16px;
+    margin-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .voice-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .voice-label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    min-width: 110px;
+    flex-shrink: 0;
+  }
+  .voice-select {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.92rem;
+    color: var(--ink);
+    background: var(--cream-dark);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 7px 12px;
+    flex: 1;
+    min-width: 200px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .voice-select:focus { border-color: var(--gold); }
+  .listen-loop-row {
+    border-top: 1px solid var(--rule);
+    padding-top: 16px;
+    margin-bottom: 0;
+  }
+  .listen-loop-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 9px 18px;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    background: none;
+    color: var(--ink-faint);
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    transition: all 0.2s;
+  }
+  .listen-loop-btn:hover { border-color: var(--gold); color: var(--ink); }
+  .listen-loop-btn.active { background: var(--gold-pale); border-color: var(--gold); color: var(--ink); }
+  .player-loop-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    background: none;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .player-loop-btn:hover { border-color: var(--gold); color: var(--ink); }
+  .player-loop-btn.active { background: var(--gold-pale); border-color: var(--gold); color: var(--ink); }
+
+  .voice-hint {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--ink-faint);
+    margin: 0;
+  }
+
+  @media (max-width: 600px) {
+    .page { padding: 28px 18px 60px; }
+    .masthead h1 { font-size: 1.8rem; }
+    .word-fr { font-size: 1.5rem; }
+    .word-card { padding: 24px 22px; }
+    .category-grid { grid-template-columns: 1fr 1fr; }
+    .gloss-row { grid-template-columns: 1fr; }
+    .gloss-left { border-right: none; border-bottom: 1px solid var(--rule); padding: 0 0 8px; margin-bottom: 8px; }
+    .gloss-right { padding-left: 0; }
+    .player-card { padding: 24px 20px; }
+    .player-main { font-size: 1.4rem; }
+    .player-controls { padding: 16px 20px 24px; }
+    .listen-setup { padding: 24px 20px; }
+    .ctrl-play { width: 80px; height: 80px; font-size: 30px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="masthead">
+    <div style="display:flex; justify-content:flex-start; margin-bottom:16px;">
+      <a href="f-index.html" style="font-family:'Courier Prime',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink-faint); text-decoration:none; border-bottom:1px solid var(--rule); padding-bottom:2px; transition:color 0.2s, border-color 0.2s;" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold)'" onmouseout="this.style.color='var(--ink-faint)';this.style.borderColor='var(--rule)'">← French Drills</a>
+    </div>
+    <div class="masthead-label">TCF Canada · Préparation</div>
+    <h1>Vocabulaire <em>par Thème</em></h1>
+    <div class="masthead-sub">50 mots essentiels · 10 thèmes · classés par difficulté</div>
+  </div>
+
+  <!-- MODE TABS -->
+  <div class="mode-tabs">
+    <button class="mode-tab active" id="tab-drill" onclick="switchMode('drill')">Drill</button>
+    <button class="mode-tab" id="tab-glossary" onclick="switchMode('glossary')">Glossaire</button>
+    <button class="mode-tab" id="tab-listen" onclick="switchMode('listen')">&#127911; Écoute</button>
+  </div>
+
+  <!-- ═══ DRILL PANEL ═══ -->
+  <div id="panel-drill">
+    <div class="noble-intro">
+      <p><strong>Comment utiliser ce drill :</strong> chaque carte présente un mot, son type grammatical, et une phrase typique du TCF. L'audio joue automatiquement. Utilisez <strong>Je connais</strong> pour avancer, <strong>À revoir</strong> pour revoir le mot plus tard. Filtrez par thème et par niveau de difficulté selon vos besoins du moment.</p>
+    </div>
+
+    <!-- Category selector -->
+    <div class="category-grid" id="category-grid"></div>
+
+    <!-- Difficulty filter -->
+    <div class="filter-row">
+      <span class="filter-label">Niveau :</span>
+      <button class="diff-btn essential active" onclick="toggleDiff('essential')">Essentiel</button>
+      <button class="diff-btn intermediate active" onclick="toggleDiff('intermediate')">Intermédiaire</button>
+      <button class="diff-btn advanced active" onclick="toggleDiff('advanced')">Avancé</button>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-wrap"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+
+    <!-- Score -->
+    <div class="score-bar">
+      <div class="score-item">Carte <span class="score-val" id="sc-current">—</span> / <span class="score-val" id="sc-total">—</span></div>
+      <div class="divider"></div>
+      <div class="score-item score-streak">Série&nbsp;<span class="score-val" id="sc-streak">0</span></div>
+      <div class="divider"></div>
+      <div class="score-item">Connus&nbsp;<span class="score-val" id="sc-known">0</span></div>
+      <div class="divider"></div>
+      <div class="score-item">À revoir&nbsp;<span class="score-val" id="sc-review" style="color:var(--red)">0</span></div>
+      <div id="audio-indicator" style="margin-left:auto;display:none">
+        <span class="audio-playing"><span class="audio-dot"></span><span class="audio-dot"></span><span class="audio-dot"></span>&nbsp;lecture</span>
+      </div>
+    </div>
+
+    <!-- Card area -->
+    <div id="card-area"></div>
+  </div>
+
+  <!-- ═══ GLOSSARY PANEL ═══ -->
+  <div id="panel-glossary" style="display:none">
+
+    <!-- Category pills -->
+    <div class="gloss-cat-nav" id="gloss-cat-nav"></div>
+
+    <!-- Diff filter -->
+    <div class="gloss-filter-row">
+      <span class="filter-label">Afficher :</span>
+      <button class="diff-btn essential active" id="gdiff-essential" onclick="toggleGlossDiff('essential')">Essentiel</button>
+      <button class="diff-btn intermediate active" id="gdiff-intermediate" onclick="toggleGlossDiff('intermediate')">Intermédiaire</button>
+      <button class="diff-btn advanced active" id="gdiff-advanced" onclick="toggleGlossDiff('advanced')">Avancé</button>
+    </div>
+
+    <!-- Legend -->
+    <div class="gloss-legend">
+      <div class="gloss-legend-item"><span class="gloss-diff-dot essential"></span>Essentiel</div>
+      <div class="gloss-legend-item"><span class="gloss-diff-dot intermediate"></span>Intermédiaire</div>
+      <div class="gloss-legend-item"><span class="gloss-diff-dot advanced"></span>Avancé</div>
+      <div class="gloss-legend-item" style="margin-left:auto; font-size:9px; opacity:0.6;">▶ mot &nbsp;·&nbsp; ▷ phrase</div>
+    </div>
+
+    <!-- Glossary content -->
+    <div id="gloss-content"></div>
+  </div>
+
+  <!-- ═══ LISTEN PANEL ═══ -->
+  <div id="panel-listen" style="display:none">
+
+    <div class="listen-setup" id="listen-setup">
+      <h2>Mode Écoute <em>— mains libres</em></h2>
+      <p>Choisissez un thème. Le mot en français, sa signification, la phrase TCF, et la traduction sont lus à la suite. Un thème complet dure environ 20–25 minutes.</p>
+
+      <div class="listen-cat-grid" id="listen-cat-grid"></div>
+
+      <div class="listen-options">
+        <span class="listen-opt-label">Vitesse :</span>
+        <button class="listen-speed-btn" id="lspeed-slow" onclick="setListenSpeed('slow')">Lente</button>
+        <button class="listen-speed-btn active" id="lspeed-normal" onclick="setListenSpeed('normal')">Normale</button>
+        <button class="listen-speed-btn" id="lspeed-fast" onclick="setListenSpeed('fast')">Rapide</button>
+      </div>
+
+      <div class="listen-voices" id="listen-voices">
+        <div class="voice-row">
+          <label class="voice-label">Voix française</label>
+          <select class="voice-select" id="voice-fr"></select>
+        </div>
+        <div class="voice-row">
+          <label class="voice-label">Voix anglaise</label>
+          <select class="voice-select" id="voice-en"></select>
+        </div>
+        <p class="voice-hint" id="voice-hint">Chargement des voix…</p>
+      </div>
+
+      <div class="listen-loop-row">
+        <button class="listen-loop-btn" id="listen-loop-btn" onclick="toggleListenLoop()">
+          <span id="listen-loop-icon">↺</span> Boucle automatique <span id="listen-loop-state">désactivée</span>
+        </button>
+      </div>
+
+      <button class="listen-start-btn" id="listen-start-btn" onclick="startListening()">▶ &nbsp; Commencer l'écoute</button>
+    </div>
+
+    <div class="listen-player" id="listen-player">
+      <div class="player-header">
+        <span class="player-cat-name" id="player-cat-name">—</span>
+        <span class="player-counter" id="player-counter">0 / 0</span>
+      </div>
+      <div class="player-progress-wrap">
+        <div class="player-progress-fill" id="player-progress-fill" style="width:0%"></div>
+      </div>
+      <div class="player-card">
+        <div class="player-stage" id="player-stage"></div>
+        <div class="player-main" id="player-main"></div>
+        <div class="player-sub" id="player-sub"></div>
+        <div class="player-type" id="player-type"></div>
+        <div class="player-speaking" id="player-speaking">
+          <span class="speak-bar"></span>
+          <span class="speak-bar"></span>
+          <span class="speak-bar"></span>
+          <span class="speak-bar"></span>
+          <span class="speak-bar"></span>
+          lecture en cours
+        </div>
+      </div>
+      <div class="player-controls">
+        <div class="player-btns">
+          <button class="ctrl-btn" onclick="listenPrev()" title="Mot précédent">
+            <span class="ctrl-icon">⏮</span>
+            <span class="ctrl-label">Précédent</span>
+          </button>
+          <button class="ctrl-play" id="ctrl-play-btn" onclick="toggleListenPlay()">▶</button>
+          <button class="ctrl-btn" onclick="listenNext()" title="Mot suivant">
+            <span class="ctrl-icon">⏭</span>
+            <span class="ctrl-label">Suivant</span>
+          </button>
+        </div>
+        <div class="player-meta">
+          <div class="player-speed-row">
+            <span class="player-speed-label">Vitesse :</span>
+            <button class="pspeed-btn" id="pspeed-slow" onclick="setPlayerSpeed('slow')">Lente</button>
+            <button class="pspeed-btn active" id="pspeed-normal" onclick="setPlayerSpeed('normal')">Normale</button>
+            <button class="pspeed-btn" id="pspeed-fast" onclick="setPlayerSpeed('fast')">Rapide</button>
+          </div>
+          <button class="player-loop-btn" id="player-loop-btn" onclick="toggleListenLoop()">↺ Boucle <span id="player-loop-state">off</span></button>
+          <button class="player-stop-btn" onclick="stopListening()">✕ Arrêter</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// DATA
+// ─────────────────────────────────────────────
+
+const CATEGORIES = {
+  daily: {
+    name: 'Vie quotidienne',
+    en: 'Daily Life',
+    words: [
+      { fr: 'le quotidien', type: 'n.m.', en: 'daily life / everyday reality', diff: 'essential', sentence: 'Dans son quotidien, il prend le métro chaque matin.', sen_en: 'In his daily life, he takes the metro every morning.' },
+      { fr: 'la routine', type: 'n.f.', en: 'routine', diff: 'essential', sentence: 'Elle a établi une routine stricte pour gérer son temps.', sen_en: 'She established a strict routine to manage her time.' },
+      { fr: 'se débrouiller', type: 'v.', en: 'to manage / to get by', diff: 'essential', sentence: 'Il faut savoir se débrouiller dans une nouvelle ville.', sen_en: 'You need to know how to get by in a new city.' },
+      { fr: 'les courses', type: 'n.f.pl.', en: 'errands / grocery shopping', diff: 'essential', sentence: 'Je fais les courses tous les samedis au marché.', sen_en: 'I do the grocery shopping every Saturday at the market.' },
+      { fr: 's\'occuper de', type: 'v.', en: 'to take care of', diff: 'essential', sentence: 'Elle s\'occupe de ses parents âgés le week-end.', sen_en: 'She takes care of her elderly parents on weekends.' },
+      { fr: 'disponible', type: 'adj.', en: 'available', diff: 'essential', sentence: 'Est-ce que vous êtes disponible demain matin ?', sen_en: 'Are you available tomorrow morning?' },
+      { fr: 'un rendez-vous', type: 'n.m.', en: 'appointment / meeting', diff: 'essential', sentence: 'Il a pris un rendez-vous chez le médecin pour la semaine prochaine.', sen_en: 'He made a doctor\'s appointment for next week.' },
+      { fr: 'la vie de tous les jours', type: 'expr.', en: 'everyday life', diff: 'essential', sentence: 'Dans la vie de tous les jours, on fait face à beaucoup d\'imprévus.', sen_en: 'In everyday life, we face many unexpected situations.' },
+      { fr: 'se lever tôt', type: 'expr.', en: 'to get up early', diff: 'essential', sentence: 'Pour éviter les embouteillages, il se lève tôt chaque jour.', sen_en: 'To avoid traffic jams, he gets up early every day.' },
+      { fr: 'les loisirs', type: 'n.m.pl.', en: 'leisure activities / free time', diff: 'essential', sentence: 'Il consacre ses loisirs à la lecture et au jardinage.', sen_en: 'He devotes his leisure time to reading and gardening.' },
+      { fr: 'gérer', type: 'v.', en: 'to manage / to handle', diff: 'intermediate', sentence: 'Il est difficile de gérer à la fois le travail et la famille.', sen_en: 'It is difficult to manage both work and family.' },
+      { fr: 'un mode de vie', type: 'n.m.', en: 'a lifestyle', diff: 'intermediate', sentence: 'Adopter un mode de vie sain est essentiel pour sa santé.', sen_en: 'Adopting a healthy lifestyle is essential for one\'s health.' },
+      { fr: 'les habitudes', type: 'n.f.pl.', en: 'habits', diff: 'intermediate', sentence: 'Changer ses habitudes alimentaires demande beaucoup de volonté.', sen_en: 'Changing one\'s eating habits requires a lot of willpower.' },
+      { fr: 'concilier', type: 'v.', en: 'to reconcile / balance', diff: 'intermediate', sentence: 'Il essaie de concilier vie professionnelle et vie personnelle.', sen_en: 'He tries to balance professional and personal life.' },
+      { fr: 'jongler', type: 'v.', en: 'to juggle (responsibilities)', diff: 'intermediate', sentence: 'Les parents jonglent souvent entre leurs obligations familiales et professionnelles.', sen_en: 'Parents often juggle family and professional obligations.' },
+      { fr: 'le bien-être', type: 'n.m.', en: 'well-being', diff: 'intermediate', sentence: 'Le bien-être au travail est devenu une priorité pour beaucoup d\'entreprises.', sen_en: 'Well-being at work has become a priority for many companies.' },
+      { fr: 'un imprévu', type: 'n.m.', en: 'an unexpected event', diff: 'intermediate', sentence: 'Un imprévu m\'a empêché d\'arriver à l\'heure.', sen_en: 'An unexpected event prevented me from arriving on time.' },
+      { fr: 's\'adapter', type: 'v.', en: 'to adapt', diff: 'intermediate', sentence: 'Il a dû s\'adapter rapidement à son nouvel environnement.', sen_en: 'He had to adapt quickly to his new environment.' },
+      { fr: 'au quotidien', type: 'expr.', en: 'on a daily basis', diff: 'intermediate', sentence: 'Au quotidien, elle utilise les transports en commun.', sen_en: 'On a daily basis, she uses public transport.' },
+      { fr: 'les démarches', type: 'n.f.pl.', en: 'administrative steps / procedures', diff: 'intermediate', sentence: 'Les démarches pour obtenir un permis de conduire sont longues.', sen_en: 'The steps to get a driver\'s licence are lengthy.' },
+      { fr: 'prioriser', type: 'v.', en: 'to prioritise', diff: 'advanced', sentence: 'Il faut savoir prioriser les tâches les plus urgentes.', sen_en: 'You need to know how to prioritise the most urgent tasks.' },
+      { fr: 'l\'autonomie', type: 'n.f.', en: 'autonomy / independence', diff: 'advanced', sentence: 'Vivre seul favorise l\'autonomie et la responsabilisation.', sen_en: 'Living alone fosters autonomy and accountability.' },
+      { fr: 'la précarité', type: 'n.f.', en: 'precariousness / financial instability', diff: 'advanced', sentence: 'La précarité touche de nombreuses familles dans les grandes villes.', sen_en: 'Financial instability affects many families in big cities.' },
+      { fr: 'contraignant(e)', type: 'adj.', en: 'constraining / demanding', diff: 'advanced', sentence: 'Ce travail est contraignant car il exige beaucoup de déplacements.', sen_en: 'This job is demanding because it requires a lot of travel.' },
+      { fr: 'le rythme de vie', type: 'n.m.', en: 'pace of life', diff: 'advanced', sentence: 'Le rythme de vie dans les grandes métropoles est souvent épuisant.', sen_en: 'The pace of life in major cities is often exhausting.' },
+      { fr: 'mettre en place', type: 'expr.', en: 'to put in place / implement', diff: 'advanced', sentence: 'Elle a mis en place une organisation stricte pour ne rien oublier.', sen_en: 'She put in place a strict system to not forget anything.' },
+      { fr: 'se remettre en question', type: 'expr.', en: 'to question oneself', diff: 'advanced', sentence: 'Il est important de se remettre en question pour progresser.', sen_en: 'It is important to question oneself in order to progress.' },
+      { fr: 'la surcharge', type: 'n.f.', en: 'overload', diff: 'advanced', sentence: 'La surcharge de travail peut provoquer un épuisement professionnel.', sen_en: 'Work overload can cause professional burnout.' },
+      { fr: 'équilibrer', type: 'v.', en: 'to balance', diff: 'advanced', sentence: 'Il tente d\'équilibrer ses dépenses avec son salaire modeste.', sen_en: 'He tries to balance his spending with his modest salary.' },
+      { fr: 'la qualité de vie', type: 'n.f.', en: 'quality of life', diff: 'advanced', sentence: 'La qualité de vie dans cette région attire de nombreux nouveaux résidents.', sen_en: 'The quality of life in this region attracts many new residents.' },
+      // filler to 50
+      { fr: 'un voisin', type: 'n.m.', en: 'a neighbour', diff: 'essential', sentence: 'Son voisin lui a proposé d\'arroser les plantes pendant ses vacances.', sen_en: 'His neighbour offered to water the plants during his holidays.' },
+      { fr: 'entretenir', type: 'v.', en: 'to maintain / keep up', diff: 'intermediate', sentence: 'Il est important d\'entretenir de bonnes relations avec ses voisins.', sen_en: 'It is important to maintain good relations with one\'s neighbours.' },
+      { fr: 'la corvée', type: 'n.f.', en: 'chore', diff: 'intermediate', sentence: 'Faire la vaisselle est une corvée qu\'elle déteste.', sen_en: 'Washing the dishes is a chore she hates.' },
+      { fr: 'un foyer', type: 'n.m.', en: 'a household / home', diff: 'essential', sentence: 'Ce foyer regroupe trois générations sous le même toit.', sen_en: 'This household brings together three generations under the same roof.' },
+      { fr: 'se reposer', type: 'v.', en: 'to rest', diff: 'essential', sentence: 'Le médecin lui a conseillé de se reposer quelques jours.', sen_en: 'The doctor advised him to rest for a few days.' },
+      { fr: 'pratique', type: 'adj.', en: 'practical / convenient', diff: 'essential', sentence: 'Habiter près du travail, c\'est très pratique.', sen_en: 'Living close to work is very convenient.' },
+      { fr: 'un quartier', type: 'n.m.', en: 'a neighbourhood', diff: 'essential', sentence: 'Elle habite dans un quartier calme et résidentiel.', sen_en: 'She lives in a quiet, residential neighbourhood.' },
+      { fr: 'la propreté', type: 'n.f.', en: 'cleanliness', diff: 'intermediate', sentence: 'La propreté des espaces communs est la responsabilité de tous.', sen_en: 'The cleanliness of shared spaces is everyone\'s responsibility.' },
+      { fr: 'aménager', type: 'v.', en: 'to fit out / arrange a space', diff: 'intermediate', sentence: 'Ils ont décidé d\'aménager le grenier en chambre supplémentaire.', sen_en: 'They decided to convert the attic into an extra bedroom.' },
+      { fr: 'une contrainte', type: 'n.f.', en: 'a constraint', diff: 'advanced', sentence: 'Les contraintes financières limitent ses choix de logement.', sen_en: 'Financial constraints limit his housing choices.' },
+      { fr: 'à portée de main', type: 'expr.', en: 'within reach / handy', diff: 'intermediate', sentence: 'Il garde toujours ses clés à portée de main.', sen_en: 'He always keeps his keys within reach.' },
+      { fr: 'faire face à', type: 'expr.', en: 'to face / deal with', diff: 'intermediate', sentence: 'Elle doit faire face à de nombreuses difficultés au quotidien.', sen_en: 'She has to deal with many difficulties on a daily basis.' },
+      { fr: 'une priorité', type: 'n.f.', en: 'a priority', diff: 'essential', sentence: 'La santé doit être notre première priorité.', sen_en: 'Health must be our top priority.' },
+      { fr: 'épuisant(e)', type: 'adj.', en: 'exhausting', diff: 'intermediate', sentence: 'Jongler entre deux emplois est épuisant sur le long terme.', sen_en: 'Juggling two jobs is exhausting in the long run.' },
+      { fr: 'le cadre de vie', type: 'n.m.', en: 'living environment / surroundings', diff: 'advanced', sentence: 'Un bon cadre de vie contribue au bien-être des habitants.', sen_en: 'A good living environment contributes to the residents\' well-being.' },
+      { fr: 'ponctuel(le)', type: 'adj.', en: 'punctual', diff: 'essential', sentence: 'Elle est connue pour être toujours ponctuelle à ses rendez-vous.', sen_en: 'She is known for always being punctual to her appointments.' },
+      { fr: 'multifonctionnel(le)', type: 'adj.', en: 'multifunctional', diff: 'advanced', sentence: 'Ce nouvel appareil multifonctionnel simplifie la vie domestique.', sen_en: 'This new multifunctional device simplifies domestic life.' },
+      { fr: 'interagir', type: 'v.', en: 'to interact', diff: 'advanced', sentence: 'Il est important d\'interagir avec ses collègues au bureau.', sen_en: 'It is important to interact with colleagues at the office.' },
+      { fr: 'un créneau', type: 'n.m.', en: 'a time slot', diff: 'advanced', sentence: 'Je n\'ai pas de créneau libre avant jeudi.', sen_en: 'I don\'t have a free time slot before Thursday.' },
+      { fr: 'assurer', type: 'v.', en: 'to ensure / handle', diff: 'intermediate', sentence: 'Il assure la garde des enfants le mercredi soir.', sen_en: 'He handles childcare on Wednesday evenings.' },
+      { fr: 'le quotidien numérique', type: 'n.m.', en: 'digital daily life', diff: 'advanced', sentence: 'Le quotidien numérique transforme nos façons de communiquer.', sen_en: 'Digital daily life is transforming the way we communicate.' },
+    ]
+  },
+
+  work: {
+    name: 'Travail',
+    en: 'Work',
+    words: [
+      { fr: 'un emploi', type: 'n.m.', en: 'a job', diff: 'essential', sentence: 'Elle a trouvé un emploi stable dans une grande entreprise.', sen_en: 'She found a stable job in a large company.' },
+      { fr: 'un poste', type: 'n.m.', en: 'a position / post', diff: 'essential', sentence: 'Il a postulé pour un poste de responsable des ressources humaines.', sen_en: 'He applied for a position as HR manager.' },
+      { fr: 'un entretien', type: 'n.m.', en: 'an interview', diff: 'essential', sentence: 'Elle a passé un entretien d\'embauche ce matin.', sen_en: 'She had a job interview this morning.' },
+      { fr: 'le salaire', type: 'n.m.', en: 'salary', diff: 'essential', sentence: 'Son salaire net est de deux mille euros par mois.', sen_en: 'His net salary is two thousand euros per month.' },
+      { fr: 'un contrat', type: 'n.m.', en: 'a contract', diff: 'essential', sentence: 'Elle a signé un contrat à durée indéterminée avec cette société.', sen_en: 'She signed a permanent contract with this company.' },
+      { fr: 'un CV', type: 'n.m.', en: 'a CV / résumé', diff: 'essential', sentence: 'Il a mis à jour son CV avant de postuler.', sen_en: 'He updated his CV before applying.' },
+      { fr: 'à temps plein', type: 'expr.', en: 'full-time', diff: 'essential', sentence: 'Elle travaille à temps plein depuis l\'obtention de son diplôme.', sen_en: 'She has been working full-time since graduating.' },
+      { fr: 'à temps partiel', type: 'expr.', en: 'part-time', diff: 'essential', sentence: 'Il travaille à temps partiel pour pouvoir s\'occuper de ses enfants.', sen_en: 'He works part-time so he can look after his children.' },
+      { fr: 'les congés', type: 'n.m.pl.', en: 'leave / holidays', diff: 'essential', sentence: 'Elle a pris une semaine de congés pour se reposer.', sen_en: 'She took a week of leave to rest.' },
+      { fr: 'une réunion', type: 'n.f.', en: 'a meeting', diff: 'essential', sentence: 'La réunion a été reportée au lendemain en raison d\'un imprévu.', sen_en: 'The meeting was postponed to the next day due to an unexpected event.' },
+      { fr: 'le télétravail', type: 'n.m.', en: 'remote work / working from home', diff: 'intermediate', sentence: 'Depuis la pandémie, le télétravail s\'est généralisé dans de nombreux secteurs.', sen_en: 'Since the pandemic, remote work has become widespread in many sectors.' },
+      { fr: 'une candidature', type: 'n.f.', en: 'a job application', diff: 'intermediate', sentence: 'Sa candidature a retenu l\'attention du jury.', sen_en: 'His application caught the attention of the panel.' },
+      { fr: 'les compétences', type: 'n.f.pl.', en: 'skills / competencies', diff: 'intermediate', sentence: 'Cette offre d\'emploi requiert des compétences en gestion de projet.', sen_en: 'This job offer requires project management skills.' },
+      { fr: 'la formation', type: 'n.f.', en: 'training / professional development', diff: 'intermediate', sentence: 'Il a suivi une formation pour obtenir une certification professionnelle.', sen_en: 'He completed a training course to obtain a professional certification.' },
+      { fr: 'un collègue', type: 'n.m.', en: 'a colleague', diff: 'essential', sentence: 'Elle entretient de bonnes relations avec ses collègues.', sen_en: 'She maintains good relations with her colleagues.' },
+      { fr: 'être licencié(e)', type: 'expr.', en: 'to be made redundant / fired', diff: 'intermediate', sentence: 'Il a été licencié suite à la restructuration de l\'entreprise.', sen_en: 'He was made redundant following the company restructuring.' },
+      { fr: 'démissionner', type: 'v.', en: 'to resign', diff: 'intermediate', sentence: 'Elle a décidé de démissionner pour créer sa propre entreprise.', sen_en: 'She decided to resign to start her own business.' },
+      { fr: 'une promotion', type: 'n.f.', en: 'a promotion', diff: 'intermediate', sentence: 'Il a obtenu une promotion après deux ans de bons résultats.', sen_en: 'He received a promotion after two years of good results.' },
+      { fr: 'la charge de travail', type: 'n.f.', en: 'workload', diff: 'intermediate', sentence: 'La charge de travail est trop lourde pour une seule personne.', sen_en: 'The workload is too heavy for one person.' },
+      { fr: 'un syndicat', type: 'n.m.', en: 'a trade union', diff: 'intermediate', sentence: 'Les syndicats ont négocié une augmentation salariale de cinq pour cent.', sen_en: 'Trade unions negotiated a five percent salary increase.' },
+      { fr: 'la reconversion', type: 'n.f.', en: 'career change / retraining', diff: 'advanced', sentence: 'À quarante ans, elle a entamé une reconversion professionnelle dans l\'informatique.', sen_en: 'At forty, she began a professional retraining in IT.' },
+      { fr: 'l\'épuisement professionnel', type: 'n.m.', en: 'professional burnout', diff: 'advanced', sentence: 'L\'épuisement professionnel touche de nombreux travailleurs dans les secteurs sous pression.', sen_en: 'Professional burnout affects many workers in high-pressure sectors.' },
+      { fr: 'la grève', type: 'n.f.', en: 'a strike', diff: 'advanced', sentence: 'Les employés ont voté pour une grève de quarante-huit heures.', sen_en: 'The employees voted for a forty-eight-hour strike.' },
+      { fr: 'un stage', type: 'n.m.', en: 'an internship / placement', diff: 'essential', sentence: 'Elle effectue un stage de six mois dans une agence de communication.', sen_en: 'She is doing a six-month internship at a communications agency.' },
+      { fr: 'le marché du travail', type: 'n.m.', en: 'the job market', diff: 'advanced', sentence: 'Le marché du travail est de plus en plus compétitif.', sen_en: 'The job market is increasingly competitive.' },
+      { fr: 'les conditions de travail', type: 'n.f.pl.', en: 'working conditions', diff: 'intermediate', sentence: 'Les employés réclament de meilleures conditions de travail.', sen_en: 'Employees are demanding better working conditions.' },
+      { fr: 'un secteur', type: 'n.m.', en: 'a sector / industry', diff: 'essential', sentence: 'Le secteur de la santé recrute massivement en ce moment.', sen_en: 'The health sector is recruiting heavily at the moment.' },
+      { fr: 'le chômage', type: 'n.m.', en: 'unemployment', diff: 'intermediate', sentence: 'Le taux de chômage a légèrement baissé ce trimestre.', sen_en: 'The unemployment rate decreased slightly this quarter.' },
+      { fr: 'indépendant(e)', type: 'adj.', en: 'self-employed / freelance', diff: 'intermediate', sentence: 'Il travaille en tant qu\'indépendant depuis cinq ans.', sen_en: 'He has been working as a freelancer for five years.' },
+      { fr: 'une entreprise', type: 'n.f.', en: 'a company / business', diff: 'essential', sentence: 'Elle dirige une petite entreprise spécialisée dans le design graphique.', sen_en: 'She runs a small company specialising in graphic design.' },
+      { fr: 'embaucher', type: 'v.', en: 'to hire', diff: 'essential', sentence: 'L\'entreprise a décidé d\'embaucher dix nouveaux employés.', sen_en: 'The company decided to hire ten new employees.' },
+      { fr: 'un avantage', type: 'n.m.', en: 'a benefit / advantage', diff: 'intermediate', sentence: 'Ce poste offre plusieurs avantages sociaux intéressants.', sen_en: 'This position offers several attractive employee benefits.' },
+      { fr: 'la hiérarchie', type: 'n.f.', en: 'the hierarchy / management chain', diff: 'advanced', sentence: 'Il faut toujours respecter la hiérarchie dans une grande organisation.', sen_en: 'You must always respect the hierarchy in a large organisation.' },
+      { fr: 'négocier', type: 'v.', en: 'to negotiate', diff: 'intermediate', sentence: 'Elle a su négocier une augmentation lors de son évaluation annuelle.', sen_en: 'She managed to negotiate a raise during her annual review.' },
+      { fr: 'le réseau professionnel', type: 'n.m.', en: 'professional network', diff: 'advanced', sentence: 'Développer son réseau professionnel est essentiel dans ce domaine.', sen_en: 'Developing your professional network is essential in this field.' },
+      { fr: 'la mobilité', type: 'n.f.', en: 'mobility / flexibility', diff: 'advanced', sentence: 'Ce poste exige une grande mobilité géographique.', sen_en: 'This position requires significant geographical mobility.' },
+      { fr: 'une tâche', type: 'n.f.', en: 'a task', diff: 'essential', sentence: 'Il a accompli toutes ses tâches dans les délais impartis.', sen_en: 'He completed all his tasks within the allotted deadlines.' },
+      { fr: 'un délai', type: 'n.m.', en: 'a deadline / timeframe', diff: 'intermediate', sentence: 'Il est crucial de respecter les délais dans ce projet.', sen_en: 'It is crucial to respect the deadlines in this project.' },
+      { fr: 'les ressources humaines', type: 'n.f.pl.', en: 'human resources (HR)', diff: 'intermediate', sentence: 'Le département des ressources humaines gère les recrutements.', sen_en: 'The human resources department manages recruitment.' },
+      { fr: 'la polyvalence', type: 'n.f.', en: 'versatility / adaptability', diff: 'advanced', sentence: 'La polyvalence est une qualité très appréciée par les employeurs.', sen_en: 'Versatility is a quality highly valued by employers.' },
+      { fr: 'intégrer', type: 'v.', en: 'to join / integrate into', diff: 'intermediate', sentence: 'Elle vient d\'intégrer une grande multinationale française.', sen_en: 'She has just joined a large French multinational.' },
+      { fr: 'le savoir-faire', type: 'n.m.', en: 'know-how / expertise', diff: 'advanced', sentence: 'Son savoir-faire technique lui a permis d\'évoluer rapidement.', sen_en: 'His technical know-how allowed him to advance quickly.' },
+      { fr: 'la prise de décision', type: 'n.f.', en: 'decision-making', diff: 'advanced', sentence: 'La prise de décision rapide est essentielle dans ce métier.', sen_en: 'Quick decision-making is essential in this profession.' },
+      { fr: 'un objectif', type: 'n.m.', en: 'a goal / objective', diff: 'essential', sentence: 'L\'objectif de cette réunion est de fixer les priorités du trimestre.', sen_en: 'The goal of this meeting is to set the quarter\'s priorities.' },
+      { fr: 'la productivité', type: 'n.f.', en: 'productivity', diff: 'intermediate', sentence: 'Le télétravail a augmenté la productivité dans plusieurs entreprises.', sen_en: 'Remote work has increased productivity in several companies.' },
+      { fr: 'superviser', type: 'v.', en: 'to supervise / oversee', diff: 'advanced', sentence: 'Elle supervise une équipe de quinze personnes au quotidien.', sen_en: 'She supervises a team of fifteen people on a daily basis.' },
+      { fr: 'un licenciement', type: 'n.m.', en: 'a layoff / dismissal', diff: 'advanced', sentence: 'Le plan de licenciement a touché cent employés de l\'usine.', sen_en: 'The layoff plan affected one hundred factory employees.' },
+      { fr: 'un bénévole', type: 'n.m.', en: 'a volunteer', diff: 'intermediate', sentence: 'L\'association est entièrement gérée par des bénévoles.', sen_en: 'The association is entirely run by volunteers.' },
+      { fr: 'une mutation', type: 'n.f.', en: 'a transfer (to another location)', diff: 'advanced', sentence: 'Il a accepté une mutation à Lyon pour progresser dans sa carrière.', sen_en: 'He accepted a transfer to Lyon to advance his career.' },
+      { fr: 'l\'ancienneté', type: 'n.f.', en: 'seniority / years of service', diff: 'advanced', sentence: 'Son ancienneté lui donne droit à des avantages supplémentaires.', sen_en: 'His seniority entitles him to additional benefits.' },
+    ]
+  },
+
+  housing: {
+    name: 'Logement',
+    en: 'Housing',
+    words: [
+      { fr: 'un loyer', type: 'n.m.', en: 'rent', diff: 'essential', sentence: 'Le loyer dans les grandes villes est souvent très élevé.', sen_en: 'Rent in big cities is often very high.' },
+      { fr: 'un appartement', type: 'n.m.', en: 'an apartment / flat', diff: 'essential', sentence: 'Elle loue un appartement de trois pièces en centre-ville.', sen_en: 'She rents a three-room flat in the city centre.' },
+      { fr: 'un propriétaire', type: 'n.m.', en: 'a landlord / owner', diff: 'essential', sentence: 'Le propriétaire a accepté de réparer la fuite d\'eau immédiatement.', sen_en: 'The landlord agreed to fix the water leak immediately.' },
+      { fr: 'un locataire', type: 'n.m.', en: 'a tenant', diff: 'essential', sentence: 'Le locataire doit respecter les règles de l\'immeuble.', sen_en: 'The tenant must respect the building rules.' },
+      { fr: 'un bail', type: 'n.m.', en: 'a lease', diff: 'essential', sentence: 'Le bail a été signé pour une durée d\'un an.', sen_en: 'The lease was signed for a period of one year.' },
+      { fr: 'les charges', type: 'n.f.pl.', en: 'utility charges / service charges', diff: 'essential', sentence: 'Les charges comprennent l\'eau et le chauffage collectif.', sen_en: 'The charges include water and collective heating.' },
+      { fr: 'une caution', type: 'n.f.', en: 'a deposit', diff: 'essential', sentence: 'Il a versé deux mois de caution pour garantir le paiement du loyer.', sen_en: 'He paid two months\' deposit to guarantee rent payment.' },
+      { fr: 'emménager', type: 'v.', en: 'to move in', diff: 'essential', sentence: 'Ils ont emménagé dans leur nouvel appartement le mois dernier.', sen_en: 'They moved into their new flat last month.' },
+      { fr: 'déménager', type: 'v.', en: 'to move out', diff: 'essential', sentence: 'Elle déménage dans une autre ville pour son nouveau travail.', sen_en: 'She is moving to another city for her new job.' },
+      { fr: 'les travaux', type: 'n.m.pl.', en: 'renovation works', diff: 'essential', sentence: 'Des travaux importants ont été réalisés dans l\'immeuble.', sen_en: 'Major renovation works were carried out in the building.' },
+      { fr: 'une résidence', type: 'n.f.', en: 'a residential building / housing complex', diff: 'intermediate', sentence: 'Il vit dans une résidence sécurisée à la périphérie de la ville.', sen_en: 'He lives in a secure residential complex on the outskirts of the city.' },
+      { fr: 'une copropriété', type: 'n.f.', en: 'a co-ownership / jointly owned building', diff: 'intermediate', sentence: 'Les décisions concernant la copropriété sont prises en assemblée générale.', sen_en: 'Decisions regarding the co-owned building are made at the general meeting.' },
+      { fr: 'une agence immobilière', type: 'n.f.', en: 'an estate agency', diff: 'intermediate', sentence: 'Elle a contacté plusieurs agences immobilières pour trouver un logement.', sen_en: 'She contacted several estate agencies to find accommodation.' },
+      { fr: 'le quartier', type: 'n.m.', en: 'the neighbourhood', diff: 'essential', sentence: 'Le quartier est bien desservi par les transports en commun.', sen_en: 'The neighbourhood is well served by public transport.' },
+      { fr: 'une colocation', type: 'n.f.', en: 'a house share / flat share', diff: 'intermediate', sentence: 'La colocation est une solution économique pour les étudiants.', sen_en: 'House sharing is an economical solution for students.' },
+      { fr: 'HLM (habitation à loyer modéré)', type: 'n.f.', en: 'social housing / council housing', diff: 'intermediate', sentence: 'Elle attend depuis deux ans une attribution d\'HLM.', sen_en: 'She has been waiting for two years for a social housing allocation.' },
+      { fr: 'un dossier de location', type: 'n.m.', en: 'a rental application file', diff: 'intermediate', sentence: 'Son dossier de location a été accepté par le propriétaire.', sen_en: 'His rental application file was accepted by the landlord.' },
+      { fr: 'les voisins', type: 'n.m.pl.', en: 'the neighbours', diff: 'essential', sentence: 'Elle a porté plainte contre ses voisins pour nuisances sonores.', sen_en: 'She filed a complaint against her neighbours for noise disturbances.' },
+      { fr: 'l\'entretien', type: 'n.m.', en: 'maintenance', diff: 'intermediate', sentence: 'L\'entretien de la chaudière est à la charge du propriétaire.', sen_en: 'Boiler maintenance is the landlord\'s responsibility.' },
+      { fr: 'une superficie', type: 'n.f.', en: 'a surface area', diff: 'intermediate', sentence: 'L\'appartement a une superficie de soixante-dix mètres carrés.', sen_en: 'The flat has a surface area of seventy square metres.' },
+      { fr: 'le marché immobilier', type: 'n.m.', en: 'the property market', diff: 'advanced', sentence: 'Le marché immobilier est en baisse dans plusieurs grandes villes.', sen_en: 'The property market is declining in several major cities.' },
+      { fr: 'insalubre', type: 'adj.', en: 'uninhabitable / unsanitary', diff: 'advanced', sentence: 'Le logement a été déclaré insalubre par les autorités sanitaires.', sen_en: 'The housing was declared uninhabitable by health authorities.' },
+      { fr: 'la rénovation énergétique', type: 'n.f.', en: 'energy renovation / retrofitting', diff: 'advanced', sentence: 'Des aides gouvernementales encouragent la rénovation énergétique des logements.', sen_en: 'Government subsidies encourage energy renovation of housing.' },
+      { fr: 'une résidence principale', type: 'n.f.', en: 'a primary residence', diff: 'intermediate', sentence: 'Il déclare cet appartement comme résidence principale.', sen_en: 'He declares this flat as his primary residence.' },
+      { fr: 'une quittance de loyer', type: 'n.f.', en: 'a rent receipt', diff: 'advanced', sentence: 'Le propriétaire est tenu de fournir une quittance de loyer chaque mois.', sen_en: 'The landlord is required to provide a rent receipt each month.' },
+      { fr: 'un état des lieux', type: 'n.m.', en: 'a property inspection report', diff: 'intermediate', sentence: 'L\'état des lieux d\'entrée doit être signé par le locataire et le propriétaire.', sen_en: 'The entry inspection report must be signed by tenant and landlord.' },
+      { fr: 'la garantie', type: 'n.f.', en: 'a guarantee / warranty', diff: 'intermediate', sentence: 'Les équipements de cuisine sont couverts par une garantie de deux ans.', sen_en: 'The kitchen appliances are covered by a two-year warranty.' },
+      { fr: 'aménager', type: 'v.', en: 'to fit out / furnish', diff: 'intermediate', sentence: 'Ils ont décidé d\'aménager le salon avec des meubles modernes.', sen_en: 'They decided to furnish the living room with modern furniture.' },
+      { fr: 'un immeuble', type: 'n.m.', en: 'a building / block of flats', diff: 'essential', sentence: 'L\'immeuble comporte dix étages et un parking souterrain.', sen_en: 'The building has ten floors and an underground car park.' },
+      { fr: 'un studio', type: 'n.m.', en: 'a studio flat', diff: 'essential', sentence: 'Il loue un studio meublé près de son université.', sen_en: 'He rents a furnished studio flat near his university.' },
+      { fr: 'la gestion locative', type: 'n.f.', en: 'rental management', diff: 'advanced', sentence: 'Il a confié la gestion locative de son appartement à une agence.', sen_en: 'He entrusted the rental management of his flat to an agency.' },
+      { fr: 'un sous-sol', type: 'n.m.', en: 'a basement', diff: 'intermediate', sentence: 'Le sous-sol est utilisé comme cave et rangement.', sen_en: 'The basement is used as a cellar and storage space.' },
+      { fr: 'une terrasse', type: 'n.f.', en: 'a terrace / balcony terrace', diff: 'essential', sentence: 'Cet appartement avec terrasse est idéal pour l\'été.', sen_en: 'This flat with a terrace is ideal for summer.' },
+      { fr: 'une nuisance', type: 'n.f.', en: 'a nuisance / disturbance', diff: 'advanced', sentence: 'Les nuisances sonores nocturnes sont punies par la loi.', sen_en: 'Nocturnal noise nuisances are punishable by law.' },
+      { fr: 'accessible', type: 'adj.', en: 'accessible / affordable', diff: 'essential', sentence: 'Le logement social doit être accessible à tous les revenus.', sen_en: 'Social housing must be accessible to all income levels.' },
+      { fr: 'refaire', type: 'v.', en: 'to redo / renovate', diff: 'intermediate', sentence: 'Ils ont refait toute la plomberie avant de mettre en location.', sen_en: 'They redid all the plumbing before renting out.' },
+      { fr: 'un syndicat de copropriété', type: 'n.m.', en: 'a homeowners\' association', diff: 'advanced', sentence: 'Le syndicat de copropriété vote le budget annuel des charges.', sen_en: 'The homeowners\' association votes on the annual budget for charges.' },
+      { fr: 'se loger', type: 'v.', en: 'to find accommodation', diff: 'essential', sentence: 'Il est difficile de se loger dans les grandes villes avec un petit budget.', sen_en: 'It is difficult to find accommodation in big cities on a small budget.' },
+      { fr: 'le chauffage', type: 'n.m.', en: 'heating', diff: 'essential', sentence: 'Le chauffage est inclus dans les charges mensuelles.', sen_en: 'Heating is included in the monthly charges.' },
+      { fr: 'une pièce', type: 'n.f.', en: 'a room', diff: 'essential', sentence: 'L\'appartement comprend quatre pièces dont deux chambres.', sen_en: 'The flat consists of four rooms including two bedrooms.' },
+      { fr: 'l\'isolation', type: 'n.f.', en: 'insulation', diff: 'intermediate', sentence: 'Une bonne isolation thermique permet de réduire les factures d\'énergie.', sen_en: 'Good thermal insulation helps reduce energy bills.' },
+      { fr: 'meublé(e)', type: 'adj.', en: 'furnished', diff: 'essential', sentence: 'Elle cherche un appartement meublé pour une courte durée.', sen_en: 'She is looking for a furnished flat for a short period.' },
+      { fr: 'sans-abri', type: 'n.m./adj.', en: 'homeless', diff: 'advanced', sentence: 'Des associations aident les sans-abri à trouver un logement d\'urgence.', sen_en: 'Associations help the homeless find emergency shelter.' },
+      { fr: 'la résiliation', type: 'n.f.', en: 'termination (of a lease)', diff: 'advanced', sentence: 'La résiliation du bail doit être faite avec un préavis d\'un mois.', sen_en: 'Termination of the lease must be done with one month\'s notice.' },
+      { fr: 'un préavis', type: 'n.m.', en: 'a notice period', diff: 'intermediate', sentence: 'Elle a donné son préavis de départ il y a un mois.', sen_en: 'She gave her notice of departure one month ago.' },
+      { fr: 'la taxe d\'habitation', type: 'n.f.', en: 'housing tax', diff: 'advanced', sentence: 'La taxe d\'habitation a été supprimée pour la majorité des ménages.', sen_en: 'The housing tax was abolished for the majority of households.' },
+      { fr: 'les commodités', type: 'n.f.pl.', en: 'amenities / conveniences', diff: 'intermediate', sentence: 'Cet appartement est proche de toutes les commodités.', sen_en: 'This flat is close to all amenities.' },
+      { fr: 'un appartement de fonction', type: 'n.m.', en: 'a company-provided flat', diff: 'advanced', sentence: 'Le directeur bénéficie d\'un appartement de fonction au centre-ville.', sen_en: 'The director benefits from a company-provided flat in the city centre.' },
+      { fr: 'acquérir', type: 'v.', en: 'to acquire / purchase', diff: 'advanced', sentence: 'Ils ont décidé d\'acquérir un bien immobilier en banlieue.', sen_en: 'They decided to purchase a property in the suburbs.' },
+      { fr: 'une annonce', type: 'n.f.', en: 'an advertisement / listing', diff: 'essential', sentence: 'Elle a répondu à plusieurs annonces de location en ligne.', sen_en: 'She responded to several rental listings online.' },
+      { fr: 'rénover', type: 'v.', en: 'to renovate', diff: 'intermediate', sentence: 'Ils projettent de rénover la cuisine avant la mise en vente.', sen_en: 'They plan to renovate the kitchen before putting it up for sale.' },
+    ]
+  },
+
+  health: {
+    name: 'Santé',
+    en: 'Health',
+    words: [
+      { fr: 'un médecin', type: 'n.m.', en: 'a doctor', diff: 'essential', sentence: 'Elle a consulté son médecin généraliste pour des douleurs au dos.', sen_en: 'She consulted her GP for back pain.' },
+      { fr: 'une ordonnance', type: 'n.f.', en: 'a prescription', diff: 'essential', sentence: 'Le médecin lui a remis une ordonnance pour des antibiotiques.', sen_en: 'The doctor gave him a prescription for antibiotics.' },
+      { fr: 'un médicament', type: 'n.m.', en: 'a medicine / medication', diff: 'essential', sentence: 'Il prend ce médicament deux fois par jour pendant une semaine.', sen_en: 'He takes this medication twice a day for one week.' },
+      { fr: 'une mutuelle', type: 'n.f.', en: 'supplementary health insurance', diff: 'essential', sentence: 'Sa mutuelle rembourse la totalité des frais dentaires.', sen_en: 'His supplementary health insurance covers all dental costs.' },
+      { fr: 'les urgences', type: 'n.f.pl.', en: 'the emergency room / A&E', diff: 'essential', sentence: 'Il a été transporté aux urgences après sa chute.', sen_en: 'He was taken to the emergency room after his fall.' },
+      { fr: 'un symptôme', type: 'n.m.', en: 'a symptom', diff: 'essential', sentence: 'Les principaux symptômes de cette maladie sont la fièvre et la fatigue.', sen_en: 'The main symptoms of this disease are fever and fatigue.' },
+      { fr: 'une consultation', type: 'n.f.', en: 'a medical consultation', diff: 'essential', sentence: 'Il a pris rendez-vous pour une consultation le vendredi matin.', sen_en: 'He made an appointment for a consultation on Friday morning.' },
+      { fr: 'la sécurité sociale', type: 'n.f.', en: 'national health insurance / social security', diff: 'essential', sentence: 'La Sécurité sociale rembourse une partie des frais médicaux.', sen_en: 'National health insurance reimburses part of the medical costs.' },
+      { fr: 'un bilan de santé', type: 'n.m.', en: 'a health check-up', diff: 'essential', sentence: 'Il est conseillé de faire un bilan de santé complet chaque année.', sen_en: 'It is advisable to have a full health check-up every year.' },
+      { fr: 'une intervention chirurgicale', type: 'n.f.', en: 'a surgical procedure / operation', diff: 'intermediate', sentence: 'L\'intervention chirurgicale a duré trois heures.', sen_en: 'The surgical procedure lasted three hours.' },
+      { fr: 'un spécialiste', type: 'n.m.', en: 'a specialist', diff: 'essential', sentence: 'Son médecin l\'a orienté vers un spécialiste cardiologue.', sen_en: 'His doctor referred him to a cardiologist specialist.' },
+      { fr: 'la prévention', type: 'n.f.', en: 'prevention', diff: 'intermediate', sentence: 'Les campagnes de prévention ont réduit le taux de tabagisme.', sen_en: 'Prevention campaigns have reduced smoking rates.' },
+      { fr: 'un dépistage', type: 'n.m.', en: 'a screening / test', diff: 'intermediate', sentence: 'Un dépistage précoce du cancer augmente les chances de guérison.', sen_en: 'Early cancer screening increases the chances of recovery.' },
+      { fr: 'une hospitalisation', type: 'n.f.', en: 'a hospital stay / hospitalisation', diff: 'intermediate', sentence: 'Son hospitalisation a duré cinq jours après l\'opération.', sen_en: 'His hospitalisation lasted five days after the operation.' },
+      { fr: 'la convalescence', type: 'n.f.', en: 'convalescence / recovery', diff: 'intermediate', sentence: 'Elle est en convalescence et ne peut pas travailler pendant trois semaines.', sen_en: 'She is convalescing and cannot work for three weeks.' },
+      { fr: 'le remboursement', type: 'n.m.', en: 'reimbursement', diff: 'intermediate', sentence: 'Le remboursement des soins dentaires est insuffisant en France.', sen_en: 'The reimbursement of dental care is insufficient in France.' },
+      { fr: 'une allergie', type: 'n.f.', en: 'an allergy', diff: 'essential', sentence: 'Il est allergique aux arachides et porte toujours un auto-injecteur.', sen_en: 'He is allergic to peanuts and always carries an auto-injector.' },
+      { fr: 'chronique', type: 'adj.', en: 'chronic', diff: 'intermediate', sentence: 'Il souffre d\'une douleur chronique au genou depuis plusieurs années.', sen_en: 'He has been suffering from chronic knee pain for several years.' },
+      { fr: 'le dossier médical', type: 'n.m.', en: 'the medical file / records', diff: 'intermediate', sentence: 'Le médecin consulte son dossier médical avant chaque consultation.', sen_en: 'The doctor consults his medical file before each appointment.' },
+      { fr: 'une épidémie', type: 'n.f.', en: 'an epidemic', diff: 'intermediate', sentence: 'Une épidémie de grippe a touché plusieurs régions cet hiver.', sen_en: 'A flu epidemic affected several regions this winter.' },
+      { fr: 'la santé mentale', type: 'n.f.', en: 'mental health', diff: 'advanced', sentence: 'La santé mentale est enfin reconnue comme une priorité par les pouvoirs publics.', sen_en: 'Mental health is finally recognised as a priority by public authorities.' },
+      { fr: 'l\'obésité', type: 'n.f.', en: 'obesity', diff: 'advanced', sentence: 'L\'obésité est un problème de santé publique qui touche des millions de personnes.', sen_en: 'Obesity is a public health problem affecting millions of people.' },
+      { fr: 'le désert médical', type: 'n.m.', en: 'medical desert (area lacking doctors)', diff: 'advanced', sentence: 'Les déserts médicaux rendent difficile l\'accès aux soins en milieu rural.', sen_en: 'Medical deserts make it difficult to access healthcare in rural areas.' },
+      { fr: 'une pathologie', type: 'n.f.', en: 'a pathology / condition', diff: 'advanced', sentence: 'Cette pathologie nécessite un traitement à long terme.', sen_en: 'This condition requires long-term treatment.' },
+      { fr: 'un traitement', type: 'n.m.', en: 'a treatment', diff: 'essential', sentence: 'Le traitement prescrit dure six semaines.', sen_en: 'The prescribed treatment lasts six weeks.' },
+      { fr: 'guérir', type: 'v.', en: 'to recover / heal', diff: 'essential', sentence: 'Il a complètement guéri grâce à un traitement adapté.', sen_en: 'He fully recovered thanks to an appropriate treatment.' },
+      { fr: 'les soins', type: 'n.m.pl.', en: 'care / treatment', diff: 'essential', sentence: 'Les soins à domicile sont de plus en plus répandus.', sen_en: 'Home care is becoming increasingly widespread.' },
+      { fr: 'un infirmier', type: 'n.m.', en: 'a nurse', diff: 'essential', sentence: 'L\'infirmier passe chaque matin pour faire les piqûres.', sen_en: 'The nurse comes every morning to give the injections.' },
+      { fr: 'une radiographie', type: 'n.f.', en: 'an X-ray', diff: 'intermediate', sentence: 'Le médecin a prescrit une radiographie du genou.', sen_en: 'The doctor prescribed an X-ray of the knee.' },
+      { fr: 'une analyse de sang', type: 'n.f.', en: 'a blood test', diff: 'intermediate', sentence: 'Les résultats de son analyse de sang sont normaux.', sen_en: 'The results of his blood test are normal.' },
+      { fr: 'la tension artérielle', type: 'n.f.', en: 'blood pressure', diff: 'intermediate', sentence: 'Son médecin surveille régulièrement sa tension artérielle.', sen_en: 'His doctor regularly monitors his blood pressure.' },
+      { fr: 'le diabète', type: 'n.m.', en: 'diabetes', diff: 'intermediate', sentence: 'Elle gère son diabète grâce à un régime alimentaire strict.', sen_en: 'She manages her diabetes through a strict diet.' },
+      { fr: 'une fracture', type: 'n.f.', en: 'a fracture', diff: 'essential', sentence: 'Il a eu une fracture du poignet lors de sa chute.', sen_en: 'He suffered a wrist fracture during his fall.' },
+      { fr: 'la nutrition', type: 'n.f.', en: 'nutrition', diff: 'intermediate', sentence: 'Une bonne nutrition est essentielle pour rester en forme.', sen_en: 'Good nutrition is essential for staying fit.' },
+      { fr: 'le tabagisme', type: 'n.m.', en: 'smoking (habit)', diff: 'intermediate', sentence: 'Le tabagisme est la première cause de cancer du poumon.', sen_en: 'Smoking is the leading cause of lung cancer.' },
+      { fr: 'la dépendance', type: 'n.f.', en: 'dependency / addiction', diff: 'advanced', sentence: 'La dépendance aux écrans est un phénomène en forte croissance chez les jeunes.', sen_en: 'Screen addiction is a rapidly growing phenomenon among young people.' },
+      { fr: 'en bonne forme', type: 'expr.', en: 'in good shape / healthy', diff: 'essential', sentence: 'Il pratique le sport régulièrement pour rester en bonne forme.', sen_en: 'He exercises regularly to stay in good shape.' },
+      { fr: 'une urgence médicale', type: 'n.f.', en: 'a medical emergency', diff: 'intermediate', sentence: 'En cas d\'urgence médicale, appelez le numéro quinze.', sen_en: 'In case of a medical emergency, call number fifteen.' },
+      { fr: 'l\'accès aux soins', type: 'n.m.', en: 'access to healthcare', diff: 'advanced', sentence: 'L\'accès aux soins reste inégal selon les régions.', sen_en: 'Access to healthcare remains unequal depending on the region.' },
+      { fr: 'la mortalité', type: 'n.f.', en: 'mortality', diff: 'advanced', sentence: 'Le taux de mortalité infantile a baissé grâce aux vaccinations.', sen_en: 'The infant mortality rate has decreased thanks to vaccinations.' },
+      { fr: 'opérer', type: 'v.', en: 'to operate on', diff: 'intermediate', sentence: 'Les chirurgiens l\'ont opéré d\'urgence hier soir.', sen_en: 'The surgeons operated on him as an emergency last night.' },
+      { fr: 'la médecine préventive', type: 'n.f.', en: 'preventive medicine', diff: 'advanced', sentence: 'La médecine préventive vise à éviter l\'apparition des maladies.', sen_en: 'Preventive medicine aims to prevent the onset of diseases.' },
+      { fr: 'un vaccin', type: 'n.m.', en: 'a vaccine', diff: 'essential', sentence: 'La campagne de vaccination a permis d\'endiguer la propagation du virus.', sen_en: 'The vaccination campaign helped contain the spread of the virus.' },
+      { fr: 'la grippe', type: 'n.f.', en: 'the flu', diff: 'essential', sentence: 'Il est fortement recommandé de se vacciner contre la grippe chaque automne.', sen_en: 'It is strongly recommended to get vaccinated against the flu each autumn.' },
+      { fr: 'une inflammation', type: 'n.f.', en: 'an inflammation', diff: 'intermediate', sentence: 'Le médecin a diagnostiqué une inflammation du genou.', sen_en: 'The doctor diagnosed an inflammation of the knee.' },
+      { fr: 'le droit à la santé', type: 'n.m.', en: 'the right to health', diff: 'advanced', sentence: 'Le droit à la santé est inscrit dans la Constitution française.', sen_en: 'The right to health is enshrined in the French Constitution.' },
+      { fr: 'une clinique', type: 'n.f.', en: 'a clinic / private hospital', diff: 'essential', sentence: 'L\'opération a eu lieu dans une clinique spécialisée.', sen_en: 'The operation took place in a specialised clinic.' },
+      { fr: 'le taux de remboursement', type: 'n.m.', en: 'the reimbursement rate', diff: 'advanced', sentence: 'Le taux de remboursement des médicaments génériques est de soixante-cinq pour cent.', sen_en: 'The reimbursement rate for generic medications is sixty-five percent.' },
+      { fr: 'un généraliste', type: 'n.m.', en: 'a GP / general practitioner', diff: 'essential', sentence: 'Elle voit régulièrement son généraliste pour un suivi annuel.', sen_en: 'She regularly sees her GP for an annual check-up.' },
+      { fr: 'le bien-être physique', type: 'n.m.', en: 'physical well-being', diff: 'intermediate', sentence: 'Le bien-être physique dépend de l\'alimentation, du sommeil et de l\'exercice.', sen_en: 'Physical well-being depends on diet, sleep, and exercise.' },
+      { fr: 'une maladie chronique', type: 'n.f.', en: 'a chronic disease', diff: 'advanced', sentence: 'Les maladies chroniques nécessitent un suivi médical régulier.', sen_en: 'Chronic diseases require regular medical monitoring.' },
+    ]
+  },
+
+  environment: {
+    name: 'Environnement',
+    en: 'Environment',
+    words: [
+      { fr: 'le changement climatique', type: 'n.m.', en: 'climate change', diff: 'essential', sentence: 'Le changement climatique menace la biodiversité sur tous les continents.', sen_en: 'Climate change threatens biodiversity on all continents.' },
+      { fr: 'les énergies renouvelables', type: 'n.f.pl.', en: 'renewable energies', diff: 'essential', sentence: 'Le gouvernement investit massivement dans les énergies renouvelables.', sen_en: 'The government is investing heavily in renewable energies.' },
+      { fr: 'la pollution', type: 'n.f.', en: 'pollution', diff: 'essential', sentence: 'La pollution atmosphérique est particulièrement élevée dans les grandes villes.', sen_en: 'Air pollution is particularly high in big cities.' },
+      { fr: 'le réchauffement climatique', type: 'n.m.', en: 'global warming', diff: 'essential', sentence: 'Le réchauffement climatique entraîne des phénomènes météorologiques extrêmes.', sen_en: 'Global warming leads to extreme weather phenomena.' },
+      { fr: 'le développement durable', type: 'n.m.', en: 'sustainable development', diff: 'essential', sentence: 'Les entreprises sont encouragées à adopter des pratiques de développement durable.', sen_en: 'Companies are encouraged to adopt sustainable development practices.' },
+      { fr: 'le recyclage', type: 'n.m.', en: 'recycling', diff: 'essential', sentence: 'Le taux de recyclage a augmenté grâce aux nouvelles réglementations.', sen_en: 'The recycling rate has increased thanks to new regulations.' },
+      { fr: 'les émissions de CO₂', type: 'n.f.pl.', en: 'CO₂ emissions', diff: 'essential', sentence: 'Réduire les émissions de CO₂ est l\'un des objectifs des accords de Paris.', sen_en: 'Reducing CO₂ emissions is one of the objectives of the Paris Agreement.' },
+      { fr: 'la biodiversité', type: 'n.f.', en: 'biodiversity', diff: 'intermediate', sentence: 'La destruction des forêts tropicales menace gravement la biodiversité.', sen_en: 'The destruction of tropical forests seriously threatens biodiversity.' },
+      { fr: 'une catastrophe naturelle', type: 'n.f.', en: 'a natural disaster', diff: 'essential', sentence: 'Cette région est régulièrement touchée par des catastrophes naturelles.', sen_en: 'This region is regularly affected by natural disasters.' },
+      { fr: 'les déchets', type: 'n.m.pl.', en: 'waste / rubbish', diff: 'essential', sentence: 'Il est interdit de jeter des déchets dans les espaces naturels.', sen_en: 'It is forbidden to throw waste in natural spaces.' },
+      { fr: 'l\'empreinte carbone', type: 'n.f.', en: 'the carbon footprint', diff: 'intermediate', sentence: 'Prendre l\'avion augmente considérablement son empreinte carbone.', sen_en: 'Taking a plane considerably increases one\'s carbon footprint.' },
+      { fr: 'une sécheresse', type: 'n.f.', en: 'a drought', diff: 'intermediate', sentence: 'La sécheresse estivale a gravement affecté les récoltes cette année.', sen_en: 'The summer drought seriously affected crops this year.' },
+      { fr: 'une inondation', type: 'n.f.', en: 'a flood', diff: 'essential', sentence: 'Les inondations ont provoqué l\'évacuation de plusieurs milliers de personnes.', sen_en: 'The floods caused the evacuation of several thousand people.' },
+      { fr: 'la déforestation', type: 'n.f.', en: 'deforestation', diff: 'intermediate', sentence: 'La déforestation de l\'Amazonie est un sujet de préoccupation mondiale.', sen_en: 'The deforestation of the Amazon is a global concern.' },
+      { fr: 'un écosystème', type: 'n.m.', en: 'an ecosystem', diff: 'intermediate', sentence: 'La disparition des abeilles menace de nombreux écosystèmes.', sen_en: 'The disappearance of bees threatens many ecosystems.' },
+      { fr: 'une espèce menacée', type: 'n.f.', en: 'an endangered species', diff: 'intermediate', sentence: 'Le gouvernement prend des mesures pour protéger les espèces menacées.', sen_en: 'The government is taking measures to protect endangered species.' },
+      { fr: 'les pesticides', type: 'n.m.pl.', en: 'pesticides', diff: 'intermediate', sentence: 'L\'utilisation des pesticides est de plus en plus réglementée.', sen_en: 'The use of pesticides is increasingly regulated.' },
+      { fr: 'la transition énergétique', type: 'n.f.', en: 'the energy transition', diff: 'advanced', sentence: 'La transition énergétique représente un enjeu économique et social majeur.', sen_en: 'The energy transition represents a major economic and social challenge.' },
+      { fr: 'polluant(e)', type: 'adj.', en: 'polluting', diff: 'essential', sentence: 'Les véhicules diesel sont considérés comme très polluants en milieu urbain.', sen_en: 'Diesel vehicles are considered highly polluting in urban areas.' },
+      { fr: 'la fonte des glaces', type: 'n.f.', en: 'the melting of ice', diff: 'intermediate', sentence: 'La fonte des glaces arctiques accélère la montée du niveau des mers.', sen_en: 'The melting of Arctic ice accelerates the rise in sea levels.' },
+      { fr: 'l\'énergie solaire', type: 'n.f.', en: 'solar energy', diff: 'essential', sentence: 'Les panneaux solaires permettent de produire de l\'énergie propre.', sen_en: 'Solar panels allow the production of clean energy.' },
+      { fr: 'l\'éolien(ne)', type: 'adj./n.m.', en: 'wind (energy)', diff: 'intermediate', sentence: 'Les éoliennes offshore jouent un rôle croissant dans la production d\'électricité.', sen_en: 'Offshore wind turbines play a growing role in electricity production.' },
+      { fr: 'la conscience écologique', type: 'n.f.', en: 'ecological awareness', diff: 'advanced', sentence: 'La conscience écologique se développe surtout chez les jeunes générations.', sen_en: 'Ecological awareness is developing especially among younger generations.' },
+      { fr: 'les gaz à effet de serre', type: 'n.m.pl.', en: 'greenhouse gases', diff: 'intermediate', sentence: 'La réduction des gaz à effet de serre est urgente selon les scientifiques.', sen_en: 'Reducing greenhouse gases is urgent according to scientists.' },
+      { fr: 'durable', type: 'adj.', en: 'sustainable', diff: 'essential', sentence: 'Il faut adopter des habitudes de consommation plus durables.', sen_en: 'We need to adopt more sustainable consumption habits.' },
+      { fr: 'la réserve naturelle', type: 'n.f.', en: 'a nature reserve', diff: 'intermediate', sentence: 'Cette réserve naturelle protège des espèces animales rares.', sen_en: 'This nature reserve protects rare animal species.' },
+      { fr: 'le tri sélectif', type: 'n.m.', en: 'selective sorting / waste sorting', diff: 'essential', sentence: 'Le tri sélectif est obligatoire dans toutes les communes.', sen_en: 'Waste sorting is mandatory in all municipalities.' },
+      { fr: 'une marée noire', type: 'n.f.', en: 'an oil spill', diff: 'advanced', sentence: 'La marée noire a détruit plusieurs kilomètres de côtes.', sen_en: 'The oil spill destroyed several kilometres of coastline.' },
+      { fr: 'la surpopulation', type: 'n.f.', en: 'overpopulation', diff: 'advanced', sentence: 'La surpopulation aggrave les problèmes de ressources naturelles.', sen_en: 'Overpopulation worsens natural resource problems.' },
+      { fr: 'une ressource naturelle', type: 'n.f.', en: 'a natural resource', diff: 'intermediate', sentence: 'L\'eau est une ressource naturelle de plus en plus rare.', sen_en: 'Water is an increasingly scarce natural resource.' },
+      { fr: 'l\'agriculture biologique', type: 'n.f.', en: 'organic farming', diff: 'intermediate', sentence: 'L\'agriculture biologique limite l\'usage de produits chimiques.', sen_en: 'Organic farming limits the use of chemical products.' },
+      { fr: 'le compostage', type: 'n.m.', en: 'composting', diff: 'intermediate', sentence: 'Le compostage des déchets organiques réduit le volume des ordures.', sen_en: 'Composting organic waste reduces the volume of rubbish.' },
+      { fr: 'la pollution sonore', type: 'n.f.', en: 'noise pollution', diff: 'intermediate', sentence: 'La pollution sonore dans les centres-villes nuit à la santé des habitants.', sen_en: 'Noise pollution in city centres harms the health of residents.' },
+      { fr: 'préserver', type: 'v.', en: 'to preserve', diff: 'essential', sentence: 'Il faut préserver les forêts pour les générations futures.', sen_en: 'We must preserve forests for future generations.' },
+      { fr: 'nuire à', type: 'v.', en: 'to harm / damage', diff: 'intermediate', sentence: 'L\'utilisation excessive de la voiture nuit à la qualité de l\'air.', sen_en: 'Excessive car use damages air quality.' },
+      { fr: 'un accord climatique', type: 'n.m.', en: 'a climate agreement', diff: 'advanced', sentence: 'Les pays signataires de l\'accord climatique s\'engagent à réduire leurs émissions.', sen_en: 'Countries signing the climate agreement commit to reducing their emissions.' },
+      { fr: 'la pollution plastique', type: 'n.f.', en: 'plastic pollution', diff: 'intermediate', sentence: 'La pollution plastique dans les océans représente une menace grave.', sen_en: 'Plastic pollution in the oceans represents a serious threat.' },
+      { fr: 'une canicule', type: 'n.f.', en: 'a heatwave', diff: 'intermediate', sentence: 'La canicule de l\'été dernier a provoqué de nombreux incendies de forêt.', sen_en: 'Last summer\'s heatwave caused many forest fires.' },
+      { fr: 'les énergies fossiles', type: 'n.f.pl.', en: 'fossil fuels / energies', diff: 'intermediate', sentence: 'La dépendance aux énergies fossiles doit diminuer progressivement.', sen_en: 'Dependence on fossil fuels must gradually decrease.' },
+      { fr: 'l\'extinction', type: 'n.f.', en: 'extinction', diff: 'advanced', sentence: 'Des centaines d\'espèces sont menacées d\'extinction chaque année.', sen_en: 'Hundreds of species are threatened with extinction every year.' },
+      { fr: 'un bilan carbone', type: 'n.m.', en: 'a carbon audit', diff: 'advanced', sentence: 'L\'entreprise a réalisé un bilan carbone pour identifier ses points faibles.', sen_en: 'The company conducted a carbon audit to identify its weak points.' },
+      { fr: 'la reforestation', type: 'n.f.', en: 'reforestation', diff: 'advanced', sentence: 'Des programmes de reforestation sont en cours dans plusieurs pays africains.', sen_en: 'Reforestation programmes are underway in several African countries.' },
+      { fr: 'les déchets plastiques', type: 'n.m.pl.', en: 'plastic waste', diff: 'essential', sentence: 'La réduction des déchets plastiques est une priorité environnementale.', sen_en: 'Reducing plastic waste is an environmental priority.' },
+      { fr: 's\'engager', type: 'v.', en: 'to commit / get involved', diff: 'intermediate', sentence: 'De nombreuses entreprises s\'engagent à atteindre la neutralité carbone d\'ici 2050.', sen_en: 'Many companies commit to achieving carbon neutrality by 2050.' },
+      { fr: 'le reboisement', type: 'n.m.', en: 'tree planting / afforestation', diff: 'advanced', sentence: 'Le reboisement des zones touchées par les incendies prend plusieurs décennies.', sen_en: 'Replanting trees in areas affected by fires takes several decades.' },
+      { fr: 'une zone protégée', type: 'n.f.', en: 'a protected area', diff: 'intermediate', sentence: 'La chasse est interdite dans les zones protégées.', sen_en: 'Hunting is forbidden in protected areas.' },
+      { fr: 'la prise de conscience', type: 'n.f.', en: 'awareness / realisation', diff: 'intermediate', sentence: 'Une prise de conscience collective est nécessaire face à l\'urgence climatique.', sen_en: 'Collective awareness is needed in the face of the climate emergency.' },
+      { fr: 'numérique et empreinte', type: 'n.f.', en: 'digital carbon footprint', diff: 'advanced', sentence: 'L\'empreinte numérique représente une part croissante des émissions mondiales.', sen_en: 'The digital carbon footprint represents a growing share of global emissions.' },
+      { fr: 'l\'urgence climatique', type: 'n.f.', en: 'the climate emergency', diff: 'intermediate', sentence: 'Les scientifiques alertent sur l\'urgence climatique depuis plusieurs décennies.', sen_en: 'Scientists have been warning about the climate emergency for several decades.' },
+      { fr: 'sobre', type: 'adj.', en: 'sober / restrained (in consumption)', diff: 'advanced', sentence: 'Adopter un mode de vie sobre est une réponse individuelle au changement climatique.', sen_en: 'Adopting a restrained lifestyle is an individual response to climate change.' },
+      { fr: 'une tempête', type: 'n.f.', en: 'a storm', diff: 'essential', sentence: 'Une violente tempête a frappé la côte atlantique la semaine dernière.', sen_en: 'A violent storm hit the Atlantic coast last week.' },
+    ]
+  },
+
+  society: {
+    name: 'Société & Citoyenneté',
+    en: 'Society & Citizenship',
+    words: [
+      { fr: 'la citoyenneté', type: 'n.f.', en: 'citizenship', diff: 'essential', sentence: 'La citoyenneté française s\'acquiert par naissance ou par naturalisation.', sen_en: 'French citizenship is acquired by birth or by naturalisation.' },
+      { fr: 'les droits', type: 'n.m.pl.', en: 'rights', diff: 'essential', sentence: 'Chaque citoyen a des droits et des devoirs envers la société.', sen_en: 'Each citizen has rights and duties towards society.' },
+      { fr: 'les devoirs', type: 'n.m.pl.', en: 'duties / obligations', diff: 'essential', sentence: 'Payer ses impôts fait partie des devoirs du citoyen.', sen_en: 'Paying taxes is part of the citizen\'s duties.' },
+      { fr: 'une élection', type: 'n.f.', en: 'an election', diff: 'essential', sentence: 'Les élections présidentielles ont lieu tous les cinq ans en France.', sen_en: 'Presidential elections take place every five years in France.' },
+      { fr: 'voter', type: 'v.', en: 'to vote', diff: 'essential', sentence: 'Il est important de voter pour exercer sa citoyenneté.', sen_en: 'It is important to vote to exercise one\'s citizenship.' },
+      { fr: 'la démocratie', type: 'n.f.', en: 'democracy', diff: 'essential', sentence: 'La démocratie repose sur le principe du suffrage universel.', sen_en: 'Democracy is based on the principle of universal suffrage.' },
+      { fr: 'les inégalités', type: 'n.f.pl.', en: 'inequalities', diff: 'essential', sentence: 'Les inégalités sociales se creusent malgré les politiques redistributives.', sen_en: 'Social inequalities are widening despite redistributive policies.' },
+      { fr: 'la laïcité', type: 'n.f.', en: 'secularism (French concept)', diff: 'intermediate', sentence: 'La laïcité garantit la séparation entre l\'État et les religions.', sen_en: 'Secularism guarantees the separation between the State and religions.' },
+      { fr: 'l\'intégration', type: 'n.f.', en: 'integration', diff: 'essential', sentence: 'L\'intégration des nouveaux arrivants passe par l\'apprentissage de la langue.', sen_en: 'The integration of newcomers goes through language learning.' },
+      { fr: 'la discrimination', type: 'n.f.', en: 'discrimination', diff: 'essential', sentence: 'La discrimination à l\'embauche est illégale en France.', sen_en: 'Employment discrimination is illegal in France.' },
+      { fr: 'la solidarité', type: 'n.f.', en: 'solidarity', diff: 'essential', sentence: 'La solidarité nationale se manifeste lors des crises humanitaires.', sen_en: 'National solidarity manifests itself during humanitarian crises.' },
+      { fr: 'un impôt', type: 'n.m.', en: 'a tax', diff: 'essential', sentence: 'Les impôts financent les services publics comme l\'éducation et la santé.', sen_en: 'Taxes finance public services such as education and health.' },
+      { fr: 'la justice sociale', type: 'n.f.', en: 'social justice', diff: 'intermediate', sentence: 'La justice sociale vise à réduire les écarts de revenus entre les citoyens.', sen_en: 'Social justice aims to reduce income gaps between citizens.' },
+      { fr: 'une manifestation', type: 'n.f.', en: 'a demonstration / protest', diff: 'intermediate', sentence: 'Des milliers de personnes ont participé à la manifestation contre la réforme.', sen_en: 'Thousands of people took part in the demonstration against the reform.' },
+      { fr: 'une loi', type: 'n.f.', en: 'a law', diff: 'essential', sentence: 'Cette nouvelle loi vise à protéger les données personnelles des citoyens.', sen_en: 'This new law aims to protect citizens\' personal data.' },
+      { fr: 'le gouvernement', type: 'n.m.', en: 'the government', diff: 'essential', sentence: 'Le gouvernement a annoncé un plan de relance économique.', sen_en: 'The government announced an economic recovery plan.' },
+      { fr: 'l\'immigration', type: 'n.f.', en: 'immigration', diff: 'essential', sentence: 'L\'immigration est un sujet de débat politique dans de nombreux pays.', sen_en: 'Immigration is a subject of political debate in many countries.' },
+      { fr: 'un réfugié', type: 'n.m.', en: 'a refugee', diff: 'intermediate', sentence: 'Des milliers de réfugiés ont demandé l\'asile politique en Europe.', sen_en: 'Thousands of refugees applied for political asylum in Europe.' },
+      { fr: 'l\'égalité des chances', type: 'n.f.', en: 'equal opportunity', diff: 'intermediate', sentence: 'L\'école publique est censée garantir l\'égalité des chances.', sen_en: 'Public school is supposed to guarantee equal opportunity.' },
+      { fr: 'la cohésion sociale', type: 'n.f.', en: 'social cohesion', diff: 'advanced', sentence: 'Le renforcement de la cohésion sociale est un enjeu majeur pour ce gouvernement.', sen_en: 'Strengthening social cohesion is a major challenge for this government.' },
+      { fr: 'une réforme', type: 'n.f.', en: 'a reform', diff: 'intermediate', sentence: 'La réforme des retraites a provoqué des grèves dans tout le pays.', sen_en: 'The pension reform provoked strikes across the country.' },
+      { fr: 'le suffrage universel', type: 'n.m.', en: 'universal suffrage', diff: 'advanced', sentence: 'Le suffrage universel permet à tous les citoyens de choisir leurs représentants.', sen_en: 'Universal suffrage allows all citizens to choose their representatives.' },
+      { fr: 'la pauvreté', type: 'n.f.', en: 'poverty', diff: 'essential', sentence: 'Des associations luttent contre la pauvreté dans les quartiers défavorisés.', sen_en: 'Associations fight against poverty in underprivileged neighbourhoods.' },
+      { fr: 'le vivre-ensemble', type: 'n.m.', en: 'living together / social harmony', diff: 'advanced', sentence: 'Le vivre-ensemble repose sur le respect mutuel et la tolérance.', sen_en: 'Living together in harmony is based on mutual respect and tolerance.' },
+      { fr: 'une association', type: 'n.f.', en: 'a non-profit organisation / association', diff: 'essential', sentence: 'Elle s\'implique dans une association caritative locale.', sen_en: 'She is involved in a local charitable association.' },
+      { fr: 'la liberté d\'expression', type: 'n.f.', en: 'freedom of expression', diff: 'intermediate', sentence: 'La liberté d\'expression est un droit fondamental dans les démocraties.', sen_en: 'Freedom of expression is a fundamental right in democracies.' },
+      { fr: 'l\'identité nationale', type: 'n.f.', en: 'national identity', diff: 'advanced', sentence: 'Le débat sur l\'identité nationale divise souvent l\'opinion publique.', sen_en: 'The debate on national identity often divides public opinion.' },
+      { fr: 'les allocations', type: 'n.f.pl.', en: 'benefits / allowances', diff: 'intermediate', sentence: 'Les allocations familiales aident les familles à faibles revenus.', sen_en: 'Family allowances help low-income families.' },
+      { fr: 'la protection sociale', type: 'n.f.', en: 'social protection / welfare', diff: 'intermediate', sentence: 'Le modèle français de protection sociale est reconnu mondialement.', sen_en: 'The French social protection model is recognised worldwide.' },
+      { fr: 'la ségrégation', type: 'n.f.', en: 'segregation', diff: 'advanced', sentence: 'La ségrégation sociale dans les banlieues est un problème persistant.', sen_en: 'Social segregation in the suburbs is a persistent problem.' },
+      { fr: 'la tolérance', type: 'n.f.', en: 'tolerance', diff: 'essential', sentence: 'La tolérance est une valeur fondamentale dans une société multiculturelle.', sen_en: 'Tolerance is a fundamental value in a multicultural society.' },
+      { fr: 'un parti politique', type: 'n.m.', en: 'a political party', diff: 'intermediate', sentence: 'Elle milite activement dans un parti politique depuis cinq ans.', sen_en: 'She has been actively involved in a political party for five years.' },
+      { fr: 'le bénévolat', type: 'n.m.', en: 'volunteering', diff: 'intermediate', sentence: 'Le bénévolat joue un rôle essentiel dans les associations caritatives.', sen_en: 'Volunteering plays an essential role in charitable associations.' },
+      { fr: 'les sans-papiers', type: 'n.m.pl.', en: 'undocumented migrants', diff: 'advanced', sentence: 'Des associations défendent les droits des sans-papiers.', sen_en: 'Associations defend the rights of undocumented migrants.' },
+      { fr: 'la résidence permanente', type: 'n.f.', en: 'permanent residency', diff: 'advanced', sentence: 'La résidence permanente lui donne accès aux mêmes droits qu\'un citoyen.', sen_en: 'Permanent residency gives him access to the same rights as a citizen.' },
+      { fr: 'l\'état de droit', type: 'n.m.', en: 'the rule of law', diff: 'advanced', sentence: 'L\'état de droit garantit que nul n\'est au-dessus des lois.', sen_en: 'The rule of law guarantees that nobody is above the law.' },
+      { fr: 'le revenu universel', type: 'n.m.', en: 'universal basic income', diff: 'advanced', sentence: 'Le revenu universel est au cœur des débats sur l\'avenir du travail.', sen_en: 'Universal basic income is at the heart of debates on the future of work.' },
+      { fr: 'une pétition', type: 'n.f.', en: 'a petition', diff: 'intermediate', sentence: 'Une pétition en ligne a recueilli un million de signatures en vingt-quatre heures.', sen_en: 'An online petition collected one million signatures in twenty-four hours.' },
+      { fr: 'le droit de vote', type: 'n.m.', en: 'the right to vote', diff: 'essential', sentence: 'Le droit de vote a été accordé aux femmes françaises en 1944.', sen_en: 'The right to vote was granted to French women in 1944.' },
+      { fr: 'la mixité sociale', type: 'n.f.', en: 'social diversity / mix', diff: 'advanced', sentence: 'La mixité sociale dans les écoles est encouragée par les politiques éducatives.', sen_en: 'Social diversity in schools is encouraged by educational policies.' },
+      { fr: 'un enjeu', type: 'n.m.', en: 'a challenge / issue / stake', diff: 'intermediate', sentence: 'L\'égalité entre les hommes et les femmes est un enjeu majeur du XXIᵉ siècle.', sen_en: 'Equality between men and women is a major issue of the 21st century.' },
+      { fr: 'la neutralité', type: 'n.f.', en: 'neutrality', diff: 'advanced', sentence: 'La neutralité de l\'État est un principe fondamental de la République.', sen_en: 'State neutrality is a fundamental principle of the Republic.' },
+      { fr: 'l\'aide sociale', type: 'n.f.', en: 'social assistance / welfare', diff: 'intermediate', sentence: 'L\'aide sociale permet aux plus démunis de subvenir à leurs besoins essentiels.', sen_en: 'Social assistance allows the most deprived to meet their basic needs.' },
+      { fr: 'fraternité', type: 'n.f.', en: 'fraternity / brotherhood', diff: 'intermediate', sentence: 'Liberté, Égalité, Fraternité sont les trois valeurs de la République française.', sen_en: 'Liberty, Equality, Fraternity are the three values of the French Republic.' },
+      { fr: 'la délinquance', type: 'n.f.', en: 'delinquency / crime', diff: 'advanced', sentence: 'La lutte contre la délinquance juvénile est une priorité du gouvernement.', sen_en: 'Fighting juvenile delinquency is a government priority.' },
+      { fr: 'le recensement', type: 'n.m.', en: 'a census', diff: 'intermediate', sentence: 'Le recensement de la population a lieu tous les cinq ans.', sen_en: 'The population census takes place every five years.' },
+      { fr: 'militant(e)', type: 'adj./n.', en: 'activist / militant', diff: 'intermediate', sentence: 'Elle est militante dans une association de défense des droits humains.', sen_en: 'She is an activist in a human rights defence association.' },
+      { fr: 'la nation', type: 'n.f.', en: 'the nation', diff: 'essential', sentence: 'L\'hymne national symbolise l\'unité de la nation.', sen_en: 'The national anthem symbolises the unity of the nation.' },
+      { fr: 'la laïcité à l\'école', type: 'n.f.', en: 'secularism at school', diff: 'advanced', sentence: 'La laïcité à l\'école interdit le port de signes religieux ostentatoires.', sen_en: 'Secularism at school prohibits the wearing of conspicuous religious symbols.' },
+      { fr: 'le débat public', type: 'n.m.', en: 'public debate', diff: 'intermediate', sentence: 'Le débat public autour de l\'immigration reste très polarisé.', sen_en: 'The public debate around immigration remains highly polarised.' },
+    ]
+  },
+
+  transport: {
+    name: 'Transport & Mobilité',
+    en: 'Transport',
+    words: [
+      { fr: 'les transports en commun', type: 'n.m.pl.', en: 'public transport', diff: 'essential', sentence: 'Elle utilise les transports en commun pour se rendre au bureau.', sen_en: 'She uses public transport to get to the office.' },
+      { fr: 'un embouteillage', type: 'n.m.', en: 'a traffic jam', diff: 'essential', sentence: 'Il est bloqué dans un embouteillage depuis une heure.', sen_en: 'He has been stuck in a traffic jam for an hour.' },
+      { fr: 'un trajet', type: 'n.m.', en: 'a journey / commute', diff: 'essential', sentence: 'Son trajet quotidien dure en moyenne quarante-cinq minutes.', sen_en: 'His daily commute lasts an average of forty-five minutes.' },
+      { fr: 'un abonnement', type: 'n.m.', en: 'a subscription / season ticket', diff: 'essential', sentence: 'Elle a pris un abonnement mensuel pour le métro.', sen_en: 'She bought a monthly metro season ticket.' },
+      { fr: 'une correspondance', type: 'n.f.', en: 'a connection / transfer', diff: 'essential', sentence: 'Il faut changer à Lyon pour la correspondance vers Marseille.', sen_en: 'You need to change at Lyon for the connection to Marseille.' },
+      { fr: 'un vol', type: 'n.m.', en: 'a flight', diff: 'essential', sentence: 'Son vol a été retardé de deux heures en raison de mauvaises conditions météo.', sen_en: 'His flight was delayed by two hours due to bad weather conditions.' },
+      { fr: 'une grève des transports', type: 'n.f.', en: 'a transport strike', diff: 'intermediate', sentence: 'La grève des transports a perturbé les déplacements de milliers d\'usagers.', sen_en: 'The transport strike disrupted the travel of thousands of users.' },
+      { fr: 'le covoiturage', type: 'n.m.', en: 'carpooling', diff: 'intermediate', sentence: 'Le covoiturage est une solution économique et écologique pour les longs trajets.', sen_en: 'Carpooling is an economical and ecological solution for long journeys.' },
+      { fr: 'un permis de conduire', type: 'n.m.', en: 'a driving licence', diff: 'essential', sentence: 'Elle a obtenu son permis de conduire au premier essai.', sen_en: 'She passed her driving test on the first attempt.' },
+      { fr: 'une autoroute', type: 'n.f.', en: 'a motorway / highway', diff: 'essential', sentence: 'L\'autoroute est payante sur la plupart des tronçons en France.', sen_en: 'The motorway is toll-paying on most sections in France.' },
+      { fr: 'un péage', type: 'n.m.', en: 'a toll', diff: 'intermediate', sentence: 'Il a payé dix euros de péage pour traverser le tunnel.', sen_en: 'He paid ten euros in tolls to cross the tunnel.' },
+      { fr: 'le trafic', type: 'n.m.', en: 'traffic', diff: 'essential', sentence: 'Le trafic est très dense aux heures de pointe.', sen_en: 'Traffic is very dense during rush hours.' },
+      { fr: 'une piste cyclable', type: 'n.f.', en: 'a cycle lane', diff: 'intermediate', sentence: 'La ville a développé un réseau de pistes cyclables sécurisées.', sen_en: 'The city has developed a network of secure cycle lanes.' },
+      { fr: 'le vélo en libre-service', type: 'n.m.', en: 'bike sharing', diff: 'intermediate', sentence: 'Le vélo en libre-service est disponible dans toutes les grandes villes françaises.', sen_en: 'Bike sharing is available in all major French cities.' },
+      { fr: 'une navette', type: 'n.f.', en: 'a shuttle', diff: 'intermediate', sentence: 'Une navette relie l\'aéroport au centre-ville toutes les vingt minutes.', sen_en: 'A shuttle connects the airport to the city centre every twenty minutes.' },
+      { fr: 'la mobilité douce', type: 'n.f.', en: 'soft mobility / active transport', diff: 'advanced', sentence: 'La mobilité douce englobe le vélo, la marche et la trottinette.', sen_en: 'Soft mobility includes cycling, walking, and scooters.' },
+      { fr: 'un retard', type: 'n.m.', en: 'a delay', diff: 'essential', sentence: 'Le retard du train a causé de nombreuses perturbations.', sen_en: 'The train delay caused many disruptions.' },
+      { fr: 'une borne de recharge', type: 'n.f.', en: 'a charging station (electric vehicle)', diff: 'advanced', sentence: 'Le nombre de bornes de recharge pour voitures électriques augmente chaque année.', sen_en: 'The number of charging stations for electric cars increases every year.' },
+      { fr: 'un réseau', type: 'n.m.', en: 'a network', diff: 'essential', sentence: 'Le réseau ferroviaire français est l\'un des plus denses d\'Europe.', sen_en: 'The French railway network is one of the densest in Europe.' },
+      { fr: 'un quai', type: 'n.m.', en: 'a platform / quay', diff: 'essential', sentence: 'Le train à destination de Paris part du quai numéro sept.', sen_en: 'The train to Paris departs from platform number seven.' },
+      { fr: 'une zone de stationnement', type: 'n.f.', en: 'a parking zone', diff: 'intermediate', sentence: 'Le stationnement est payant dans toutes les zones du centre-ville.', sen_en: 'Parking is paid in all city centre zones.' },
+      { fr: 'le billet', type: 'n.m.', en: 'a ticket', diff: 'essential', sentence: 'Elle a acheté son billet de train en ligne pour bénéficier d\'un tarif réduit.', sen_en: 'She bought her train ticket online to get a reduced price.' },
+      { fr: 'déraillé(e)', type: 'adj.', en: 'derailed', diff: 'advanced', sentence: 'Un train a déraillé cette nuit, causant d\'importants retards.', sen_en: 'A train derailed overnight, causing significant delays.' },
+      { fr: 'la fréquence', type: 'n.f.', en: 'frequency (of service)', diff: 'intermediate', sentence: 'La fréquence des bus a été augmentée pendant les heures de pointe.', sen_en: 'The frequency of buses has been increased during rush hours.' },
+      { fr: 'un carrefour', type: 'n.m.', en: 'a crossroads / intersection', diff: 'intermediate', sentence: 'Un accident s\'est produit au carrefour principale de la ville.', sen_en: 'An accident occurred at the main intersection in the city.' },
+      { fr: 'l\'intermodalité', type: 'n.f.', en: 'multimodal transport / intermodality', diff: 'advanced', sentence: 'L\'intermodalité permet de combiner facilement plusieurs modes de transport.', sen_en: 'Intermodality makes it easy to combine several modes of transport.' },
+      { fr: 'un panneau de signalisation', type: 'n.m.', en: 'a road sign', diff: 'intermediate', sentence: 'Il n\'a pas vu le panneau de signalisation et a pris la mauvaise direction.', sen_en: 'He didn\'t see the road sign and took the wrong direction.' },
+      { fr: 'les heures de pointe', type: 'n.f.pl.', en: 'rush hours / peak hours', diff: 'essential', sentence: 'Évitez de prendre le métro pendant les heures de pointe si possible.', sen_en: 'Avoid taking the metro during rush hours if possible.' },
+      { fr: 'une voiture électrique', type: 'n.f.', en: 'an electric car', diff: 'intermediate', sentence: 'Les ventes de voitures électriques ont doublé en deux ans.', sen_en: 'Sales of electric cars have doubled in two years.' },
+      { fr: 'annulé(e)', type: 'adj.', en: 'cancelled', diff: 'essential', sentence: 'Son vol a été annulé en raison d\'une tempête sur l\'Atlantique.', sen_en: 'His flight was cancelled due to a storm over the Atlantic.' },
+      { fr: 'les infrastructures', type: 'n.f.pl.', en: 'infrastructure', diff: 'advanced', sentence: 'Le gouvernement investit dans les infrastructures de transport.', sen_en: 'The government is investing in transport infrastructure.' },
+      { fr: 'un aiguillage', type: 'n.m.', en: 'a railway switch / points', diff: 'advanced', sentence: 'Un problème d\'aiguillage a bloqué plusieurs trains pendant deux heures.', sen_en: 'A points problem blocked several trains for two hours.' },
+      { fr: 'la signalétique', type: 'n.f.', en: 'signage / signposting', diff: 'advanced', sentence: 'La signalétique de cet aéroport est claire et bien organisée.', sen_en: 'The signage at this airport is clear and well organised.' },
+      { fr: 'un tramway', type: 'n.m.', en: 'a tram', diff: 'essential', sentence: 'Le tramway a été réintroduit dans plusieurs grandes villes françaises.', sen_en: 'The tram has been reintroduced in several major French cities.' },
+      { fr: 'l\'accessibilité', type: 'n.f.', en: 'accessibility', diff: 'intermediate', sentence: 'L\'accessibilité des transports pour les personnes handicapées reste insuffisante.', sen_en: 'Transport accessibility for disabled people remains insufficient.' },
+      { fr: 'une déviation', type: 'n.f.', en: 'a detour / diversion', diff: 'intermediate', sentence: 'Des travaux ont entraîné une déviation sur la route nationale.', sen_en: 'Roadworks caused a diversion on the main road.' },
+      { fr: 'carburant', type: 'n.m.', en: 'fuel', diff: 'essential', sentence: 'Le prix du carburant a fortement augmenté ces derniers mois.', sen_en: 'The price of fuel has risen sharply in recent months.' },
+      { fr: 'se déplacer', type: 'v.', en: 'to travel / move around', diff: 'essential', sentence: 'Il est facile de se déplacer en ville grâce au réseau de métro.', sen_en: 'It is easy to travel around the city thanks to the metro network.' },
+      { fr: 'un itinéraire', type: 'n.m.', en: 'an itinerary / route', diff: 'intermediate', sentence: 'Elle a planifié son itinéraire pour éviter les zones de travaux.', sen_en: 'She planned her route to avoid roadwork zones.' },
+      { fr: 'une liaison', type: 'n.f.', en: 'a link / connection (transport)', diff: 'intermediate', sentence: 'Une nouvelle liaison aérienne a été ouverte entre Paris et Montréal.', sen_en: 'A new air link was opened between Paris and Montreal.' },
+      { fr: 'la circulation', type: 'n.f.', en: 'traffic / circulation', diff: 'essential', sentence: 'La circulation est très perturbée suite à l\'accident sur le périphérique.', sen_en: 'Traffic is heavily disrupted following the accident on the ring road.' },
+      { fr: 'à pied', type: 'expr.', en: 'on foot', diff: 'essential', sentence: 'Le bureau est à dix minutes à pied de la gare.', sen_en: 'The office is ten minutes on foot from the station.' },
+      { fr: 'une amende', type: 'n.f.', en: 'a fine', diff: 'intermediate', sentence: 'Il a reçu une amende pour excès de vitesse sur l\'autoroute.', sen_en: 'He received a fine for speeding on the motorway.' },
+      { fr: 'le transport aérien', type: 'n.m.', en: 'air transport / aviation', diff: 'intermediate', sentence: 'Le transport aérien est l\'un des secteurs les plus polluants.', sen_en: 'Air transport is one of the most polluting sectors.' },
+      { fr: 'le stationnement', type: 'n.m.', en: 'parking', diff: 'essential', sentence: 'Le stationnement est interdit devant les entrées des écoles.', sen_en: 'Parking is prohibited in front of school entrances.' },
+      { fr: 'un passage à niveau', type: 'n.m.', en: 'a level crossing / railroad crossing', diff: 'advanced', sentence: 'Les accidents aux passages à niveau restent préoccupants.', sen_en: 'Accidents at level crossings remain a concern.' },
+      { fr: 'un véhicule', type: 'n.m.', en: 'a vehicle', diff: 'essential', sentence: 'Les véhicules diesel sont progressivement interdits dans les centres-villes.', sen_en: 'Diesel vehicles are being progressively banned from city centres.' },
+      { fr: 'la gare', type: 'n.f.', en: 'the train station', diff: 'essential', sentence: 'La gare de Lyon est l\'une des plus fréquentées d\'Europe.', sen_en: 'Lyon station is one of the busiest in Europe.' },
+      { fr: 'embarquer', type: 'v.', en: 'to board (a plane/boat)', diff: 'intermediate', sentence: 'Les passagers ont commencé à embarquer une heure avant le départ.', sen_en: 'Passengers began boarding one hour before departure.' },
+      { fr: 'un bouchon', type: 'n.m.', en: 'a traffic jam / bottleneck', diff: 'intermediate', sentence: 'Il y a un gros bouchon sur la rocade ce matin.', sen_en: 'There is a big traffic jam on the ring road this morning.' },
+    ]
+  },
+
+  food: {
+    name: 'Alimentation',
+    en: 'Food',
+    words: [
+      { fr: 'équilibré(e)', type: 'adj.', en: 'balanced', diff: 'essential', sentence: 'Il est conseillé d\'adopter une alimentation équilibrée pour rester en bonne santé.', sen_en: 'It is advisable to adopt a balanced diet to stay healthy.' },
+      { fr: 'les matières grasses', type: 'n.f.pl.', en: 'fats', diff: 'essential', sentence: 'Les médecins conseillent de limiter la consommation de matières grasses.', sen_en: 'Doctors advise limiting fat consumption.' },
+      { fr: 'les protéines', type: 'n.f.pl.', en: 'proteins', diff: 'essential', sentence: 'Les légumineuses sont une excellente source de protéines végétales.', sen_en: 'Legumes are an excellent source of plant proteins.' },
+      { fr: 'un régime', type: 'n.m.', en: 'a diet', diff: 'essential', sentence: 'Son médecin lui a prescrit un régime sans sel après son opération.', sen_en: 'His doctor prescribed a salt-free diet after his operation.' },
+      { fr: 'les calories', type: 'n.f.pl.', en: 'calories', diff: 'essential', sentence: 'Elle surveille son apport en calories pour maintenir son poids.', sen_en: 'She monitors her calorie intake to maintain her weight.' },
+      { fr: 'biologique', type: 'adj.', en: 'organic', diff: 'essential', sentence: 'Elle préfère acheter des produits biologiques malgré le prix plus élevé.', sen_en: 'She prefers to buy organic products despite the higher price.' },
+      { fr: 'une allergie alimentaire', type: 'n.f.', en: 'a food allergy', diff: 'essential', sentence: 'Il souffre d\'une allergie alimentaire aux produits laitiers.', sen_en: 'He suffers from a food allergy to dairy products.' },
+      { fr: 'un additif', type: 'n.m.', en: 'an additive', diff: 'intermediate', sentence: 'Les additifs alimentaires sont réglementés par la législation européenne.', sen_en: 'Food additives are regulated by European legislation.' },
+      { fr: 'la restauration rapide', type: 'n.f.', en: 'fast food', diff: 'essential', sentence: 'La restauration rapide est souvent critiquée pour sa faible qualité nutritionnelle.', sen_en: 'Fast food is often criticised for its low nutritional quality.' },
+      { fr: 'un produit transformé', type: 'n.m.', en: 'a processed product', diff: 'intermediate', sentence: 'Les nutritionnistes déconseillent une consommation excessive de produits transformés.', sen_en: 'Nutritionists advise against excessive consumption of processed products.' },
+      { fr: 'la gastronomie', type: 'n.f.', en: 'gastronomy', diff: 'intermediate', sentence: 'La gastronomie française est inscrite au patrimoine culturel immatériel de l\'UNESCO.', sen_en: 'French gastronomy is listed on UNESCO\'s intangible cultural heritage.' },
+      { fr: 'végétarien(ne)', type: 'adj.', en: 'vegetarian', diff: 'essential', sentence: 'De plus en plus de restaurateurs proposent des menus végétariens.', sen_en: 'More and more restaurateurs are offering vegetarian menus.' },
+      { fr: 'une intolérance', type: 'n.f.', en: 'an intolerance', diff: 'essential', sentence: 'Elle a une intolérance au gluten diagnostiquée l\'année dernière.', sen_en: 'She has a gluten intolerance diagnosed last year.' },
+      { fr: 'la date de péremption', type: 'n.f.', en: 'the expiry date', diff: 'intermediate', sentence: 'Il faut toujours vérifier la date de péremption avant de consommer.', sen_en: 'You should always check the expiry date before consuming.' },
+      { fr: 'une portion', type: 'n.f.', en: 'a portion / serving', diff: 'essential', sentence: 'Les spécialistes recommandent cinq portions de fruits et légumes par jour.', sen_en: 'Specialists recommend five portions of fruit and vegetables per day.' },
+      { fr: 'le gaspillage alimentaire', type: 'n.m.', en: 'food waste', diff: 'intermediate', sentence: 'Le gaspillage alimentaire représente un tiers de la production mondiale.', sen_en: 'Food waste represents a third of global production.' },
+      { fr: 'les fibres', type: 'n.f.pl.', en: 'fibre', diff: 'intermediate', sentence: 'Une alimentation riche en fibres favorise le bon fonctionnement du transit intestinal.', sen_en: 'A diet rich in fibre promotes good digestive function.' },
+      { fr: 'épicé(e)', type: 'adj.', en: 'spicy', diff: 'essential', sentence: 'Les plats épicés ne sont pas recommandés en cas de problèmes digestifs.', sen_en: 'Spicy dishes are not recommended in case of digestive problems.' },
+      { fr: 'la junk food', type: 'n.f.', en: 'junk food', diff: 'essential', sentence: 'Les jeunes sont souvent attirés par la junk food malgré ses effets négatifs.', sen_en: 'Young people are often attracted to junk food despite its negative effects.' },
+      { fr: 'la traçabilité', type: 'n.f.', en: 'traceability', diff: 'advanced', sentence: 'La traçabilité des aliments est obligatoire depuis le scandale de la vache folle.', sen_en: 'Food traceability has been mandatory since the BSE scandal.' },
+      { fr: 'une recette', type: 'n.f.', en: 'a recipe', diff: 'essential', sentence: 'Il a suivi la recette traditionnelle de sa grand-mère pour préparer la ratatouille.', sen_en: 'He followed his grandmother\'s traditional recipe to prepare ratatouille.' },
+      { fr: 'la consommation', type: 'n.f.', en: 'consumption', diff: 'essential', sentence: 'La consommation de sucre raffiné doit être réduite selon les nutritionnistes.', sen_en: 'Consumption of refined sugar should be reduced according to nutritionists.' },
+      { fr: 'un agriculteur', type: 'n.m.', en: 'a farmer', diff: 'essential', sentence: 'Les agriculteurs locaux vendent leurs produits directement au marché.', sen_en: 'Local farmers sell their products directly at the market.' },
+      { fr: 'la chaîne alimentaire', type: 'n.f.', en: 'the food chain', diff: 'advanced', sentence: 'La pollution des océans affecte toute la chaîne alimentaire marine.', sen_en: 'Ocean pollution affects the entire marine food chain.' },
+      { fr: 'sans gluten', type: 'expr.', en: 'gluten-free', diff: 'intermediate', sentence: 'De nombreux produits sans gluten sont maintenant disponibles en supermarché.', sen_en: 'Many gluten-free products are now available in supermarkets.' },
+      { fr: 'un marché bio', type: 'n.m.', en: 'an organic market', diff: 'intermediate', sentence: 'Elle fait ses achats au marché bio chaque dimanche matin.', sen_en: 'She does her shopping at the organic market every Sunday morning.' },
+      { fr: 'la cuisine faite maison', type: 'n.f.', en: 'home cooking', diff: 'essential', sentence: 'La cuisine faite maison est généralement plus saine que les plats préparés.', sen_en: 'Home cooking is generally healthier than ready-made meals.' },
+      { fr: 'une étiquette', type: 'n.f.', en: 'a label', diff: 'essential', sentence: 'Il faut apprendre à lire les étiquettes pour faire des choix alimentaires éclairés.', sen_en: 'You need to learn to read labels to make informed food choices.' },
+      { fr: 'les conserves', type: 'n.f.pl.', en: 'tinned / canned foods', diff: 'essential', sentence: 'Les conserves permettent de préserver les aliments pendant longtemps.', sen_en: 'Canned foods allow food to be preserved for a long time.' },
+      { fr: 'végétalien(ne)', type: 'adj.', en: 'vegan', diff: 'intermediate', sentence: 'Le régime végétalien exclut tout produit d\'origine animale.', sen_en: 'The vegan diet excludes all products of animal origin.' },
+      { fr: 'une huile', type: 'n.f.', en: 'an oil', diff: 'essential', sentence: 'L\'huile d\'olive est très utilisée dans la cuisine méditerranéenne.', sen_en: 'Olive oil is widely used in Mediterranean cuisine.' },
+      { fr: 'les féculents', type: 'n.m.pl.', en: 'starchy foods', diff: 'intermediate', sentence: 'Les féculents sont une source importante d\'énergie pour l\'organisme.', sen_en: 'Starchy foods are an important source of energy for the body.' },
+      { fr: 'la sécurité alimentaire', type: 'n.f.', en: 'food safety / food security', diff: 'advanced', sentence: 'La sécurité alimentaire mondiale est menacée par le changement climatique.', sen_en: 'Global food security is threatened by climate change.' },
+      { fr: 'un supplément nutritionnel', type: 'n.m.', en: 'a nutritional supplement', diff: 'advanced', sentence: 'Son médecin lui a prescrit un supplément nutritionnel en vitamine D.', sen_en: 'His doctor prescribed a vitamin D nutritional supplement.' },
+      { fr: 'la fermentation', type: 'n.f.', en: 'fermentation', diff: 'advanced', sentence: 'La fermentation est utilisée depuis des millénaires pour conserver les aliments.', sen_en: 'Fermentation has been used for millennia to preserve food.' },
+      { fr: 'les sucres', type: 'n.m.pl.', en: 'sugars', diff: 'essential', sentence: 'Il faut distinguer les sucres naturels des sucres ajoutés.', sen_en: 'You need to distinguish natural sugars from added sugars.' },
+      { fr: 'un plat préparé', type: 'n.m.', en: 'a ready-made meal', diff: 'essential', sentence: 'Les plats préparés sont pratiques mais souvent trop salés.', sen_en: 'Ready-made meals are convenient but often too salty.' },
+      { fr: 'l\'obésité infantile', type: 'n.f.', en: 'childhood obesity', diff: 'advanced', sentence: 'L\'obésité infantile est en augmentation dans les pays développés.', sen_en: 'Childhood obesity is increasing in developed countries.' },
+      { fr: 'une campagne de sensibilisation', type: 'n.f.', en: 'an awareness campaign', diff: 'advanced', sentence: 'Une campagne de sensibilisation encourage les enfants à manger plus de légumes.', sen_en: 'An awareness campaign encourages children to eat more vegetables.' },
+      { fr: 'la cuisine du monde', type: 'n.f.', en: 'world cuisine', diff: 'intermediate', sentence: 'La cuisine du monde enrichit nos habitudes alimentaires.', sen_en: 'World cuisine enriches our eating habits.' },
+      { fr: 'un produit local', type: 'n.m.', en: 'a local product', diff: 'essential', sentence: 'Les consommateurs préfèrent de plus en plus les produits locaux.', sen_en: 'Consumers increasingly prefer local products.' },
+      { fr: 'la valeur nutritionnelle', type: 'n.f.', en: 'the nutritional value', diff: 'intermediate', sentence: 'La valeur nutritionnelle des aliments varie selon leur mode de préparation.', sen_en: 'The nutritional value of food varies according to how it is prepared.' },
+      { fr: 'un menu', type: 'n.m.', en: 'a menu / set meal', diff: 'essential', sentence: 'Le restaurant propose un menu à prix fixe le midi.', sen_en: 'The restaurant offers a fixed-price set meal at lunch.' },
+      { fr: 'les vitamines', type: 'n.f.pl.', en: 'vitamins', diff: 'essential', sentence: 'Une alimentation variée assure un apport suffisant en vitamines.', sen_en: 'A varied diet ensures a sufficient intake of vitamins.' },
+      { fr: 'cuisiner', type: 'v.', en: 'to cook', diff: 'essential', sentence: 'Il aime cuisiner des recettes traditionnelles le week-end.', sen_en: 'He likes to cook traditional recipes at the weekend.' },
+      { fr: 'un nutritionniste', type: 'n.m.', en: 'a nutritionist', diff: 'intermediate', sentence: 'Elle a consulté un nutritionniste pour adapter son alimentation.', sen_en: 'She consulted a nutritionist to adapt her diet.' },
+      { fr: 'les produits laitiers', type: 'n.m.pl.', en: 'dairy products', diff: 'essential', sentence: 'Les produits laitiers sont recommandés pour leur teneur en calcium.', sen_en: 'Dairy products are recommended for their calcium content.' },
+      { fr: 'déguster', type: 'v.', en: 'to taste / savour', diff: 'intermediate', sentence: 'Elle a dégusté un vin rouge de Bourgogne lors de son séjour.', sen_en: 'She savoured a Burgundy red wine during her stay.' },
+      { fr: 'un marché alimentaire', type: 'n.m.', en: 'a food market', diff: 'essential', sentence: 'Le marché alimentaire du samedi attire de nombreux habitants du quartier.', sen_en: 'The Saturday food market attracts many residents from the neighbourhood.' },
+      { fr: 'la traçabilité des produits', type: 'n.f.', en: 'product traceability', diff: 'advanced', sentence: 'La traçabilité des produits permet de retracer leur origine avec précision.', sen_en: 'Product traceability allows their origin to be traced with precision.' },
+    ]
+  },
+
+  media: {
+    name: 'Médias & Communication',
+    en: 'Media',
+    words: [
+      { fr: 'les médias', type: 'n.m.pl.', en: 'the media', diff: 'essential', sentence: 'Les médias jouent un rôle essentiel dans la formation de l\'opinion publique.', sen_en: 'The media plays an essential role in shaping public opinion.' },
+      { fr: 'une fake news', type: 'n.f.', en: 'fake news / misinformation', diff: 'essential', sentence: 'Les fake news se propagent très rapidement sur les réseaux sociaux.', sen_en: 'Fake news spreads very quickly on social media.' },
+      { fr: 'les réseaux sociaux', type: 'n.m.pl.', en: 'social media / social networks', diff: 'essential', sentence: 'De nombreuses entreprises utilisent les réseaux sociaux pour leur communication.', sen_en: 'Many companies use social media for their communications.' },
+      { fr: 'la liberté de la presse', type: 'n.f.', en: 'freedom of the press', diff: 'intermediate', sentence: 'La liberté de la presse est un pilier fondamental de la démocratie.', sen_en: 'Freedom of the press is a fundamental pillar of democracy.' },
+      { fr: 'un journaliste', type: 'n.m.', en: 'a journalist', diff: 'essential', sentence: 'La journaliste a enquêté pendant un an sur les pratiques de l\'entreprise.', sen_en: 'The journalist investigated the company\'s practices for a year.' },
+      { fr: 'une émission', type: 'n.f.', en: 'a broadcast / programme', diff: 'essential', sentence: 'Cette émission de radio est écoutée par plus d\'un million d\'auditeurs.', sen_en: 'This radio programme is listened to by more than one million listeners.' },
+      { fr: 'un article', type: 'n.m.', en: 'an article', diff: 'essential', sentence: 'Elle a écrit un article sur les conséquences de la crise économique.', sen_en: 'She wrote an article on the consequences of the economic crisis.' },
+      { fr: 'la désinformation', type: 'n.f.', en: 'disinformation', diff: 'intermediate', sentence: 'La désinformation en ligne est devenue un enjeu politique majeur.', sen_en: 'Online disinformation has become a major political issue.' },
+      { fr: 'une chaîne d\'information', type: 'n.f.', en: 'a news channel', diff: 'essential', sentence: 'Les chaînes d\'information en continu diffusent les actualités vingt-quatre heures sur vingt-quatre.', sen_en: 'Rolling news channels broadcast news twenty-four hours a day.' },
+      { fr: 'un podcast', type: 'n.m.', en: 'a podcast', diff: 'essential', sentence: 'Les podcasts sont devenus un format très populaire pour s\'informer.', sen_en: 'Podcasts have become a very popular format for staying informed.' },
+      { fr: 'la presse écrite', type: 'n.f.', en: 'the written press / print media', diff: 'intermediate', sentence: 'La presse écrite a perdu de nombreux lecteurs avec l\'essor du numérique.', sen_en: 'The written press has lost many readers with the rise of digital media.' },
+      { fr: 'un influenceur', type: 'n.m.', en: 'an influencer', diff: 'intermediate', sentence: 'Cet influenceur compte plus de cinq millions d\'abonnés sur sa plateforme.', sen_en: 'This influencer has more than five million followers on his platform.' },
+      { fr: 'la censure', type: 'n.f.', en: 'censorship', diff: 'advanced', sentence: 'La censure des médias est pratiquée dans plusieurs régimes autoritaires.', sen_en: 'Media censorship is practised in several authoritarian regimes.' },
+      { fr: 'un abonné', type: 'n.m.', en: 'a subscriber', diff: 'essential', sentence: 'La chaîne a gagné cent mille abonnés en une semaine.', sen_en: 'The channel gained one hundred thousand subscribers in one week.' },
+      { fr: 's\'informer', type: 'v.', en: 'to get informed / keep up with news', diff: 'essential', sentence: 'Il est important de s\'informer auprès de sources fiables et diversifiées.', sen_en: 'It is important to get informed from reliable and diverse sources.' },
+      { fr: 'une source fiable', type: 'n.f.', en: 'a reliable source', diff: 'intermediate', sentence: 'Il faut toujours vérifier l\'information auprès d\'une source fiable.', sen_en: 'You should always verify information with a reliable source.' },
+      { fr: 'le droit à l\'information', type: 'n.m.', en: 'the right to information', diff: 'intermediate', sentence: 'Le droit à l\'information est garanti par la Constitution dans les démocraties.', sen_en: 'The right to information is guaranteed by the Constitution in democracies.' },
+      { fr: 'viral(e)', type: 'adj.', en: 'viral', diff: 'essential', sentence: 'La vidéo est devenue virale en quelques heures.', sen_en: 'The video went viral in a few hours.' },
+      { fr: 'un algorithme', type: 'n.m.', en: 'an algorithm', diff: 'advanced', sentence: 'Les algorithmes des plateformes numériques influencent les contenus que nous voyons.', sen_en: 'Digital platform algorithms influence the content we see.' },
+      { fr: 'la couverture médiatique', type: 'n.f.', en: 'media coverage', diff: 'advanced', sentence: 'L\'événement a bénéficié d\'une large couverture médiatique internationale.', sen_en: 'The event received wide international media coverage.' },
+      { fr: 'un débat télévisé', type: 'n.m.', en: 'a televised debate', diff: 'intermediate', sentence: 'Le débat télévisé entre les deux candidats a été suivi par des millions de téléspectateurs.', sen_en: 'The televised debate between the two candidates was watched by millions of viewers.' },
+      { fr: 'une tribune', type: 'n.f.', en: 'an opinion piece / tribune', diff: 'advanced', sentence: 'Elle a publié une tribune dans Le Monde pour défendre sa position.', sen_en: 'She published an opinion piece in Le Monde to defend her position.' },
+      { fr: 'la vie privée', type: 'n.f.', en: 'private life / privacy', diff: 'intermediate', sentence: 'Les médias doivent respecter la vie privée des personnalités publiques.', sen_en: 'The media must respect the private life of public figures.' },
+      { fr: 'un reportage', type: 'n.m.', en: 'a report / documentary piece', diff: 'essential', sentence: 'Ce reportage sur la crise migratoire a remporté un prix international.', sen_en: 'This report on the migration crisis won an international award.' },
+      { fr: 'interactif(ve)', type: 'adj.', en: 'interactive', diff: 'intermediate', sentence: 'Les médias interactifs permettent aux lecteurs de participer activement.', sen_en: 'Interactive media allows readers to participate actively.' },
+      { fr: 'la prise de parole', type: 'n.f.', en: 'speaking out / taking the floor', diff: 'intermediate', sentence: 'Les réseaux sociaux ont facilité la prise de parole des citoyens ordinaires.', sen_en: 'Social media has facilitated ordinary citizens speaking out.' },
+      { fr: 'un éditorial', type: 'n.m.', en: 'an editorial', diff: 'advanced', sentence: 'L\'éditorial du journal exprime la position officielle de la rédaction.', sen_en: 'The newspaper editorial expresses the official position of the editorial team.' },
+      { fr: 'un téléspectateur', type: 'n.m.', en: 'a TV viewer', diff: 'essential', sentence: 'L\'émission a réuni dix millions de téléspectateurs hier soir.', sen_en: 'The programme attracted ten million viewers last night.' },
+      { fr: 'la rédaction', type: 'n.f.', en: 'the editorial team / newsroom', diff: 'intermediate', sentence: 'La rédaction a décidé de ne pas publier cet article par manque de preuves.', sen_en: 'The editorial team decided not to publish this article for lack of evidence.' },
+      { fr: 'numérique', type: 'adj.', en: 'digital', diff: 'essential', sentence: 'La transformation numérique des médias a bouleversé les pratiques journalistiques.', sen_en: 'The digital transformation of the media has disrupted journalistic practices.' },
+      { fr: 'un communiqué de presse', type: 'n.m.', en: 'a press release', diff: 'advanced', sentence: 'L\'entreprise a publié un communiqué de presse pour démentir les rumeurs.', sen_en: 'The company published a press release to deny the rumours.' },
+      { fr: 'une rubrique', type: 'n.f.', en: 'a section / column (in media)', diff: 'intermediate', sentence: 'Elle tient une rubrique hebdomadaire sur la culture dans ce magazine.', sen_en: 'She runs a weekly culture section in this magazine.' },
+      { fr: 'l\'audience', type: 'n.f.', en: 'the audience / viewership', diff: 'intermediate', sentence: 'L\'audience de ce journal télévisé a chuté ces dernières années.', sen_en: 'The viewership of this TV news programme has fallen in recent years.' },
+      { fr: 'un témoin', type: 'n.m.', en: 'a witness', diff: 'essential', sentence: 'Des témoins ont confirmé les faits relatés dans l\'article.', sen_en: 'Witnesses confirmed the facts reported in the article.' },
+      { fr: 'la propagande', type: 'n.f.', en: 'propaganda', diff: 'advanced', sentence: 'La propagande d\'État fausse la perception de la réalité par les citoyens.', sen_en: 'State propaganda distorts citizens\' perception of reality.' },
+      { fr: 'une accréditation', type: 'n.f.', en: 'an accreditation (press)', diff: 'advanced', sentence: 'Le journaliste a obtenu une accréditation pour couvrir le sommet international.', sen_en: 'The journalist obtained accreditation to cover the international summit.' },
+      { fr: 'un média alternatif', type: 'n.m.', en: 'an alternative media outlet', diff: 'advanced', sentence: 'Les médias alternatifs offrent souvent un regard différent sur l\'actualité.', sen_en: 'Alternative media often offers a different perspective on current events.' },
+      { fr: 'en direct', type: 'expr.', en: 'live', diff: 'essential', sentence: 'Le match sera retransmis en direct sur la chaîne principale.', sen_en: 'The match will be broadcast live on the main channel.' },
+      { fr: 'les données personnelles', type: 'n.f.pl.', en: 'personal data', diff: 'intermediate', sentence: 'La protection des données personnelles est réglementée par le RGPD en Europe.', sen_en: 'The protection of personal data is regulated by the GDPR in Europe.' },
+      { fr: 'un commentaire', type: 'n.m.', en: 'a comment', diff: 'essential', sentence: 'Les commentaires haineux sur les réseaux sociaux peuvent être sanctionnés par la loi.', sen_en: 'Hateful comments on social media can be punished by law.' },
+      { fr: 'relayer', type: 'v.', en: 'to relay / share (information)', diff: 'intermediate', sentence: 'Les internautes ont massivement relayé cette information sur les réseaux.', sen_en: 'Internet users massively shared this information on the networks.' },
+      { fr: 'l\'instantanéité', type: 'n.f.', en: 'immediacy / instant nature', diff: 'advanced', sentence: 'L\'instantanéité des réseaux sociaux rend la vérification des informations plus difficile.', sen_en: 'The immediacy of social media makes fact-checking more difficult.' },
+      { fr: 'la vérification des faits', type: 'n.f.', en: 'fact-checking', diff: 'advanced', sentence: 'La vérification des faits est une pratique indispensable pour un journaliste.', sen_en: 'Fact-checking is an indispensable practice for a journalist.' },
+      { fr: 'une interview', type: 'n.f.', en: 'an interview', diff: 'essential', sentence: 'Elle a accordé une interview exclusive à la radio nationale.', sen_en: 'She gave an exclusive interview to the national radio.' },
+      { fr: 'surveiller', type: 'v.', en: 'to monitor / watch', diff: 'intermediate', sentence: 'Les autorités surveillent les contenus illégaux publiés en ligne.', sen_en: 'Authorities monitor illegal content published online.' },
+      { fr: 'un sondage', type: 'n.m.', en: 'a poll / survey', diff: 'intermediate', sentence: 'Selon un sondage récent, la confiance dans les médias a baissé.', sen_en: 'According to a recent poll, trust in the media has declined.' },
+      { fr: 'la transparence', type: 'n.f.', en: 'transparency', diff: 'intermediate', sentence: 'Les médias sont appelés à faire preuve de plus de transparence sur leurs sources.', sen_en: 'The media is called upon to show greater transparency about its sources.' },
+      { fr: 'un réseau d\'information', type: 'n.m.', en: 'a news network', diff: 'intermediate', sentence: 'Ce réseau d\'information est présent dans plus de cinquante pays.', sen_en: 'This news network is present in more than fifty countries.' },
+      { fr: 'la crise de confiance', type: 'n.f.', en: 'the trust crisis', diff: 'advanced', sentence: 'Une crise de confiance dans les médias traditionnels pousse les gens vers les réseaux sociaux.', sen_en: 'A trust crisis in traditional media pushes people towards social networks.' },
+      { fr: 'la satire', type: 'n.f.', en: 'satire', diff: 'advanced', sentence: 'La satire politique est protégée par la liberté d\'expression.', sen_en: 'Political satire is protected by freedom of expression.' },
+      { fr: 'publier', type: 'v.', en: 'to publish', diff: 'essential', sentence: 'Le journal a publié les résultats de son enquête en première page.', sen_en: 'The newspaper published the results of its investigation on the front page.' },
+    ]
+  },
+
+  money: {
+    name: 'Argent & Consommation',
+    en: 'Money',
+    words: [
+      { fr: 'un budget', type: 'n.m.', en: 'a budget', diff: 'essential', sentence: 'Elle a établi un budget mensuel pour mieux gérer ses dépenses.', sen_en: 'She established a monthly budget to better manage her expenses.' },
+      { fr: 'les dépenses', type: 'n.f.pl.', en: 'expenses / spending', diff: 'essential', sentence: 'Il essaie de réduire ses dépenses pour économiser pour les vacances.', sen_en: 'He tries to reduce his spending to save for the holidays.' },
+      { fr: 'les économies', type: 'n.f.pl.', en: 'savings', diff: 'essential', sentence: 'Elle a utilisé ses économies pour payer l\'acompte de sa voiture.', sen_en: 'She used her savings to pay the deposit on her car.' },
+      { fr: 'un prêt', type: 'n.m.', en: 'a loan', diff: 'essential', sentence: 'Il a contracté un prêt bancaire pour financer ses études.', sen_en: 'He took out a bank loan to finance his studies.' },
+      { fr: 'un compte bancaire', type: 'n.m.', en: 'a bank account', diff: 'essential', sentence: 'Elle a ouvert un compte bancaire dès son arrivée au Canada.', sen_en: 'She opened a bank account as soon as she arrived in Canada.' },
+      { fr: 'un virement', type: 'n.m.', en: 'a bank transfer', diff: 'essential', sentence: 'Il effectue un virement mensuel pour payer son loyer.', sen_en: 'He makes a monthly bank transfer to pay his rent.' },
+      { fr: 'une facture', type: 'n.f.', en: 'a bill / invoice', diff: 'essential', sentence: 'Elle a oublié de payer sa facture d\'électricité ce mois-ci.', sen_en: 'She forgot to pay her electricity bill this month.' },
+      { fr: 'un remboursement', type: 'n.m.', en: 'a repayment / refund', diff: 'essential', sentence: 'Le remboursement de son prêt étudiant durera quinze ans.', sen_en: 'The repayment of his student loan will last fifteen years.' },
+      { fr: 'le pouvoir d\'achat', type: 'n.m.', en: 'purchasing power', diff: 'intermediate', sentence: 'Le pouvoir d\'achat des ménages a diminué à cause de l\'inflation.', sen_en: 'Household purchasing power has decreased due to inflation.' },
+      { fr: 'l\'inflation', type: 'n.f.', en: 'inflation', diff: 'intermediate', sentence: 'L\'inflation a atteint son niveau le plus élevé depuis vingt ans.', sen_en: 'Inflation has reached its highest level in twenty years.' },
+      { fr: 'investir', type: 'v.', en: 'to invest', diff: 'intermediate', sentence: 'Il a décidé d\'investir dans l\'immobilier pour assurer son avenir.', sen_en: 'He decided to invest in real estate to secure his future.' },
+      { fr: 'un taux d\'intérêt', type: 'n.m.', en: 'an interest rate', diff: 'intermediate', sentence: 'La hausse des taux d\'intérêt rend l\'emprunt plus coûteux.', sen_en: 'The rise in interest rates makes borrowing more expensive.' },
+      { fr: 'la TVA (taxe sur la valeur ajoutée)', type: 'n.f.', en: 'VAT (value-added tax)', diff: 'intermediate', sentence: 'Le taux de TVA est de vingt pour cent sur la plupart des produits.', sen_en: 'The VAT rate is twenty percent on most products.' },
+      { fr: 'une assurance', type: 'n.f.', en: 'an insurance', diff: 'essential', sentence: 'Il a souscrit une assurance habitation avant d\'emménager.', sen_en: 'He took out home insurance before moving in.' },
+      { fr: 'la dette', type: 'n.f.', en: 'debt', diff: 'intermediate', sentence: 'La dette publique française représente environ cent dix pour cent du PIB.', sen_en: 'French public debt represents approximately one hundred and ten percent of GDP.' },
+      { fr: 'un crédit', type: 'n.m.', en: 'credit / a loan', diff: 'essential', sentence: 'Elle a demandé un crédit à la consommation pour acheter un électroménager.', sen_en: 'She applied for a consumer credit to buy a household appliance.' },
+      { fr: 'rentable', type: 'adj.', en: 'profitable / cost-effective', diff: 'intermediate', sentence: 'Cet investissement n\'est pas rentable sur le court terme.', sen_en: 'This investment is not profitable in the short term.' },
+      { fr: 'une prime', type: 'n.f.', en: 'a bonus / premium', diff: 'intermediate', sentence: 'Elle a reçu une prime de fin d\'année pour ses résultats exceptionnels.', sen_en: 'She received a year-end bonus for her exceptional results.' },
+      { fr: 'un bilan financier', type: 'n.m.', en: 'a financial statement / balance sheet', diff: 'advanced', sentence: 'L\'entreprise a présenté un bilan financier positif pour le troisième trimestre.', sen_en: 'The company presented a positive financial statement for the third quarter.' },
+      { fr: 'la fraude fiscale', type: 'n.f.', en: 'tax fraud / tax evasion', diff: 'advanced', sentence: 'La fraude fiscale coûte des milliards à l\'État chaque année.', sen_en: 'Tax fraud costs the state billions every year.' },
+      { fr: 'abordable', type: 'adj.', en: 'affordable', diff: 'essential', sentence: 'Ces logements sont à des prix abordables pour les jeunes travailleurs.', sen_en: 'These homes are at affordable prices for young workers.' },
+      { fr: 'les charges sociales', type: 'n.f.pl.', en: 'social contributions / payroll taxes', diff: 'advanced', sentence: 'Les charges sociales représentent environ quarante-cinq pour cent du salaire brut.', sen_en: 'Social contributions represent around forty-five percent of gross salary.' },
+      { fr: 'dépenser', type: 'v.', en: 'to spend', diff: 'essential', sentence: 'Il a tendance à trop dépenser en restaurants et sorties.', sen_en: 'He tends to spend too much on restaurants and outings.' },
+      { fr: 'économiser', type: 'v.', en: 'to save (money)', diff: 'essential', sentence: 'Elle économise chaque mois pour s\'acheter un appartement.', sen_en: 'She saves every month to buy herself a flat.' },
+      { fr: 'la retraite', type: 'n.f.', en: 'retirement / pension', diff: 'essential', sentence: 'Il cotise depuis vingt ans pour préparer sa retraite.', sen_en: 'He has been contributing for twenty years to prepare for his retirement.' },
+      { fr: 'une bourse', type: 'n.f.', en: 'a grant / scholarship / stock exchange', diff: 'intermediate', sentence: 'Elle a obtenu une bourse d\'études pour financer son master.', sen_en: 'She obtained a study grant to finance her master\'s degree.' },
+      { fr: 'les impôts sur le revenu', type: 'n.m.pl.', en: 'income taxes', diff: 'intermediate', sentence: 'Les impôts sur le revenu sont prélevés à la source depuis 2019.', sen_en: 'Income taxes have been deducted at source since 2019.' },
+      { fr: 'la consommation responsable', type: 'n.f.', en: 'responsible consumption', diff: 'advanced', sentence: 'La consommation responsable implique de choisir des produits éthiques et durables.', sen_en: 'Responsible consumption involves choosing ethical and sustainable products.' },
+      { fr: 'une transaction', type: 'n.f.', en: 'a transaction', diff: 'intermediate', sentence: 'Chaque transaction est sécurisée par un code de validation.', sen_en: 'Each transaction is secured by a validation code.' },
+      { fr: 'une réduction', type: 'n.f.', en: 'a discount / reduction', diff: 'essential', sentence: 'Les membres fidèles bénéficient d\'une réduction de quinze pour cent.', sen_en: 'Loyal members benefit from a fifteen percent discount.' },
+      { fr: 'un découvert bancaire', type: 'n.m.', en: 'a bank overdraft', diff: 'advanced', sentence: 'Il est en découvert bancaire depuis plusieurs jours.', sen_en: 'He has been in bank overdraft for several days.' },
+      { fr: 'une dépense imprévue', type: 'n.f.', en: 'an unexpected expense', diff: 'intermediate', sentence: 'Une dépense imprévue a déséquilibré son budget mensuel.', sen_en: 'An unexpected expense threw off his monthly budget.' },
+      { fr: 'le revenu', type: 'n.m.', en: 'income', diff: 'essential', sentence: 'Son revenu mensuel net est de deux mille cinq cents euros.', sen_en: 'His net monthly income is two thousand five hundred euros.' },
+      { fr: 'la croissance économique', type: 'n.f.', en: 'economic growth', diff: 'advanced', sentence: 'La croissance économique du pays est prévue à deux pour cent cette année.', sen_en: 'The country\'s economic growth is forecast at two percent this year.' },
+      { fr: 'une banque', type: 'n.f.', en: 'a bank', diff: 'essential', sentence: 'Elle a changé de banque pour obtenir de meilleures conditions.', sen_en: 'She changed banks to get better terms.' },
+      { fr: 'le patrimoine', type: 'n.m.', en: 'assets / wealth / heritage', diff: 'advanced', sentence: 'Son patrimoine immobilier lui assure des revenus complémentaires.', sen_en: 'His property assets provide him with supplementary income.' },
+      { fr: 'cotiser', type: 'v.', en: 'to contribute / pay into', diff: 'intermediate', sentence: 'Tous les salariés cotisent obligatoirement à la sécurité sociale.', sen_en: 'All employees are required to contribute to social security.' },
+      { fr: 'solvable', type: 'adj.', en: 'solvent / creditworthy', diff: 'advanced', sentence: 'Le propriétaire vérifie que le locataire est solvable avant de signer le bail.', sen_en: 'The landlord checks that the tenant is creditworthy before signing the lease.' },
+      { fr: 'un acompte', type: 'n.m.', en: 'a deposit / down payment', diff: 'intermediate', sentence: 'Ils ont versé un acompte de dix pour cent pour réserver l\'appartement.', sen_en: 'They paid a ten percent deposit to reserve the flat.' },
+      { fr: 'la redevance', type: 'n.f.', en: 'a fee / licence fee', diff: 'advanced', sentence: 'La redevance audiovisuelle finance les chaînes de télévision publiques.', sen_en: 'The TV licence fee funds public television channels.' },
+      { fr: 'plafonner', type: 'v.', en: 'to cap / plateau', diff: 'advanced', sentence: 'Son salaire a plafonné depuis trois ans sans augmentation.', sen_en: 'His salary has plateaued for three years without an increase.' },
+      { fr: 'les frais', type: 'n.m.pl.', en: 'fees / charges / costs', diff: 'essential', sentence: 'Les frais de gestion bancaire ont augmenté cette année.', sen_en: 'Bank management fees increased this year.' },
+      { fr: 'une cotisation', type: 'n.f.', en: 'a contribution / membership fee', diff: 'intermediate', sentence: 'La cotisation annuelle à cette association est de cinquante euros.', sen_en: 'The annual membership fee for this association is fifty euros.' },
+      { fr: 'l\'endettement', type: 'n.f.', en: 'indebtedness / debt level', diff: 'advanced', sentence: 'Le fort endettement des ménages inquiète les économistes.', sen_en: 'The high level of household debt worries economists.' },
+      { fr: 'gratuit(e)', type: 'adj.', en: 'free (of charge)', diff: 'essential', sentence: 'L\'entrée au musée est gratuite le premier dimanche du mois.', sen_en: 'Entry to the museum is free on the first Sunday of the month.' },
+      { fr: 'un chèque', type: 'n.m.', en: 'a cheque', diff: 'essential', sentence: 'Il a payé par chèque car il n\'avait pas sa carte bancaire.', sen_en: 'He paid by cheque because he didn\'t have his bank card.' },
+      { fr: 'une pénalité', type: 'n.f.', en: 'a penalty', diff: 'intermediate', sentence: 'Un retard de paiement entraîne une pénalité financière.', sen_en: 'A late payment incurs a financial penalty.' },
+      { fr: 'la crise économique', type: 'n.f.', en: 'the economic crisis', diff: 'intermediate', sentence: 'La crise économique a entraîné une hausse du chômage dans tout le pays.', sen_en: 'The economic crisis led to a rise in unemployment across the country.' },
+      { fr: 'les prestations sociales', type: 'n.f.pl.', en: 'social benefits', diff: 'intermediate', sentence: 'Les prestations sociales aident les familles à faibles revenus à couvrir leurs besoins essentiels.', sen_en: 'Social benefits help low-income families cover their basic needs.' },
+      { fr: 'une taxe', type: 'n.f.', en: 'a tax / levy', diff: 'essential', sentence: 'Une nouvelle taxe environnementale a été introduite sur les vols aériens.', sen_en: 'A new environmental tax was introduced on air travel.' },
+    ]
+  },
+
+  transversal: {
+    name: 'Mots transversaux',
+    en: 'Cross-topic & Discourse',
+    words: [
+      // ── CONTRAST & CONCESSION ──
+      { fr: 'en revanche', type: 'loc.adv.', en: 'on the other hand / however', diff: 'essential', sentence: 'Le loyer est élevé ; en revanche, le quartier est très bien desservi.', sen_en: 'The rent is high; on the other hand, the neighbourhood is very well served.' },
+      { fr: 'pourtant', type: 'adv.', en: 'yet / however / nevertheless', diff: 'essential', sentence: 'Il travaille beaucoup ; pourtant, il ne gagne pas suffisamment.', sen_en: 'He works a lot; yet he does not earn enough.' },
+      { fr: 'néanmoins', type: 'adv.', en: 'nevertheless / nonetheless', diff: 'intermediate', sentence: 'Les résultats sont encourageants ; néanmoins, des efforts restent nécessaires.', sen_en: 'The results are encouraging; nevertheless, efforts are still needed.' },
+      { fr: 'certes', type: 'adv.', en: 'admittedly / granted (sets up a concession)', diff: 'intermediate', sentence: 'Certes, la situation s\'est améliorée, mais des inégalités persistent.', sen_en: 'Admittedly, the situation has improved, but inequalities persist.' },
+      { fr: 'cependant', type: 'adv.', en: 'however / yet', diff: 'essential', sentence: 'La loi a été adoptée ; cependant, son application reste difficile.', sen_en: 'The law was passed; however, its application remains difficult.' },
+      { fr: 'malgré', type: 'prép.', en: 'despite / in spite of', diff: 'essential', sentence: 'Malgré les efforts du gouvernement, le chômage reste élevé.', sen_en: 'Despite the government\'s efforts, unemployment remains high.' },
+      { fr: 'bien que', type: 'conj.', en: 'although / even though (+ subjonctif)', diff: 'intermediate', sentence: 'Bien que les prix aient augmenté, la consommation ne faiblit pas.', sen_en: 'Although prices have risen, consumption is not weakening.' },
+      { fr: 'quoique', type: 'conj.', en: 'although / even though (+ subjonctif)', diff: 'advanced', sentence: 'Quoique le rapport soit positif, certains experts restent sceptiques.', sen_en: 'Although the report is positive, some experts remain sceptical.' },
+      { fr: 'or', type: 'conj.', en: 'yet / but (introduces a twist)', diff: 'advanced', sentence: 'On pensait que la mesure suffirait ; or, les résultats sont décevants.', sen_en: 'It was thought the measure would suffice; yet the results are disappointing.' },
+      { fr: 'si...que', type: 'loc.conj.', en: 'however...may be / even if', diff: 'advanced', sentence: 'Si importante que soit la croissance, elle ne profite pas à tous.', sen_en: 'However important growth may be, it does not benefit everyone.' },
+
+      // ── ADDITION & REINFORCEMENT ──
+      { fr: 'de plus', type: 'loc.adv.', en: 'furthermore / moreover', diff: 'essential', sentence: 'Ce poste offre un bon salaire ; de plus, il inclut des avantages sociaux.', sen_en: 'This position offers a good salary; furthermore, it includes employee benefits.' },
+      { fr: 'en outre', type: 'loc.adv.', en: 'in addition / furthermore (formal)', diff: 'intermediate', sentence: 'En outre, le rapport souligne l\'importance de la formation continue.', sen_en: 'In addition, the report highlights the importance of ongoing training.' },
+      { fr: 'par ailleurs', type: 'loc.adv.', en: 'moreover / on another note', diff: 'intermediate', sentence: 'Par ailleurs, les autorités envisagent de nouvelles mesures fiscales.', sen_en: 'Moreover, the authorities are considering new tax measures.' },
+      { fr: 'd\'ailleurs', type: 'loc.adv.', en: 'besides / incidentally / as a matter of fact', diff: 'intermediate', sentence: 'Ce phénomène n\'est pas nouveau ; d\'ailleurs, des études l\'ont documenté depuis les années 90.', sen_en: 'This phenomenon is not new; as a matter of fact, studies have documented it since the 90s.' },
+      { fr: 'voire', type: 'adv.', en: 'or even / indeed', diff: 'intermediate', sentence: 'Cette situation est préoccupante, voire alarmante selon certains experts.', sen_en: 'This situation is worrying, or even alarming according to some experts.' },
+      { fr: 'qui plus est', type: 'loc.adv.', en: 'what is more / on top of that', diff: 'advanced', sentence: 'Le projet est coûteux et, qui plus est, son impact environnemental est incertain.', sen_en: 'The project is costly and, what is more, its environmental impact is uncertain.' },
+      { fr: 'non seulement...mais aussi', type: 'loc.conj.', en: 'not only...but also', diff: 'intermediate', sentence: 'Ce dispositif est non seulement efficace, mais aussi peu coûteux.', sen_en: 'This system is not only effective, but also inexpensive.' },
+
+      // ── CONSEQUENCE & CAUSE ──
+      { fr: 'par conséquent', type: 'loc.adv.', en: 'consequently / therefore', diff: 'essential', sentence: 'Les coûts ont augmenté ; par conséquent, les prix ont dû être révisés.', sen_en: 'Costs have risen; consequently, prices had to be revised.' },
+      { fr: 'ainsi', type: 'adv.', en: 'thus / therefore / in this way', diff: 'essential', sentence: 'Ainsi, la réforme a permis de réduire les inégalités scolaires.', sen_en: 'Thus, the reform made it possible to reduce educational inequalities.' },
+      { fr: 'c\'est pourquoi', type: 'loc.conj.', en: 'that is why / which is why', diff: 'essential', sentence: 'Le financement est insuffisant ; c\'est pourquoi le projet a été suspendu.', sen_en: 'The funding is insufficient; that is why the project was suspended.' },
+      { fr: 'en raison de', type: 'loc.prép.', en: 'due to / because of', diff: 'essential', sentence: 'Le vol a été retardé en raison de mauvaises conditions météorologiques.', sen_en: 'The flight was delayed due to bad weather conditions.' },
+      { fr: 'grâce à', type: 'loc.prép.', en: 'thanks to', diff: 'essential', sentence: 'Grâce à cette politique, le taux de chômage a baissé significativement.', sen_en: 'Thanks to this policy, the unemployment rate has dropped significantly.' },
+      { fr: 'faute de', type: 'loc.prép.', en: 'for lack of / due to a lack of', diff: 'intermediate', sentence: 'Faute de financement, le projet a été abandonné.', sen_en: 'For lack of funding, the project was abandoned.' },
+      { fr: 'dès lors', type: 'loc.adv.', en: 'from then on / consequently', diff: 'advanced', sentence: 'Dès lors, les autorités ont décidé de renforcer les contrôles.', sen_en: 'From then on, the authorities decided to strengthen controls.' },
+      { fr: 'il en résulte que', type: 'loc.verb.', en: 'it follows that / the result is that', diff: 'advanced', sentence: 'Il en résulte que les ménages les plus modestes sont les plus touchés.', sen_en: 'It follows that the most modest households are the most affected.' },
+
+      // ── FRAMING & DISCOURSE ──
+      { fr: 'en effet', type: 'loc.adv.', en: 'indeed / in fact (confirms what was said)', diff: 'essential', sentence: 'Ce problème est grave ; en effet, il touche plus d\'un million de personnes.', sen_en: 'This problem is serious; indeed, it affects more than one million people.' },
+      { fr: 'c\'est-à-dire', type: 'loc.conj.', en: 'that is to say / i.e.', diff: 'essential', sentence: 'Le taux d\'abstention a augmenté, c\'est-à-dire que moins de citoyens ont voté.', sen_en: 'The abstention rate has increased, that is to say fewer citizens voted.' },
+      { fr: 'quant à', type: 'loc.prép.', en: 'as for / regarding', diff: 'intermediate', sentence: 'Quant aux jeunes, ils sont particulièrement touchés par cette réforme.', sen_en: 'As for young people, they are particularly affected by this reform.' },
+      { fr: 'il s\'avère que', type: 'loc.verb.', en: 'it turns out that / it proves that', diff: 'intermediate', sentence: 'Il s\'avère que les résultats sont bien meilleurs que prévu.', sen_en: 'It turns out that the results are much better than expected.' },
+      { fr: 'force est de constater que', type: 'loc.verb.', en: 'one cannot but note that / it must be acknowledged that', diff: 'advanced', sentence: 'Force est de constater que la situation s\'est détériorée malgré les efforts déployés.', sen_en: 'It must be acknowledged that the situation has deteriorated despite the efforts made.' },
+      { fr: 'il convient de', type: 'loc.verb.', en: 'it is appropriate to / one should', diff: 'advanced', sentence: 'Il convient de rappeler que cette mesure n\'est pas rétroactive.', sen_en: 'It is appropriate to recall that this measure is not retroactive.' },
+      { fr: 'selon', type: 'prép.', en: 'according to', diff: 'essential', sentence: 'Selon les dernières statistiques, le taux d\'emploi a progressé de deux pour cent.', sen_en: 'According to the latest statistics, the employment rate has increased by two percent.' },
+      { fr: 'à cet égard', type: 'loc.adv.', en: 'in this regard / on this point', diff: 'advanced', sentence: 'À cet égard, les recommandations de l\'OMS sont claires.', sen_en: 'In this regard, the WHO recommendations are clear.' },
+      { fr: 'dans ce contexte', type: 'loc.adv.', en: 'in this context', diff: 'intermediate', sentence: 'Dans ce contexte, les entreprises doivent adapter leur stratégie rapidement.', sen_en: 'In this context, companies must adapt their strategy quickly.' },
+      { fr: 'à l\'heure actuelle', type: 'loc.adv.', en: 'at the present time / currently', diff: 'intermediate', sentence: 'À l\'heure actuelle, aucune solution définitive n\'a été trouvée.', sen_en: 'At the present time, no definitive solution has been found.' },
+
+      // ── FORMAL REGISTER VERBS ──
+      { fr: 'obtenir', type: 'v.', en: 'to obtain / get (formal alt. to avoir)', diff: 'essential', sentence: 'Il a obtenu un permis de travail après plusieurs mois de démarches.', sen_en: 'He obtained a work permit after several months of procedures.' },
+      { fr: 'nécessiter', type: 'v.', en: 'to require / necessitate (formal alt. to avoir besoin de)', diff: 'intermediate', sentence: 'Cette procédure nécessite la présentation de plusieurs documents officiels.', sen_en: 'This procedure requires the presentation of several official documents.' },
+      { fr: 'permettre de', type: 'v.', en: 'to allow / enable', diff: 'essential', sentence: 'Cette réforme permet de simplifier les démarches administratives.', sen_en: 'This reform allows administrative procedures to be simplified.' },
+      { fr: 'constituer', type: 'v.', en: 'to constitute / represent', diff: 'intermediate', sentence: 'Cette décision constitue une avancée majeure pour les droits des travailleurs.', sen_en: 'This decision represents a major step forward for workers\' rights.' },
+      { fr: 'souligner', type: 'v.', en: 'to highlight / emphasise', diff: 'intermediate', sentence: 'Le rapport souligne la nécessité d\'agir rapidement face à la crise climatique.', sen_en: 'The report highlights the need to act quickly in the face of the climate crisis.' },
+      { fr: 'entraîner', type: 'v.', en: 'to lead to / bring about / cause', diff: 'essential', sentence: 'Une hausse des taux d\'intérêt entraîne généralement une baisse de la consommation.', sen_en: 'A rise in interest rates generally leads to a fall in consumption.' },
+      { fr: 'mettre en évidence', type: 'loc.verb.', en: 'to highlight / bring to light', diff: 'intermediate', sentence: 'Cette étude met en évidence les liens entre pauvreté et décrochage scolaire.', sen_en: 'This study brings to light the links between poverty and school dropout.' },
+      { fr: 'remettre en cause', type: 'loc.verb.', en: 'to call into question / challenge', diff: 'advanced', sentence: 'Ces nouvelles données remettent en cause les conclusions de l\'étude précédente.', sen_en: 'This new data calls into question the conclusions of the previous study.' },
+      { fr: 'faire état de', type: 'loc.verb.', en: 'to report / give an account of', diff: 'advanced', sentence: 'Le rapport fait état d\'une augmentation significative des cas de burnout.', sen_en: 'The report gives an account of a significant increase in burnout cases.' },
+      { fr: 'témoigner de', type: 'loc.verb.', en: 'to testify to / be evidence of', diff: 'advanced', sentence: 'Ces chiffres témoignent d\'une amélioration réelle des conditions de vie.', sen_en: 'These figures testify to a real improvement in living conditions.' },
+
+      // ── QUANTIFICATION & SCOPE ──
+      { fr: 'davantage', type: 'adv.', en: 'more / further (formal alt. to plus)', diff: 'intermediate', sentence: 'Les jeunes utilisent davantage les transports en commun que les générations précédentes.', sen_en: 'Young people use public transport more than previous generations.' },
+      { fr: 'dans la mesure où', type: 'loc.conj.', en: 'insofar as / to the extent that', diff: 'advanced', sentence: 'Cette politique est justifiée dans la mesure où elle protège les plus vulnérables.', sen_en: 'This policy is justified insofar as it protects the most vulnerable.' },
+      { fr: 'à tel point que', type: 'loc.conj.', en: 'to such an extent that', diff: 'advanced', sentence: 'La situation s\'est dégradée à tel point que des mesures d\'urgence ont été prises.', sen_en: 'The situation has deteriorated to such an extent that emergency measures were taken.' },
+      { fr: 'tant...que', type: 'loc.conj.', en: 'both...and / as much...as', diff: 'intermediate', sentence: 'Tant les employeurs que les salariés bénéficient de cette réforme.', sen_en: 'Both employers and employees benefit from this reform.' },
+      { fr: 'la plupart de', type: 'loc.déterm.', en: 'most of / the majority of', diff: 'essential', sentence: 'La plupart des sondés estiment que la situation économique va se détériorer.', sen_en: 'Most respondents believe that the economic situation will deteriorate.' },
+      { fr: 'en majorité', type: 'loc.adv.', en: 'mostly / for the most part', diff: 'intermediate', sentence: 'Les personnes interrogées sont en majorité favorables à cette mesure.', sen_en: 'The people questioned are mostly in favour of this measure.' },
+    ]
+  }
+};
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let currentCat = 'daily';
+let activeDiffs = { essential: true, intermediate: true, advanced: true };
+let queue = [];
+let qIndex = 0;
+let known = 0;
+let reviewCount = 0;
+let streak = 0;
+let revealed = false;
+let senEnShown = false;
+let speechSynth = window.speechSynthesis;
+let currentUtterance = null;
+
+// ─────────────────────────────────────────────
+// SHUFFLE
+// ─────────────────────────────────────────────
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// ─────────────────────────────────────────────
+// BUILD QUEUE
+// ─────────────────────────────────────────────
+function buildQueue() {
+  const words = CATEGORIES[currentCat].words.filter(w => activeDiffs[w.diff]);
+  queue = shuffle([...words]);
+  qIndex = 0;
+}
+
+// ─────────────────────────────────────────────
+// INIT CATEGORY GRID
+// ─────────────────────────────────────────────
+function initCategoryGrid() {
+  const grid = document.getElementById('category-grid');
+  let html = '';
+  for (const [key, cat] of Object.entries(CATEGORIES)) {
+    const total = cat.words.length;
+    html += `<button class="cat-btn${key === currentCat ? ' active' : ''}" onclick="selectCategory('${key}')">
+      <span class="cat-name">${cat.name}</span>
+      <span class="cat-count">${cat.en} · ${total} mots</span>
+    </button>`;
+  }
+  grid.innerHTML = html;
+}
+
+function selectCategory(key) {
+  currentCat = key;
+  known = 0; reviewCount = 0; streak = 0;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.cat-btn').forEach(b => {
+    if (b.querySelector('.cat-name').textContent === CATEGORIES[key].name) b.classList.add('active');
+  });
+  buildQueue();
+  updateScore();
+  renderCard();
+}
+
+// ─────────────────────────────────────────────
+// DIFFICULTY FILTER
+// ─────────────────────────────────────────────
+function toggleDiff(diff) {
+  activeDiffs[diff] = !activeDiffs[diff];
+  const btn = document.querySelector(`.diff-btn.${diff}`);
+  btn.classList.toggle('active', activeDiffs[diff]);
+  buildQueue();
+  updateScore();
+  renderCard();
+}
+
+// ─────────────────────────────────────────────
+// SCORE
+// ─────────────────────────────────────────────
+function updateScore() {
+  document.getElementById('sc-current').textContent = queue.length > 0 ? (qIndex + 1) : '—';
+  document.getElementById('sc-total').textContent = queue.length || '—';
+  document.getElementById('sc-streak').textContent = streak;
+  document.getElementById('sc-known').textContent = known;
+  document.getElementById('sc-review').textContent = reviewCount;
+  // progress
+  const pct = queue.length > 0 ? Math.min(100, Math.round(qIndex / queue.length * 100)) : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+// ─────────────────────────────────────────────
+// SPEECH
+// ─────────────────────────────────────────────
+function speak(text, onEnd) {
+  if (!speechSynth) return;
+  speechSynth.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'fr-FR';
+  utt.rate = 0.9;
+  utt.pitch = 1;
+  currentUtterance = utt;
+  const indicator = document.getElementById('audio-indicator');
+  indicator.style.display = 'flex';
+  utt.onend = () => {
+    indicator.style.display = 'none';
+    if (onEnd) onEnd();
+  };
+  utt.onerror = () => { indicator.style.display = 'none'; };
+  speechSynth.speak(utt);
+}
+
+function speakWord() {
+  if (queue.length === 0) return;
+  const w = queue[qIndex];
+  speak(w.fr);
+}
+
+function speakSentence() {
+  if (queue.length === 0) return;
+  const w = queue[qIndex];
+  speak(w.sentence);
+}
+
+// ─────────────────────────────────────────────
+// RENDER CARD
+// ─────────────────────────────────────────────
+function renderCard() {
+  const area = document.getElementById('card-area');
+  updateScore();
+
+  if (queue.length === 0) {
+    area.innerHTML = `<div class="empty-state"><h3>Aucun mot disponible</h3><p>Activez au moins un niveau de difficulté pour voir les mots.</p></div>`;
+    return;
+  }
+
+  if (qIndex >= queue.length) {
+    const total = known + reviewCount;
+    const pct = total > 0 ? Math.round(known / total * 100) : 0;
+    area.innerHTML = `
+      <div class="session-complete">
+        <h2>Session terminée ✓</h2>
+        <p>Connus : <strong>${known}</strong> &nbsp;·&nbsp; À revoir : <strong>${reviewCount}</strong> &nbsp;·&nbsp; Score : <strong>${pct}%</strong></p>
+        <button class="restart-btn" onclick="restartSession()">Recommencer ce thème</button>
+      </div>`;
+    return;
+  }
+
+  const w = queue[qIndex];
+  revealed = false;
+  senEnShown = false;
+
+  const diffLabel = { essential: 'Essentiel', intermediate: 'Intermédiaire', advanced: 'Avancé' }[w.diff];
+
+  area.innerHTML = `
+    <div class="word-card">
+      <div class="card-top">
+        <div class="q-number">Mot ${qIndex + 1} / ${queue.length}</div>
+        <span class="diff-badge ${w.diff}">${diffLabel}</span>
+      </div>
+
+      <div class="word-fr">
+        <span>${w.fr}</span>
+        <span class="word-type">${w.type}</span>
+        <button class="play-word-btn" onclick="speakWord()" title="Écouter le mot">▶</button>
+      </div>
+
+      <div class="translation-area">
+        <button class="reveal-btn" id="reveal-btn" onclick="revealTranslation()">▸ Afficher la traduction</button>
+        <div class="translation-reveal" id="translation-reveal">
+          <div class="translation-en">${w.en}</div>
+        </div>
+      </div>
+
+      <div class="sentence-block">
+        <div class="sentence-label">Phrase typique TCF</div>
+        <div class="sentence-fr">
+          <span class="sentence-text" id="sentence-text">${w.sentence}</span>
+          <button class="play-sentence-btn" onclick="speakSentence()" title="Écouter la phrase">▶</button>
+        </div>
+        <div class="sentence-en" id="sentence-en">${w.sen_en}</div>
+        <button class="toggle-sen-en" onclick="toggleSenEn()">▸ Traduction de la phrase</button>
+      </div>
+
+      <div class="action-row">
+        <button class="btn-know" onclick="markKnown()">✓ Je connais</button>
+        <button class="btn-review" onclick="markReview()">↺ À revoir</button>
+        <button class="btn-skip" onclick="skipCard()">→ Passer</button>
+      </div>
+    </div>`;
+
+  // Auto-play sentence after a short pause
+  setTimeout(() => {
+    speak(w.sentence);
+  }, 400);
+}
+
+function revealTranslation() {
+  revealed = true;
+  document.getElementById('reveal-btn').style.display = 'none';
+  document.getElementById('translation-reveal').classList.add('open');
+}
+
+function toggleSenEn() {
+  const el = document.getElementById('sentence-en');
+  const btn = el.nextElementSibling;
+  if (!el) return;
+  senEnShown = !senEnShown;
+  el.classList.toggle('show', senEnShown);
+  btn.textContent = senEnShown ? '▾ Masquer la traduction' : '▸ Traduction de la phrase';
+}
+
+function markKnown() {
+  known++;
+  streak++;
+  qIndex++;
+  updateScore();
+  renderCard();
+}
+
+function markReview() {
+  reviewCount++;
+  streak = 0;
+  // Re-insert word later in queue
+  const reInsert = Math.min(qIndex + 4, queue.length);
+  queue.splice(reInsert, 0, queue[qIndex]);
+  qIndex++;
+  updateScore();
+  renderCard();
+}
+
+function skipCard() {
+  streak = 0;
+  qIndex++;
+  updateScore();
+  renderCard();
+}
+
+function restartSession() {
+  known = 0; reviewCount = 0; streak = 0;
+  buildQueue();
+  updateScore();
+  renderCard();
+}
+
+
+
+// ─────────────────────────────────────────────
+// GLOSSARY
+// ─────────────────────────────────────────────
+let glossCat = 'all';
+let glossDiffs = { essential: true, intermediate: true, advanced: true };
+
+function initGlossCatNav() {
+  const nav = document.getElementById('gloss-cat-nav');
+  let html = `<button class="gloss-cat-pill active" onclick="selectGlossCat('all')">Tous les thèmes</button>`;
+  for (const [key, cat] of Object.entries(CATEGORIES)) {
+    html += `<button class="gloss-cat-pill" onclick="selectGlossCat('${key}')">${cat.name}</button>`;
+  }
+  nav.innerHTML = html;
+}
+
+function selectGlossCat(key) {
+  glossCat = key;
+  document.querySelectorAll('.gloss-cat-pill').forEach(b => b.classList.remove('active'));
+  const pills = document.querySelectorAll('.gloss-cat-pill');
+  pills.forEach(b => {
+    const isAll = key === 'all' && b.textContent === 'Tous les thèmes';
+    const isCat = key !== 'all' && CATEGORIES[key] && b.textContent === CATEGORIES[key].name;
+    if (isAll || isCat) b.classList.add('active');
+  });
+  renderGlossary();
+}
+
+function toggleGlossDiff(diff) {
+  glossDiffs[diff] = !glossDiffs[diff];
+  document.getElementById('gdiff-' + diff).classList.toggle('active', glossDiffs[diff]);
+  renderGlossary();
+}
+
+function glossSpeak(text, type) {
+  if (!speechSynth) return;
+  speechSynth.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'fr-FR';
+  utt.rate = type === 'word' ? 0.85 : 0.9;
+  speechSynth.speak(utt);
+}
+
+function renderGlossary() {
+  const container = document.getElementById('gloss-content');
+  const catsToShow = glossCat === 'all' ? Object.keys(CATEGORIES) : [glossCat];
+  const diffOrder = ['essential', 'intermediate', 'advanced'];
+  const diffLabel = { essential: 'Essentiel', intermediate: 'Intermédiaire', advanced: 'Avancé' };
+
+  let html = '';
+
+  for (const catKey of catsToShow) {
+    const cat = CATEGORIES[catKey];
+    const filteredWords = cat.words.filter(w => glossDiffs[w.diff]);
+    if (filteredWords.length === 0) continue;
+
+    // Sort: essential first, then intermediate, then advanced; within each, keep original order
+    const sorted = [...filteredWords].sort((a, b) => diffOrder.indexOf(a.diff) - diffOrder.indexOf(b.diff));
+
+    html += `<div class="gloss-section" id="gloss-${catKey}">
+      <div class="gloss-section-header">
+        <span class="gloss-section-title">${cat.name}</span>
+        <span class="gloss-section-en">${cat.en}</span>
+        <span class="gloss-section-count">${filteredWords.length} mots</span>
+      </div>`;
+
+    let lastDiff = null;
+    for (const w of sorted) {
+      if (w.diff !== lastDiff) {
+        html += `<div class="gloss-diff-label">${diffLabel[w.diff]}</div>`;
+        lastDiff = w.diff;
+      }
+      const wEsc = w.fr.replace(/'/g, "\\'");
+      const sEsc = w.sentence.replace(/'/g, "\\'");
+      html += `
+        <div class="gloss-row">
+          <div class="gloss-left">
+            <div class="gloss-fr">
+              <span class="gloss-diff-dot ${w.diff}"></span>
+              <span>${w.fr}</span>
+              <button class="gloss-play" onclick="glossSpeak('${wEsc}','word')" title="Écouter le mot">▶</button>
+            </div>
+            <div class="gloss-type">${w.type}</div>
+            <div class="gloss-en">${w.en}</div>
+          </div>
+          <div class="gloss-right">
+            <div class="gloss-sentence">
+              <span class="gloss-sentence-text">${w.sentence}</span>
+              <button class="gloss-play" onclick="glossSpeak('${sEsc}','sentence')" title="Écouter la phrase">▷</button>
+            </div>
+            <div class="gloss-sen-en">${w.sen_en}</div>
+          </div>
+        </div>`;
+    }
+
+    html += `</div>`;
+  }
+
+  container.innerHTML = html || `<div class="empty-state"><h3>Aucun mot à afficher</h3><p>Activez au moins un niveau de difficulté.</p></div>`;
+}
+
+// ─────────────────────────────────────────────
+// LISTEN MODE
+// ─────────────────────────────────────────────
+let listenCat = 'daily';
+let listenSpeed = 'normal';
+let listenWords = [];
+let listenIndex = 0;
+let listenPlaying = false;
+let listenPaused = false;
+let listenStage = 0; // 0=word_fr, 1=meaning, 2=sentence_fr, 3=sentence_en, 4=word_fr_repeat
+let selectedVoiceFr = null;
+let selectedVoiceEn = null;
+let listenLoop = false;
+
+function loadVoices() {
+  const voices = speechSynth.getVoices();
+  if (voices.length === 0) return; // not ready yet
+
+  const frSelect = document.getElementById('voice-fr');
+  const enSelect = document.getElementById('voice-en');
+  const hint = document.getElementById('voice-hint');
+
+  const frVoices = voices.filter(v => v.lang.startsWith('fr'));
+  const enVoices = voices.filter(v => v.lang.startsWith('en'));
+
+  // Populate French dropdown
+  frSelect.innerHTML = frVoices.length === 0
+    ? '<option value="">Aucune voix française trouvée</option>'
+    : frVoices.map((v, i) => `<option value="${i}">${v.name} (${v.lang})</option>`).join('');
+
+  // Populate English dropdown
+  enSelect.innerHTML = enVoices.length === 0
+    ? '<option value="">Aucune voix anglaise trouvée</option>'
+    : enVoices.map((v, i) => `<option value="${i}">${v.name} (${v.lang})</option>`).join('');
+
+  // Set defaults — prefer local/premium voices
+  const bestFr = frVoices.findIndex(v => v.localService) !== -1
+    ? frVoices.findIndex(v => v.localService)
+    : 0;
+  const bestEn = enVoices.findIndex(v => v.localService) !== -1
+    ? enVoices.findIndex(v => v.localService)
+    : 0;
+
+  frSelect.selectedIndex = bestFr;
+  enSelect.selectedIndex = bestEn;
+
+  selectedVoiceFr = frVoices[bestFr] || null;
+  selectedVoiceEn = enVoices[bestEn] || null;
+
+  frSelect.onchange = () => { selectedVoiceFr = frVoices[parseInt(frSelect.value)] || null; };
+  enSelect.onchange = () => { selectedVoiceEn = enVoices[parseInt(enSelect.value)] || null; };
+
+  const total = frVoices.length + enVoices.length;
+  hint.textContent = `${total} voix trouvées sur cet appareil. Choisissez celles que vous préférez.`;
+}
+
+// Voices load asynchronously — try immediately and on the voiceschanged event
+if (speechSynth) {
+  loadVoices();
+  speechSynth.onvoiceschanged = loadVoices;
+}
+
+const PAUSE_BETWEEN = { normal: 900, slow: 1400 };
+const PAUSE_BETWEEN_WORDS = { normal: 1600, slow: 2400 };
+const SPEED_RATE = { normal: 0.88, slow: 0.72, fast: 1.05 };
+
+const STAGE_META = [
+  { label: 'Mot en français', mainKey: 'fr',      subKey: 'type', subIsType: true, lang: 'fr' },
+  { label: 'Signification',   mainKey: 'en',      subKey: null,                   lang: 'en' },
+  { label: 'Phrase TCF',      mainKey: 'sentence', subKey: null,                  lang: 'fr' },
+  { label: 'Traduction',      mainKey: 'sen_en',  subKey: null,                   lang: 'en' },
+  { label: 'Phrase — répétition', mainKey: 'sentence', subKey: null,              lang: 'fr' },
+  { label: 'À retenir',       mainKey: 'fr',      subKey: null,                   lang: 'fr' },
+];
+
+function initListenCatGrid() {
+  const grid = document.getElementById('listen-cat-grid');
+  let html = '';
+  for (const [key, cat] of Object.entries(CATEGORIES)) {
+    const total = cat.words.length;
+    html += `<button class="listen-cat-btn${key === listenCat ? ' active' : ''}" onclick="selectListenCat('${key}')">
+      <span class="lcat-name">${cat.name}</span>
+      <span class="lcat-count">${cat.en} · ${total} mots</span>
+    </button>`;
+  }
+  grid.innerHTML = html;
+}
+
+function selectListenCat(key) {
+  listenCat = key;
+  document.querySelectorAll('.listen-cat-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.listen-cat-btn').forEach(b => {
+    if (b.querySelector('.lcat-name').textContent === CATEGORIES[key].name) b.classList.add('active');
+  });
+}
+
+function setListenSpeed(s) {
+  listenSpeed = s;
+  document.getElementById('lspeed-slow').classList.toggle('active', s === 'slow');
+  document.getElementById('lspeed-normal').classList.toggle('active', s === 'normal');
+  document.getElementById('lspeed-fast').classList.toggle('active', s === 'fast');
+}
+
+function setPlayerSpeed(s) {
+  listenSpeed = s;
+  document.getElementById('pspeed-slow').classList.toggle('active', s === 'slow');
+  document.getElementById('pspeed-normal').classList.toggle('active', s === 'normal');
+  document.getElementById('pspeed-fast').classList.toggle('active', s === 'fast');
+}
+
+function toggleListenLoop() {
+  listenLoop = !listenLoop;
+  // Setup screen button
+  const icon = document.getElementById('listen-loop-icon');
+  const state = document.getElementById('listen-loop-state');
+  const btn = document.getElementById('listen-loop-btn');
+  if (icon) icon.textContent = listenLoop ? '↺' : '↺';
+  if (state) state.textContent = listenLoop ? 'activée' : 'désactivée';
+  if (btn) btn.classList.toggle('active', listenLoop);
+  // Player button
+  const pstate = document.getElementById('player-loop-state');
+  const pbtn = document.getElementById('player-loop-btn');
+  if (pstate) pstate.textContent = listenLoop ? 'on' : 'off';
+  if (pbtn) pbtn.classList.toggle('active', listenLoop);
+}
+
+function startListening() {
+  const cat = CATEGORIES[listenCat];
+  // Sort: essential first, then intermediate, then advanced
+  const diffOrder = ['essential', 'intermediate', 'advanced'];
+  listenWords = [...cat.words].sort((a, b) => diffOrder.indexOf(a.diff) - diffOrder.indexOf(b.diff));
+  listenIndex = 0;
+  listenStage = 0;
+  listenPlaying = true;
+  listenPaused = false;
+
+  document.getElementById('listen-setup').style.display = 'none';
+  const player = document.getElementById('listen-player');
+  player.classList.add('active');
+
+  document.getElementById('player-cat-name').textContent = cat.name;
+  updatePlayerProgress();
+  updatePlayerDisplay();
+  playCurrentStage();
+}
+
+function stopListening() {
+  listenPlaying = false;
+  listenPaused = false;
+  speechSynth && speechSynth.cancel();
+  document.getElementById('listen-setup').style.display = '';
+  document.getElementById('listen-player').classList.remove('active');
+  document.getElementById('ctrl-play-btn').textContent = '▶';
+  setSpeakingVisible(false);
+}
+
+function toggleListenPlay() {
+  if (!listenPlaying && !listenPaused) return;
+  if (listenPaused) {
+    listenPaused = false;
+    listenPlaying = true;
+    document.getElementById('ctrl-play-btn').textContent = '⏸';
+    playCurrentStage();
+  } else {
+    listenPaused = true;
+    listenPlaying = false;
+    speechSynth && speechSynth.cancel();
+    document.getElementById('ctrl-play-btn').textContent = '▶';
+    setSpeakingVisible(false);
+  }
+}
+
+function listenPrev() {
+  speechSynth && speechSynth.cancel();
+  listenStage = 0;
+  listenIndex = Math.max(0, listenIndex - 1);
+  updatePlayerProgress();
+  updatePlayerDisplay();
+  if (listenPlaying) playCurrentStage();
+}
+
+function listenNext() {
+  speechSynth && speechSynth.cancel();
+  listenStage = 0;
+  listenIndex = Math.min(listenWords.length - 1, listenIndex + 1);
+  updatePlayerProgress();
+  updatePlayerDisplay();
+  if (listenPlaying) playCurrentStage();
+}
+
+function updatePlayerProgress() {
+  const total = listenWords.length;
+  const pct = total > 0 ? Math.round((listenIndex / total) * 100) : 0;
+  document.getElementById('player-progress-fill').style.width = pct + '%';
+  document.getElementById('player-counter').textContent = `${listenIndex + 1} / ${total}`;
+}
+
+function updatePlayerDisplay() {
+  if (listenIndex >= listenWords.length) return;
+  const w = listenWords[listenIndex];
+  const meta = STAGE_META[listenStage];
+  document.getElementById('player-stage').textContent = meta.label;
+  document.getElementById('player-main').textContent = w[meta.mainKey] || '';
+  if (meta.subIsType) {
+    document.getElementById('player-sub').textContent = '';
+    document.getElementById('player-type').textContent = w.type;
+  } else {
+    document.getElementById('player-sub').textContent = meta.subKey ? w[meta.subKey] : '';
+    document.getElementById('player-type').textContent = '';
+  }
+}
+
+function setSpeakingVisible(v) {
+  document.getElementById('player-speaking').classList.toggle('visible', v);
+}
+
+function playCurrentStage() {
+  if (!listenPlaying || listenPaused) return;
+  if (listenIndex >= listenWords.length) {
+    if (listenLoop) {
+      // Reshuffle and restart
+      const diffOrder = ['essential', 'intermediate', 'advanced'];
+      listenWords = shuffle([...CATEGORIES[listenCat].words]).sort(
+        (a, b) => diffOrder.indexOf(a.diff) - diffOrder.indexOf(b.diff)
+      );
+      // Randomise within each difficulty tier
+      const tiers = ['essential','intermediate','advanced'];
+      let result = [];
+      for (const t of tiers) {
+        result = result.concat(shuffle(listenWords.filter(w => w.diff === t)));
+      }
+      listenWords = result;
+      listenIndex = 0;
+      listenStage = 0;
+      updatePlayerProgress();
+      playCurrentStage();
+      return;
+    }
+    // No loop — session complete
+    listenPlaying = false;
+    document.getElementById('ctrl-play-btn').textContent = '▶';
+    document.getElementById('player-stage').textContent = 'Terminé ✓';
+    document.getElementById('player-main').textContent = 'Session complète';
+    document.getElementById('player-sub').textContent = 'Activez la boucle pour recommencer automatiquement.';
+    document.getElementById('player-type').textContent = '';
+    setSpeakingVisible(false);
+    return;
+  }
+
+  updatePlayerDisplay();
+  document.getElementById('ctrl-play-btn').textContent = '⏸';
+
+  const w = listenWords[listenIndex];
+  const meta = STAGE_META[listenStage];
+  let textToSpeak = w[meta.mainKey] || '';
+  // Replace ' / ' with ', ' so TTS doesn't say "slash"
+  textToSpeak = textToSpeak.replace(/ \/ /g, ', ');
+
+  // Determine language and voice
+  const isFr = STAGE_META[listenStage].lang === 'fr';
+
+  speechSynth && speechSynth.cancel();
+  setSpeakingVisible(true);
+
+  const utt = new SpeechSynthesisUtterance(textToSpeak);
+  utt.lang = isFr ? 'fr-FR' : 'en-US';
+  // Rapide only applies to French — English stays at normal rate
+  utt.rate = isFr ? SPEED_RATE[listenSpeed] : Math.min(SPEED_RATE[listenSpeed], SPEED_RATE['normal']);
+  if (isFr && selectedVoiceFr) utt.voice = selectedVoiceFr;
+  if (!isFr && selectedVoiceEn) utt.voice = selectedVoiceEn;
+
+  utt.onend = () => {
+    if (!listenPlaying || listenPaused) { setSpeakingVisible(false); return; }
+    setSpeakingVisible(false);
+
+    // Determine pause duration
+    const isLastStage = listenStage === STAGE_META.length - 1;
+    const pauseMs = isLastStage ? PAUSE_BETWEEN_WORDS[listenSpeed] : PAUSE_BETWEEN[listenSpeed];
+
+    setTimeout(() => {
+      if (!listenPlaying || listenPaused) return;
+      if (isLastStage) {
+        // Move to next word
+        listenStage = 0;
+        listenIndex++;
+        updatePlayerProgress();
+      } else {
+        listenStage++;
+      }
+      playCurrentStage();
+    }, pauseMs);
+  };
+
+  utt.onerror = () => { setSpeakingVisible(false); };
+  speechSynth.speak(utt);
+}
+
+// ─────────────────────────────────────────────
+// MODE SWITCHING — updated to include listen
+// ─────────────────────────────────────────────
+function switchMode(mode) {
+  speechSynth && speechSynth.cancel();
+  if (mode !== 'listen') { listenPlaying = false; listenPaused = false; }
+
+  document.getElementById('panel-drill').style.display = mode === 'drill' ? '' : 'none';
+  document.getElementById('panel-glossary').style.display = mode === 'glossary' ? '' : 'none';
+  document.getElementById('panel-listen').style.display = mode === 'listen' ? '' : 'none';
+
+  document.getElementById('tab-drill').classList.toggle('active', mode === 'drill');
+  document.getElementById('tab-glossary').classList.toggle('active', mode === 'glossary');
+  document.getElementById('tab-listen').classList.toggle('active', mode === 'listen');
+
+  if (mode === 'glossary') renderGlossary();
+}
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+initCategoryGrid();
+initGlossCatNav();
+initListenCatGrid();
+buildQueue();
+renderCard();
+</script>
+</body>
+</html>

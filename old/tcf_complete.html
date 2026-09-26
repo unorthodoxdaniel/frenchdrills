@@ -1,0 +1,2274 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCF Tâche 3 — Complete Guide</title>
+<style>
+/* ── SHARED BASE ─────────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f4f0;--surface:#fff;--surface2:#f0efe9;
+  --text:#1a1a18;--text2:#5a5a54;--text3:#9a9a92;
+  --border:rgba(26,26,24,.1);--border2:rgba(26,26,24,.2);
+  --radius:10px;--radius-sm:6px;
+  --font:system-ui,-apple-system,"Segoe UI",sans-serif;
+  --slot1:#1a3f6b;--slot1l:#e2eef9;--slot1m:#b8d4f0;
+  --slot2:#2d5a1e;--slot2l:#e8f5e2;--slot2m:#b8dfa8;
+  --slot3:#7a300a;--slot3l:#fdeee6;--slot3m:#f5c4a0;
+  --slot4:#3d1a6e;--slot4l:#ede5f8;--slot4m:#ccb8f0;
+  --pred:#2d5a1e;--predl:#e8f5e2;--predm:#b8dfa8;
+  --adj:#1a3f6b;--adjl:#e2eef9;--adjm:#b8d4f0;
+  --verb:#7a300a;--verbl:#fdeee6;--verbm:#f5c4a0;
+  --conn:#3d1a6e;--connl:#ede5f8;--connm:#ccb8f0;
+  --neg:#c0392b;--negl:#fdf0ef;--negm:#f5b8b4;
+  --pos:#1a6b3f;--posl:#e2f5ec;--posm:#b8dfcc;
+  --s1:#1a3f6b;--s1l:#e2eef9;--s1m:#b8d4f0;
+  --s2:#2d5a1e;--s2l:#e8f5e2;--s2m:#b8dfa8;
+  --s3:#7a300a;--s3l:#fdeee6;--s3m:#f5c4a0;
+  --s4:#3d1a6e;--s4l:#ede5f8;--s4m:#ccb8f0;
+  --csit:#7a5000;--csitl:#fff8e0;--csitm:#ffd966;
+  --cadj:#1a5a30;--cadjl:#d6f5e3;--cadjm:#7dcc9e;
+  --cout:#1a3a6b;--coutl:#d6e8ff;--coutm:#7ab0ee;
+  --cverb:#5a1a6b;--cverbl:#f5e2f9;--cverbm:#d4a0ee;
+  --cobj:#7a3a00;--cobjl:#fff0d6;--cobjm:#ffb84d;
+  --cneg:#8b1a1a;--cnegl:#fde8e8;--cnegm:#f5a0a0;
+  --cpos:#1a5a3a;--cposl:#e0f5ec;--cposm:#7dcca8;
+  --cpred:#2d5a1e;--cpredl:#e8f5e2;--cpredm:#b8dfa8;
+  --csol:#3a1070;--csoll:#ecdeff;--csolm:#b899ee;
+  --cper:#7a2010;--cperl:#ffe0d6;--cperm:#f5a090;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#111110;--surface:#1c1c1a;--surface2:#242422;
+  --text:#eeede6;--text2:#9a9a90;--text3:#606058;
+  --border:rgba(238,237,230,.09);--border2:rgba(238,237,230,.18);
+  --slot1l:#0e1e32;--slot1m:#1c3a60;--slot2l:#0e1e0a;--slot2m:#1c3814;
+  --slot3l:#200e04;--slot3m:#3e1a08;--slot4l:#160a28;--slot4m:#2c1450;
+  --predl:#0e1e0a;--predm:#1c3814;--adjl:#0e1e32;--adjm:#1c3a60;
+  --verbl:#200e04;--verbm:#3e1a08;--connl:#160a28;--connm:#2c1450;
+  --negl:#280a08;--negm:#501410;--posl:#081e10;--posm:#103820;
+  --s1l:#0e1e32;--s2l:#0e1e0a;--s3l:#200e04;--s4l:#160a28;
+  --csitl:#2a1e00;--cadjl:#082010;--coutl:#081428;--cverbl:#1e0828;
+  --cobjl:#1e1000;--cnegl:#1e0808;--cposl:#081e10;--cpredl:#0e1e0a;--csoll:#120828;--cperl:#280a04;
+}}
+
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.5;padding-bottom:6rem}
+
+/* ── TOP NAV ─────────────────────────────────────────────────────────── */
+.top-nav{
+  position:sticky;top:0;z-index:200;
+  background:var(--surface);
+  border-bottom:1px solid var(--border2);
+  display:flex;align-items:stretch;
+  overflow-x:auto;scrollbar-width:none;
+  padding:0;
+}
+.top-nav::-webkit-scrollbar{display:none}
+.top-nav-title{
+  font-size:13px;font-weight:700;color:var(--text3);
+  padding:0 16px;display:flex;align-items:center;
+  border-right:1px solid var(--border2);white-space:nowrap;flex-shrink:0;
+  letter-spacing:.02em;
+}
+.top-tab{
+  font-size:13px;font-weight:600;
+  padding:0 18px;height:46px;display:flex;align-items:center;
+  border:none;background:none;color:var(--text2);cursor:pointer;
+  border-bottom:2px solid transparent;white-space:nowrap;
+  font-family:inherit;transition:color .12s;flex-shrink:0;
+}
+.top-tab:hover{color:var(--text)}
+.top-tab.active{color:var(--text);border-bottom-color:var(--text)}
+
+/* ── SUB NAV (within a tab) ─────────────────────────────────────────── */
+.sub-nav{
+  background:var(--surface2);
+  border-bottom:1px solid var(--border2);
+  padding:0 1.5rem;
+  display:flex;align-items:center;gap:0;
+  overflow-x:auto;scrollbar-width:none;
+  position:sticky;top:46px;z-index:150;
+}
+.sub-nav::-webkit-scrollbar{display:none}
+.nav-item{font-size:12px;font-weight:500;padding:10px 12px;color:var(--text2);border-bottom:2px solid transparent;white-space:nowrap;cursor:pointer;text-decoration:none;transition:color .12s}
+.nav-item:hover{color:var(--text)}
+.nav-item.s1{color:var(--slot1)}
+.nav-item.s2{color:var(--slot2)}
+.nav-item.s3{color:var(--slot3)}
+.nav-item.s4{color:var(--slot4)}
+.nav-btn{font-size:12px;font-weight:500;padding:10px 12px;color:var(--text2);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;font-family:inherit}
+.nav-btn:hover{color:var(--text)}
+.nav-btn.active{border-bottom-color:var(--text);color:var(--text)}
+
+/* ── SECTIONS ────────────────────────────────────────────────────────── */
+.tab-section{display:none}
+.tab-section.active{display:block}
+.wrap{max-width:900px;margin:0 auto;padding:2rem 1.5rem 0}
+.wrap-sm{max-width:860px;margin:0 auto;padding:2rem 1.5rem 0}
+
+/* ── PALETTE LEGEND ─────────────────────────────────────────────────── */
+.pal-legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem}
+.pal-legend-item{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text2)}
+.pal-legend-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+
+/* ── INJECT ALL CSS ─────────────────────────────────────────────────── */
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#f5f4f0;
+  --surface:#ffffff;
+  --surface2:#f0efe9;
+  --text:#1a1a18;
+  --text2:#5a5a54;
+  --text3:#9a9a92;
+  --border:rgba(26,26,24,.1);
+  --border2:rgba(26,26,24,.18);
+
+  --slot1:#1a3f6b; --slot1l:#e2eef9; --slot1m:#b8d4f0;
+  --slot2:#2d5a1e; --slot2l:#e8f5e2; --slot2m:#b8dfa8;
+  --slot3:#7a300a; --slot3l:#fdeee6; --slot3m:#f5c4a0;
+  --slot4:#3d1a6e; --slot4l:#ede5f8; --slot4m:#ccb8f0;
+
+  --pred:#2d5a1e;  --predl:#e8f5e2;  --predm:#b8dfa8;
+  --adj:#1a3f6b;   --adjl:#e2eef9;   --adjm:#b8d4f0;
+  --verb:#7a300a;  --verbl:#fdeee6;  --verbm:#f5c4a0;
+  --conn:#3d1a6e;  --connl:#ede5f8;  --connm:#ccb8f0;
+
+  --neg:#c0392b; --negl:#fdf0ef; --negm:#f5b8b4;
+  --pos:#1a6b3f; --posl:#e2f5ec; --posm:#b8dfcc;
+  --radius:10px; --radius-sm:6px;
+  --font:system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#111110; --surface:#1c1c1a; --surface2:#242422;
+  --text:#eeede6; --text2:#9a9a90; --text3:#606058;
+  --border:rgba(238,237,230,.09); --border2:rgba(238,237,230,.16);
+  --slot1l:#0e1e32; --slot1m:#1c3a60;
+  --slot2l:#0e1e0a; --slot2m:#1c3814;
+  --slot3l:#200e04; --slot3m:#3e1a08;
+  --slot4l:#160a28; --slot4m:#2c1450;
+  --predl:#0e1e0a; --predm:#1c3814;
+  --adjl:#0e1e32;  --adjm:#1c3a60;
+  --verbl:#200e04; --verbm:#3e1a08;
+  --connl:#160a28; --connm:#2c1450;
+  --negl:#280a08; --negm:#501410;
+  --posl:#081e10; --posm:#103820;
+}}
+
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.5;padding-bottom:6rem}
+
+/* ── NAV ─────────────────────────────────────────────── */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:var(--surface);
+  border-bottom:1px solid var(--border2);
+  padding:0 1.5rem;
+  display:flex;align-items:center;gap:0;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+nav::-webkit-scrollbar{display:none}
+.nav-item{
+  font-size:13px;font-weight:500;
+  padding:14px 14px;
+  color:var(--text2);
+  border-bottom:2px solid transparent;
+  white-space:nowrap;cursor:pointer;
+  text-decoration:none;
+  transition:color .12s,border-color .12s;
+}
+.nav-item:hover{color:var(--text)}
+.nav-item.s1{color:var(--slot1)}
+.nav-item.s2{color:var(--slot2)}
+.nav-item.s3{color:var(--slot3)}
+.nav-item.s4{color:var(--slot4)}
+.nav-title{font-size:13px;font-weight:600;color:var(--text3);padding:14px 14px 14px 0;margin-right:8px;border-right:1px solid var(--border2);white-space:nowrap}
+
+/* ── LAYOUT ──────────────────────────────────────────── */
+.wrap{max-width:900px;margin:0 auto;padding:2.5rem 1.5rem 0}
+section{margin-bottom:4rem}
+h2{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:1.5rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+
+/* ── SLOT FLOW ───────────────────────────────────────── */
+.slot-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:2rem}
+@media(max-width:680px){.slot-flow{grid-template-columns:repeat(2,1fr)}}
+.slot-box{border-radius:var(--radius);padding:1rem 1rem .9rem;border:1px solid var(--border2)}
+.slot-box.s1{background:var(--slot1l);border-color:var(--slot1m)}
+.slot-box.s2{background:var(--slot2l);border-color:var(--slot2m)}
+.slot-box.s3{background:var(--slot3l);border-color:var(--slot3m)}
+.slot-box.s4{background:var(--slot4l);border-color:var(--slot4m)}
+.slot-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.4rem}
+.slot-box.s1 .slot-label{color:var(--slot1)}
+.slot-box.s2 .slot-label{color:var(--slot2)}
+.slot-box.s3 .slot-label{color:var(--slot3)}
+.slot-box.s4 .slot-label{color:var(--slot4)}
+.slot-name{font-size:15px;font-weight:600;margin-bottom:.35rem}
+.slot-desc{font-size:12px;color:var(--text2);line-height:1.5}
+.slot-rule{font-size:11px;font-style:italic;color:var(--text3);margin-top:.5rem;padding-top:.5rem;border-top:1px solid var(--border)}
+
+/* ── SECTION HEADER STRIPE ──────────────────────────── */
+.section-head{display:flex;align-items:center;gap:12px;margin-bottom:1.25rem}
+.section-badge{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:20px}
+.section-head h3{font-size:18px;font-weight:600}
+
+/* ── TEMPLATE BLOCK ─────────────────────────────────── */
+.template{
+  font-size:14px;font-weight:500;
+  padding:.9rem 1.1rem;
+  border-radius:var(--radius-sm);
+  border-left:3px solid;
+  margin-bottom:.75rem;
+  line-height:1.6;
+}
+.template.s1{background:var(--slot1l);border-color:var(--slot1)}
+.template.s2{background:var(--slot2l);border-color:var(--slot2)}
+.template.s3{background:var(--slot3l);border-color:var(--slot3)}
+.template.s4{background:var(--slot4l);border-color:var(--slot4)}
+.bracket{display:inline;font-weight:700;padding:0 2px;border-radius:3px}
+.b-sit{background:#ffe5a0;color:#7a5000}
+.b-adj{background:#c8f0d0;color:#1a5a30}
+.b-adj2{background:#d0e8ff;color:#1a3a6b}
+.b-pers{background:#ffd8cc;color:#7a2010}
+.b-sol{background:#e8d8ff;color:#3a1070}
+
+/* ── EXAMPLE LINE ───────────────────────────────────── */
+.ex{font-size:13px;color:var(--text2);font-style:italic;padding:.5rem .9rem;margin-bottom:1rem;border-left:2px solid var(--border2)}
+
+/* ── TWO-COL GRID ───────────────────────────────────── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem}
+@media(max-width:560px){.two-col{grid-template-columns:1fr}}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:1rem}
+@media(max-width:680px){.three-col{grid-template-columns:1fr 1fr}}
+@media(max-width:400px){.three-col{grid-template-columns:1fr}}
+
+/* ── PILL GROUPS ─────────────────────────────────────── */
+.pill-group{margin-bottom:1.25rem}
+.pill-group-label{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);margin-bottom:.5rem}
+.pills{display:flex;flex-wrap:wrap;gap:6px}
+.pill{font-size:13px;padding:4px 12px;border-radius:20px;border:1px solid transparent;line-height:1.4}
+.pill-neg{background:var(--negl);color:var(--neg);border-color:var(--negm)}
+.pill-pos{background:var(--posl);color:var(--pos);border-color:var(--posm)}
+.pill-neu{background:var(--surface2);color:var(--text2);border-color:var(--border2)}
+
+/* ── TABLE CARD ─────────────────────────────────────── */
+.card{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden;margin-bottom:1rem}
+.card-head{padding:.65rem 1rem;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.card table{width:100%;border-collapse:collapse}
+.card table td,.card table th{padding:.55rem 1rem;font-size:13px;text-align:left;border-top:1px solid var(--border);vertical-align:top}
+.card table th{font-size:11px;font-weight:600;color:var(--text3);border-top:none;padding-top:.4rem;padding-bottom:.4rem;background:var(--surface2)}
+.card table td:first-child{font-weight:600;white-space:nowrap;width:38%}
+.card table td:nth-child(2){color:var(--text2)}
+.card table .note-cell{font-size:12px;color:var(--text3);font-style:italic}
+
+/* ── TYPE HEADER ─────────────────────────────────────── */
+.type-head{font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:.4rem .9rem;margin-top:.5rem;margin-bottom:.4rem;border-radius:var(--radius-sm)}
+.type-neg{background:var(--negl);color:var(--neg)}
+.type-pos{background:var(--posl);color:var(--pos)}
+.type-neu{background:var(--surface2);color:var(--text3)}
+
+/* ── PRED TYPE BLOCK ─────────────────────────────────── */
+.pred-block{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);margin-bottom:1rem;overflow:hidden}
+.pred-block-head{padding:.7rem 1rem;display:flex;align-items:baseline;gap:10px;border-bottom:1px solid var(--border)}
+.pred-block-num{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3)}
+.pred-block-title{font-size:14px;font-weight:700}
+.pred-block-subtitle{font-size:12px;color:var(--text2);margin-left:auto}
+.pred-body{padding:.8rem 1rem}
+.pred-primary{display:flex;align-items:baseline;gap:8px;margin-bottom:.6rem}
+.pred-primary-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);min-width:52px}
+.pred-primary-verb{font-size:15px;font-weight:700;color:var(--pred)}
+.pred-alts{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:.8rem}
+.pred-alt{font-size:12px;padding:2px 9px;border-radius:14px;background:var(--predl);color:var(--pred);border:1px solid var(--predm)}
+.pred-rows{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:.6rem}
+@media(max-width:500px){.pred-rows{grid-template-columns:1fr}}
+.pred-row-box{background:var(--surface2);border-radius:var(--radius-sm);padding:.6rem .8rem;border:1px solid var(--border)}
+.pred-row-label{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);margin-bottom:.4rem}
+.pred-row-item{font-size:12px;color:var(--text2);line-height:1.7}
+.pred-row-item span{font-weight:600;color:var(--text)}
+.pred-modal{font-size:12px;color:var(--text3);font-style:italic;padding:.5rem .8rem;background:var(--surface2);border-radius:var(--radius-sm);border:1px solid var(--border);margin-top:.2rem}
+.pred-modal strong{color:var(--text2);font-style:normal}
+
+/* ── CONNECTOR BLOCK ─────────────────────────────────── */
+.conn-group{margin-bottom:1.5rem}
+.conn-group-title{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--conn);background:var(--connl);padding:.4rem .9rem;border-radius:var(--radius-sm);margin-bottom:.5rem;border:1px solid var(--connm)}
+.conn-item{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--border2);border-radius:var(--radius-sm);overflow:hidden;margin-bottom:6px;font-size:13px}
+@media(max-width:500px){.conn-item{grid-template-columns:1fr}}
+.conn-fr{padding:.5rem .8rem;font-weight:600;background:var(--surface);border-right:1px solid var(--border)}
+.conn-en{padding:.5rem .8rem;color:var(--text2);background:var(--surface2)}
+.conn-note{font-size:11px;color:var(--text3);font-style:italic;grid-column:1/-1;padding:.35rem .8rem;background:var(--surface2);border-top:1px solid var(--border)}
+
+/* ── VERB CLUSTER CARD ──────────────────────────────── */
+.cluster-card{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);margin-bottom:10px;overflow:hidden}
+.cluster-head{display:flex;align-items:center;gap:10px;padding:.65rem 1rem;border-bottom:1px solid var(--border);cursor:pointer;user-select:none}
+.cluster-name{font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;flex:1}
+.cluster-toggle{font-size:18px;color:var(--text3);transition:transform .2s;line-height:1}
+.cluster-body{padding:.8rem 1rem;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:520px){.cluster-body{grid-template-columns:1fr}}
+.cluster-col-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.4rem}
+.cluster-col-neg .cluster-col-label{color:var(--neg)}
+.cluster-col-pos .cluster-col-label{color:var(--pos)}
+.cluster-verb{font-size:13px;line-height:1.9}
+.cluster-verb span{font-weight:600;color:var(--text)}
+.cluster-verb small{color:var(--text3);font-size:11px;display:block;line-height:1.4;margin-bottom:.1rem;font-style:italic}
+
+/* ── ROTATION RULE ───────────────────────────────────── */
+.rotation-rule{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);padding:1rem 1.1rem;margin-bottom:1.5rem;font-size:13px;color:var(--text2)}
+.rotation-rule strong{color:var(--text)}
+
+/* ── DIVIDER ─────────────────────────────────────────── */
+.divider{border:none;border-top:1px solid var(--border);margin:2rem 0}
+
+/* ── SCROLL TARGET ───────────────────────────────────── */
+[id]{scroll-margin-top:52px}
+
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f4f0;--surface:#fff;--surface2:#f0efe9;
+  --text:#1a1a18;--text2:#5a5a54;--text3:#9a9a92;
+  --border:rgba(26,26,24,.1);--border2:rgba(26,26,24,.2);
+  --radius:10px;--radius-sm:6px;
+  --s1:#1a3f6b;--s1l:#e2eef9;--s1m:#b8d4f0;
+  --s2:#2d5a1e;--s2l:#e8f5e2;--s2m:#b8dfa8;
+  --s3:#7a300a;--s3l:#fdeee6;--s3m:#f5c4a0;
+  --s4:#3d1a6e;--s4l:#ede5f8;--s4m:#ccb8f0;
+  --csit:#7a5000;--csitl:#fff3cc;--csitm:#ffd966;
+  --cadj:#1a5a30;--cadjl:#d6f5e3;--cadjm:#7dcc9e;
+  --cout:#1a3a6b;--coutl:#d6e8ff;--coutm:#7ab0ee;
+  --cper:#7a2010;--cperl:#ffe0d6;--cperm:#f5a090;
+  --csol:#3a1070;--csoll:#ecdeff;--csolm:#b899ee;
+  --cpred:#2d5a1e;--cpredl:#e8f5e2;--cpredm:#b8dfa8;
+  --cverb:#5a1a6b;--cverbl:#f5e2f9;--cverbm:#d4a0ee;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#111110;--surface:#1c1c1a;--surface2:#242422;
+  --text:#eeede6;--text2:#9a9a90;--text3:#606058;
+  --border:rgba(238,237,230,.09);--border2:rgba(238,237,230,.18);
+  --s1l:#0e1e32;--s2l:#0e1e0a;--s3l:#200e04;--s4l:#160a28;
+  --csitl:#2a1e00;--cadjl:#082010;--coutl:#081428;--cperl:#280a04;--csoll:#120828;--cpredl:#0e1e0a;--cverbl:#1e0828;
+}}
+html{scroll-behavior:smooth}
+body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:6rem}
+nav{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border2);padding:0 1.5rem;display:flex;align-items:center;gap:4px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.nav-title{font-size:13px;font-weight:600;color:var(--text3);padding:14px 14px 14px 0;margin-right:8px;border-right:1px solid var(--border2);white-space:nowrap;flex-shrink:0}
+.nav-btn{font-size:13px;font-weight:500;padding:14px 12px;color:var(--text2);border:none;background:none;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;font-family:inherit}
+.nav-btn:hover{color:var(--text)}
+.nav-btn.active{border-bottom-color:var(--text);color:var(--text)}
+.wrap{max-width:880px;margin:0 auto;padding:1.75rem 1.5rem 0}
+.slot-tabs{display:flex;gap:6px;margin-bottom:1.5rem;flex-wrap:wrap}
+.slot-tab{font-size:13px;font-weight:600;padding:7px 16px;border-radius:20px;border:1.5px solid transparent;cursor:pointer;transition:all .15s;background:var(--surface2);color:var(--text2);font-family:inherit}
+.slot-tab:hover{color:var(--text)}
+.slot-tab.on-s1{background:var(--s1l);color:var(--s1);border-color:var(--s1m)}
+.slot-tab.on-s2{background:var(--s2l);color:var(--s2);border-color:var(--s2m)}
+.slot-tab.on-s3{background:var(--s3l);color:var(--s3);border-color:var(--s3m)}
+.slot-tab.on-s4{background:var(--s4l);color:var(--s4);border-color:var(--s4m)}
+
+/* sentence card */
+.sc{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:1.25rem 1.4rem;margin-bottom:1rem;line-height:2.4;font-size:15px;display:none}
+.sc.visible{display:block}
+.sc-label{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;display:block;margin-bottom:.5rem}
+.sc-type{font-size:11px;color:var(--text3);display:block;margin-bottom:.5rem;font-style:italic}
+.sc.s1 .sc-label{color:var(--s1)}
+.sc.s2 .sc-label{color:var(--s2)}
+.sc.s3 .sc-label{color:var(--s3)}
+.sc.s4 .sc-label{color:var(--s4)}
+
+/* chips */
+.chip{display:inline-flex;align-items:center;gap:3px;font-size:13px;font-weight:600;padding:2px 9px 3px;border-radius:5px;border:1.5px solid;cursor:pointer;transition:filter .1s,transform .1s;white-space:normal;vertical-align:middle;user-select:none;line-height:1.4}
+.chip:hover{filter:brightness(.93);transform:translateY(-1px)}
+.chip:active{transform:translateY(0)}
+.chip.csit{background:var(--csitl);color:var(--csit);border-color:var(--csitm)}
+.chip.cadj{background:var(--cadjl);color:var(--cadj);border-color:var(--cadjm)}
+.chip.cout{background:var(--coutl);color:var(--cout);border-color:var(--coutm)}
+.chip.cper{background:var(--cperl);color:var(--cper);border-color:var(--cperm)}
+.chip.csol{background:var(--csoll);color:var(--csol);border-color:var(--csolm)}
+.chip.cpred{background:var(--cpredl);color:var(--cpred);border-color:var(--cpredm)}
+.chip.cverb{background:var(--cverbl);color:var(--cverb);border-color:var(--cverbm)}
+.chip-arr{font-size:9px;opacity:.55;flex-shrink:0}
+.st{color:var(--text);font-weight:400}
+
+/* dropdown */
+.dd{position:fixed;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);box-shadow:0 8px 32px rgba(0,0,0,.2);z-index:9999;width:300px;max-height:320px;overflow-y:auto;display:none}
+.dd.open{display:block}
+.dd-hdr{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.55rem 1rem .35rem;color:var(--text3);border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface)}
+.dd-item{padding:.5rem 1rem;cursor:pointer;font-size:13px;line-height:1.4;transition:background .1s}
+.dd-item:hover{background:var(--surface2)}
+.dd-item.sel{background:var(--s2l);font-weight:600}
+.dd-note{font-size:11px;color:var(--text3);font-style:italic;display:block;margin-top:1px}
+
+/* full para */
+.full-box{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:1.4rem 1.6rem;margin-bottom:2rem;line-height:2;font-size:15px}
+.full-label{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text3);margin-bottom:.75rem}
+.full-box .hl{font-weight:700}
+
+/* legend */
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem;align-items:center}
+.li{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text2)}
+.ld{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+.legend-note{font-size:12px;color:var(--text3);margin-left:4px}
+
+@media(max-width:560px){.sc{font-size:14px;line-height:2.2}.chip{font-size:12px}.wrap{padding:1.25rem 1rem 0}}
+
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f4f0;--surface:#fff;--surface2:#f0efe9;
+  --text:#1a1a18;--text2:#5a5a54;--text3:#9a9a92;
+  --border:rgba(26,26,24,.1);--border2:rgba(26,26,24,.2);
+  --radius:10px;--radius-sm:6px;
+  --s1:#1a3f6b;--s1l:#e2eef9;--s1m:#b8d4f0;
+  --s2:#2d5a1e;--s2l:#e8f5e2;--s2m:#b8dfa8;
+  --s3:#7a300a;--s3l:#fdeee6;--s3m:#f5c4a0;
+  --s4:#3d1a6e;--s4l:#ede5f8;--s4m:#ccb8f0;
+  --csit:#7a5000;--csitl:#fff8e0;--csitm:#ffd966;
+  --cadj:#1a5a30;--cadjl:#d6f5e3;--cadjm:#7dcc9e;
+  --cout:#1a3a6b;--coutl:#d6e8ff;--coutm:#7ab0ee;
+  --cverb:#5a1a6b;--cverbl:#f5e2f9;--cverbm:#d4a0ee;
+  --cobj:#7a3a00;--cobjl:#fff0d6;--cobjm:#ffb84d;
+  --cneg:#8b1a1a;--cnegl:#fde8e8;--cnegm:#f5a0a0;
+  --cpos:#1a5a3a;--cposl:#e0f5ec;--cposm:#7dcca8;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#111110;--surface:#1c1c1a;--surface2:#242422;
+  --text:#eeede6;--text2:#9a9a90;--text3:#606058;
+  --border:rgba(238,237,230,.09);--border2:rgba(238,237,230,.18);
+  --s1l:#0e1e32;--s2l:#0e1e0a;--s3l:#200e04;--s4l:#160a28;
+  --csitl:#2a1e00;--cadjl:#082010;--coutl:#081428;--cverbl:#1e0828;--cobjl:#1e1000;--cnegl:#1e0808;--cposl:#081e10;
+}}
+html{scroll-behavior:smooth}
+body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding-bottom:5rem}
+nav{position:sticky;top:0;z-index:50;background:var(--surface);border-bottom:1px solid var(--border2);padding:0 1.5rem;display:flex;align-items:center;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.nav-title{font-size:13px;font-weight:600;color:var(--text3);padding:13px 12px 13px 0;margin-right:6px;border-right:1px solid var(--border2);white-space:nowrap;flex-shrink:0}
+.nav-a{font-size:12px;font-weight:500;padding:13px 10px;color:var(--text2);white-space:nowrap;text-decoration:none;border-bottom:2px solid transparent;transition:color .12s}
+.nav-a:hover{color:var(--text)}
+
+.wrap{max-width:860px;margin:0 auto;padding:2rem 1.5rem 0}
+
+/* TYPE BLOCK */
+.block{margin-bottom:3.5rem}
+.block-head{margin-bottom:1.25rem}
+.block-num{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:.2rem}
+.block-title{font-size:20px;font-weight:700;margin-bottom:.2rem}
+.block-sub{font-size:13px;color:var(--text2)}
+
+/* TEMPLATE SENTENCE */
+.tpl{
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:var(--radius);
+  padding:1.1rem 1.4rem;
+  font-size:15px;
+  line-height:2.2;
+  margin-bottom:1.25rem;
+}
+.tpl-label{font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;display:block;margin-bottom:.4rem;color:var(--text3)}
+.br{display:inline-block;font-weight:700;padding:1px 8px 2px;border-radius:5px;border:1.5px solid;line-height:1.5;font-size:14px;vertical-align:middle}
+.br.sit{background:var(--csitl);color:var(--csit);border-color:var(--csitm)}
+.br.adj{background:var(--cadjl);color:var(--cadj);border-color:var(--cadjm)}
+.br.out{background:var(--coutl);color:var(--cout);border-color:var(--coutm)}
+.br.vrb{background:var(--cverbl);color:var(--cverb);border-color:var(--cverbm)}
+.br.obj{background:var(--cobjl);color:var(--cobj);border-color:var(--cobjm)}
+.st{font-weight:400;color:var(--text)}
+
+/* PALETTE GRID */
+.palette{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-bottom:.5rem}
+.pal-group{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden}
+.pal-group-head{
+  font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  padding:.45rem .9rem;border-bottom:1px solid var(--border);
+}
+.pal-group-head.sit{background:var(--csitl);color:var(--csit)}
+.pal-group-head.adj{background:var(--cadjl);color:var(--cadj)}
+.pal-group-head.out{background:var(--coutl);color:var(--cout)}
+.pal-group-head.vrb{background:var(--cverbl);color:var(--cverb)}
+.pal-group-head.obj{background:var(--cobjl);color:var(--cobj)}
+.pal-group-head.neg{background:var(--cnegl);color:var(--cneg)}
+.pal-group-head.pos{background:var(--cposl);color:var(--cpos)}
+.pal-pills{padding:.6rem .8rem;display:flex;flex-wrap:wrap;gap:5px}
+.pill{
+  font-size:12px;line-height:1.4;padding:3px 9px;border-radius:14px;border:1px solid transparent;
+  display:flex;flex-direction:column;gap:1px;
+}
+.pill.sit{background:var(--csitl);color:var(--csit);border-color:var(--csitm)}
+.pill.adj{background:var(--cadjl);color:var(--cadj);border-color:var(--cadjm)}
+.pill.out{background:var(--coutl);color:var(--cout);border-color:var(--coutm)}
+.pill.vrb{background:var(--cverbl);color:var(--cverb);border-color:var(--cverbm)}
+.pill.obj{background:var(--cobjl);color:var(--cobj);border-color:var(--cobjm)}
+.pill.neg{background:var(--cnegl);color:var(--cneg);border-color:var(--cnegm)}
+.pill.pos{background:var(--cposl);color:var(--cpos);border-color:var(--cposm)}
+.pill-fr{font-weight:600}
+.pill-en{font-size:10px;opacity:.75;font-style:italic}
+
+.modal-note{font-size:12px;color:var(--text3);padding:.5rem .9rem;font-style:italic;border-top:1px solid var(--border)}
+
+hr{border:none;border-top:1px solid var(--border);margin:0 0 3.5rem}
+
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div class="top-nav">
+  <div class="top-nav-title">TCF T3</div>
+  <button class="top-tab active" id="tt-ref"    onclick="switchTab('ref')">Reference</button>
+  <button class="top-tab"        id="tt-palette" onclick="switchTab('palette')">Palette</button>
+  <button class="top-tab"        id="tt-builder" onclick="switchTab('builder')">Builder</button>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     TAB 1 — REFERENCE
+═══════════════════════════════════════════════════════════════════ -->
+<div class="tab-section active" id="tab-ref">
+  <nav class="sub-nav">
+    <a class="nav-item" href="#slots">Slots</a>
+    <a class="nav-item s1" href="#slot1">Slot 1</a>
+    <a class="nav-item s2" href="#slot2">Slot 2</a>
+    <a class="nav-item s3" href="#slot3">Slot 3</a>
+    <a class="nav-item s4" href="#slot4">Slot 4</a>
+    <a class="nav-item" href="#predicates">Predicates</a>
+    <a class="nav-item" href="#adjectives">Adjectives</a>
+    <a class="nav-item" href="#verbs">Verbs</a>
+    <a class="nav-item" href="#connectors">Connectors</a>
+  </nav>
+  <div class="wrap">
+    
+
+<!-- ══════════════════════════════════════════════════════
+     SLOT OVERVIEW
+══════════════════════════════════════════════════════ -->
+<section id="slots">
+<h2>Paragraph structure — 4 slots</h2>
+<div class="slot-flow">
+  <div class="slot-box s1">
+    <div class="slot-label">Slot 1</div>
+    <div class="slot-name">Claim</div>
+    <div class="slot-desc">Position + conditional verb + optional scope qualifier</div>
+    <div class="slot-rule">Always conditional — never present tense</div>
+  </div>
+  <div class="slot-box s2">
+    <div class="slot-label">Slot 2</div>
+    <div class="slot-name">En effet</div>
+    <div class="slot-desc">Mechanism: what happens to people in general <em>(on)</em></div>
+    <div class="slot-rule">Conditional preferred. Present = grounded but weaker</div>
+  </div>
+  <div class="slot-box s3">
+    <div class="slot-label">Slot 3</div>
+    <div class="slot-name">Par exemple</div>
+    <div class="slot-desc">Concrete person <em>(qui)</em> — grounds the claim</div>
+    <div class="slot-rule">Always present tense — no conditional here</div>
+  </div>
+  <div class="slot-box s4">
+    <div class="slot-label">Slot 4</div>
+    <div class="slot-name">C'est pourquoi</div>
+    <div class="slot-desc">Solution or conclusion — returns to conditional</div>
+    <div class="slot-rule">il serait essentiel &gt; il est essentiel</div>
+  </div>
+</div>
+
+<div class="rotation-rule">
+  <strong>Register rule:</strong> Present tense = asserting a fact (B1). Conditional = arguing a position (B2/C1). Anywhere you have a present tense verb in slots 1, 2 or 4 — ask if it should be conditional.
+</div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLOT 1
+══════════════════════════════════════════════════════ -->
+<section id="slot1">
+<h2>Slot 1 — Claim</h2>
+
+<div class="card">
+  <div class="card-head" style="background:var(--slot1l);color:var(--slot1)">Four conditional verbs</div>
+  <table>
+    <tr><th>Verb</th><th>Role</th><th>Pattern</th></tr>
+    <tr><td>devrait</td><td>Prescription — what should be</td><td class="note-cell">devrait + être + adj</td></tr>
+    <tr><td>pourrait</td><td>Mechanism — what could happen</td><td class="note-cell">pourrait + infinitive</td></tr>
+    <tr><td>aurait un [impact/effet]</td><td>Impact — what effect it would have</td><td class="note-cell">aurait un effet [adj] sur</td></tr>
+    <tr><td>il serait [adj] de</td><td>Evaluation — judgment on situation</td><td class="note-cell">il serait essentiel / important de</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <div class="card-head" style="background:var(--slot1l);color:var(--slot1)">Scope qualifiers — optional register polish</div>
+  <table>
+    <tr><th>French</th><th>English</th><th>Grammar note</th></tr>
+    <tr><td>indépendamment de</td><td>regardless of</td><td class="note-cell">+ noun. Strongest universaliser.</td></tr>
+    <tr><td>quel(le) que soit</td><td>whatever / regardless of</td><td class="note-cell">agrees with noun: quel que soit l'âge / quelle que soit la situation</td></tr>
+    <tr><td>à condition de</td><td>on the condition that</td><td class="note-cell">+ infinitive. à condition que + subjunctive.</td></tr>
+    <tr><td>pour peu que</td><td>provided that / as long as</td><td class="note-cell">+ subjunctive</td></tr>
+    <tr><td>sans pour autant</td><td>without necessarily going so far as to</td><td class="note-cell">+ infinitive. Limits the claim. High register.</td></tr>
+  </table>
+</div>
+
+<div class="ex">Le télétravail <strong>pourrait améliorer</strong> la qualité de vie, <strong>à condition d'</strong>être bien encadré.</div>
+<div class="ex">L'accès à l'éducation <strong>devrait être</strong> garanti à tous, <strong>indépendamment</strong> du niveau de revenus.</div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLOT 2
+══════════════════════════════════════════════════════ -->
+<section id="slot2">
+<h2>Slot 2 — En effet (mechanism)</h2>
+
+<div class="template s2">
+  En effet, lorsqu'on <span class="bracket b-sit">[situation]</span>, on pourrait se retrouver <span class="bracket b-adj">[adj]</span>, ce qui pourrait rapidement devenir <span class="bracket b-adj2">[outcome]</span>.
+</div>
+
+<div class="three-col">
+  <div class="card">
+    <div class="card-head" style="background:var(--slot2l);color:var(--slot2)">[situation] — one clause</div>
+    <table>
+      <tr><td colspan="2">travaille seul(e)</td></tr>
+      <tr><td colspan="2">manque de soutien</td></tr>
+      <tr><td colspan="2">arrive dans un nouveau pays</td></tr>
+      <tr><td colspan="2">dépend entièrement de</td></tr>
+      <tr><td colspan="2">est exposé(e) à</td></tr>
+      <tr><td colspan="2">n'a pas accès à</td></tr>
+      <tr><td colspan="2">se retrouve sans repères</td></tr>
+      <tr><td colspan="2">utilise trop les réseaux sociaux</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-head" style="background:var(--slot2l);color:var(--slot2)">[adj] — one word</div>
+    <table>
+      <tr><td class="pill-neg" style="border:none;background:none">isolé(e)</td></tr>
+      <tr><td class="pill-neg" style="border:none;background:none">épuisé(e)</td></tr>
+      <tr><td class="pill-neg" style="border:none;background:none">dépassé(e)</td></tr>
+      <tr><td class="pill-neg" style="border:none;background:none">démotivé(e)</td></tr>
+      <tr><td class="pill-neg" style="border:none;background:none">dépendant(e)</td></tr>
+      <tr><td class="pill-neg" style="border:none;background:none">perdu(e)</td></tr>
+      <tr><td class="pill-pos" style="border:none;background:none">valorisé(e)</td></tr>
+      <tr><td class="pill-neg" style="border:none;background:none">stressé(e)</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-head" style="background:var(--slot2l);color:var(--slot2)">[outcome] — escalation</div>
+    <table>
+      <tr><td colspan="2">problématique</td></tr>
+      <tr><td colspan="2">néfaste pour la santé</td></tr>
+      <tr><td colspan="2">difficile à surmonter</td></tr>
+      <tr><td colspan="2">une source d'anxiété</td></tr>
+      <tr><td colspan="2">épuisant(e)</td></tr>
+      <tr><td colspan="2" style="color:var(--pos)">un facteur de bien-être</td></tr>
+      <tr><td colspan="2" style="color:var(--pos)">une source de bien-être</td></tr>
+      <tr><td colspan="2" style="color:var(--pos)">bénéfique pour la santé</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom:.75rem">
+  <div class="card-head" style="background:var(--slot2l);color:var(--slot2)">Rotation templates</div>
+  <table>
+    <tr><td>plus on… plus on risque de</td><td class="note-cell">En effet, plus on dépend des écrans, plus on risque de perdre ses repères.</td></tr>
+    <tr><td>le fait de… entraînerait</td><td class="note-cell">En effet, le fait de travailler sans limites entraînerait souvent un épuisement progressif.</td></tr>
+    <tr><td>il serait difficile de… sans</td><td class="note-cell">En effet, il serait difficile de s'intégrer sans maîtriser la langue d'accueil.</td></tr>
+  </table>
+</div>
+
+<div class="rotation-rule">
+  <strong>Modal swap rule:</strong> Both <em>pourrait</em> = strongest register. One swap (keep present for <em>on se retrouve</em>) = grounded. Default: both conditional. Use one swap when slot 3 is very concrete.
+</div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLOT 3
+══════════════════════════════════════════════════════ -->
+<section id="slot3">
+<h2>Slot 3 — Par exemple (concrete person)</h2>
+
+<div class="template s3">
+  C'est le cas de <span class="bracket b-pers">[personne]</span> qui <span class="bracket b-adj">[predicate — present tense]</span>.
+</div>
+
+<div class="card" style="margin-bottom:.75rem">
+  <div class="card-head" style="background:var(--slot3l);color:var(--slot3)">Openers — rotate these</div>
+  <table>
+    <tr><td>C'est le cas de [personne] qui…</td><td class="note-cell">Default. Direct.</td></tr>
+    <tr><td>Par exemple, un(e) [personne] peut…</td><td class="note-cell">Simplest. Safe.</td></tr>
+    <tr><td>Il suffit de penser à [groupe] pour comprendre que…</td><td class="note-cell">More rhetorical.</td></tr>
+    <tr><td>Prenons le cas de [personne] qui…</td><td class="note-cell">Invites the examiner in.</td></tr>
+  </table>
+</div>
+
+<div class="two-col">
+  <div class="card">
+    <div class="card-head" style="background:var(--slot3l);color:var(--slot3)">[personne] bank</div>
+    <table>
+      <tr><td>Technologie</td><td class="note-cell">un adolescent sans encadrement numérique</td></tr>
+      <tr><td>Immigration</td><td class="note-cell">un jeune immigrant qui ne parle pas encore la langue</td></tr>
+      <tr><td>Travail</td><td class="note-cell">un employé en télétravail sans contact humain</td></tr>
+      <tr><td>Éducation</td><td class="note-cell">un adulte de 45 ans qui reprend des études</td></tr>
+      <tr><td>Médias</td><td class="note-cell">un enfant de 8 ans devant les écrans</td></tr>
+      <tr><td>Apparence</td><td class="note-cell">une femme de 40 ans sous pression professionnelle</td></tr>
+      <tr><td>Alimentation</td><td class="note-cell">une famille modeste qui veut manger sainement</td></tr>
+      <tr><td>Transport</td><td class="note-cell">un habitant de banlieue sans alternative à la voiture</td></tr>
+      <tr><td>Social</td><td class="note-cell">un senior qui vit seul sans réseau de soutien</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-head" style="background:var(--slot3l);color:var(--slot3)">[predicate] categories</div>
+    <table>
+      <tr><td>Obligation</td><td class="note-cell">qui doit / qui se voit contraint(e) de / qui n'a pas le choix de</td></tr>
+      <tr><td>Negative state</td><td class="note-cell">qui se retrouve isolé(e) / épuisé(e) / dépassé(e) / perdu(e)</td></tr>
+      <tr><td>Loss</td><td class="note-cell">qui perd ses repères / sa motivation / confiance en soi</td></tr>
+      <tr><td>Difficulty</td><td class="note-cell">qui n'arrive plus à / qui a du mal à</td></tr>
+      <tr><td>Drift</td><td class="note-cell">qui finit par / qui a tendance à / qui renonce à</td></tr>
+      <tr><td>Suitability</td><td class="note-cell">pour qui ce n'est pas toujours possible</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="rotation-rule"><strong>Key rule:</strong> Slot 3 is always present tense. The example describes something that <em>happens</em>, not something that <em>could</em> happen. No conditional here.</div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     SLOT 4
+══════════════════════════════════════════════════════ -->
+<section id="slot4">
+<h2>Slot 4 — Conclusion</h2>
+
+<div class="template s4">
+  C'est pourquoi il <strong>serait</strong> essentiel de <span class="bracket b-sol">[solution]</span>.
+</div>
+
+<div class="card" style="margin-bottom:.75rem">
+  <div class="card-head" style="background:var(--slot4l);color:var(--slot4)">Three shapes</div>
+  <table>
+    <tr><td>C'est pourquoi il serait essentiel de…</td><td class="note-cell">Prescriptive solution. Most common.</td></tr>
+    <tr><td>C'est la raison pour laquelle beaucoup de [personnes] cherchent à…</td><td class="note-cell">Behavioural observation.</td></tr>
+    <tr><td>C'est pourquoi il est important de ne pas oublier que…</td><td class="note-cell">Nuance or caveat. Use for balanced conclusion.</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <div class="card-head" style="background:var(--slot4l);color:var(--slot4)">[solution] — infinitive phrases</div>
+  <table>
+    <tr><td colspan="2">encadrer l'usage des écrans</td></tr>
+    <tr><td colspan="2">accompagner les personnes dans leur transition</td></tr>
+    <tr><td colspan="2">maintenir un équilibre entre vie pro et perso</td></tr>
+    <tr><td colspan="2">garantir un accès équitable aux soins</td></tr>
+    <tr><td colspan="2">mettre en place des mesures concrètes</td></tr>
+    <tr><td colspan="2">sensibiliser le public aux enjeux</td></tr>
+    <tr><td colspan="2">prendre en charge les personnes les plus vulnérables</td></tr>
+  </table>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     PREDICATES
+══════════════════════════════════════════════════════ -->
+<section id="predicates">
+<h2>Predicate system — 4 types</h2>
+
+<div class="rotation-rule" style="margin-bottom:1.5rem">
+  <strong>Rotation rule:</strong> Never use the same primary verb in both slot 2 (<em>on</em>) and slot 3 (<em>qui</em>) of the same paragraph. <em>se retrouve</em> in slot 2 → swap to <em>se sent / devient / se trouve</em> in slot 3.
+</div>
+
+<!-- TYPE 1 -->
+<div class="pred-block">
+  <div class="pred-block-head">
+    <span class="pred-block-num">Type 1</span>
+    <span class="pred-block-title">State — how they end up</span>
+    <span class="pred-block-subtitle">se retrouver + adj</span>
+  </div>
+  <div class="pred-body">
+    <div class="pred-primary">
+      <span class="pred-primary-label">Primary</span>
+      <span class="pred-primary-verb">se retrouver + adj</span>
+    </div>
+    <div class="pred-alts">
+      <span class="pred-alt">se sentir + adj</span>
+      <span class="pred-alt">devenir + adj</span>
+      <span class="pred-alt">se trouver + adj</span>
+      <span class="pred-alt">être amené(e) à</span>
+    </div>
+    <div class="pred-rows">
+      <div class="pred-row-box">
+        <div class="pred-row-label">Slot 2 — on (negative)</div>
+        <div class="pred-row-item"><span>on se retrouve / se sent / devient</span> — isolé(e) / épuisé(e) / dépassé(e) / démuni(e) / perdu(e) / dépendant(e) / stressé(e) / vulnérable / dépaysé(e)</div>
+      </div>
+      <div class="pred-row-box">
+        <div class="pred-row-label">Slot 3 — qui (negative)</div>
+        <div class="pred-row-item"><span>qui se retrouve / se sent / devient / se trouve</span> — isolé(e) / épuisé(e) / dépassé(e) / démuni(e) / perdu(e) / complexé(e)</div>
+      </div>
+      <div class="pred-row-box">
+        <div class="pred-row-label">Slot 2 — on (positive)</div>
+        <div class="pred-row-item"><span>on se retrouve / se sent / devient</span> — plus libre / plus confiant(e) / mieux équipé(e) / épanoui(e) / valorisé(e) / soulagé(e)</div>
+      </div>
+      <div class="pred-row-box">
+        <div class="pred-row-label">Slot 3 — qui (positive)</div>
+        <div class="pred-row-item"><span>qui se retrouve / devient</span> — plus autonome / épanoui(e) / valorisé(e) / mieux intégré(e)</div>
+      </div>
+    </div>
+    <div class="pred-modal"><strong>Modal layer:</strong> <em>pourrait se retrouver / risque de devenir / pourrait se sentir</em></div>
+  </div>
+</div>
+
+<!-- TYPE 2 -->
+<div class="pred-block">
+  <div class="pred-block-head">
+    <span class="pred-block-num">Type 2</span>
+    <span class="pred-block-title">Possession — what they lose or gain</span>
+    <span class="pred-block-subtitle">perdre</span>
+  </div>
+  <div class="pred-body">
+    <div class="pred-primary">
+      <span class="pred-primary-label">Primary −</span>
+      <span class="pred-primary-verb">perdre</span>
+    </div>
+    <div class="pred-alts">
+      <span class="pred-alt">manquer de</span>
+      <span class="pred-alt">se voir privé(e) de</span>
+      <span class="pred-alt">souffrir d'un manque de</span>
+      <span class="pred-alt">voir + noun + diminuer</span>
+    </div>
+    <div class="pred-primary" style="margin-top:.4rem">
+      <span class="pred-primary-label">Primary +</span>
+      <span class="pred-primary-verb" style="color:var(--pos)">acquérir</span>
+    </div>
+    <div class="pred-alts">
+      <span class="pred-alt" style="background:var(--posl);color:var(--pos);border-color:var(--posm)">développer</span>
+      <span class="pred-alt" style="background:var(--posl);color:var(--pos);border-color:var(--posm)">renforcer</span>
+      <span class="pred-alt" style="background:var(--posl);color:var(--pos);border-color:var(--posm)">gagner en</span>
+    </div>
+    <div class="pred-rows">
+      <div class="pred-row-box">
+        <div class="pred-row-label">Slot 2 — on (negative)</div>
+        <div class="pred-row-item"><span>on perd / manque de / se voit privé(e) de</span> — ses repères / sa motivation / confiance en soi / ses habitudes / le fil de ses relations</div>
+      </div>
+      <div class="pred-row-box">
+        <div class="pred-row-label">Slot 3 — qui (negative)</div>
+        <div class="pred-row-item"><span>qui perd / manque de / se voit privé(e) de</span> — ses repères / sa motivation / sa capacité à</div>
+      </div>
+      <div class="pred-row-box">
+        <div class="pred-row-label">Slot 2 — on (positive)</div>
+        <div class="pred-row-item"><span>on développe / acquiert / renforce / gagne en</span> — nouvelles compétences / autonomie / liens sociaux / équilibre</div>
+      </div>
+      <div class="pred-row-box">
+        <div class="pred-row-label">Slot 3 — qui (positive)</div>
+        <div class="pred-row-item"><span>qui acquiert / développe / gagne en</span> — expérience / compétences / équilibre / autonomie</div>
+      </div>
+    </div>
+    <div class="pred-modal"><strong>Modal layer:</strong> <em>pourrait perdre / risque de perdre / pourrait acquérir</em> — Types 1 & 2 sound like facts without modals. Always add one.</div>
+  </div>
+</div>
+
+<!-- TYPE 3a -->
+<div class="pred-block">
+  <div class="pred-block-head">
+    <span class="pred-block-num">Type 3a</span>
+    <span class="pred-block-title">Forced behaviour — obligation / constraint</span>
+    <span class="pred-block-subtitle">être obligé(e) de</span>
+  </div>
+  <div class="pred-body">
+    <div class="pred-primary">
+      <span class="pred-primary-label">Primary</span>
+      <span class="pred-primary-verb">être obligé(e) de</span>
+    </div>
+    <div class="pred-alts">
+      <span class="pred-alt">se voir contraint(e) de</span>
+      <span class="pred-alt">n'avoir pas le choix de</span>
+      <span class="pred-alt">devoir</span>
+    </div>
+    <div class="pred-rows">
+      <div class="pred-row-box">
+        <div class="pred-row-label">Slot 2 — on</div>
+        <div class="pred-row-item"><span>on est obligé(e) de / on se voit contraint(e) de / on n'a pas le choix de</span></div>
+      </div>
+      <div class="pred-row-box">
+        <div class="pred-row-label">Slot 3 — qui</div>
+        <div class="pred-row-item"><span>qui doit / qui se voit contraint(e) de / qui n'a pas le choix de / qui est obligé(e) de</span></div>
+      </div>
+    </div>
+    <div class="pred-modal"><strong>No modal needed.</strong> The obligation is already the certainty. 3a is the only type where you never add <em>pourrait</em>.</div>
+  </div>
+</div>
+
+<!-- TYPE 3b -->
+<div class="pred-block">
+  <div class="pred-block-head">
+    <span class="pred-block-num">Type 3b</span>
+    <span class="pred-block-title">Drifted behaviour — gradual voluntary shift</span>
+    <span class="pred-block-subtitle">finir par</span>
+  </div>
+  <div class="pred-body">
+    <div class="pred-alts" style="margin-bottom:.8rem">
+      <span class="pred-alt">finir par décrocher</span>
+      <span class="pred-alt">renoncer à</span>
+      <span class="pred-alt">éviter de</span>
+      <span class="pred-alt">avoir tendance à s'isoler</span>
+      <span class="pred-alt">se replier sur soi</span>
+      <span class="pred-alt" style="background:var(--posl);color:var(--pos);border-color:var(--posm)">finir par s'épanouir</span>
+      <span class="pred-alt" style="background:var(--posl);color:var(--pos);border-color:var(--posm)">s'investir davantage dans</span>
+      <span class="pred-alt" style="background:var(--posl);color:var(--pos);border-color:var(--posm)">chercher à se dépasser</span>
+    </div>
+    <div class="pred-rows">
+      <div class="pred-row-box">
+        <div class="pred-row-label">Slot 2 — on (negative)</div>
+        <div class="pred-row-item"><span>on finit par décrocher / on renonce à / on évite de / on a tendance à s'isoler / on se replie sur soi</span></div>
+      </div>
+      <div class="pred-row-box">
+        <div class="pred-row-label">Slot 3 — qui (negative)</div>
+        <div class="pred-row-item"><span>qui finit par décrocher / qui renonce à / qui évite de / qui a tendance à s'isoler</span></div>
+      </div>
+    </div>
+    <div class="pred-modal"><strong>Modal layer:</strong> <em>pourrait finir par / risque de finir par</em> — use when softening the drift claim.</div>
+  </div>
+</div>
+
+<!-- TYPE 4 -->
+<div class="pred-block">
+  <div class="pred-block-head">
+    <span class="pred-block-num">Type 4</span>
+    <span class="pred-block-title">Capacity — what they can or can't do</span>
+    <span class="pred-block-subtitle">avoir du mal à</span>
+  </div>
+  <div class="pred-body">
+    <div class="pred-primary">
+      <span class="pred-primary-label">Primary −</span>
+      <span class="pred-primary-verb">avoir du mal à</span>
+    </div>
+    <div class="pred-alts">
+      <span class="pred-alt">n'arrive plus à</span>
+      <span class="pred-alt">peiner à</span>
+      <span class="pred-alt">ne pas parvenir à</span>
+      <span class="pred-alt">ne pas bénéficier des mêmes conditions</span>
+    </div>
+    <div class="pred-primary" style="margin-top:.4rem">
+      <span class="pred-primary-label">Primary +</span>
+      <span class="pred-primary-verb" style="color:var(--pos)">parvenir enfin à</span>
+    </div>
+    <div class="pred-alts">
+      <span class="pred-alt" style="background:var(--posl);color:var(--pos);border-color:var(--posm)">arriver mieux à</span>
+      <span class="pred-alt" style="background:var(--posl);color:var(--pos);border-color:var(--posm)">bénéficier de</span>
+      <span class="pred-alt" style="background:var(--posl);color:var(--pos);border-color:var(--posm)">pouvoir enfin concilier</span>
+    </div>
+    <div class="pred-rows">
+      <div class="pred-row-box">
+        <div class="pred-row-label">Slot 2 — on (negative)</div>
+        <div class="pred-row-item"><span>on a du mal à / on n'arrive plus à / on peine à / on ne parvient pas à</span></div>
+      </div>
+      <div class="pred-row-box">
+        <div class="pred-row-label">Slot 3 — qui (negative)</div>
+        <div class="pred-row-item"><span>qui a du mal à / qui n'arrive plus à / pour qui ce n'est pas toujours possible / qui ne convient pas à tout le monde</span></div>
+      </div>
+    </div>
+    <div class="pred-modal"><strong>Modal on positive side only:</strong> <em>pourrait enfin bénéficier de / pourrait parvenir à</em></div>
+  </div>
+</div>
+
+<!-- ESCALATION TAIL -->
+<div class="card">
+  <div class="card-head" style="background:var(--predl);color:var(--pred)">Escalation tail — slot 2 add-on after any Type 1 or 2 negative</div>
+  <table>
+    <tr><td>ce qui pourrait rapidement devenir problématique</td><td class="note-cell">General. Default.</td></tr>
+    <tr><td>ce qui pourrait rapidement devenir néfaste</td><td class="note-cell">Health / environment arguments.</td></tr>
+    <tr><td>ce qui pourrait rapidement devenir difficile à surmonter</td><td class="note-cell">Personal / psychological states.</td></tr>
+    <tr><td>ce qui pourrait rapidement devenir une source d'anxiété</td><td class="note-cell">Stress / social / technology.</td></tr>
+  </table>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     ADJECTIVES
+══════════════════════════════════════════════════════ -->
+<section id="adjectives">
+<h2>Adjectives — agreement quick reference</h2>
+
+<div class="card" style="margin-bottom:1rem">
+  <div class="card-head" style="background:var(--adjl);color:var(--adj)">Negative states</div>
+  <table>
+    <tr><th>French</th><th>English</th><th>Fem. / Plural note</th></tr>
+    <tr><td>isolé / isolée</td><td>isolated</td><td class="note-cell">isolés / isolées</td></tr>
+    <tr><td>épuisé / épuisée</td><td>exhausted / burnt out</td><td class="note-cell">épuisés / épuisées</td></tr>
+    <tr><td>dépassé / dépassée</td><td>overwhelmed</td><td class="note-cell">dépassés / dépassées</td></tr>
+    <tr><td>démuni / démunie</td><td>helpless / without resources</td><td class="note-cell">démunis / démunies</td></tr>
+    <tr><td>perdu / perdue</td><td>lost</td><td class="note-cell">perdus / perdues</td></tr>
+    <tr><td>dépendant / dépendante</td><td>dependent</td><td class="note-cell">dépendants / dépendantes</td></tr>
+    <tr><td>stressé / stressée</td><td>stressed</td><td class="note-cell">stressés / stressées</td></tr>
+    <tr><td>vulnérable</td><td>vulnerable</td><td class="note-cell">invariable — same m/f/pl</td></tr>
+    <tr><td>dépaysé / dépaysée</td><td>disoriented / out of one's element</td><td class="note-cell">dépaysés / dépaysées</td></tr>
+    <tr><td>complexé / complexée</td><td>self-conscious / insecure</td><td class="note-cell">complexés / complexées</td></tr>
+    <tr><td>précaire</td><td>precarious / financially unstable</td><td class="note-cell">invariable — same m/f/pl</td></tr>
+    <tr><td>endetté / endettée</td><td>indebted</td><td class="note-cell">endettés / endettées</td></tr>
+    <tr><td>découragé / découragée</td><td>discouraged</td><td class="note-cell">découragés / découragées</td></tr>
+    <tr><td>submergé / submergée</td><td>overwhelmed / swamped (by volume)</td><td class="note-cell">submergés / submergées</td></tr>
+    <tr><td>déconnecté / déconnectée</td><td>disconnected from real life</td><td class="note-cell">déconnectés / déconnectées</td></tr>
+    <tr><td>nocif / <strong>nocive</strong></td><td>harmful / toxic</td><td class="note-cell">⚠ irregular fem: nocive not nocife</td></tr>
+    <tr><td>irréversible</td><td>irreversible</td><td class="note-cell">invariable — same m/f/pl</td></tr>
+    <tr><td>inégalitaire</td><td>unequal / creating inequality</td><td class="note-cell">invariable — same m/f/pl</td></tr>
+    <tr><td>insuffisant / insuffisante</td><td>inadequate / insufficient</td><td class="note-cell">insuffisants / insuffisantes</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <div class="card-head" style="background:var(--posl);color:var(--pos)">Positive states</div>
+  <table>
+    <tr><th>French</th><th>English</th><th>Fem. / Plural note</th></tr>
+    <tr><td>épanoui / épanouie</td><td>fulfilled / thriving</td><td class="note-cell">épanouis / épanouies</td></tr>
+    <tr><td>valorisé / valorisée</td><td>valued / recognised</td><td class="note-cell">valorisés / valorisées</td></tr>
+    <tr><td>autonome</td><td>autonomous / self-sufficient</td><td class="note-cell">invariable — same m/f/pl</td></tr>
+    <tr><td>mieux équipé / mieux équipée</td><td>better equipped</td><td class="note-cell">mieux équipés / mieux équipées</td></tr>
+    <tr><td>soulagé / soulagée</td><td>relieved</td><td class="note-cell">soulagés / soulagées</td></tr>
+    <tr><td>durable</td><td>sustainable</td><td class="note-cell">invariable — same m/f/pl</td></tr>
+    <tr><td>contraint / <strong>contrainte</strong></td><td>forced to (3a)</td><td class="note-cell">contraints / contraintes — agreement on contraint in se voir contraint(e) de</td></tr>
+  </table>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     VERBS BY CLUSTER
+══════════════════════════════════════════════════════ -->
+<section id="verbs">
+<h2>Verbs by topic cluster</h2>
+<p style="font-size:13px;color:var(--text2);margin-bottom:1.25rem">Click any cluster to expand. You need the primary pair at reflex speed. One alternate per cluster = enough for rotation.</p>
+</section>
+
+<script>
+const clusters = [
+  {name:"TIME",neg:["faire perdre du temps — primary. Subject = the thing causing the loss.","accaparer — monopolise / take up all of. Subject = the thing that takes over.","empiéter sur — encroach on / eat into (one domain invading another).","mobiliser — take up. Neutral — can be positive or negative."],pos:["optimiser — optimise. Primary positive.","libérer du temps — free up time. Concise, direct."]},
+  {name:"STRESS",neg:["alourdir la pression — primary. More elevated than augmenter le stress.","peser sur — weigh on / bear down on. Subject = the burden.","user — wear out / erode gradually. Signals slow depletion.","fragiliser — weaken / make fragile. Works for people and systems."],pos:["réduire le stress — primary positive. Straightforward and versatile."]},
+  {name:"MONEY",neg:["grever le budget — primary. More formal and vivid than coûter cher.","pénaliser — penalise / put at a disadvantage. Strong in inequality arguments.","exclure — exclude. Access denied by cost. Key for rights/equality.","aggraver les inégalités — compound. Use as a cluster-level outcome."],pos:["économiser — save (money). Primary positive.","alléger — lighten / ease (financial burden). More formal than réduire."]},
+  {name:"PRODUCTIVITY",neg:["entraver l'efficacité — primary. Formal. Works for systems and individuals.","freiner — slow down / hinder. Slightly less formal than entraver.","compromettre — compromise / jeopardise. Signals outcome is at risk.","disperser — scatter / fragment (attention). Specific to focus fragmentation."],pos:["améliorer la productivité — primary positive. Safe and versatile."]},
+  {name:"LEARNING",neg:["inhiber — primary. Suppression of natural curiosity or growth.","décourager — discourage. More accessible register than inhiber."],pos:["faciliter l'apprentissage — primary positive. Core phrase.","stimuler — stimulate. Signals active engagement and motivation.","renforcer — strengthen / reinforce. For skills already present."]},
+  {name:"SOCIAL",neg:["isoler — primary negative. Direct and versatile.","couper de — cut off from. Signals severance from community.","fragiliser les relations — weaken relationships. Gradual erosion of bonds.","distancer — distance. More formal. Signals growing gap."],pos:["tisser des liens — primary positive. Vivid. Tisser = to weave.","fédérer — unite / bring together. High-register. Implies shared identity.","rapprocher — bring closer / bond. Common and versatile."]},
+  {name:"PROBLEMS",neg:["provoquer — primary. Neutral causation — most versatile.","aggraver — worsen. Signals existing problem made worse.","générer — generate / produce (negative). Slightly more formal than provoquer.","déclencher — trigger / set off. Signals specific moment of onset.","alimenter — fuel / feed (a problem). Implies ongoing supply of negative dynamic."],pos:["prévenir — prevent. Primary positive.","atténuer — mitigate / reduce impact. Partial solution — honest and nuanced."]},
+  {name:"TECHNOLOGY",neg:["conditionner — primary. Implies manipulation without awareness.","détourner de — divert from / distract from. Redirection of attention.","modeler — shape / mould. More gradual and deep than conditionner.","déplacer — displace. Automation displacing workers."],pos:["faciliter — primary positive. Safe and versatile across all topics.","automatiser — automate. Neutral — can be framed positive or negative."]},
+  {name:"ENVIRONMENT",neg:["polluer — primary. Foundational environment verb.","détériorer l'environnement — primary compound. More formal than polluer.","contaminer — contaminate. Specific to soil, water, food chain.","épuiser les ressources — deplete resources. Key for sustainability.","menacer — threaten. Signals danger to ecosystems or species.","rejeter (dans) — release / discharge into. Technical: rejeter dans l'atmosphère."],pos:["préserver — primary positive. Broad and safe.","sensibiliser à — raise awareness about. About changing behaviours.","réduire les émissions — reduce emissions. Key phrase for climate/transport."]},
+  {name:"GOV / HEALTH",neg:["aggraver les inégalités — primary. Systemic/policy level.","négliger — neglect. Signals deliberate or systemic inaction.","exclure — exclude. Signals people shut out of a system.","priver de — deprive of. Removal of a right or access.","sous-financer — underfund. Specific to public services.","abandonner — abandon. Strong alternate. Implies moral failure."],pos:["garantir — primary positive. Core verb for rights and access.","assurer l'accès à — ensure access to. Positive compound.","prendre en charge — cover / take charge of. Health/social policy.","encadrer — regulate / provide a framework. Not banning — governing.","mettre en place — put in place / implement. For policies and measures."]},
+];
+
+const wrap = document.getElementById("verbs").nextElementSibling;
+// replace the p tag — insert cards after section
+const section = document.getElementById("verbs");
+
+clusters.forEach(cl => {
+  const div = document.createElement("div");
+  div.className = "cluster-card";
+  div.innerHTML = `
+    <div class="cluster-head" onclick="this.parentElement.querySelector('.cluster-body').classList.toggle('hidden');this.querySelector('.cluster-toggle').style.transform=this.parentElement.querySelector('.cluster-body').classList.contains('hidden')?'rotate(0deg)':'rotate(45deg)'">
+      <span class="cluster-name">${cl.name}</span>
+      <span class="cluster-toggle" style="transform:rotate(45deg)">+</span>
+    </div>
+    <div class="cluster-body">
+      <div class="cluster-col-neg">
+        <div class="cluster-col-label">Negative / Problem</div>
+        ${cl.neg.map((v,i)=>`<div class="cluster-verb">${i===0?'<span>':'<span style="color:var(--text2);font-weight:400">'}${v.split('—')[0].trim()}</span>${v.includes('—')?'<small>'+v.split('—').slice(1).join('—').trim()+'</small>':''}</div>`).join('')}
+      </div>
+      <div class="cluster-col-pos">
+        <div class="cluster-col-label">Positive / Solution</div>
+        ${cl.pos.map((v,i)=>`<div class="cluster-verb">${i===0?'<span>':'<span style="color:var(--text2);font-weight:400">'}${v.split('—')[0].trim()}</span>${v.includes('—')?'<small>'+v.split('—').slice(1).join('—').trim()+'</small>':''}</div>`).join('')}
+      </div>
+    </div>`;
+  section.appendChild(div);
+});
+</script>
+
+<!-- ══════════════════════════════════════════════════════
+     CONNECTORS
+══════════════════════════════════════════════════════ -->
+<section id="connectors" style="margin-top:2rem">
+<h2>Connectors & fixed phrases</h2>
+
+<div class="conn-group">
+  <div class="conn-group-title">Setup phrases — slot 2 openers</div>
+  <div class="conn-item"><div class="conn-fr">à force de + infinitive</div><div class="conn-en">by dint of / by constantly doing</div><div class="conn-note">Sets up drift. à force de + verb → on finit par… e.g. À force de tout gérer seul, on finit par s'épuiser.</div></div>
+  <div class="conn-item"><div class="conn-fr">lorsqu'on + verb</div><div class="conn-en">when one / whenever someone</div><div class="conn-note">Standard slot 2 opener. Introduces the triggering situation neutrally.</div></div>
+  <div class="conn-item"><div class="conn-fr">en effet</div><div class="conn-en">indeed / in fact</div><div class="conn-note">Signals slot 2 opening. Introduces the explanation of the slot 1 claim.</div></div>
+</div>
+
+<div class="conn-group">
+  <div class="conn-group-title">Scope qualifiers — slot 1 polish</div>
+  <div class="conn-item"><div class="conn-fr">indépendamment de</div><div class="conn-en">regardless of</div><div class="conn-note">Strongest universaliser. + noun. e.g. indépendamment du niveau de revenus.</div></div>
+  <div class="conn-item"><div class="conn-fr">quel(le) que soit</div><div class="conn-en">whatever / regardless of what</div><div class="conn-note">Agrees with noun: quel que soit l'âge / quelle que soit la situation.</div></div>
+  <div class="conn-item"><div class="conn-fr">à condition de / à condition que</div><div class="conn-en">on the condition that / provided that</div><div class="conn-note">à condition de + infinitive. à condition que + subjunctive.</div></div>
+  <div class="conn-item"><div class="conn-fr">sans pour autant</div><div class="conn-en">without necessarily going so far as to</div><div class="conn-note">+ infinitive. Limits the main claim. High register.</div></div>
+  <div class="conn-item"><div class="conn-fr">pour peu que + subjonctif</div><div class="conn-en">provided that / as long as</div><div class="conn-note">Signals the positive outcome depends on a condition.</div></div>
+</div>
+
+<div class="conn-group">
+  <div class="conn-group-title">Example signals — slot 3 openers (rotate all three)</div>
+  <div class="conn-item"><div class="conn-fr">c'est le cas de</div><div class="conn-en">this is the case for / take the example of</div><div class="conn-note">Default slot 3 opener.</div></div>
+  <div class="conn-item"><div class="conn-fr">il suffit de penser à</div><div class="conn-en">one only needs to think of</div><div class="conn-note">Slightly more rhetorical than c'est le cas de.</div></div>
+  <div class="conn-item"><div class="conn-fr">par exemple</div><div class="conn-en">for example</div><div class="conn-note">Simplest. Never use twice in same paragraph.</div></div>
+</div>
+
+<div class="conn-group">
+  <div class="conn-group-title">Causation</div>
+  <div class="conn-item"><div class="conn-fr">ce qui</div><div class="conn-en">which (consequence clause)</div><div class="conn-note">Links state to consequence. ce qui pourrait… / ce qui entraîne…</div></div>
+  <div class="conn-item"><div class="conn-fr">entraîner</div><div class="conn-en">to lead to / to bring about</div><div class="conn-note">More formal than provoquer. Subject causes the outcome.</div></div>
+</div>
+
+<div class="conn-group">
+  <div class="conn-group-title">Comparison & contrast</div>
+  <div class="conn-item"><div class="conn-fr">contrairement à</div><div class="conn-en">contrary to / unlike</div><div class="conn-note">Introduces a contrast. Often sets up a nuance or counter-argument.</div></div>
+  <div class="conn-item"><div class="conn-fr">par rapport à</div><div class="conn-en">compared to / in relation to</div><div class="conn-note">Neutral comparison. Can be positive or negative.</div></div>
+  <div class="conn-item"><div class="conn-fr">autant… autant</div><div class="conn-en">just as… so too / on one hand… on the other</div><div class="conn-note">Parallel structure for two-sided argument. High register.</div></div>
+  <div class="conn-item"><div class="conn-fr">non seulement… mais aussi</div><div class="conn-en">not only… but also</div><div class="conn-note">Escalates an argument by adding a second layer.</div></div>
+</div>
+
+<div class="conn-group">
+  <div class="conn-group-title">Restriction nuance — use in slot 4 or nuance slot</div>
+  <div class="conn-item"><div class="conn-fr">ne signifie pas que</div><div class="conn-en">does not mean that</div><div class="conn-note">Limits the scope of a previous claim.</div></div>
+  <div class="conn-item"><div class="conn-fr">ne garantit pas</div><div class="conn-en">does not guarantee</div><div class="conn-note">Honest limitation — outcome is uncertain.</div></div>
+  <div class="conn-item"><div class="conn-fr">ne suffit pas de</div><div class="conn-en">it is not enough to</div><div class="conn-note">Signals the proposed solution is incomplete alone.</div></div>
+</div>
+
+<div class="conn-group">
+  <div class="conn-group-title">Amplifying nuance</div>
+  <div class="conn-item"><div class="conn-fr">va bien au-delà de</div><div class="conn-en">goes well beyond</div><div class="conn-note">Amplifies — shows larger scope than expected.</div></div>
+  <div class="conn-item"><div class="conn-fr">ne se limite pas à</div><div class="conn-en">is not limited to</div><div class="conn-note">Opens up a broader consequence than the obvious one.</div></div>
+  <div class="conn-item"><div class="conn-fr">non seulement possible mais aussi rentable</div><div class="conn-en">not only possible but also profitable</div><div class="conn-note">Template for showing a solution is both feasible and beneficial.</div></div>
+</div>
+
+</section>
+
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     TAB 2 — PALETTE
+═══════════════════════════════════════════════════════════════════ -->
+<div class="tab-section" id="tab-palette">
+  <nav class="sub-nav">
+    <a class="nav-item" href="#t1">Type 1</a>
+    <a class="nav-item" href="#t2n">Type 2 −</a>
+    <a class="nav-item" href="#t2p">Type 2 +</a>
+    <a class="nav-item" href="#t3a">Type 3a</a>
+    <a class="nav-item" href="#t3b">Type 3b</a>
+    <a class="nav-item" href="#t4">Type 4</a>
+    <a class="nav-item" href="#esc">Escalation</a>
+    <a class="nav-item" href="#sit">Situations</a>
+  </nav>
+  <div class="wrap">
+    
+
+<!-- ══ TYPE 1 — STATE ══════════════════════════════════════════ -->
+<div class="block" id="t1">
+  <div class="block-head">
+    <div class="block-num">Type 1</div>
+    <div class="block-title">State — how they end up</div>
+    <div class="block-sub">Primary: <strong>se retrouver + adj</strong> · Alternates: se sentir, devenir, se trouver, être amené(e) à</div>
+  </div>
+
+  <div class="tpl">
+    <span class="tpl-label">Slot 2 template</span>
+    <span class="st">En effet, lorsqu'on </span><span class="br sit">situation</span>
+    <span class="st">, on pourrait </span><span class="br vrb">se retrouver / se sentir / devenir</span>
+    <span class="st"> </span><span class="br adj">adj</span>
+    <span class="st">, ce qui pourrait rapidement devenir </span><span class="br out">outcome</span><span class="st">.</span>
+  </div>
+  <div class="tpl">
+    <span class="tpl-label">Slot 3 template</span>
+    <span class="st">C'est le cas de </span><span class="br sit">personne</span>
+    <span class="st"> qui </span><span class="br vrb">se retrouve / se sent / devient</span>
+    <span class="st"> </span><span class="br adj">adj</span><span class="st">.</span>
+  </div>
+
+  <div class="palette">
+    <div class="pal-group">
+      <div class="pal-group-head vrb">Verb structure</div>
+      <div class="pal-pills">
+        <div class="pill vrb"><span class="pill-fr">se retrouver</span><span class="pill-en">to end up (in a state)</span></div>
+        <div class="pill vrb"><span class="pill-fr">se sentir</span><span class="pill-en">to feel</span></div>
+        <div class="pill vrb"><span class="pill-fr">devenir</span><span class="pill-en">to become</span></div>
+        <div class="pill vrb"><span class="pill-fr">se trouver</span><span class="pill-en">to find oneself — formal</span></div>
+        <div class="pill vrb"><span class="pill-fr">être amené(e) à</span><span class="pill-en">to be led to — + infinitive</span></div>
+      </div>
+      <div class="modal-note">Modal layer: <em>pourrait se retrouver · risque de devenir</em></div>
+    </div>
+    <div class="pal-group">
+      <div class="pal-group-head neg">Negative adjectives</div>
+      <div class="pal-pills">
+        <div class="pill neg"><span class="pill-fr">isolé(e)</span><span class="pill-en">isolated</span></div>
+        <div class="pill neg"><span class="pill-fr">épuisé(e)</span><span class="pill-en">exhausted / burnt out</span></div>
+        <div class="pill neg"><span class="pill-fr">dépassé(e)</span><span class="pill-en">overwhelmed</span></div>
+        <div class="pill neg"><span class="pill-fr">démuni(e)</span><span class="pill-en">helpless / without resources</span></div>
+        <div class="pill neg"><span class="pill-fr">perdu(e)</span><span class="pill-en">lost</span></div>
+        <div class="pill neg"><span class="pill-fr">dépendant(e)</span><span class="pill-en">dependent</span></div>
+        <div class="pill neg"><span class="pill-fr">stressé(e)</span><span class="pill-en">stressed</span></div>
+        <div class="pill neg"><span class="pill-fr">vulnérable ⚬</span><span class="pill-en">vulnerable — invariable</span></div>
+        <div class="pill neg"><span class="pill-fr">dépaysé(e)</span><span class="pill-en">disoriented / out of place</span></div>
+        <div class="pill neg"><span class="pill-fr">complexé(e)</span><span class="pill-en">self-conscious / insecure</span></div>
+        <div class="pill neg"><span class="pill-fr">découragé(e)</span><span class="pill-en">discouraged</span></div>
+        <div class="pill neg"><span class="pill-fr">submergé(e)</span><span class="pill-en">swamped / overwhelmed by volume</span></div>
+        <div class="pill neg"><span class="pill-fr">déconnecté(e)</span><span class="pill-en">disconnected from real life</span></div>
+        <div class="pill neg"><span class="pill-fr">précaire ⚬</span><span class="pill-en">precarious — invariable</span></div>
+        <div class="pill neg"><span class="pill-fr">endetté(e)</span><span class="pill-en">indebted</span></div>
+      </div>
+    </div>
+    <div class="pal-group">
+      <div class="pal-group-head pos">Positive adjectives</div>
+      <div class="pal-pills">
+        <div class="pill pos"><span class="pill-fr">épanoui(e)</span><span class="pill-en">fulfilled / thriving</span></div>
+        <div class="pill pos"><span class="pill-fr">valorisé(e)</span><span class="pill-en">valued / recognised</span></div>
+        <div class="pill pos"><span class="pill-fr">mieux équipé(e)</span><span class="pill-en">better equipped</span></div>
+        <div class="pill pos"><span class="pill-fr">soulagé(e)</span><span class="pill-en">relieved</span></div>
+        <div class="pill pos"><span class="pill-fr">autonome ⚬</span><span class="pill-en">autonomous — invariable</span></div>
+        <div class="pill pos"><span class="pill-fr">plus confiant(e)</span><span class="pill-en">more confident</span></div>
+        <div class="pill pos"><span class="pill-fr">mieux intégré(e)</span><span class="pill-en">better integrated</span></div>
+      </div>
+    </div>
+  </div>
+</div><hr>
+
+<!-- ══ TYPE 2 NEG — LOSS ════════════════════════════════════════ -->
+<div class="block" id="t2n">
+  <div class="block-head">
+    <div class="block-num">Type 2 — Negative</div>
+    <div class="block-title">Possession — what they lose</div>
+    <div class="block-sub">Primary: <strong>perdre</strong> · Alternates: manquer de, se voir privé(e) de, souffrir d'un manque de</div>
+  </div>
+
+  <div class="tpl">
+    <span class="tpl-label">Slot 2 template</span>
+    <span class="st">En effet, lorsqu'on </span><span class="br sit">situation</span>
+    <span class="st">, on </span><span class="br vrb">loss verb</span>
+    <span class="st"> </span><span class="br obj">what is lost</span><span class="st">.</span>
+  </div>
+  <div class="tpl">
+    <span class="tpl-label">Slot 3 template</span>
+    <span class="st">C'est le cas de </span><span class="br sit">personne</span>
+    <span class="st"> qui </span><span class="br vrb">perd / manque de…</span>
+    <span class="st"> </span><span class="br obj">what is lost</span><span class="st">.</span>
+  </div>
+
+  <div class="palette">
+    <div class="pal-group">
+      <div class="pal-group-head vrb">Loss verbs</div>
+      <div class="pal-pills">
+        <div class="pill vrb"><span class="pill-fr">perd</span><span class="pill-en">loses — primary</span></div>
+        <div class="pill vrb"><span class="pill-fr">manque de</span><span class="pill-en">lacks</span></div>
+        <div class="pill vrb"><span class="pill-fr">se voit privé(e) de</span><span class="pill-en">finds oneself deprived of</span></div>
+        <div class="pill vrb"><span class="pill-fr">souffre d'un manque de</span><span class="pill-en">suffers from a lack of</span></div>
+        <div class="pill vrb"><span class="pill-fr">voit [noun] diminuer</span><span class="pill-en">watches [sth] decrease</span></div>
+      </div>
+      <div class="modal-note">Modal: <em>pourrait perdre · risque de perdre</em> — always add modal, sounds like a fact without it</div>
+    </div>
+    <div class="pal-group">
+      <div class="pal-group-head obj">What is lost</div>
+      <div class="pal-pills">
+        <div class="pill obj"><span class="pill-fr">ses repères</span><span class="pill-en">one's bearings / landmarks</span></div>
+        <div class="pill obj"><span class="pill-fr">sa motivation</span><span class="pill-en">one's motivation</span></div>
+        <div class="pill obj"><span class="pill-fr">confiance en soi</span><span class="pill-en">self-confidence</span></div>
+        <div class="pill obj"><span class="pill-fr">ses habitudes</span><span class="pill-en">one's routines / habits</span></div>
+        <div class="pill obj"><span class="pill-fr">le fil de ses relations</span><span class="pill-en">the thread of one's relationships</span></div>
+        <div class="pill obj"><span class="pill-fr">sa capacité à progresser</span><span class="pill-en">one's ability to progress</span></div>
+        <div class="pill obj"><span class="pill-fr">l'envie de s'investir</span><span class="pill-en">the desire to invest oneself</span></div>
+        <div class="pill obj"><span class="pill-fr">tout soutien humain</span><span class="pill-en">any human support</span></div>
+      </div>
+    </div>
+  </div>
+</div><hr>
+
+<!-- ══ TYPE 2 POS — GAIN ════════════════════════════════════════ -->
+<div class="block" id="t2p">
+  <div class="block-head">
+    <div class="block-num">Type 2 — Positive</div>
+    <div class="block-title">Possession — what they gain</div>
+    <div class="block-sub">Primary: <strong>acquérir</strong> · Alternates: développer, renforcer, gagner en</div>
+  </div>
+
+  <div class="tpl">
+    <span class="tpl-label">Slot 2 template</span>
+    <span class="st">En effet, lorsqu'on </span><span class="br sit">situation</span>
+    <span class="st">, on </span><span class="br vrb">gain verb</span>
+    <span class="st"> </span><span class="br obj">what is gained</span><span class="st">.</span>
+  </div>
+  <div class="tpl">
+    <span class="tpl-label">Slot 3 template</span>
+    <span class="st">C'est le cas de </span><span class="br sit">personne</span>
+    <span class="st"> qui </span><span class="br vrb">acquiert / développe…</span>
+    <span class="st"> </span><span class="br obj">what is gained</span><span class="st">.</span>
+  </div>
+
+  <div class="palette">
+    <div class="pal-group">
+      <div class="pal-group-head vrb">Gain verbs</div>
+      <div class="pal-pills">
+        <div class="pill vrb"><span class="pill-fr">acquiert</span><span class="pill-en">acquires — primary</span></div>
+        <div class="pill vrb"><span class="pill-fr">développe</span><span class="pill-en">develops</span></div>
+        <div class="pill vrb"><span class="pill-fr">renforce</span><span class="pill-en">strengthens — things already present</span></div>
+        <div class="pill vrb"><span class="pill-fr">gagne en</span><span class="pill-en">gains in — no article after: gagne en autonomie</span></div>
+        <div class="pill vrb"><span class="pill-fr">retrouve</span><span class="pill-en">rediscovers / gets back</span></div>
+      </div>
+    </div>
+    <div class="pal-group">
+      <div class="pal-group-head obj">What is gained</div>
+      <div class="pal-pills">
+        <div class="pill obj"><span class="pill-fr">de nouvelles compétences</span><span class="pill-en">new skills</span></div>
+        <div class="pill obj"><span class="pill-fr">de l'autonomie</span><span class="pill-en">autonomy</span></div>
+        <div class="pill obj"><span class="pill-fr">des liens sociaux solides</span><span class="pill-en">strong social ties</span></div>
+        <div class="pill obj"><span class="pill-fr">de l'expérience</span><span class="pill-en">experience</span></div>
+        <div class="pill obj"><span class="pill-fr">en confiance</span><span class="pill-en">in confidence (gagner en)</span></div>
+        <div class="pill obj"><span class="pill-fr">en maturité</span><span class="pill-en">in maturity (gagner en)</span></div>
+        <div class="pill obj"><span class="pill-fr">un équilibre</span><span class="pill-en">a balance</span></div>
+        <div class="pill obj"><span class="pill-fr">une discipline mentale</span><span class="pill-en">mental discipline</span></div>
+      </div>
+    </div>
+  </div>
+</div><hr>
+
+<!-- ══ TYPE 3a — FORCED ═════════════════════════════════════════ -->
+<div class="block" id="t3a">
+  <div class="block-head">
+    <div class="block-num">Type 3a</div>
+    <div class="block-title">Forced behaviour — obligation / constraint</div>
+    <div class="block-sub">Something external imposes the action. No modal needed — obligation is already the certainty.</div>
+  </div>
+
+  <div class="tpl">
+    <span class="tpl-label">Slot 2 template</span>
+    <span class="st">En effet, lorsqu'on </span><span class="br sit">situation</span>
+    <span class="st">, on </span><span class="br vrb">obligation verb</span>
+    <span class="st"> </span><span class="br obj">forced action</span><span class="st">.</span>
+  </div>
+  <div class="tpl">
+    <span class="tpl-label">Slot 3 template</span>
+    <span class="st">C'est le cas de </span><span class="br sit">personne</span>
+    <span class="st"> qui </span><span class="br vrb">doit / se voit contraint(e)…</span>
+    <span class="st"> </span><span class="br obj">forced action</span><span class="st">.</span>
+  </div>
+
+  <div class="palette">
+    <div class="pal-group">
+      <div class="pal-group-head vrb">Obligation verbs</div>
+      <div class="pal-pills">
+        <div class="pill vrb"><span class="pill-fr">est obligé(e) de</span><span class="pill-en">is forced to — obligé → obligée (f)</span></div>
+        <div class="pill vrb"><span class="pill-fr">se voit contraint(e) de</span><span class="pill-en">finds oneself forced to — formal — contraint → contrainte (f)</span></div>
+        <div class="pill vrb"><span class="pill-fr">n'a pas le choix de</span><span class="pill-en">has no choice but to — eliminates agency</span></div>
+        <div class="pill vrb"><span class="pill-fr">doit</span><span class="pill-en">must / has to — simplest</span></div>
+      </div>
+      <div class="modal-note">⚠ No modal on 3a — the obligation is already the certainty</div>
+    </div>
+    <div class="pal-group">
+      <div class="pal-group-head obj">Forced actions</div>
+      <div class="pal-pills">
+        <div class="pill obj"><span class="pill-fr">faire des compromis</span><span class="pill-en">make compromises</span></div>
+        <div class="pill obj"><span class="pill-fr">renoncer à ses projets</span><span class="pill-en">give up one's plans</span></div>
+        <div class="pill obj"><span class="pill-fr">tout gérer seul(e)</span><span class="pill-en">manage everything alone</span></div>
+        <div class="pill obj"><span class="pill-fr">accepter des conditions précaires</span><span class="pill-en">accept precarious conditions</span></div>
+        <div class="pill obj"><span class="pill-fr">s'adapter sans soutien</span><span class="pill-en">adapt without support</span></div>
+        <div class="pill obj"><span class="pill-fr">posséder une voiture</span><span class="pill-en">own a car</span></div>
+        <div class="pill obj"><span class="pill-fr">payer des soins coûteux</span><span class="pill-en">pay for costly medical care</span></div>
+        <div class="pill obj"><span class="pill-fr">dépendre d'un système défaillant</span><span class="pill-en">depend on a failing system</span></div>
+      </div>
+    </div>
+  </div>
+</div><hr>
+
+<!-- ══ TYPE 3b — DRIFT ══════════════════════════════════════════ -->
+<div class="block" id="t3b">
+  <div class="block-head">
+    <div class="block-num">Type 3b</div>
+    <div class="block-title">Drifted behaviour — gradual voluntary shift</div>
+    <div class="block-sub">Something internal or situational pulls the person over time. Setup with: <em>à force de…</em></div>
+  </div>
+
+  <div class="tpl">
+    <span class="tpl-label">Slot 2 template</span>
+    <span class="st">En effet, à force de </span><span class="br sit">situation</span>
+    <span class="st">, on </span><span class="br vrb">drift verb</span>
+    <span class="st"> </span><span class="br obj">object (optional)</span><span class="st">.</span>
+  </div>
+  <div class="tpl">
+    <span class="tpl-label">Slot 3 template</span>
+    <span class="st">C'est le cas de </span><span class="br sit">personne</span>
+    <span class="st"> qui </span><span class="br vrb">finit par / a tendance à…</span>
+    <span class="st"> </span><span class="br obj">object (optional)</span><span class="st">.</span>
+  </div>
+
+  <div class="palette">
+    <div class="pal-group">
+      <div class="pal-group-head neg">Negative drift verbs</div>
+      <div class="pal-pills">
+        <div class="pill neg"><span class="pill-fr">finit par décrocher</span><span class="pill-en">ends up dropping out</span></div>
+        <div class="pill neg"><span class="pill-fr">renonce à</span><span class="pill-en">gives up on</span></div>
+        <div class="pill neg"><span class="pill-fr">évite de</span><span class="pill-en">avoids doing</span></div>
+        <div class="pill neg"><span class="pill-fr">a tendance à s'isoler</span><span class="pill-en">tends to isolate oneself</span></div>
+        <div class="pill neg"><span class="pill-fr">se replie sur soi</span><span class="pill-en">withdraws into oneself</span></div>
+        <div class="pill neg"><span class="pill-fr">risque de finir par décrocher</span><span class="pill-en">risks ending up dropping out — modal</span></div>
+      </div>
+    </div>
+    <div class="pal-group">
+      <div class="pal-group-head pos">Positive drift verbs</div>
+      <div class="pal-pills">
+        <div class="pill pos"><span class="pill-fr">finit par s'épanouir</span><span class="pill-en">ends up thriving</span></div>
+        <div class="pill pos"><span class="pill-fr">s'investit davantage dans</span><span class="pill-en">invests more in</span></div>
+        <div class="pill pos"><span class="pill-fr">cherche à se dépasser</span><span class="pill-en">seeks to push oneself</span></div>
+        <div class="pill pos"><span class="pill-fr">commence à progresser</span><span class="pill-en">begins to progress</span></div>
+        <div class="pill pos"><span class="pill-fr">tend à s'ouvrir</span><span class="pill-en">tends to open up</span></div>
+      </div>
+    </div>
+    <div class="pal-group">
+      <div class="pal-group-head obj">Objects of drift (renonce à / évite de…)</div>
+      <div class="pal-pills">
+        <div class="pill obj"><span class="pill-fr">ses ambitions</span><span class="pill-en">one's ambitions</span></div>
+        <div class="pill obj"><span class="pill-fr">ses efforts</span><span class="pill-en">one's efforts</span></div>
+        <div class="pill obj"><span class="pill-fr">demander de l'aide</span><span class="pill-en">asking for help</span></div>
+        <div class="pill obj"><span class="pill-fr">sortir et voir des gens</span><span class="pill-en">going out and seeing people</span></div>
+        <div class="pill obj"><span class="pill-fr">sa formation</span><span class="pill-en">one's training</span></div>
+      </div>
+    </div>
+  </div>
+</div><hr>
+
+<!-- ══ TYPE 4 — CAPACITY ════════════════════════════════════════ -->
+<div class="block" id="t4">
+  <div class="block-head">
+    <div class="block-num">Type 4</div>
+    <div class="block-title">Capacity — what they can or can't do</div>
+    <div class="block-sub">Primary −: <strong>avoir du mal à</strong> · Primary +: <strong>parvenir enfin à</strong></div>
+  </div>
+
+  <div class="tpl">
+    <span class="tpl-label">Slot 2 template</span>
+    <span class="st">En effet, lorsqu'on </span><span class="br sit">situation</span>
+    <span class="st">, on </span><span class="br vrb">capacity verb</span>
+    <span class="st"> </span><span class="br obj">what they struggle / manage to do</span><span class="st">.</span>
+  </div>
+  <div class="tpl">
+    <span class="tpl-label">Slot 3 template</span>
+    <span class="st">C'est le cas de </span><span class="br sit">personne</span>
+    <span class="st"> qui </span><span class="br vrb">a du mal à / parvient enfin à…</span>
+    <span class="st"> </span><span class="br obj">what they struggle / manage to do</span><span class="st">.</span>
+  </div>
+
+  <div class="palette">
+    <div class="pal-group">
+      <div class="pal-group-head neg">Negative capacity verbs</div>
+      <div class="pal-pills">
+        <div class="pill neg"><span class="pill-fr">a du mal à</span><span class="pill-en">struggles to — most natural in speech</span></div>
+        <div class="pill neg"><span class="pill-fr">n'arrive plus à</span><span class="pill-en">can no longer — lost capacity</span></div>
+        <div class="pill neg"><span class="pill-fr">peine à</span><span class="pill-en">has trouble doing — formal/written</span></div>
+        <div class="pill neg"><span class="pill-fr">ne parvient pas à</span><span class="pill-en">fails to / is unable to — complete inability</span></div>
+        <div class="pill neg"><span class="pill-fr">ne bénéficie pas des mêmes conditions</span><span class="pill-en">doesn't benefit from the same conditions — inequality</span></div>
+        <div class="pill neg"><span class="pill-fr">pour qui ce n'est pas toujours possible</span><span class="pill-en">for whom it isn't always possible — suitability</span></div>
+      </div>
+      <div class="modal-note">Modal on negative: not needed — the incapacity is its own limit</div>
+    </div>
+    <div class="pal-group">
+      <div class="pal-group-head pos">Positive capacity verbs</div>
+      <div class="pal-pills">
+        <div class="pill pos"><span class="pill-fr">parvient enfin à</span><span class="pill-en">finally manages to — enfin signals breakthrough</span></div>
+        <div class="pill pos"><span class="pill-fr">arrive mieux à</span><span class="pill-en">manages better to — comparative improvement</span></div>
+        <div class="pill pos"><span class="pill-fr">bénéficie enfin de</span><span class="pill-en">finally benefits from</span></div>
+        <div class="pill pos"><span class="pill-fr">peut enfin concilier</span><span class="pill-en">can finally balance — concilier = balance two things</span></div>
+        <div class="pill pos"><span class="pill-fr">pourrait enfin bénéficier de</span><span class="pill-en">could finally benefit from — modal for policy arguments</span></div>
+      </div>
+    </div>
+    <div class="pal-group">
+      <div class="pal-group-head obj">Capacity objects</div>
+      <div class="pal-pills">
+        <div class="pill obj"><span class="pill-fr">maintenir un équilibre</span><span class="pill-en">maintain a balance</span></div>
+        <div class="pill obj"><span class="pill-fr">déconnecter après le travail</span><span class="pill-en">switch off after work</span></div>
+        <div class="pill obj"><span class="pill-fr">se concentrer suffisamment</span><span class="pill-en">concentrate sufficiently</span></div>
+        <div class="pill obj"><span class="pill-fr">accéder aux soins nécessaires</span><span class="pill-en">access necessary care</span></div>
+        <div class="pill obj"><span class="pill-fr">s'intégrer correctement</span><span class="pill-en">integrate properly</span></div>
+        <div class="pill obj"><span class="pill-fr">progresser à son propre rythme</span><span class="pill-en">progress at one's own pace</span></div>
+        <div class="pill obj"><span class="pill-fr">concilier vie pro et perso</span><span class="pill-en">balance work and personal life</span></div>
+      </div>
+    </div>
+  </div>
+</div><hr>
+
+<!-- ══ ESCALATION TAIL ══════════════════════════════════════════ -->
+<div class="block" id="esc">
+  <div class="block-head">
+    <div class="block-num">Escalation tail</div>
+    <div class="block-title">ce qui pourrait rapidement devenir…</div>
+    <div class="block-sub">Slot 2 add-on only. Follows any Type 1 or Type 2 negative predicate.</div>
+  </div>
+
+  <div class="tpl">
+    <span class="tpl-label">Pattern</span>
+    <span class="st">…on pourrait se retrouver </span><span class="br adj">adj</span>
+    <span class="st">, </span><span class="br out">ce qui pourrait rapidement devenir…</span><span class="st">.</span>
+  </div>
+
+  <div class="palette">
+    <div class="pal-group" style="grid-column:1/-1">
+      <div class="pal-group-head out">Escalation outcomes</div>
+      <div class="pal-pills">
+        <div class="pill out"><span class="pill-fr">problématique</span><span class="pill-en">problematic — general default</span></div>
+        <div class="pill out"><span class="pill-fr">néfaste pour la santé mentale</span><span class="pill-en">harmful to mental health — stress / social</span></div>
+        <div class="pill out"><span class="pill-fr">difficile à surmonter</span><span class="pill-en">hard to overcome — personal / psychological</span></div>
+        <div class="pill out"><span class="pill-fr">une source d'anxiété durable</span><span class="pill-en">a lasting source of anxiety — stress / technology</span></div>
+        <div class="pill out"><span class="pill-fr">un obstacle à l'intégration</span><span class="pill-en">an obstacle to integration — immigration</span></div>
+        <div class="pill out"><span class="pill-fr">irréversible</span><span class="pill-en">irreversible — invariable — environment</span></div>
+        <div class="pill out"><span class="pill-fr">épuisant(e) sur le long terme</span><span class="pill-en">exhausting in the long run — work / stress</span></div>
+        <div class="pill out"><span class="pill-fr">une source de bien-être</span><span class="pill-en">a source of well-being — positive</span></div>
+        <div class="pill out"><span class="pill-fr">bénéfique pour la santé</span><span class="pill-en">beneficial for health — positive</span></div>
+      </div>
+    </div>
+  </div>
+</div><hr>
+
+<!-- ══ SITUATION BANK ════════════════════════════════════════════ -->
+<div class="block" id="sit">
+  <div class="block-head">
+    <div class="block-num">Shared bank</div>
+    <div class="block-title">Situations — lorsqu'on…</div>
+    <div class="block-sub">Used across all types in slot 2. One short clause only.</div>
+  </div>
+
+  <div class="palette">
+    <div class="pal-group" style="grid-column:1/-1">
+      <div class="pal-group-head sit">Situations</div>
+      <div class="pal-pills">
+        <div class="pill sit"><span class="pill-fr">travaille sans encadrement</span><span class="pill-en">works without supervision / structure</span></div>
+        <div class="pill sit"><span class="pill-fr">manque de soutien</span><span class="pill-en">lacks support</span></div>
+        <div class="pill sit"><span class="pill-fr">arrive dans un nouveau pays</span><span class="pill-en">arrives in a new country</span></div>
+        <div class="pill sit"><span class="pill-fr">dépend entièrement des écrans</span><span class="pill-en">depends entirely on screens</span></div>
+        <div class="pill sit"><span class="pill-fr">est exposé(e) à des contenus négatifs</span><span class="pill-en">is exposed to negative content</span></div>
+        <div class="pill sit"><span class="pill-fr">n'a pas accès aux soins</span><span class="pill-en">doesn't have access to healthcare</span></div>
+        <div class="pill sit"><span class="pill-fr">se retrouve sans repères</span><span class="pill-en">finds oneself without bearings</span></div>
+        <div class="pill sit"><span class="pill-fr">travaille seul(e) à distance</span><span class="pill-en">works alone remotely</span></div>
+        <div class="pill sit"><span class="pill-fr">n'a pas les moyens de manger sainement</span><span class="pill-en">can't afford to eat healthily</span></div>
+        <div class="pill sit"><span class="pill-fr">joue aux jeux vidéo plusieurs heures par jour</span><span class="pill-en">plays video games for hours a day</span></div>
+        <div class="pill sit"><span class="pill-fr">utilise les réseaux sociaux de façon excessive</span><span class="pill-en">uses social media excessively</span></div>
+        <div class="pill sit"><span class="pill-fr">pratique une activité sportive régulièrement</span><span class="pill-en">practises sport regularly</span></div>
+        <div class="pill sit"><span class="pill-fr">n'a pas de filet de sécurité sociale</span><span class="pill-en">has no social safety net</span></div>
+        <div class="pill sit"><span class="pill-fr">est soumis(e) à une pression constante</span><span class="pill-en">is subjected to constant pressure</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     TAB 3 — BUILDER
+═══════════════════════════════════════════════════════════════════ -->
+<div class="tab-section" id="tab-builder">
+  <nav class="sub-nav" id="builder-subnav">
+    <button class="nav-btn active" id="nav-builder" onclick="showSec('builder')">Builder</button>
+    <button class="nav-btn" id="nav-full" onclick="showSec('full')">Full paragraph</button>
+  </nav>
+  <div class="wrap-sm">
+    <div style="height:1rem"></div>
+    <div class="legend">
+      <div class="li"><div class="ld" style="background:var(--csitm)"></div>situation / opener</div>
+      <div class="li"><div class="ld" style="background:var(--cadjm)"></div>adjective</div>
+      <div class="li"><div class="ld" style="background:var(--coutm)"></div>outcome</div>
+      <div class="li"><div class="ld" style="background:var(--cperm)"></div>person</div>
+      <div class="li"><div class="ld" style="background:var(--cpredm)"></div>predicate</div>
+      <div class="li"><div class="ld" style="background:var(--csolm)"></div>solution</div>
+      <div class="li"><div class="ld" style="background:var(--cverbm)"></div>verb structure</div>
+      <span class="legend-note">— tap any coloured chip to swap it</span>
+    </div>
+    
+<div class="legend">
+  <div class="li"><div class="ld" style="background:var(--csitm)"></div>situation / opener</div>
+  <div class="li"><div class="ld" style="background:var(--cadjm)"></div>adjective</div>
+  <div class="li"><div class="ld" style="background:var(--coutm)"></div>outcome</div>
+  <div class="li"><div class="ld" style="background:var(--cperm)"></div>person</div>
+  <div class="li"><div class="ld" style="background:var(--cpredm)"></div>predicate</div>
+  <div class="li"><div class="ld" style="background:var(--csolm)"></div>solution</div>
+  <div class="li"><div class="ld" style="background:var(--cverbm)"></div>verb structure</div>
+  <span class="legend-note">— tap any coloured chip to swap it</span>
+</div>
+
+<div id="sec-builder">
+<div class="slot-tabs">
+  <button class="slot-tab on-s1" id="tab-s1" onclick="setSlot(1)">Slot 1 — Claim</button>
+  <button class="slot-tab" id="tab-s2" onclick="setSlot(2)">Slot 2 — En effet</button>
+  <button class="slot-tab" id="tab-s3" onclick="setSlot(3)">Slot 3 — Par exemple</button>
+  <button class="slot-tab" id="tab-s4" onclick="setSlot(4)">Slot 4 — C'est pourquoi</button>
+</div>
+<div id="cards"></div>
+</div>
+
+<div id="sec-full" style="display:none">
+  <div class="full-box">
+    <div class="full-label">Full paragraph</div>
+    <div id="full-para"></div>
+  </div>
+</div>
+
+  </div>
+</div>
+
+<!-- DROPDOWN (shared, floats above everything) -->
+<div class="dd" id="dd">
+  <div class="dd-hdr" id="dd-hdr"></div>
+  <div id="dd-list"></div>
+</div>
+
+<script>
+// ── TAB SWITCHER ─────────────────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab-section').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.top-tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.getElementById('tt-' + name).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ── BUILDER JS ───────────────────────────────────────────────────────────────
+
+// ─── DATA ────────────────────────────────────────────────────────────────────
+
+const SUBJECTS = [
+  {fr:"Le télétravail"},
+  {fr:"L'accès à l'éducation"},
+  {fr:"Les réseaux sociaux"},
+  {fr:"L'alimentation saine"},
+  {fr:"Les transports en commun"},
+  {fr:"L'usage des écrans"},
+  {fr:"La pratique sportive"},
+  {fr:"L'intégration des immigrants"},
+  {fr:"Le système de santé"},
+  {fr:"L'automatisation du travail"},
+  {fr:"La régulation des plateformes"},
+  {fr:"L'accès aux soins médicaux"},
+];
+
+// Slot 1 — the verb+completion pairs
+const S1_VERBS = [
+  {fr:"devrait être encadré",        comp:"",                          note:"prescription — devrait + être + adj"},
+  {fr:"devrait être accessible à tous", comp:"",                       note:"prescription — devrait + être + adj"},
+  {fr:"devrait être garanti à tous", comp:"",                          note:"prescription — devrait + être + adj"},
+  {fr:"pourrait améliorer la qualité de vie", comp:"",                 note:"mechanism — pourrait + infinitive"},
+  {fr:"pourrait réduire les inégalités", comp:"",                      note:"mechanism — pourrait + infinitive"},
+  {fr:"pourrait contribuer à l'intégration", comp:"",                  note:"mechanism — pourrait + infinitive"},
+  {fr:"aurait un effet positif sur la cohésion sociale", comp:"",      note:"impact — aurait un effet + adj + sur"},
+  {fr:"aurait un effet négatif sur la santé mentale", comp:"",         note:"impact — aurait un effet + adj + sur"},
+];
+
+const S1_SCOPE = [
+  {fr:"indépendamment de l'âge ou des revenus",      note:"strongest universaliser — + noun"},
+  {fr:"quel que soit le contexte",                    note:"agrees with noun"},
+  {fr:"quelle que soit la situation familiale",       note:"quelle — feminine noun"},
+  {fr:"à condition d'être bien encadré",              note:"+ infinitive"},
+  {fr:"à condition que les inégalités soient réduites", note:"+ subjunctive"},
+  {fr:"sans pour autant l'imposer à tous",            note:"limits the claim — high register"},
+  {fr:"pour peu que les conditions soient réunies",   note:"+ subjunctive"},
+  {fr:"",                                             note:"(no scope qualifier)"},
+];
+
+// Slot 2 — one block per predicate type
+// Each block: { type, label, template_fn, state_keys, dropdowns }
+// template_fn receives state object and chip() fn, returns HTML string
+
+const S2_ADJS_NEG = [
+  {fr:"isolé(e)",      note:"social / télétravail"},
+  {fr:"épuisé(e)",     note:"work / stress"},
+  {fr:"dépassé(e)",    note:"time / technology"},
+  {fr:"démuni(e)",     note:"money / immigration"},
+  {fr:"perdu(e)",      note:"immigration / education"},
+  {fr:"dépendant(e)", note:"technology"},
+  {fr:"stressé(e)",   note:"stress cluster"},
+  {fr:"vulnérable",   note:"invariable — health / gov"},
+  {fr:"dépaysé(e)",   note:"immigration"},
+  {fr:"découragé(e)", note:"learning"},
+  {fr:"submergé(e)",  note:"technology — overwhelmed by volume"},
+  {fr:"déconnecté(e)",note:"technology — cut off from real life"},
+  {fr:"précaire",     note:"invariable — money / gov"},
+  {fr:"endetté(e)",   note:"money / health"},
+  {fr:"complexé(e)",  note:"social / media"},
+];
+const S2_ADJS_POS = [
+  {fr:"valorisé(e)",     note:"work / learning"},
+  {fr:"épanoui(e)",      note:"education / social"},
+  {fr:"mieux équipé(e)", note:"education / work"},
+  {fr:"soulagé(e)",      note:"health / stress"},
+  {fr:"plus autonome",   note:"invariable — education / work"},
+];
+
+const S2_SITUATIONS = [
+  {fr:"travaille sans encadrement"},
+  {fr:"manque de soutien"},
+  {fr:"arrive dans un nouveau pays"},
+  {fr:"dépend entièrement des écrans"},
+  {fr:"est exposé(e) à des contenus négatifs"},
+  {fr:"n'a pas accès aux soins"},
+  {fr:"se retrouve sans repères"},
+  {fr:"travaille seul(e) à distance"},
+  {fr:"n'a pas les moyens de manger sainement"},
+  {fr:"joue aux jeux vidéo plusieurs heures par jour"},
+  {fr:"utilise les réseaux sociaux de façon excessive"},
+  {fr:"pratique une activité sportive régulièrement"},
+];
+
+const S2_EN_EFFET = [
+  {fr:"En effet, lorsqu'on",   note:"default — standard opener"},
+  {fr:"En effet, plus on",     note:"use with: plus on [sit], plus on risque de…"},
+  {fr:"En effet, le fait de",  note:"use with: le fait de [sit] entraînerait…"},
+  {fr:"En effet, il serait difficile de", note:"use with: il serait difficile de [sit] sans…"},
+];
+
+const S2_OUTCOMES = [
+  {fr:"problématique",                   note:"general — default"},
+  {fr:"néfaste pour la santé mentale",   note:"stress / social / technology"},
+  {fr:"difficile à surmonter",           note:"personal / psychological"},
+  {fr:"une source d'anxiété durable",    note:"stress / social"},
+  {fr:"un obstacle à l'intégration",     note:"immigration"},
+  {fr:"épuisant(e) sur le long terme",   note:"work / stress"},
+  {fr:"irréversible",                    note:"environment — invariable"},
+  {fr:"une source de bien-être",         note:"positive"},
+  {fr:"bénéfique pour la santé",         note:"positive"},
+];
+
+// Type 2 — possession
+const S2_LOSS_VERBS = [
+  {fr:"perd",                    note:"primary — perdre"},
+  {fr:"manque de",               note:"alternate — absence rather than active loss"},
+  {fr:"se voit privé(e) de",     note:"formal — agreement on privé(e)"},
+  {fr:"souffre d'un manque de",  note:"emphasises impact of absence"},
+  {fr:"voit sa motivation diminuer", note:"subject watches something decline"},
+];
+const S2_LOSS_OBJECTS = [
+  {fr:"ses repères"},
+  {fr:"sa motivation"},
+  {fr:"confiance en soi"},
+  {fr:"ses habitudes"},
+  {fr:"le fil de ses relations"},
+  {fr:"sa capacité à progresser"},
+  {fr:"l'envie de s'investir"},
+];
+const S2_GAIN_VERBS = [
+  {fr:"acquiert",    note:"primary positive — skills, experience"},
+  {fr:"développe",   note:"capacities and qualities over time"},
+  {fr:"renforce",    note:"things already present that grow stronger"},
+  {fr:"gagne en",    note:"fixed: gagner en + noun (no article)"},
+];
+const S2_GAIN_OBJECTS = [
+  {fr:"de nouvelles compétences"},
+  {fr:"de l'autonomie"},
+  {fr:"des liens sociaux solides"},
+  {fr:"de l'expérience"},
+  {fr:"en confiance"},
+  {fr:"en maturité"},
+];
+
+// Type 3a — forced behaviour
+const S2_FORCE_VERBS = [
+  {fr:"est obligé(e) de",         note:"primary — obligé → obligée (f)"},
+  {fr:"se voit contraint(e) de",  note:"formal — agreement on contraint(e)"},
+  {fr:"n'a pas le choix de",      note:"strongest — eliminates agency"},
+  {fr:"doit",                     note:"simplest"},
+];
+const S2_FORCE_ACTS = [
+  {fr:"faire des compromis"},
+  {fr:"renoncer à ses projets"},
+  {fr:"dépendre d'un système défaillant"},
+  {fr:"s'adapter sans aucun soutien"},
+  {fr:"tout gérer seul(e)"},
+  {fr:"accepter des conditions précaires"},
+  {fr:"posséder une voiture"},
+  {fr:"payer des soins coûteux"},
+];
+
+// Type 3b — drifted behaviour
+const S2_DRIFT_VERBS_NEG = [
+  {fr:"finit par décrocher",           note:"gradual disengagement"},
+  {fr:"renonce à",                     note:"pressured abandonment"},
+  {fr:"évite de",                      note:"avoidance as learned behaviour"},
+  {fr:"a tendance à s'isoler",         note:"direction, not fixed state"},
+  {fr:"se replie sur soi",             note:"stronger — emotional withdrawal"},
+  {fr:"risque de finir par décrocher", note:"modal layer — softens the claim"},
+];
+const S2_DRIFT_VERBS_POS = [
+  {fr:"finit par s'épanouir",          note:"positive drift arc"},
+  {fr:"s'investit davantage dans",     note:"growing engagement"},
+  {fr:"cherche à se dépasser",         note:"internal motivation — high register"},
+  {fr:"commence à progresser",         note:"early positive shift"},
+];
+const S2_DRIFT_OBJECTS = [
+  {fr:"ses ambitions"},
+  {fr:"ses efforts"},
+  {fr:"demander de l'aide"},
+  {fr:"sortir et voir des gens"},
+  {fr:"maintenir ses routines"},
+];
+
+// Type 4 — capacity
+const S2_CAP_NEG = [
+  {fr:"a du mal à",                         note:"most common — natural in speech"},
+  {fr:"n'arrive plus à",                    note:"lost capacity — previously could"},
+  {fr:"peine à",                            note:"formal — written register"},
+  {fr:"ne parvient pas à",                  note:"complete inability"},
+  {fr:"ne bénéficie pas des mêmes conditions", note:"inequality — access, fairness"},
+];
+const S2_CAP_POS = [
+  {fr:"parvient enfin à",          note:"enfin signals breakthrough"},
+  {fr:"arrive mieux à",            note:"comparative improvement"},
+  {fr:"bénéficie enfin de",        note:"access to advantage or resource"},
+  {fr:"peut enfin concilier",      note:"concilier = balance two things"},
+  {fr:"pourrait enfin bénéficier de", note:"modal positive — policy/rights"},
+];
+const S2_CAP_OBJECTS = [
+  {fr:"maintenir un équilibre"},
+  {fr:"déconnecter après le travail"},
+  {fr:"se concentrer suffisamment"},
+  {fr:"accéder aux soins nécessaires"},
+  {fr:"s'intégrer correctement"},
+  {fr:"progresser à son propre rythme"},
+  {fr:"concilier vie pro et perso"},
+];
+
+// Slot 3
+const S3_OPENERS = [
+  {fr:"C'est le cas de",                              note:"default — most versatile"},
+  {fr:"Par exemple,",                                 note:"simplest"},
+  {fr:"Il suffit de penser à",                        note:"more rhetorical"},
+  {fr:"Prenons le cas de",                            note:"invites the examiner in"},
+];
+const S3_PERSONS = [
+  {fr:"un adolescent sans encadrement numérique",            note:"technology"},
+  {fr:"une adolescente exposée aux réseaux sociaux",         note:"technology / media"},
+  {fr:"un employé en télétravail sans contact humain",       note:"work"},
+  {fr:"une employée qui jongle entre famille et carrière",   note:"work"},
+  {fr:"un adulte de 45 ans qui reprend des études",          note:"education"},
+  {fr:"une étudiante étrangère face à la barrière linguistique", note:"immigration"},
+  {fr:"un jeune immigrant qui ne parle pas encore la langue",note:"immigration"},
+  {fr:"une famille modeste qui veut manger sainement",       note:"alimentation"},
+  {fr:"un habitant de banlieue sans alternative à la voiture",note:"transport"},
+  {fr:"un senior qui vit seul sans réseau de soutien",       note:"social"},
+  {fr:"une travailleuse indépendante sans protection sociale",note:"government"},
+  {fr:"un enfant de 8 ans devant les écrans plusieurs heures par jour",note:"technology"},
+  {fr:"une femme de 40 ans sous pression professionnelle",   note:"work / appearance"},
+  {fr:"un patient sans couverture médicale complète",        note:"health"},
+];
+
+// Slot 3 predicates by type — mirrors slot 2 types
+const S3_PRED_T1_NEG = [
+  {fr:"se retrouve isolé(e)",      note:"Type 1 — State"},
+  {fr:"se sent épuisé(e)",         note:"Type 1 — State"},
+  {fr:"devient dépendant(e)",      note:"Type 1 — State"},
+  {fr:"se trouve démuni(e)",       note:"Type 1 — State — formal"},
+  {fr:"se retrouve dépassé(e)",    note:"Type 1 — State"},
+  {fr:"se sent perdu(e)",          note:"Type 1 — State"},
+  {fr:"se retrouve vulnérable",    note:"Type 1 — State — invariable"},
+  {fr:"se retrouve dépaysé(e)",    note:"Type 1 — State — immigration"},
+];
+const S3_PRED_T1_POS = [
+  {fr:"se retrouve plus autonome", note:"Type 1 — State (positive)"},
+  {fr:"se sent enfin valorisé(e)", note:"Type 1 — State (positive)"},
+  {fr:"devient plus confiant(e)",  note:"Type 1 — State (positive)"},
+  {fr:"se retrouve épanoui(e)",    note:"Type 1 — State (positive)"},
+  {fr:"se sent mieux équipé(e)",   note:"Type 1 — State (positive)"},
+];
+const S3_PRED_T2_NEG = [
+  {fr:"perd ses repères",               note:"Type 2 — Possession"},
+  {fr:"manque de motivation",           note:"Type 2 — Possession"},
+  {fr:"se voit privé(e) de tout soutien",note:"Type 2 — Possession — agreement on privé(e)"},
+  {fr:"souffre d'un manque de repères", note:"Type 2 — Possession"},
+  {fr:"voit sa confiance diminuer",     note:"Type 2 — Possession"},
+  {fr:"perd le fil de ses relations",   note:"Type 2 — Possession"},
+];
+const S3_PRED_T2_POS = [
+  {fr:"acquiert de nouvelles compétences", note:"Type 2 — Possession (positive)"},
+  {fr:"développe une vraie discipline",    note:"Type 2 — Possession (positive)"},
+  {fr:"renforce sa confiance en soi",      note:"Type 2 — Possession (positive)"},
+  {fr:"gagne en autonomie",                note:"Type 2 — Possession (positive)"},
+];
+const S3_PRED_T3A = [
+  {fr:"doit tout gérer seul(e)",              note:"Type 3a — Forced — devoir"},
+  {fr:"se voit contraint(e) de renoncer",     note:"Type 3a — Forced — agreement on contraint(e)"},
+  {fr:"n'a pas le choix de s'adapter",        note:"Type 3a — Forced — eliminates agency"},
+  {fr:"est obligé(e) de faire des compromis", note:"Type 3a — Forced — obligé → obligée (f)"},
+];
+const S3_PRED_T3B_NEG = [
+  {fr:"finit par décrocher",          note:"Type 3b — Drifted (neg)"},
+  {fr:"a tendance à s'isoler",        note:"Type 3b — Drifted (neg)"},
+  {fr:"renonce à ses ambitions",      note:"Type 3b — Drifted (neg)"},
+  {fr:"évite de demander de l'aide",  note:"Type 3b — Drifted (neg)"},
+  {fr:"se replie sur soi",            note:"Type 3b — Drifted (neg)"},
+];
+const S3_PRED_T3B_POS = [
+  {fr:"finit par s'épanouir",              note:"Type 3b — Drifted (pos)"},
+  {fr:"s'investit davantage dans sa formation", note:"Type 3b — Drifted (pos)"},
+  {fr:"cherche à se dépasser",             note:"Type 3b — Drifted (pos)"},
+];
+const S3_PRED_T4_NEG = [
+  {fr:"a du mal à maintenir un équilibre",         note:"Type 4 — Capacity (neg)"},
+  {fr:"n'arrive plus à déconnecter",               note:"Type 4 — Capacity (neg)"},
+  {fr:"peine à trouver sa place",                  note:"Type 4 — Capacity (neg)"},
+  {fr:"ne parvient pas à accéder aux soins",       note:"Type 4 — Capacity (neg)"},
+  {fr:"ne bénéficie pas des mêmes conditions",     note:"Type 4 — Capacity (neg) — inequality"},
+  {fr:"pour qui ce n'est pas toujours possible",   note:"Type 4 — suitability"},
+];
+const S3_PRED_T4_POS = [
+  {fr:"parvient enfin à progresser",            note:"Type 4 — Capacity (pos)"},
+  {fr:"arrive mieux à concilier ses obligations",note:"Type 4 — Capacity (pos)"},
+  {fr:"bénéficie enfin d'un suivi adapté",      note:"Type 4 — Capacity (pos)"},
+  {fr:"peut enfin concilier vie pro et perso",  note:"Type 4 — Capacity (pos)"},
+];
+
+// Slot 4
+const S4_SHAPES = [
+  {fr:"C'est pourquoi il serait essentiel de",                        note:"prescriptive — most common"},
+  {fr:"C'est la raison pour laquelle beaucoup de personnes cherchent à", note:"behavioural observation"},
+  {fr:"C'est pourquoi il est important de ne pas oublier que",        note:"nuance / caveat"},
+];
+const S4_SOLUTIONS = [
+  {fr:"encadrer l'usage des écrans",                    note:"technology"},
+  {fr:"accompagner les personnes dans leur transition", note:"work / immigration"},
+  {fr:"maintenir un équilibre entre vie pro et perso",  note:"work / stress"},
+  {fr:"garantir un accès équitable aux soins",          note:"health / government"},
+  {fr:"mettre en place des mesures concrètes",          note:"government — general"},
+  {fr:"sensibiliser le public aux enjeux",              note:"environment / technology"},
+  {fr:"prendre en charge les personnes les plus vulnérables", note:"health / social"},
+  {fr:"réduire les inégalités d'accès",                 note:"money / government"},
+  {fr:"encourager une consommation plus responsable",   note:"environment"},
+  {fr:"renforcer les liens sociaux",                    note:"social"},
+  {fr:"préserver les ressources naturelles",            note:"environment"},
+  {fr:"assurer l'accès à une formation de qualité",     note:"education"},
+];
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+const ST = {
+  slot: 1,
+  s1: { subject: SUBJECTS[0], verb: S1_VERBS[0], scope: S1_SCOPE[0] },
+  s2t1: { effet: S2_EN_EFFET[0], sit: S2_SITUATIONS[0], adj: S2_ADJS_NEG[0], out: S2_OUTCOMES[0] },
+  s2t2n:{ effet: S2_EN_EFFET[0], sit: S2_SITUATIONS[0], lverb: S2_LOSS_VERBS[0], lobj: S2_LOSS_OBJECTS[0] },
+  s2t2p:{ effet: S2_EN_EFFET[0], sit: S2_SITUATIONS[0], gverb: S2_GAIN_VERBS[0], gobj: S2_GAIN_OBJECTS[0] },
+  s2t3a:{ effet: S2_EN_EFFET[0], sit: S2_SITUATIONS[0], fverb: S2_FORCE_VERBS[0], fact: S2_FORCE_ACTS[0] },
+  s2t3b:{ effet: S2_EN_EFFET[0], sit: S2_SITUATIONS[0], dverb: S2_DRIFT_VERBS_NEG[0], dobj: S2_DRIFT_OBJECTS[0] },
+  s2t4: { effet: S2_EN_EFFET[0], sit: S2_SITUATIONS[0], cverb: S2_CAP_NEG[0], cobj: S2_CAP_OBJECTS[0] },
+  s3:   { opener: S3_OPENERS[0], person: S3_PERSONS[0], pred: S3_PRED_T1_NEG[0] },
+  s4:   { shape: S4_SHAPES[0], sol: S4_SOLUTIONS[0] },
+  // which s2 block is active
+  s2block: 't1',
+  // which s3 pred group is active
+  s3predgroup: 't1n',
+};
+
+// ─── CHIP & TXT HELPERS ──────────────────────────────────────────────────────
+function chip(cls, key, text) {
+  const safe = text.replace(/'/g,"&#39;").replace(/"/g,'&quot;');
+  return `<span class="chip ${cls}" data-key="${key}" onclick="openDD(event,'${key}')">${text} <span class="chip-arr">▾</span></span>`;
+}
+function txt(t){ return `<span class="st">${t}</span>`; }
+
+// ─── RENDER FUNCTIONS ────────────────────────────────────────────────────────
+
+function renderS1(){
+  const {subject,verb,scope} = ST.s1;
+  let s = chip('cpred','s1-subject', subject.fr) + txt(' ') + chip('cverb','s1-verb', verb.fr);
+  if(scope.fr) s += txt(', ') + chip('cout','s1-scope', scope.fr);
+  s += txt('.');
+  setCard('s1-sentence', s);
+}
+
+function renderS2(){
+  const b = ST.s2block;
+  // hide all s2 cards, show active
+  ['t1','t2n','t2p','t3a','t3b','t4'].forEach(k=>{
+    const el = document.getElementById('s2-card-'+k);
+    if(el) el.classList.toggle('visible', k===b);
+  });
+  if(b==='t1'){
+    const {effet,sit,adj,out} = ST.s2t1;
+    const s = chip('csit','s2t1-effet', effet.fr) + txt(' ') +
+      chip('csit','s2t1-sit', sit.fr) +
+      txt(', on pourrait se retrouver ') +
+      chip('cadj','s2t1-adj', adj.fr) +
+      txt(', ce qui pourrait rapidement devenir ') +
+      chip('cout','s2t1-out', out.fr) + txt('.');
+    setCard('s2t1-sentence', s);
+  } else if(b==='t2n'){
+    const {effet,sit,lverb,lobj} = ST.s2t2n;
+    const s = chip('csit','s2t2n-effet', effet.fr) + txt(' ') +
+      chip('csit','s2t2n-sit', sit.fr) + txt(', on ') +
+      chip('cverb','s2t2n-lverb', lverb.fr) + txt(' ') +
+      chip('cout','s2t2n-lobj', lobj.fr) + txt('.');
+    setCard('s2t2n-sentence', s);
+  } else if(b==='t2p'){
+    const {effet,sit,gverb,gobj} = ST.s2t2p;
+    const s = chip('csit','s2t2p-effet', effet.fr) + txt(' ') +
+      chip('csit','s2t2p-sit', sit.fr) + txt(', on ') +
+      chip('cverb','s2t2p-gverb', gverb.fr) + txt(' ') +
+      chip('cout','s2t2p-gobj', gobj.fr) + txt('.');
+    setCard('s2t2p-sentence', s);
+  } else if(b==='t3a'){
+    const {effet,sit,fverb,fact} = ST.s2t3a;
+    const s = chip('csit','s2t3a-effet', effet.fr) + txt(' ') +
+      chip('csit','s2t3a-sit', sit.fr) + txt(', on ') +
+      chip('cverb','s2t3a-fverb', fverb.fr) + txt(' ') +
+      chip('cout','s2t3a-fact', fact.fr) + txt('.');
+    setCard('s2t3a-sentence', s);
+  } else if(b==='t3b'){
+    const {effet,sit,dverb,dobj} = ST.s2t3b;
+    // some drift verbs don't need an object
+    const needsObj = !['a tendance à s\'isoler','se replie sur soi','finit par décrocher','finit par s\'épanouir','s\'investit davantage dans'].some(v=>dverb.fr.startsWith(v.split(' ')[0]) && dverb.fr.includes('par') || dverb.fr===v);
+    const s = chip('csit','s2t3b-effet', effet.fr) + txt(' ') +
+      chip('csit','s2t3b-sit', sit.fr) + txt(', on ') +
+      chip('cverb','s2t3b-dverb', dverb.fr) +
+      (needsObj ? txt(' ') + chip('cout','s2t3b-dobj', dobj.fr) : '') + txt('.');
+    setCard('s2t3b-sentence', s);
+  } else if(b==='t4'){
+    const {effet,sit,cverb,cobj} = ST.s2t4;
+    const s = chip('csit','s2t4-effet', effet.fr) + txt(' ') +
+      chip('csit','s2t4-sit', sit.fr) + txt(', on ') +
+      chip('cverb','s2t4-cverb', cverb.fr) + txt(' ') +
+      chip('cout','s2t4-cobj', cobj.fr) + txt('.');
+    setCard('s2t4-sentence', s);
+  }
+}
+
+function renderS3(){
+  const g = ST.s3predgroup;
+  // hide all pred-group selectors styling
+  document.querySelectorAll('.s3-pred-tab').forEach(el=>{
+    el.classList.toggle('on-s3', el.dataset.g===g);
+  });
+  const predMap = {
+    't1n': S3_PRED_T1_NEG, 't1p': S3_PRED_T1_POS,
+    't2n': S3_PRED_T2_NEG, 't2p': S3_PRED_T2_POS,
+    't3a': S3_PRED_T3A,
+    't3bn': S3_PRED_T3B_NEG, 't3bp': S3_PRED_T3B_POS,
+    't4n': S3_PRED_T4_NEG,   't4p': S3_PRED_T4_POS,
+  };
+  // if current pred not in new group, reset
+  const grpData = predMap[g];
+  if(!grpData.find(p=>p.fr===ST.s3.pred.fr)) ST.s3.pred = grpData[0];
+  const {opener,person,pred} = ST.s3;
+  const s = chip('csit','s3-opener', opener.fr) + txt(' ') +
+    chip('cper','s3-person', person.fr) + txt(' qui ') +
+    chip('cpred','s3-pred', pred.fr) + txt('.');
+  setCard('s3-sentence', s);
+  // update DROPDOWN_MAP for s3-pred
+  DROPDOWN_MAP['s3-pred'] = { label:'Predicate ('+g+')', data: grpData, sk:'s3', prop:'pred' };
+}
+
+function renderS4(){
+  const {shape,sol} = ST.s4;
+  const s = chip('cpred','s4-shape', shape.fr) + txt(' ') +
+    chip('csol','s4-sol', sol.fr) + txt('.');
+  setCard('s4-sentence', s);
+}
+
+function renderAll(){ renderS1(); renderS2(); renderS3(); renderS4(); updateFull(); }
+function setCard(id,html){ const el=document.getElementById(id); if(el) el.innerHTML=html; }
+
+// ─── FULL PARA ───────────────────────────────────────────────────────────────
+function getS2Text(){
+  const b=ST.s2block;
+  if(b==='t1'){const{effet,sit,adj,out}=ST.s2t1;return`${effet.fr} ${sit.fr}, on pourrait se retrouver <b>${adj.fr}</b>, ce qui pourrait rapidement devenir <b>${out.fr}</b>.`;}
+  if(b==='t2n'){const{effet,sit,lverb,lobj}=ST.s2t2n;return`${effet.fr} ${sit.fr}, on <b>${lverb.fr}</b> <b>${lobj.fr}</b>.`;}
+  if(b==='t2p'){const{effet,sit,gverb,gobj}=ST.s2t2p;return`${effet.fr} ${sit.fr}, on <b>${gverb.fr}</b> <b>${gobj.fr}</b>.`;}
+  if(b==='t3a'){const{effet,sit,fverb,fact}=ST.s2t3a;return`${effet.fr} ${sit.fr}, on <b>${fverb.fr}</b> <b>${fact.fr}</b>.`;}
+  if(b==='t3b'){const{effet,sit,dverb,dobj}=ST.s2t3b;return`${effet.fr} ${sit.fr}, on <b>${dverb.fr}</b> <b>${dobj.fr}</b>.`;}
+  if(b==='t4'){const{effet,sit,cverb,cobj}=ST.s2t4;return`${effet.fr} ${sit.fr}, on <b>${cverb.fr}</b> <b>${cobj.fr}</b>.`;}
+}
+function updateFull(){
+  const{subject,verb,scope}=ST.s1;
+  const{opener,person,pred}=ST.s3;
+  const{shape,sol}=ST.s4;
+  const p1=`<b>${subject.fr}</b> <b>${verb.fr}</b>${scope.fr?', <b>'+scope.fr+'</b>':''}.`;
+  const p2=getS2Text();
+  const p3=`<b>${opener.fr}</b> <b>${person.fr}</b> qui <b>${pred.fr}</b>.`;
+  const p4=`<b>${shape.fr}</b> <b>${sol.fr}</b>.`;
+  const el=document.getElementById('full-para');
+  if(el) el.innerHTML=[p1,p2,p3,p4].join(' ');
+}
+
+// ─── DROPDOWN MAP ────────────────────────────────────────────────────────────
+// sk = state key (which ST sub-object), prop = property name
+const DROPDOWN_MAP = {
+  's1-subject':   {label:'Subject',          data:SUBJECTS,      sk:'s1',   prop:'subject'},
+  's1-verb':      {label:'Verb + completion', data:S1_VERBS,      sk:'s1',   prop:'verb'},
+  's1-scope':     {label:'Scope qualifier',   data:S1_SCOPE,      sk:'s1',   prop:'scope'},
+  's2t1-effet':   {label:'En effet opener',   data:S2_EN_EFFET,   sk:'s2t1', prop:'effet'},
+  's2t1-sit':     {label:'Situation',         data:S2_SITUATIONS, sk:'s2t1', prop:'sit'},
+  's2t1-adj':     {label:'Adjective',         data:[...S2_ADJS_NEG,...S2_ADJS_POS], sk:'s2t1', prop:'adj'},
+  's2t1-out':     {label:'Outcome',           data:S2_OUTCOMES,   sk:'s2t1', prop:'out'},
+  's2t2n-effet':  {label:'En effet opener',   data:S2_EN_EFFET,   sk:'s2t2n',prop:'effet'},
+  's2t2n-sit':    {label:'Situation',         data:S2_SITUATIONS, sk:'s2t2n',prop:'sit'},
+  's2t2n-lverb':  {label:'Loss verb',         data:S2_LOSS_VERBS, sk:'s2t2n',prop:'lverb'},
+  's2t2n-lobj':   {label:'What is lost',      data:S2_LOSS_OBJECTS,sk:'s2t2n',prop:'lobj'},
+  's2t2p-effet':  {label:'En effet opener',   data:S2_EN_EFFET,   sk:'s2t2p',prop:'effet'},
+  's2t2p-sit':    {label:'Situation',         data:S2_SITUATIONS, sk:'s2t2p',prop:'sit'},
+  's2t2p-gverb':  {label:'Gain verb',         data:S2_GAIN_VERBS, sk:'s2t2p',prop:'gverb'},
+  's2t2p-gobj':   {label:'What is gained',    data:S2_GAIN_OBJECTS,sk:'s2t2p',prop:'gobj'},
+  's2t3a-effet':  {label:'En effet opener',   data:S2_EN_EFFET,   sk:'s2t3a',prop:'effet'},
+  's2t3a-sit':    {label:'Situation',         data:S2_SITUATIONS, sk:'s2t3a',prop:'sit'},
+  's2t3a-fverb':  {label:'Obligation verb',   data:S2_FORCE_VERBS,sk:'s2t3a',prop:'fverb'},
+  's2t3a-fact':   {label:'Forced action',     data:S2_FORCE_ACTS, sk:'s2t3a',prop:'fact'},
+  's2t3b-effet':  {label:'En effet opener',   data:S2_EN_EFFET,   sk:'s2t3b',prop:'effet'},
+  's2t3b-sit':    {label:'Situation',         data:S2_SITUATIONS, sk:'s2t3b',prop:'sit'},
+  's2t3b-dverb':  {label:'Drift verb',        data:[...S2_DRIFT_VERBS_NEG,...S2_DRIFT_VERBS_POS], sk:'s2t3b',prop:'dverb'},
+  's2t3b-dobj':   {label:'Object of drift',   data:S2_DRIFT_OBJECTS, sk:'s2t3b',prop:'dobj'},
+  's2t4-effet':   {label:'En effet opener',   data:S2_EN_EFFET,   sk:'s2t4', prop:'effet'},
+  's2t4-sit':     {label:'Situation',         data:S2_SITUATIONS, sk:'s2t4', prop:'sit'},
+  's2t4-cverb':   {label:'Capacity verb',     data:[...S2_CAP_NEG,...S2_CAP_POS], sk:'s2t4',prop:'cverb'},
+  's2t4-cobj':    {label:'Capacity object',   data:S2_CAP_OBJECTS,sk:'s2t4', prop:'cobj'},
+  's3-opener':    {label:'Opener',            data:S3_OPENERS,    sk:'s3',   prop:'opener'},
+  's3-person':    {label:'Person',            data:S3_PERSONS,    sk:'s3',   prop:'person'},
+  's3-pred':      {label:'Predicate',         data:S3_PRED_T1_NEG,sk:'s3',   prop:'pred'},
+  's4-shape':     {label:'Conclusion shape',  data:S4_SHAPES,     sk:'s4',   prop:'shape'},
+  's4-sol':       {label:'Solution',          data:S4_SOLUTIONS,  sk:'s4',   prop:'sol'},
+};
+
+// ─── DROPDOWN LOGIC ──────────────────────────────────────────────────────────
+let _activeKey = null;
+let _skipNextClose = false;
+
+function openDD(e, key){
+  e.stopPropagation();
+  const dd = document.getElementById('dd');
+  if(_activeKey===key && dd.classList.contains('open')){ closeDD(); return; }
+  _activeKey = key;
+  _skipNextClose = true;
+
+  const cfg = DROPDOWN_MAP[key];
+  if(!cfg) return;
+  document.getElementById('dd-hdr').textContent = cfg.label;
+  const current = ST[cfg.sk][cfg.prop];
+  document.getElementById('dd-list').innerHTML = cfg.data.map((item,i)=>{
+    const sel = item.fr===current.fr?' sel':'';
+    return `<div class="dd-item${sel}" onclick="pickItem('${key}',${i})">`+
+      `<span style="font-weight:600">${item.fr||'(none)'}</span>`+
+      (item.note?`<span class="dd-note">${item.note}</span>`:'')+
+      `</div>`;
+  }).join('');
+
+  const rect = e.currentTarget.getBoundingClientRect();
+  const ddW = 300;
+  let left = rect.left;
+  if(left+ddW>window.innerWidth-8) left=window.innerWidth-ddW-8;
+  if(left<8) left=8;
+  const top = Math.min(rect.bottom+6+window.scrollY, window.scrollY+window.innerHeight-330);
+  dd.style.left = left+'px';
+  dd.style.top = top+'px';
+  dd.style.width = ddW+'px';
+  dd.classList.add('open');
+}
+
+function pickItem(key, idx){
+  const cfg = DROPDOWN_MAP[key];
+  ST[cfg.sk][cfg.prop] = cfg.data[idx];
+  _skipNextClose = true;
+  closeDD();
+  renderAll();
+}
+
+function closeDD(){
+  document.getElementById('dd').classList.remove('open');
+  _activeKey = null;
+}
+
+document.addEventListener('click', ()=>{
+  if(_skipNextClose){ _skipNextClose=false; return; }
+  closeDD();
+});
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeDD(); });
+
+// ─── SLOT TABS ────────────────────────────────────────────────────────────────
+function setSlot(n){
+  ST.slot=n;
+  [1,2,3,4].forEach(i=>{
+    const tab=document.getElementById('tab-s'+i);
+    tab.className='slot-tab'+(i===n?' on-s'+i:'');
+  });
+  document.querySelectorAll('.sc').forEach(el=>{
+    const s=parseInt(el.dataset.slot||'0');
+    el.classList.toggle('visible',s===n);
+  });
+}
+
+// ─── S2 BLOCK TABS ────────────────────────────────────────────────────────────
+function setS2Block(b){
+  ST.s2block=b;
+  document.querySelectorAll('.s2-btab').forEach(el=>{
+    el.classList.toggle('on-s2', el.dataset.b===b);
+  });
+  renderS2(); updateFull();
+}
+
+// ─── S3 PRED GROUP ────────────────────────────────────────────────────────────
+function setS3PredGroup(g){
+  ST.s3predgroup=g;
+  renderS3(); updateFull();
+}
+
+// ─── SECTION SWITCHING ───────────────────────────────────────────────────────
+function showSec(s){
+  document.getElementById('sec-builder').style.display=s==='builder'?'block':'none';
+  document.getElementById('sec-full').style.display=s==='full'?'block':'none';
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('nav-'+s).classList.add('active');
+  if(s==='full') updateFull();
+}
+
+// ─── BUILD DOM ───────────────────────────────────────────────────────────────
+function buildDOM(){
+  const wrap = document.getElementById('cards');
+
+  // SLOT 1
+  wrap.innerHTML += `
+  <div class="sc s1 visible" data-slot="1">
+    <span class="sc-label">Slot 1 — Claim</span>
+    <span class="sc-type">Subject + conditional verb + completion + optional scope qualifier</span>
+    <span id="s1-sentence"></span>
+  </div>`;
+
+  // SLOT 2 — sub-tabs + 6 cards
+  const s2tabs = [
+    ['t1',  'Type 1 — State'],
+    ['t2n', 'Type 2 — Loss'],
+    ['t2p', 'Type 2 — Gain'],
+    ['t3a', 'Type 3a — Obligation'],
+    ['t3b', 'Type 3b — Drift'],
+    ['t4',  'Type 4 — Capacity'],
+  ];
+  let s2html = `<div class="sc s2" data-slot="2" id="s2-meta" style="display:none">
+    <span class="sc-label">Slot 2 — En effet</span>
+    <div class="slot-tabs" style="margin-bottom:.75rem;margin-top:.25rem">
+      ${s2tabs.map(([b,label])=>`<button class="slot-tab s2-btab${b==='t1'?' on-s2':''}" data-b="${b}" onclick="setS2Block('${b}')">${label}</button>`).join('')}
+    </div>
+  </div>`;
+  s2tabs.forEach(([b,label])=>{
+    s2html += `<div class="sc s2" data-slot="2" id="s2-card-${b}">
+      <span class="sc-label">Slot 2 — ${label}</span>
+      <span id="s2${b}-sentence"></span>
+    </div>`;
+  });
+  wrap.innerHTML += s2html;
+
+  // SLOT 3 — pred group sub-tabs
+  const s3groups = [
+    ['t1n','T1 State −'],['t1p','T1 State +'],
+    ['t2n','T2 Loss'],  ['t2p','T2 Gain'],
+    ['t3a','T3a Oblig'],['t3bn','T3b Drift −'],['t3bp','T3b Drift +'],
+    ['t4n','T4 Cap −'], ['t4p','T4 Cap +'],
+  ];
+  wrap.innerHTML += `
+  <div class="sc s3" data-slot="3">
+    <span class="sc-label">Slot 3 — Par exemple</span>
+    <span class="sc-type">Pick the predicate type that matches your Slot 2</span>
+    <div class="slot-tabs" style="margin-bottom:.75rem;margin-top:.25rem">
+      ${s3groups.map(([g,label])=>`<button class="slot-tab s3-pred-tab${g==='t1n'?' on-s3':''}" data-g="${g}" onclick="setS3PredGroup('${g}')" style="${g==='t1n'?'background:var(--s3l);color:var(--s3);border-color:var(--s3m)':''}">${label}</button>`).join('')}
+    </div>
+    <span id="s3-sentence"></span>
+  </div>`;
+
+  // SLOT 4
+  wrap.innerHTML += `
+  <div class="sc s4" data-slot="4">
+    <span class="sc-label">Slot 4 — C'est pourquoi</span>
+    <span id="s4-sentence"></span>
+  </div>`;
+}
+
+buildDOM();
+// show s2 meta-card (tabs row) together with active s2 block
+document.getElementById('s2-meta').style.display='block';
+document.getElementById('s2-meta').classList.add('visible');
+// fix: s2-meta should show on slot 2
+document.getElementById('s2-meta').dataset.slot='2';
+renderAll();
+setSlot(1);
+
+</script>
+</body>
+</html>

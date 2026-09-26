@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Genre &amp; Suffixes — Noble Method Drill</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f5f0e8;
+    --cream-dark: #ede7d9;
+    --ink: #1a1209;
+    --ink-light: #3d3a2e;
+    --ink-faint: #7a7060;
+    --gold: #b8952a;
+    --gold-light: #d4b04a;
+    --gold-pale: #f0e4b8;
+    --red: #8b2a2a;
+    --green: #2a5c3a;
+    --masc: #1a3a5c;
+    --masc-bg: #eaf1f8;
+    --fem: #5c1a3a;
+    --fem-bg: #f8eaf1;
+    --rule: #c8bfa0;
+    --shadow: rgba(26,26,20,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+  }
+
+  /* ── MASTHEAD ── */
+  .masthead {
+    text-align: center;
+    padding-bottom: 28px;
+    border-bottom: 2px solid var(--rule);
+    margin-bottom: 36px;
+  }
+
+  .home-nav {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+  }
+
+  .home-nav a {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .home-nav a:hover { color: var(--gold); border-color: var(--gold); }
+
+  .masthead-label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+
+  .masthead h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2.6rem;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.15;
+    margin-bottom: 6px;
+  }
+
+  .masthead h1 em { font-style: italic; color: var(--ink-light); }
+
+  .masthead-sub {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--ink-faint);
+  }
+
+  /* ── NOBLE INTRO ── */
+  .noble-intro {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 28px 36px;
+    margin-bottom: 36px;
+    border-radius: 2px;
+  }
+
+  .noble-intro h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--gold-light);
+    font-weight: 400;
+    margin-bottom: 14px;
+  }
+
+  .noble-intro p {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.95rem;
+    line-height: 1.85;
+    color: rgba(245,240,232,0.82);
+    margin-bottom: 10px;
+  }
+
+  .noble-intro p:last-child { margin-bottom: 0; }
+  .noble-intro strong { color: var(--cream); }
+  .noble-intro em { color: rgba(245,240,232,0.7); font-style: italic; }
+
+  /* ── TABS ── */
+  .tab-nav {
+    display: flex;
+    gap: 0;
+    border-bottom: 1.5px solid var(--rule);
+    margin-bottom: 36px;
+  }
+
+  .tab-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1.5px;
+    padding: 10px 22px;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .tab-btn:hover { color: var(--ink); }
+  .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── REFERENCE ── */
+  .ref-block {
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    margin-bottom: 28px;
+    overflow: hidden;
+  }
+
+  .ref-block-header {
+    padding: 12px 20px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  .ref-block-header.fem  { background: var(--fem);  color: #fff; }
+  .ref-block-header.masc { background: var(--masc); color: #fff; }
+  .ref-block-header.note { background: var(--ink);  color: var(--gold-light); }
+
+  .ref-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'EB Garamond', serif;
+    font-size: 0.95rem;
+  }
+
+  .ref-table th {
+    background: var(--cream-dark);
+    padding: 8px 20px;
+    text-align: left;
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    border-bottom: 1px solid var(--rule);
+    font-weight: 400;
+  }
+
+  .ref-table td {
+    padding: 10px 20px;
+    border-bottom: 1px solid #e8e0cc;
+    vertical-align: top;
+    line-height: 1.55;
+  }
+
+  .ref-table tr:last-child td { border-bottom: none; }
+
+  .suffix-tag {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--ink);
+    background: var(--gold-pale);
+    border: 1px solid var(--rule);
+    padding: 1px 8px;
+    border-radius: 2px;
+  }
+
+  .ex { font-style: italic; color: var(--ink-faint); font-size: 0.9rem; }
+
+  .note-list {
+    padding: 0;
+    list-style: none;
+  }
+
+  .note-list li {
+    padding: 12px 20px;
+    border-bottom: 1px solid #2e2a26;
+    font-family: 'EB Garamond', serif;
+    font-size: 0.93rem;
+    line-height: 1.75;
+    color: rgba(245,240,232,0.8);
+  }
+
+  .note-list li:last-child { border-bottom: none; }
+  .note-list strong { color: var(--gold-light); }
+  .note-list em { font-style: italic; color: rgba(245,240,232,0.6); }
+
+  /* ── DRILL SCORE BAR ── */
+  .score-bar {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 14px 20px;
+    background: var(--cream-dark);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    margin-bottom: 28px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    flex-wrap: wrap;
+  }
+
+  .score-item { display: flex; align-items: center; gap: 8px; color: var(--ink-faint); }
+  .score-val { color: var(--ink); font-weight: 700; font-size: 15px; }
+  .score-streak .score-val { color: var(--gold); }
+  .score-bar .divider { width: 1px; height: 20px; background: var(--rule); }
+
+  /* ── MODE SELECTOR ── */
+  .mode-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+
+  .mode-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    background: none;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 7px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .mode-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .mode-btn.active { background: var(--ink); color: var(--gold-light); border-color: var(--ink); }
+
+  /* ── QUESTION CARD ── */
+  .question-card {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 36px 40px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 12px var(--shadow);
+  }
+
+  .q-number {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .q-suffix {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+
+  .q-word {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--ink-faint);
+    margin-bottom: 28px;
+  }
+
+  .q-prompt {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 18px;
+  }
+
+  /* ── GENDER BUTTONS ── */
+  .gender-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .gender-btn {
+    flex: 1;
+    max-width: 200px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 14px 20px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.18s;
+    border: 1.5px solid;
+  }
+
+  .gender-btn.masc {
+    background: var(--masc-bg);
+    color: var(--masc);
+    border-color: var(--masc);
+  }
+
+  .gender-btn.masc:hover { background: var(--masc); color: #fff; }
+
+  .gender-btn.fem {
+    background: var(--fem-bg);
+    color: var(--fem);
+    border-color: var(--fem);
+  }
+
+  .gender-btn.fem:hover { background: var(--fem); color: #fff; }
+
+  .gender-btn:disabled { opacity: 0.5; cursor: default; pointer-events: none; }
+
+  /* ── NEXT BUTTON ── */
+  .next-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: none;
+    border: 1.5px solid var(--gold);
+    border-radius: 2px;
+    padding: 10px 22px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: none;
+    margin-top: 4px;
+  }
+
+  .next-btn:hover { background: var(--gold); color: var(--cream); }
+
+  /* ── FEEDBACK ── */
+  .feedback {
+    font-family: 'EB Garamond', serif;
+    font-size: 1rem;
+    padding: 10px 0 4px;
+    min-height: 28px;
+    display: none;
+    line-height: 1.7;
+  }
+
+  .feedback.correct { color: var(--green); }
+  .feedback.incorrect { color: var(--red); }
+
+  .rule-note {
+    display: block;
+    margin-top: 6px;
+    font-style: italic;
+    font-size: 0.92rem;
+    color: var(--ink-faint);
+    padding: 6px 14px;
+    background: var(--gold-pale);
+    border-left: 2px solid var(--gold);
+    font-family: 'EB Garamond', serif;
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress-wrap {
+    height: 3px;
+    background: var(--rule);
+    border-radius: 2px;
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  /* ── END CARD ── */
+  .end-card {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 48px 40px;
+    text-align: center;
+    box-shadow: 0 2px 12px var(--shadow);
+  }
+
+  .end-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .end-score {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    font-weight: 400;
+    color: var(--gold);
+    line-height: 1.1;
+    margin: 16px 0 8px;
+  }
+
+  .end-pct {
+    font-family: 'Courier Prime', monospace;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    margin-bottom: 16px;
+  }
+
+  .end-msg {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--ink-faint);
+    margin-bottom: 32px;
+  }
+
+  .restart-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: none;
+    border: 1.5px solid var(--gold);
+    border-radius: 2px;
+    padding: 12px 28px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .restart-btn:hover { background: var(--gold); color: var(--cream); }
+
+  @media (max-width: 560px) {
+    .page { padding: 28px 18px 60px; }
+    .question-card { padding: 24px 20px; }
+    .q-suffix { font-size: 2.1rem; }
+    .noble-intro { padding: 20px 20px; }
+    .gender-row { flex-direction: column; }
+    .gender-btn { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- MASTHEAD -->
+  <div class="masthead">
+    <div class="home-nav">
+      <a href="f-index.html">← Retour à l'accueil</a>
+    </div>
+    <div class="masthead-label">Noble Method Drill</div>
+    <h1>Genre &amp; <em>Suffixes</em></h1>
+    <p class="masthead-sub">Masculine and feminine patterns — from suffix to certainty</p>
+  </div>
+
+  <!-- INTRO -->
+  <div class="noble-intro">
+    <h2>Why suffixes are your shortcut</h2>
+    <p>Memorising the gender of every French noun would take years. But recognising <strong>suffix patterns</strong> gives you a reliable shortcut that covers the vast majority of vocabulary.</p>
+    <p>A word ending in <strong>-tion</strong> is almost always feminine. A word ending in <strong>-ment</strong> is almost always masculine. Learn the patterns, and gender prediction becomes instinct — not memory.</p>
+    <p><em>The Reference tab has the full pattern table. The Drill tab puts it to the test — with the rule shown every time you answer.</em></p>
+  </div>
+
+  <!-- TABS -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('reference', this)">Référence</button>
+    <button class="tab-btn" onclick="switchTab('drill', this)">Drill</button>
+  </div>
+
+  <!-- ════════ REFERENCE ════════ -->
+  <div id="tab-reference" class="tab-panel active">
+
+    <!-- FEMININE -->
+    <div class="ref-block">
+      <div class="ref-block-header fem">♀ — Suffixes Féminins</div>
+      <table class="ref-table">
+        <thead><tr><th>Suffixe</th><th>Exemples</th></tr></thead>
+        <tbody>
+          <tr><td><span class="suffix-tag">-tion / -sion</span></td><td class="ex">la nation, la télévision, la décision</td></tr>
+          <tr><td><span class="suffix-tag">-té / -tié</span></td><td class="ex">la liberté, la beauté, l'amitié</td></tr>
+          <tr><td><span class="suffix-tag">-ure</span></td><td class="ex">la nature, la voiture, la culture</td></tr>
+          <tr><td><span class="suffix-tag">-ance / -ence</span></td><td class="ex">la chance, la science, la patience</td></tr>
+          <tr><td><span class="suffix-tag">-ette</span></td><td class="ex">la baguette, la chaussette</td></tr>
+          <tr><td><span class="suffix-tag">-eur</span> <span style="font-size:0.82rem;color:var(--ink-faint)">(abstrait)</span></td><td class="ex">la chaleur, la peur, la couleur</td></tr>
+          <tr><td><span class="suffix-tag">-ie</span></td><td class="ex">la pharmacie, la boulangerie, la vie</td></tr>
+          <tr><td><span class="suffix-tag">-ise</span></td><td class="ex">la surprise, la franchise</td></tr>
+          <tr><td><span class="suffix-tag">-oire</span> <span style="font-size:0.82rem;color:var(--ink-faint)">(souvent)</span></td><td class="ex">la mémoire, la gloire, la victoire</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- MASCULINE -->
+    <div class="ref-block">
+      <div class="ref-block-header masc">♂ — Suffixes Masculins</div>
+      <table class="ref-table">
+        <thead><tr><th>Suffixe</th><th>Exemples</th></tr></thead>
+        <tbody>
+          <tr><td><span class="suffix-tag">-ment</span></td><td class="ex">le gouvernement, le moment, le sentiment</td></tr>
+          <tr><td><span class="suffix-tag">-age</span></td><td class="ex">le voyage, le fromage, le village</td></tr>
+          <tr><td><span class="suffix-tag">-isme</span></td><td class="ex">le tourisme, le capitalisme, le journalisme</td></tr>
+          <tr><td><span class="suffix-tag">-eur</span> <span style="font-size:0.82rem;color:var(--ink-faint)">(personne)</span></td><td class="ex">le professeur, le directeur, le vendeur</td></tr>
+          <tr><td><span class="suffix-tag">-oir</span></td><td class="ex">le miroir, le couloir, le tiroir</td></tr>
+          <tr><td><span class="suffix-tag">-eau</span></td><td class="ex">le gâteau, le chapeau, le bureau</td></tr>
+          <tr><td><span class="suffix-tag">-ier</span></td><td class="ex">le cahier, le quartier, le métier</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- NOTES -->
+    <div class="ref-block">
+      <div class="ref-block-header note">⚠ — Points de Vigilance</div>
+      <ul class="note-list" style="background:var(--ink)">
+        <li><strong>-eur double règle :</strong> Abstract quality → féminin <em>(la chaleur, la peur, la douceur)</em>. Person doing something → masculin <em>(le professeur, le directeur, le vendeur)</em>.</li>
+        <li><strong>-oire se divise :</strong> <em>la victoire, la mémoire</em> (fém.) — mais <em>le territoire, le laboratoire</em> (masc.). Pas fiable — à mémoriser individuellement.</li>
+        <li><strong>La terminaison -e</strong> est <em>plus souvent</em> féminine, mais avec trop d'exceptions pour s'y fier seul.</li>
+        <li><strong>Grands gains TCF :</strong> <em>-tion</em> est quasi toujours féminin. <em>-ment</em> est quasi toujours masculin. Ces deux suffixes couvrent une énorme partie du vocabulaire.</li>
+      </ul>
+    </div>
+
+  </div><!-- /tab-reference -->
+
+  <!-- ════════ DRILL ════════ -->
+  <div id="tab-drill" class="tab-panel">
+
+    <div class="mode-row">
+      <button class="mode-btn active" onclick="setMode('all',this)">Tous les suffixes</button>
+      <button class="mode-btn" onclick="setMode('fem',this)">Féminins</button>
+      <button class="mode-btn" onclick="setMode('masc',this)">Masculins</button>
+      <button class="mode-btn" onclick="setMode('tricky',this)">Pièges (-eur, -oire)</button>
+    </div>
+
+    <div class="score-bar">
+      <div class="score-item">Score&nbsp;<span class="score-val" id="score-display">0</span></div>
+      <div class="divider"></div>
+      <div class="score-item">Question&nbsp;<span class="score-val" id="q-display">1</span>&nbsp;/&nbsp;<span class="score-val" id="total-display">20</span></div>
+      <div class="divider"></div>
+      <div class="score-item score-streak">Série&nbsp;<span class="score-val" id="streak-display">0</span></div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+
+    <div id="drill-area"></div>
+
+  </div><!-- /tab-drill -->
+
+</div><!-- /page -->
+
+<script>
+// ── DATA ─────────────────────────────────────────────────────────────────
+const WORDS = [
+  // FEMININE -tion / -sion
+  { word:'la nation',        gender:'f', suffix:'-tion',          rule:'Les mots en -tion sont presque toujours féminins.' },
+  { word:'la télévision',    gender:'f', suffix:'-sion',          rule:'Les mots en -sion sont presque toujours féminins.' },
+  { word:'la décision',      gender:'f', suffix:'-sion',          rule:'Les mots en -sion sont presque toujours féminins.' },
+  { word:'la solution',      gender:'f', suffix:'-tion',          rule:'Les mots en -tion sont presque toujours féminins.' },
+  { word:'la production',    gender:'f', suffix:'-tion',          rule:'Les mots en -tion sont presque toujours féminins.' },
+  { word:'la révolution',    gender:'f', suffix:'-tion',          rule:'Les mots en -tion sont presque toujours féminins.' },
+  { word:'la passion',       gender:'f', suffix:'-sion',          rule:'Les mots en -sion sont presque toujours féminins.' },
+  { word:'la tension',       gender:'f', suffix:'-sion',          rule:'Les mots en -sion sont presque toujours féminins.' },
+  // FEMININE -té
+  { word:'la liberté',       gender:'f', suffix:'-té',            rule:'Les mots en -té sont toujours féminins.' },
+  { word:'la beauté',        gender:'f', suffix:'-té',            rule:'Les mots en -té sont toujours féminins.' },
+  { word:'la réalité',       gender:'f', suffix:'-té',            rule:'Les mots en -té sont toujours féminins.' },
+  { word:'la qualité',       gender:'f', suffix:'-té',            rule:'Les mots en -té sont toujours féminins.' },
+  { word:"l'amitié",         gender:'f', suffix:'-tié',           rule:'Les mots en -tié sont féminins.' },
+  { word:'la moitié',        gender:'f', suffix:'-tié',           rule:'Les mots en -tié sont féminins.' },
+  // FEMININE -ure
+  { word:'la nature',        gender:'f', suffix:'-ure',           rule:'Les mots en -ure sont presque toujours féminins.' },
+  { word:'la voiture',       gender:'f', suffix:'-ure',           rule:'Les mots en -ure sont presque toujours féminins.' },
+  { word:'la culture',       gender:'f', suffix:'-ure',           rule:'Les mots en -ure sont presque toujours féminins.' },
+  { word:'la peinture',      gender:'f', suffix:'-ure',           rule:'Les mots en -ure sont presque toujours féminins.' },
+  { word:'la nourriture',    gender:'f', suffix:'-ure',           rule:'Les mots en -ure sont presque toujours féminins.' },
+  // FEMININE -ance/-ence
+  { word:'la chance',        gender:'f', suffix:'-ance',          rule:'Les mots en -ance sont presque toujours féminins.' },
+  { word:'la science',       gender:'f', suffix:'-ence',          rule:'Les mots en -ence sont presque toujours féminins.' },
+  { word:'la patience',      gender:'f', suffix:'-ence',          rule:'Les mots en -ence sont presque toujours féminins.' },
+  { word:'la distance',      gender:'f', suffix:'-ance',          rule:'Les mots en -ance sont presque toujours féminins.' },
+  { word:'la confiance',     gender:'f', suffix:'-ance',          rule:'Les mots en -ance sont presque toujours féminins.' },
+  { word:'la différence',    gender:'f', suffix:'-ence',          rule:'Les mots en -ence sont presque toujours féminins.' },
+  // FEMININE -ette
+  { word:'la baguette',      gender:'f', suffix:'-ette',          rule:'Les mots en -ette sont presque toujours féminins.' },
+  { word:'la chaussette',    gender:'f', suffix:'-ette',          rule:'Les mots en -ette sont presque toujours féminins.' },
+  { word:'la recette',       gender:'f', suffix:'-ette',          rule:'Les mots en -ette sont presque toujours féminins.' },
+  // FEMININE -eur (abstract) — TRICKY
+  { word:'la chaleur',       gender:'f', suffix:'-eur (abstrait)', rule:'-eur est féminin pour les qualités abstraites : la chaleur, la peur, la couleur.', tricky:true },
+  { word:'la peur',          gender:'f', suffix:'-eur (abstrait)', rule:'-eur est féminin pour les qualités abstraites.', tricky:true },
+  { word:'la couleur',       gender:'f', suffix:'-eur (abstrait)', rule:'-eur est féminin pour les qualités abstraites.', tricky:true },
+  { word:'la douceur',       gender:'f', suffix:'-eur (abstrait)', rule:'-eur est féminin pour les qualités abstraites.', tricky:true },
+  { word:'la lenteur',       gender:'f', suffix:'-eur (abstrait)', rule:'-eur est féminin pour les qualités abstraites.', tricky:true },
+  // FEMININE -ie
+  { word:'la pharmacie',     gender:'f', suffix:'-ie',            rule:'Les mots en -ie sont presque toujours féminins.' },
+  { word:'la boulangerie',   gender:'f', suffix:'-ie',            rule:'Les mots en -ie sont presque toujours féminins.' },
+  { word:'la vie',           gender:'f', suffix:'-ie',            rule:'Les mots en -ie sont presque toujours féminins.' },
+  { word:'la géographie',    gender:'f', suffix:'-ie',            rule:'Les mots en -ie sont presque toujours féminins.' },
+  // FEMININE -ise
+  { word:'la surprise',      gender:'f', suffix:'-ise',           rule:'Les mots en -ise sont presque toujours féminins.' },
+  { word:'la franchise',     gender:'f', suffix:'-ise',           rule:'Les mots en -ise sont presque toujours féminins.' },
+  // FEMININE -oire — TRICKY
+  { word:'la mémoire',       gender:'f', suffix:'-oire',          rule:'-oire est souvent féminin : la mémoire, la victoire, la gloire.', tricky:true },
+  { word:'la victoire',      gender:'f', suffix:'-oire',          rule:'-oire est souvent féminin : la mémoire, la victoire, la gloire.', tricky:true },
+  { word:'la gloire',        gender:'f', suffix:'-oire',          rule:'-oire est souvent féminin : la mémoire, la victoire, la gloire.', tricky:true },
+  // MASCULINE -ment
+  { word:'le gouvernement',  gender:'m', suffix:'-ment',          rule:'Les mots en -ment sont presque toujours masculins.' },
+  { word:'le moment',        gender:'m', suffix:'-ment',          rule:'Les mots en -ment sont presque toujours masculins.' },
+  { word:'le sentiment',     gender:'m', suffix:'-ment',          rule:'Les mots en -ment sont presque toujours masculins.' },
+  { word:'le développement', gender:'m', suffix:'-ment',          rule:'Les mots en -ment sont presque toujours masculins.' },
+  { word:'le mouvement',     gender:'m', suffix:'-ment',          rule:'Les mots en -ment sont presque toujours masculins.' },
+  { word:'le changement',    gender:'m', suffix:'-ment',          rule:'Les mots en -ment sont presque toujours masculins.' },
+  // MASCULINE -age
+  { word:'le voyage',        gender:'m', suffix:'-age',           rule:'Les mots en -age sont presque toujours masculins.' },
+  { word:'le fromage',       gender:'m', suffix:'-age',           rule:'Les mots en -age sont presque toujours masculins.' },
+  { word:'le village',       gender:'m', suffix:'-age',           rule:'Les mots en -age sont presque toujours masculins.' },
+  { word:'le langage',       gender:'m', suffix:'-age',           rule:'Les mots en -age sont presque toujours masculins.' },
+  { word:'le courage',       gender:'m', suffix:'-age',           rule:'Les mots en -age sont presque toujours masculins.' },
+  { word:'le message',       gender:'m', suffix:'-age',           rule:'Les mots en -age sont presque toujours masculins.' },
+  // MASCULINE -isme
+  { word:'le tourisme',      gender:'m', suffix:'-isme',          rule:'Les mots en -isme sont toujours masculins.' },
+  { word:'le capitalisme',   gender:'m', suffix:'-isme',          rule:'Les mots en -isme sont toujours masculins.' },
+  { word:'le journalisme',   gender:'m', suffix:'-isme',          rule:'Les mots en -isme sont toujours masculins.' },
+  { word:'le réalisme',      gender:'m', suffix:'-isme',          rule:'Les mots en -isme sont toujours masculins.' },
+  // MASCULINE -eur (person) — TRICKY
+  { word:'le professeur',    gender:'m', suffix:'-eur (personne)', rule:'-eur est masculin quand il désigne une personne qui fait quelque chose.', tricky:true },
+  { word:'le directeur',     gender:'m', suffix:'-eur (personne)', rule:'-eur est masculin quand il désigne une personne qui fait quelque chose.', tricky:true },
+  { word:'le vendeur',       gender:'m', suffix:'-eur (personne)', rule:'-eur est masculin quand il désigne une personne qui fait quelque chose.', tricky:true },
+  { word:'le chanteur',      gender:'m', suffix:'-eur (personne)', rule:'-eur est masculin quand il désigne une personne qui fait quelque chose.', tricky:true },
+  // MASCULINE -oir
+  { word:'le miroir',        gender:'m', suffix:'-oir',           rule:'Les mots en -oir sont presque toujours masculins.' },
+  { word:'le couloir',       gender:'m', suffix:'-oir',           rule:'Les mots en -oir sont presque toujours masculins.' },
+  { word:'le tiroir',        gender:'m', suffix:'-oir',           rule:'Les mots en -oir sont presque toujours masculins.' },
+  { word:'le pouvoir',       gender:'m', suffix:'-oir',           rule:'Les mots en -oir sont presque toujours masculins.' },
+  // MASCULINE -eau
+  { word:'le gâteau',        gender:'m', suffix:'-eau',           rule:'Les mots en -eau sont presque toujours masculins.' },
+  { word:'le chapeau',       gender:'m', suffix:'-eau',           rule:'Les mots en -eau sont presque toujours masculins.' },
+  { word:'le bureau',        gender:'m', suffix:'-eau',           rule:'Les mots en -eau sont presque toujours masculins.' },
+  { word:'le tableau',       gender:'m', suffix:'-eau',           rule:'Les mots en -eau sont presque toujours masculins.' },
+  // MASCULINE -ier
+  { word:'le cahier',        gender:'m', suffix:'-ier',           rule:'Les mots en -ier sont presque toujours masculins.' },
+  { word:'le quartier',      gender:'m', suffix:'-ier',           rule:'Les mots en -ier sont presque toujours masculins.' },
+  { word:'le métier',        gender:'m', suffix:'-ier',           rule:'Les mots en -ier sont presque toujours masculins.' },
+  { word:'le pommier',       gender:'m', suffix:'-ier',           rule:'Les mots en -ier sont presque toujours masculins.' },
+  // MASCULINE -oire — TRICKY
+  { word:'le territoire',    gender:'m', suffix:'-oire',          rule:'Attention — -oire peut être masculin : le territoire, le laboratoire.', tricky:true },
+  { word:'le laboratoire',   gender:'m', suffix:'-oire',          rule:'Attention — -oire peut être masculin : le territoire, le laboratoire.', tricky:true },
+];
+
+// ── STATE ────────────────────────────────────────────────────────────────
+const TOTAL = 20;
+let mode    = 'all';
+let queue   = [];
+let idx     = 0;
+let score   = 0;
+let streak  = 0;
+let answered = false;
+
+function getPool() {
+  if (mode === 'fem')    return WORDS.filter(w => w.gender === 'f');
+  if (mode === 'masc')   return WORDS.filter(w => w.gender === 'm');
+  if (mode === 'tricky') return WORDS.filter(w => w.tricky);
+  return WORDS;
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function stripArticle(w) {
+  return w.replace(/^(le |la |l'|les )/, '');
+}
+
+// ── RENDER ───────────────────────────────────────────────────────────────
+function startDrill() {
+  queue    = shuffle(getPool()).slice(0, TOTAL);
+  idx      = 0;
+  score    = 0;
+  streak   = 0;
+  answered = false;
+  updateBar();
+  renderQuestion();
+}
+
+function updateBar() {
+  document.getElementById('score-display').textContent  = score;
+  document.getElementById('q-display').textContent      = Math.min(idx + 1, TOTAL);
+  document.getElementById('total-display').textContent  = TOTAL;
+  document.getElementById('streak-display').textContent = streak;
+  document.getElementById('progress-fill').style.width  = (idx / TOTAL * 100) + '%';
+}
+
+function renderQuestion() {
+  const area = document.getElementById('drill-area');
+  if (idx >= TOTAL) { renderEnd(); return; }
+
+  const item = queue[idx];
+  const bare = stripArticle(item.word);
+
+  area.innerHTML = `
+    <div class="question-card">
+      <div class="q-number">Question ${idx + 1} sur ${TOTAL}</div>
+      <div class="q-suffix">${item.suffix}</div>
+      <div class="q-word">${bare}</div>
+      <div class="q-prompt">Quel est le genre ?</div>
+      <div class="gender-row">
+        <button class="gender-btn masc" onclick="answer('m')">♂ Masculin</button>
+        <button class="gender-btn fem"  onclick="answer('f')">♀ Féminin</button>
+      </div>
+      <div class="feedback" id="feedback"></div>
+      <button class="next-btn" id="next-btn" onclick="advance()">
+        ${idx + 1 >= TOTAL ? 'Voir résultats →' : 'Question suivante →'}
+      </button>
+    </div>
+  `;
+  answered = false;
+  updateBar();
+}
+
+function answer(chosen) {
+  if (answered) return;
+  answered = true;
+
+  const item    = queue[idx];
+  const correct = chosen === item.gender;
+  const fb      = document.getElementById('feedback');
+
+  document.querySelectorAll('.gender-btn').forEach(b => b.disabled = true);
+  document.getElementById('next-btn').style.display = '';
+
+  if (correct) {
+    score++;
+    streak++;
+    fb.className = 'feedback correct';
+    fb.innerHTML = `✓ Correct — <em>${item.word}</em><span class="rule-note">${item.rule}</span>`;
+  } else {
+    streak = 0;
+    const rightLabel = item.gender === 'm' ? '♂ Masculin' : '♀ Féminin';
+    fb.className = 'feedback incorrect';
+    fb.innerHTML = `✗ Non — c'est <strong>${rightLabel}</strong> : <em>${item.word}</em><span class="rule-note">${item.rule}</span>`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById('score-display').textContent  = score;
+  document.getElementById('streak-display').textContent = streak;
+}
+
+function advance() {
+  idx++;
+  renderQuestion();
+}
+
+function renderEnd() {
+  const pct = Math.round(score / TOTAL * 100);
+  let msg = '';
+  if (pct === 100) msg = 'Parfait — aucune faute. Les suffixes n\'ont plus de secrets pour vous.';
+  else if (pct >= 80) msg = 'Très bien. Quelques patterns à revoir, mais vous êtes sur la bonne voie.';
+  else if (pct >= 60) msg = 'Pas mal. Repassez la Référence et réessayez.';
+  else msg = 'Continuez — la répétition installe les patterns. Revenez demain.';
+
+  document.getElementById('drill-area').innerHTML = `
+    <div class="end-card">
+      <h2>Résultats</h2>
+      <div class="end-score">${score} / ${TOTAL}</div>
+      <div class="end-pct">${pct}%</div>
+      <div class="end-msg">${msg}</div>
+      <button class="restart-btn" onclick="startDrill()">Recommencer</button>
+    </div>
+  `;
+  document.getElementById('progress-fill').style.width = '100%';
+}
+
+// ── MODE + TABS ───────────────────────────────────────────────────────────
+function setMode(m, btn) {
+  mode = m;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  startDrill();
+}
+
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'drill' && queue.length === 0) startDrill();
+}
+
+// init drill data silently so first visit to drill tab is instant
+queue = shuffle(getPool()).slice(0, TOTAL);
+</script>
+</body>
+</html>

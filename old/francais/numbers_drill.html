@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Les Nombres — French Number Drill</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#1a1209; --paper:#f5efe0; --aged:#e8dcc8; --red:#c0392b; --gold:#b8860b; --faded:#8a7a5e; --green:#2d6a4f; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--paper); color:var(--ink); font-family:'Courier Prime',monospace; min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:40px 20px; background-image: repeating-linear-gradient(0deg,transparent,transparent 27px,rgba(180,160,120,0.15) 28px), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); }
+  header { text-align:center; margin-bottom:40px; border-bottom:2px solid var(--gold); padding-bottom:24px; width:100%; max-width:700px; }
+  header h1 { font-family:'Playfair Display',serif; font-size:clamp(2rem,5vw,3.2rem); font-style:italic; letter-spacing:-0.02em; }
+  header p { color:var(--faded); font-size:0.85rem; letter-spacing:0.15em; text-transform:uppercase; margin-top:6px; }
+  .mode-selector { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:32px; max-width:700px; width:100%; }
+  .mode-btn { font-family:'Courier Prime',monospace; font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase; padding:8px 18px; border:1.5px solid var(--faded); background:transparent; color:var(--faded); cursor:pointer; transition:all 0.2s; border-radius:2px; }
+  .mode-btn:hover { border-color:var(--ink); color:var(--ink); background:var(--aged); }
+  .mode-btn.active { background:var(--ink); color:var(--paper); border-color:var(--ink); }
+  .mode-btn.sprint-btn { border-color:var(--red); color:var(--red); }
+  .mode-btn.sprint-btn:hover { background:var(--red); color:var(--paper); }
+  .mode-btn.sprint-btn.active { background:var(--red); color:var(--paper); border-color:var(--red); }
+  .card { background:white; border:1px solid var(--aged); max-width:700px; width:100%; padding:48px 40px; box-shadow:4px 4px 0 var(--aged); position:relative; margin-bottom:24px; }
+  @media(max-width:500px){ .card{ padding:28px 18px; } }
+  .card::before { content:''; position:absolute; top:12px; left:12px; right:-12px; bottom:-12px; border:1px solid var(--aged); z-index:-1; }
+  .noble-hint { display:none !important; }
+  .question-area { text-align:center; margin:32px 0; }
+  .number-display { font-family:'Playfair Display',serif; font-size:clamp(4rem,12vw,8rem); font-weight:900; color:var(--ink); line-height:1; margin-bottom:8px; letter-spacing:-0.04em; }
+  .direction-label { font-size:0.75rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--faded); margin-bottom:32px; }
+  .answer-reveal { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,4vw,2.8rem); font-style:italic; color:var(--red); min-height:60px; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity 0.4s ease; text-align:center; }
+  .answer-reveal.show { opacity:1; }
+  .audio-btn { display:inline-flex; align-items:center; gap:8px; font-family:'Courier Prime',monospace; font-size:0.78rem; letter-spacing:0.12em; text-transform:uppercase; padding:10px 20px; border:1.5px solid var(--ink); background:transparent; color:var(--ink); cursor:pointer; transition:all 0.2s; margin:8px 4px; border-radius:2px; }
+  .audio-btn:hover { background:var(--ink); color:var(--paper); }
+  .audio-btn svg { width:14px; height:14px; fill:currentColor; }
+  .controls { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:24px; padding-top:24px; border-top:1px solid var(--aged); }
+  .primary-btn { font-family:'Courier Prime',monospace; font-size:0.85rem; letter-spacing:0.12em; text-transform:uppercase; padding:14px 32px; background:var(--ink); color:var(--paper); border:none; cursor:pointer; transition:all 0.2s; border-radius:2px; flex:1; min-width:160px; }
+  .primary-btn:hover { background:var(--red); }
+  .secondary-btn { font-family:'Courier Prime',monospace; font-size:0.85rem; letter-spacing:0.12em; text-transform:uppercase; padding:14px 24px; background:transparent; color:var(--ink); border:1.5px solid var(--ink); cursor:pointer; transition:all 0.2s; border-radius:2px; }
+  .secondary-btn:hover { background:var(--aged); }
+  .progress-bar { max-width:700px; width:100%; height:3px; background:var(--aged); margin-bottom:24px; border-radius:2px; overflow:hidden; }
+  .progress-fill { height:100%; background:var(--gold); transition:width 0.4s ease; border-radius:2px; }
+  .stats { display:flex; gap:24px; justify-content:center; max-width:700px; width:100%; margin-bottom:20px; font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--faded); }
+  .stats strong { color:var(--ink); font-size:1.1rem; display:block; font-family:'Playfair Display',serif; }
+  .breakdown { background:var(--aged); padding:20px 24px; margin-top:16px; opacity:0; transition:opacity 0.3s; font-size:0.85rem; line-height:1.9; display:none; }
+  .breakdown.show { opacity:1; display:block; }
+  .breakdown .chunk { color:var(--red); font-style:italic; }
+  .type-input { font-family:'Playfair Display',serif; font-size:1.6rem; font-style:italic; text-align:center; border:none; border-bottom:2px solid var(--ink); background:transparent; color:var(--ink); padding:8px 4px; width:100%; max-width:400px; outline:none; display:block; margin:0 auto 16px; }
+  .type-input::placeholder { color:var(--aged); }
+  .result-badge { font-size:0.78rem; letter-spacing:0.15em; text-transform:uppercase; padding:6px 16px; border-radius:2px; display:inline-block; margin:8px auto; font-family:'Courier Prime',monospace; }
+  .result-badge.correct { background:#d4edda; color:var(--green); }
+  .result-badge.wrong { background:#fde8e8; color:var(--red); }
+  .result-badge.hidden { display:none; }
+  .range-group { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:20px; max-width:700px; width:100%; }
+  .range-btn { font-family:'Courier Prime',monospace; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; padding:6px 14px; border:1.5px solid var(--aged); background:transparent; color:var(--faded); cursor:pointer; border-radius:2px; transition:all 0.2s; }
+  .range-btn.active,.range-btn:hover { border-color:var(--gold); color:var(--gold); }
+  .range-btn.active { background:rgba(184,134,11,0.08); }
+  footer { max-width:700px; width:100%; text-align:center; margin-top:32px; color:var(--faded); font-size:0.75rem; letter-spacing:0.08em; line-height:1.8; border-top:1px solid var(--aged); padding-top:20px; }
+  @keyframes flash-correct { 0%{background:white;} 30%{background:#d4f5e2;} 100%{background:white;} }
+  @keyframes flash-wrong { 0%{background:white;} 30%{background:#fde8e8;} 100%{background:white;} }
+  .card.flash-correct { animation:flash-correct 0.5s ease; }
+  .card.flash-wrong { animation:flash-wrong 0.5s ease; }
+  .noble-intro { background:var(--ink); color:var(--paper); max-width:700px; width:100%; padding:32px 36px; margin-bottom:32px; border-radius:2px; }
+  .noble-intro h2 { font-family:'Playfair Display',serif; font-size:1.2rem; font-style:italic; margin-bottom:14px; color:var(--gold); }
+  .noble-intro p { font-size:0.82rem; line-height:1.8; color:rgba(245,239,224,0.8); margin-bottom:8px; }
+  .noble-intro strong { color:var(--paper); }
+  /* SPRINT */
+  .sprint-row { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:14px; max-width:700px; width:100%; }
+  .sprint-sub-btn { font-family:'Courier Prime',monospace; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; padding:7px 18px; border:1.5px solid var(--faded); background:transparent; color:var(--faded); cursor:pointer; border-radius:2px; transition:all 0.2s; flex:1; max-width:200px; }
+  .sprint-sub-btn.active { border-color:var(--red); color:var(--red); background:rgba(192,57,43,0.06); }
+  .timer-bar-wrap { max-width:700px; width:100%; height:5px; background:var(--aged); margin-bottom:6px; border-radius:2px; overflow:hidden; }
+  .timer-bar-fill { height:100%; background:var(--red); border-radius:2px; transition:width 0.1s linear; }
+  .timer-label { max-width:700px; width:100%; text-align:right; font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--red); margin-bottom:14px; }
+  .sprint-stats { display:flex; gap:20px; justify-content:center; max-width:700px; width:100%; margin-bottom:16px; font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--faded); }
+  .sprint-stats strong { color:var(--ink); font-size:1.1rem; display:block; font-family:'Playfair Display',serif; }
+  .sprint-stats .streak-val { color:var(--red); font-size:1.8rem; }
+  .sprint-sentence { font-family:'Playfair Display',serif; font-size:clamp(1rem,3vw,1.45rem); font-style:italic; color:var(--ink); line-height:1.75; text-align:center; margin-bottom:24px; }
+  .sprint-inputs { display:flex; flex-direction:column; gap:14px; align-items:center; margin-bottom:8px; }
+  .sprint-input-row { display:flex; align-items:center; gap:10px; width:100%; max-width:420px; }
+  .sprint-input-label { font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--faded); min-width:44px; text-align:right; }
+  .sprint-input { font-family:'Playfair Display',serif; font-size:1.3rem; font-style:italic; text-align:center; border:none; border-bottom:2px solid var(--ink); background:transparent; color:var(--ink); padding:6px 4px; flex:1; outline:none; transition:border-color 0.2s; }
+  .sprint-input::placeholder { color:var(--aged); font-style:normal; font-size:0.9rem; }
+  .sprint-input.correct { border-color:var(--green); color:var(--green); }
+  .sprint-input.wrong { border-color:var(--red); color:var(--red); }
+  .sprint-input:disabled { opacity:1; }
+  .sprint-reveal-inline { font-family:'Courier Prime',monospace; font-size:0.8rem; color:var(--red); min-width:60px; opacity:0; transition:opacity 0.3s; }
+  .sprint-reveal-inline.show { opacity:1; }
+  .sprint-done-score { font-family:'Playfair Display',serif; font-size:clamp(3rem,10vw,5rem); font-weight:900; color:var(--red); line-height:1; margin:20px 0 6px; }
+  .sprint-done-label { font-size:0.72rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--faded); margin-bottom:20px; }
+  .sprint-done-detail { font-size:0.85rem; color:var(--faded); line-height:1.9; margin-bottom:28px; }
+  .study-badge { display:inline-block; font-size:0.6em; letter-spacing:0.1em; text-transform:uppercase; background:rgba(184,134,11,0.1); color:var(--gold); border:1px solid var(--gold); padding:1px 6px; border-radius:2px; margin-left:6px; vertical-align:middle; }
+  /* FOCUS FILTER */
+  .focus-toggle { max-width:700px; width:100%; margin-bottom:6px; }
+  .focus-toggle-btn { font-family:'Courier Prime',monospace; font-size:0.68rem; letter-spacing:0.12em; text-transform:uppercase; background:transparent; border:none; color:var(--faded); cursor:pointer; padding:4px 0; display:flex; align-items:center; gap:6px; transition:color 0.2s; }
+  .focus-toggle-btn:hover { color:var(--ink); }
+  .focus-toggle-btn .arrow { display:inline-block; transition:transform 0.2s; font-style:normal; }
+  .focus-toggle-btn.open .arrow { transform:rotate(90deg); }
+  .focus-pills-wrap { max-width:700px; width:100%; display:none; margin-bottom:16px; }
+  .focus-pills-wrap.open { display:block; }
+  .focus-pills { display:flex; gap:7px; flex-wrap:wrap; margin-top:10px; }
+  .focus-pill { font-family:'Courier Prime',monospace; font-size:0.68rem; letter-spacing:0.09em; text-transform:uppercase; padding:5px 12px; border:1.5px solid var(--aged); background:transparent; color:var(--faded); cursor:pointer; border-radius:20px; transition:all 0.18s; }
+  .focus-pill:hover { border-color:var(--ink); color:var(--ink); }
+  .focus-pill.active { background:var(--ink); color:var(--paper); border-color:var(--ink); }
+  .focus-pool-warn { font-size:0.7rem; color:var(--gold); font-style:italic; margin-top:8px; display:none; }
+  .focus-pool-warn.show { display:block; }
+  .back-home { display:inline-flex; align-items:center; gap:7px; font-family:'Courier Prime',monospace; font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--faded); text-decoration:none; padding:8px 0; border-bottom:1px solid transparent; transition:color 0.2s,border-color 0.2s; margin-bottom:20px; align-self:flex-start; }
+  .back-home:hover { color:var(--ink); border-bottom-color:var(--ink); }
+  .back-home svg { width:12px; height:12px; fill:currentColor; }
+</style>
+</head>
+<body>
+<a href="f-index.html" class="back-home"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Home</a>
+<header><h1>Les Nombres</h1><p>A French Number Drill — Noble Method</p></header>
+<div class="noble-intro">
+  <h2>How this works...</h2>
+  <p>Think of French numbers as <strong>building blocks, not memorisation</strong>. You already know the blocks — we're just going to stack them differently.</p>
+  <p>The key insight: French counts in <strong>chunks</strong>. Sixty-nineteen (79), four-twenties (80), four-twenty-ten (90). Once the logic clicks, the numbers build themselves.</p>
+  <p>Use the standard modes to learn. Hit <strong>⚡ Sprint</strong> for real-time pressure. Use the Focus filter to isolate a context.</p>
+</div>
+<div class="mode-selector">
+  <button class="mode-btn active" onclick="setMode('flash',this)">Flash Cards</button>
+  <button class="mode-btn" onclick="setMode('type',this)">Type It</button>
+  <button class="mode-btn" onclick="setMode('listen',this)">Hear &amp; Guess</button>
+  <button class="mode-btn sprint-btn" onclick="setMode('sprint',this)">⚡ Sprint</button>
+</div>
+<div class="range-group" id="normal-range-group">
+  <button class="range-btn active" onclick="setRange('41-69')" id="range-41-69">41–69</button>
+  <button class="range-btn" onclick="setRange('70-79')" id="range-70-79">70–79 <em style="font-size:.65em">(tricky!)</em></button>
+  <button class="range-btn" onclick="setRange('80-99')" id="range-80-99">80–99 <em style="font-size:.65em">(trickiest!)</em></button>
+  <button class="range-btn" onclick="setRange('40-99')" id="range-40-99">🎲 40–99</button>
+  <button class="range-btn" onclick="setRange('100-999')" id="range-100-999">100s</button>
+  <button class="range-btn" onclick="setRange('1000+')" id="range-1000+">1000+</button>
+  <button class="range-btn" onclick="setRange('mixed')" id="range-mixed">🎲 All mixed</button>
+</div>
+<!-- Sprint sub-mode -->
+<div class="sprint-row" id="sprint-sub-row" style="display:none">
+  <button class="sprint-sub-btn active" id="ssub-numbers" onclick="setSprintSub('numbers',this)">Numbers only</button>
+  <button class="sprint-sub-btn" id="ssub-context" onclick="setSprintSub('context',this)">In context</button>
+</div>
+<!-- Sprint pressure -->
+<div class="sprint-row" id="sprint-pres-row" style="display:none">
+  <button class="sprint-sub-btn" id="spres-study" onclick="setSprintPressure('study',this)">Study <span class="study-badge">no timer</span></button>
+  <button class="sprint-sub-btn active" id="spres-sprint" onclick="setSprintPressure('sprint',this)">⚡ Sprint</button>
+</div>
+<!-- Focus filter (context sub-mode only) -->
+<div class="focus-toggle" id="focus-toggle-wrap" style="display:none">
+  <button class="focus-toggle-btn" id="focus-toggle-btn" onclick="toggleFocusPanel()">
+    <span class="arrow">▶</span> Focus by category
+  </button>
+</div>
+<div class="focus-pills-wrap" id="focus-pills-wrap">
+  <div class="focus-pills" id="focus-pills"></div>
+  <div class="focus-pool-warn" id="focus-pool-warn">Small pool — you may see repeats. Consider adding another category.</div>
+</div>
+<!-- Timer -->
+<div class="timer-bar-wrap" id="timer-bar-wrap" style="display:none"><div class="timer-bar-fill" id="timer-bar-fill" style="width:100%"></div></div>
+<div class="timer-label" id="timer-label" style="display:none">9s</div>
+<!-- Normal progress/stats -->
+<div class="progress-bar" id="normal-progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+<div class="stats" id="normal-stats">
+  <div><strong id="stat-seen">0</strong> Seen</div>
+  <div><strong id="stat-correct">0</strong> Correct</div>
+  <div><strong id="stat-streak">0</strong> Streak</div>
+</div>
+<!-- Sprint stats -->
+<div class="sprint-stats" id="sprint-stats" style="display:none">
+  <div><strong class="streak-val" id="sp-streak">0</strong> Best streak</div>
+  <div><strong id="sp-seen">0</strong> Seen</div>
+  <div><strong id="sp-correct">0</strong> Correct</div>
+</div>
+<div class="card" id="main-card">
+  <div id="mode-flash">
+    <div class="noble-hint" id="noble-hint"></div>
+    <div class="question-area">
+      <div class="number-display" id="number-display">—</div>
+      <div class="direction-label">What is this in French?</div>
+      <div style="text-align:center;margin-bottom:16px;">
+        <button class="audio-btn" onclick="speakNumber()"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.97z"/></svg>Hear it</button>
+      </div>
+      <div class="answer-reveal" id="answer-reveal">—</div>
+      <div class="breakdown" id="breakdown-panel"></div>
+    </div>
+    <div class="controls">
+      <button class="secondary-btn" id="reveal-btn" onclick="revealAnswer()">Reveal</button>
+      <button class="primary-btn" id="next-btn" onclick="nextQuestion()" style="display:none">Next →</button>
+      <button class="secondary-btn" id="breakdown-btn" onclick="toggleBreakdown()" style="display:none">Break it down</button>
+    </div>
+    <div id="flash-feedback" style="text-align:center;margin-top:16px;display:none;">
+      <button class="audio-btn" onclick="markCorrect()" style="border-color:var(--green);color:var(--green)">✓ Got it</button>
+      <button class="audio-btn" onclick="markWrong()" style="border-color:var(--red);color:var(--red)">✗ Missed it</button>
+    </div>
+  </div>
+  <div id="mode-type" style="display:none">
+    <div class="noble-hint" id="noble-hint-type"></div>
+    <div class="question-area">
+      <div class="number-display" id="number-display-type">—</div>
+      <div class="direction-label">Type the French word(s)</div>
+      <input class="type-input" id="type-input" placeholder="e.g. quatre-vingt-dix..." onkeydown="handleTypeKey(event)"/>
+      <div class="result-badge hidden" id="type-badge"></div>
+      <div class="answer-reveal" id="answer-reveal-type" style="font-size:1.4rem">—</div>
+      <div class="breakdown" id="breakdown-panel-type"></div>
+    </div>
+    <div class="controls">
+      <button class="primary-btn" id="check-btn" onclick="checkType()">Check</button>
+      <button class="primary-btn" id="next-btn-type" onclick="nextQuestion()" style="display:none">Next →</button>
+      <button class="secondary-btn" id="breakdown-btn-type" onclick="toggleBreakdown('type')" style="display:none">Break it down</button>
+    </div>
+    <div style="text-align:center;margin-top:16px;">
+      <button class="audio-btn" onclick="speakNumber()"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.97z"/></svg>Hear it</button>
+    </div>
+  </div>
+  <div id="mode-listen" style="display:none">
+    <div class="noble-hint" id="noble-hint-listen"></div>
+    <div class="question-area">
+      <div style="text-align:center;margin:24px 0 8px;">
+        <div style="font-size:0.8rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--faded);margin-bottom:16px;">Listen carefully, then type the number</div>
+        <button class="audio-btn" onclick="speakAndWait()" style="font-size:0.9rem;padding:14px 28px;"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.97z"/></svg>▶ Play Number</button>
+      </div>
+      <input class="type-input" id="listen-input" placeholder="Type the number you heard..." onkeydown="handleListenKey(event)" style="margin-top:24px;"/>
+      <div class="result-badge hidden" id="listen-badge"></div>
+      <div class="answer-reveal" id="answer-reveal-listen" style="font-size:1.6rem;margin-top:8px;">—</div>
+      <div class="breakdown" id="breakdown-panel-listen"></div>
+    </div>
+    <div class="controls">
+      <button class="primary-btn" id="check-listen-btn" onclick="checkListen()">Check</button>
+      <button class="primary-btn" id="next-btn-listen" onclick="nextQuestion()" style="display:none">Next →</button>
+      <button class="secondary-btn" id="breakdown-btn-listen" onclick="toggleBreakdown('listen')" style="display:none">Break it down</button>
+    </div>
+  </div>
+  <div id="mode-sprint" style="display:none"><div id="sprint-content"></div></div>
+</div>
+<footer>Uses your browser's built-in speech synthesis (French voice).<br>Sprint plays audio once — no repeats. Tap out any time to see your session summary.</footer>
+
+<script>
+// ── NUMBER ENGINE ─────────────────────────────────────────────────────────────
+const ones=['','un','deux','trois','quatre','cinq','six','sept','huit','neuf','dix','onze','douze','treize','quatorze','quinze','seize','dix-sept','dix-huit','dix-neuf'];
+const tens=['','','vingt','trente','quarante','cinquante','soixante','soixante','quatre-vingt','quatre-vingt'];
+function toFrench(n){
+  if(n===0)return'zéro';if(n<0)return'moins '+toFrench(-n);
+  if(n>=1000000){const m=Math.floor(n/1000000),r=n%1000000;return(m===1?'un million':toFrench(m)+' millions')+(r?' '+toFrench(r):'');}
+  if(n>=1000){const k=Math.floor(n/1000),r=n%1000;return(k===1?'mille':toFrench(k)+' mille')+(r?' '+toFrench(r):'');}
+  if(n>=100){const h=Math.floor(n/100),r=n%100;if(r===0)return h===1?'cent':toFrench(h)+' cents';return(h===1?'cent':toFrench(h)+' cent')+' '+toFrench(r);}
+  if(n>=70&&n<=79)return'soixante-'+ones[n-60];
+  if(n===80)return'quatre-vingts';
+  if(n>=81&&n<=99)return'quatre-vingt-'+ones[n-80];
+  if(n>=60&&n<=69){const r=n-60;if(r===0)return'soixante';if(r===1)return'soixante et un';return'soixante-'+ones[r];}
+  if(n>=20){const t=Math.floor(n/10),r=n%10;if(r===0)return tens[t];if(r===1)return tens[t]+' et un';return tens[t]+'-'+ones[r];}
+  return ones[n];
+}
+function randInt(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+function getBreakdown(n){
+  const fr=toFrench(n);
+  if(n>=70&&n<=79)return`<span class="chunk">soixante</span> (60) + <span class="chunk">${ones[n-60]}</span> (${n-60}) = <strong>${fr}</strong>`;
+  if(n>=80&&n<=99){if(n===80)return`<span class="chunk">quatre</span> (4) × <span class="chunk">vingt</span> (20) = <strong>quatre-vingts</strong>`;return`<span class="chunk">quatre-vingt</span> (80) + <span class="chunk">${ones[n-80]}</span> (${n-80}) = <strong>${fr}</strong>`;}
+  if(n>=100&&n<1000){const h=Math.floor(n/100),r=n%100;return`<span class="chunk">${toFrench(h)}</span> (${h}) × <span class="chunk">cent</span> (100)${r?` + <span class="chunk">${toFrench(r)}</span> (${r})`:''} = <strong>${fr}</strong>`;}
+  if(n>=1000){const k=Math.floor(n/1000),r=n%1000;return`<span class="chunk">${k===1?'mille':toFrench(k)+' mille'}</span> (${k*1000})${r?` + <span class="chunk">${toFrench(r)}</span> (${r})`:''} = <strong>${fr}</strong>`;}
+  const t=Math.floor(n/10),r=n%10;
+  if(n>=20&&r>0)return`<span class="chunk">${tens[t]}</span> (${t*10}) + <span class="chunk">${r===1?'et un':ones[r]}</span> (${r}) = <strong>${fr}</strong>`;
+  return`<strong>${fr}</strong>`;
+}
+
+// ── NORMAL RANGES ─────────────────────────────────────────────────────────────
+const ranges={'40-99':()=>Math.random()<0.3?randInt(40,60):randInt(61,99),'41-69':()=>randInt(41,69),'70-79':()=>randInt(70,79),'80-99':()=>randInt(80,99),'100-999':()=>{const r=Math.random();if(r<0.3)return Math.floor(Math.random()*9+1)*100;if(r<0.6)return Math.floor(Math.random()*90+10)*10;return randInt(100,999);},'1000+':()=>{const r=Math.random();if(r<0.4)return[1000,2000,5000,10000,100000,1000000][Math.floor(Math.random()*6)];return randInt(1000,9999);},'mixed':()=>{const fns=[()=>randInt(41,99),()=>randInt(70,99),()=>randInt(80,99),()=>randInt(100,999),()=>randInt(1000,9999)];return fns[Math.floor(Math.random()*fns.length)]();}};
+
+// ── CONFUSER POOL ─────────────────────────────────────────────────────────────
+const confusers=[70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,21,31,41,51,61,71,16,17,18,19,60,100,200,201,300,1000,1066,1492,1776,1789,1815,1914,1918,1939,1944,1945,2001,2024];
+function pickConfuser(){return confusers[Math.floor(Math.random()*confusers.length)];}
+
+// ── SLOT GENERATORS ───────────────────────────────────────────────────────────
+const G={
+  hour:()=>randInt(0,23),
+  minute:()=>randInt(0,59),
+  minRound:()=>[0,5,10,15,20,25,30,35,40,45,50,55][randInt(0,11)],
+  age:()=>Math.random()<0.75?randInt(18,75):randInt(1,17),
+  ageOld:()=>randInt(60,97),
+  ageChild:()=>randInt(3,15),
+  price:()=>randInt(1,99),
+  priceBig:()=>randInt(10,499),
+  priceTicket:()=>randInt(8,120),
+  cents:()=>[10,20,25,30,40,50,60,70,75,80,90,95][randInt(0,11)],
+  dist:()=>Math.random()<0.5?randInt(2,99):randInt(100,800),
+  distShort:()=>randInt(2,50),
+  distWalk:()=>randInt(100,900), // metres
+  year:()=>{const eras=[()=>randInt(500,999),()=>randInt(1000,1499),()=>randInt(1500,1799),()=>randInt(1800,1945),()=>randInt(1946,1999),()=>randInt(2000,2024)];const w=[0.05,0.08,0.12,0.25,0.30,0.20];let r=Math.random(),c=0;for(let i=0;i<w.length;i++){c+=w[i];if(r<c)return eras[i]();}return eras[5]();},
+  yearModern:()=>randInt(1950,2024),
+  yearHist:()=>randInt(500,1945),
+  floor:()=>randInt(1,20),
+  floorLow:()=>randInt(1,6),
+  streetNum:()=>randInt(1,150),
+  qty:()=>Math.random()<0.6?randInt(2,99):randInt(100,500),
+  qtySmall:()=>randInt(2,30),
+  qtyLarge:()=>randInt(50,5000),
+  phone2:()=>randInt(10,99),
+  speed:()=>[30,50,70,80,90,110,130][randInt(0,6)],
+  temp:()=>randInt(-5,40),
+  grade:()=>randInt(5,20),
+  pct:()=>randInt(1,99),
+  pages:()=>randInt(10,999),
+  duration:()=>randInt(5,90), // minutes
+  durationH:()=>randInt(1,12), // hours
+  weight:()=>randInt(100,999), // grams
+  sqm:()=>randInt(15,200),
+};
+function fmtMin(m){return m<10?'0'+m:String(m);}
+
+// ── TEMPLATES ─────────────────────────────────────────────────────────────────
+// cat: category key for filter system
+const TEMPLATES=[
+  // ── TIMES & DURATIONS ──────────────────────────────────────────────────────
+  {cat:'times',text:'Il est {0}h{1} du matin.',audio:n=>`Il est ${toFrench(n[0])} heures ${n[1]===0?'':toFrench(n[1])} du matin`,slots:[G.hour,G.minute],labels:['h','min'],dfn:(v,i)=>i===1?fmtMin(v[i]):v[i]},
+  {cat:'times',text:'Le train part à {0}h{1}.',audio:n=>`Le train part à ${toFrench(n[0])} heures ${n[1]===0?'pile':toFrench(n[1])}`,slots:[G.hour,G.minRound],labels:['h','min'],dfn:(v,i)=>i===1?fmtMin(v[i]):v[i]},
+  {cat:'times',text:'Le rendez-vous est à {0}h{1}.',audio:n=>`Le rendez-vous est à ${toFrench(n[0])} heures ${n[1]===0?'pile':toFrench(n[1])}`,slots:[G.hour,G.minute],labels:['h','min'],dfn:(v,i)=>i===1?fmtMin(v[i]):v[i]},
+  {cat:'times',text:'La réunion commence à {0}h{1} et finit à {2}h{3}.',audio:n=>`La réunion commence à ${toFrench(n[0])} heures ${n[1]===0?'pile':toFrench(n[1])} et finit à ${toFrench(n[2])} heures ${n[3]===0?'pile':toFrench(n[3])}`,slots:[G.hour,G.minRound,()=>randInt(0,23),G.minRound],labels:['h','min','h','min'],dfn:(v,i)=>(i===1||i===3)?fmtMin(v[i]):v[i]},
+  {cat:'times',text:'Le musée ouvre à {0}h et ferme à {1}h.',audio:n=>`Le musée ouvre à ${toFrench(n[0])} heures et ferme à ${toFrench(n[1])} heures`,slots:[()=>randInt(8,12),()=>randInt(17,22)],labels:['h','h']},
+  {cat:'times',text:'Le vol dure {0} heures et {1} minutes.',audio:n=>`Le vol dure ${toFrench(n[0])} heures et ${toFrench(n[1])} minutes`,slots:[G.durationH,G.minRound],labels:['h','min']},
+  {cat:'times',text:'Le prochain bus arrive dans {0} minutes.',audio:n=>`Le prochain bus arrive dans ${toFrench(n[0])} minutes`,slots:[G.duration],labels:['min']},
+  {cat:'times',text:'La pharmacie est ouverte jusqu\'à {0}h{1}.',audio:n=>`La pharmacie est ouverte jusqu'à ${toFrench(n[0])} heures ${n[1]===0?'pile':toFrench(n[1])}`,slots:[()=>randInt(18,22),G.minRound],labels:['h','min'],dfn:(v,i)=>i===1?fmtMin(v[i]):v[i]},
+  {cat:'times',text:'L\'opération dure environ {0} minutes.',audio:n=>`L'opération dure environ ${toFrench(n[0])} minutes`,slots:[G.duration],labels:['min']},
+  {cat:'times',text:'Le concert commence à {0}h{1} et dure {2} heures.',audio:n=>`Le concert commence à ${toFrench(n[0])} heures ${n[1]===0?'pile':toFrench(n[1])} et dure ${toFrench(n[2])} heures`,slots:[()=>randInt(19,22),G.minRound,()=>randInt(1,3)],labels:['h','min','h'],dfn:(v,i)=>i===1?fmtMin(v[i]):v[i]},
+  {cat:'times',text:'Le dernier métro est à {0}h{1}.',audio:n=>`Le dernier métro est à ${toFrench(n[0])} heures ${n[1]===0?'pile':toFrench(n[1])}`,slots:[()=>randInt(0,2),G.minRound],labels:['h','min'],dfn:(v,i)=>i===1?fmtMin(v[i]):v[i]},
+
+  // ── PRICES ─────────────────────────────────────────────────────────────────
+  {cat:'prices',text:'Ça coûte {0} euros.',audio:n=>`Ça coûte ${toFrench(n[0])} euros`,slots:[G.priceBig],labels:['€']},
+  {cat:'prices',text:'C\'est {0} euros et {1} centimes.',audio:n=>`C'est ${toFrench(n[0])} euros et ${toFrench(n[1])} centimes`,slots:[G.price,G.cents],labels:['€','cts']},
+  {cat:'prices',text:'Le billet coûte {0} euros.',audio:n=>`Le billet coûte ${toFrench(n[0])} euros`,slots:[G.priceTicket],labels:['€']},
+  {cat:'prices',text:'La chambre coûte {0} euros la nuit.',audio:n=>`La chambre coûte ${toFrench(n[0])} euros la nuit`,slots:[()=>randInt(40,350)],labels:['€']},
+  {cat:'prices',text:'Il me reste {0} euros et {1} centimes.',audio:n=>`Il me reste ${toFrench(n[0])} euros et ${toFrench(n[1])} centimes`,slots:[G.price,G.cents],labels:['€','cts']},
+  {cat:'prices',text:'Le repas pour {0} personnes coûte {1} euros.',audio:n=>`Le repas pour ${toFrench(n[0])} personnes coûte ${toFrench(n[1])} euros`,slots:[()=>randInt(2,8),()=>randInt(30,300)],labels:['pers','€']},
+  {cat:'prices',text:'J\'ai acheté {0} livres à {1} euros chacun.',audio:n=>`J'ai acheté ${toFrench(n[0])} livres à ${toFrench(n[1])} euros chacun`,slots:[G.qtySmall,G.price],labels:['','€']},
+  {cat:'prices',text:'L\'abonnement mensuel est de {0} euros.',audio:n=>`L'abonnement mensuel est de ${toFrench(n[0])} euros`,slots:[()=>randInt(5,99)],labels:['€']},
+  {cat:'prices',text:'La réduction est de {0} euros sur le prix initial de {1} euros.',audio:n=>`La réduction est de ${toFrench(n[0])} euros sur le prix initial de ${toFrench(n[1])} euros`,slots:[()=>randInt(5,50),()=>randInt(20,200)],labels:['€','€']},
+  {cat:'prices',text:'Le tarif réduit est de {0} euros, le tarif plein de {1} euros.',audio:n=>`Le tarif réduit est de ${toFrench(n[0])} euros, le tarif plein de ${toFrench(n[1])} euros`,slots:[G.priceTicket,()=>randInt(20,150)],labels:['€','€']},
+  {cat:'prices',text:'Un café coûte {0} euros, une bière {1} euros.',audio:n=>`Un café coûte ${toFrench(n[0])} euros, une bière ${toFrench(n[1])} euros`,slots:[()=>randInt(1,4),()=>randInt(3,8)],labels:['€','€']},
+
+  // ── AGES ───────────────────────────────────────────────────────────────────
+  {cat:'ages',text:'Il a {0} ans.',audio:n=>`Il a ${toFrench(n[0])} ans`,slots:[G.age],labels:['ans']},
+  {cat:'ages',text:'Elle vient d\'avoir {0} ans.',audio:n=>`Elle vient d'avoir ${toFrench(n[0])} ans`,slots:[G.age],labels:['ans']},
+  {cat:'ages',text:'Mon grand-père a {0} ans et ma grand-mère en a {1}.',audio:n=>`Mon grand-père a ${toFrench(n[0])} ans et ma grand-mère en a ${toFrench(n[1])}`,slots:[G.ageOld,G.ageOld],labels:['ans','ans']},
+  {cat:'ages',text:'Elle a commencé à travailler à {0} ans.',audio:n=>`Elle a commencé à travailler à ${toFrench(n[0])} ans`,slots:[()=>randInt(18,30)],labels:['ans']},
+  {cat:'ages',text:'On cherche des bénévoles entre {0} et {1} ans.',audio:n=>`On cherche des bénévoles entre ${toFrench(n[0])} et ${toFrench(n[1])} ans`,slots:[()=>randInt(18,35),()=>randInt(40,65)],labels:['ans','ans']},
+  {cat:'ages',text:'Le candidat est âgé de {0} ans.',audio:n=>`Le candidat est âgé de ${toFrench(n[0])} ans`,slots:[G.age],labels:['ans']},
+  {cat:'ages',text:'La victime avait {0} ans au moment des faits.',audio:n=>`La victime avait ${toFrench(n[0])} ans au moment des faits`,slots:[G.age],labels:['ans']},
+  {cat:'ages',text:'Les enfants de {0} à {1} ans entrent gratuitement.',audio:n=>`Les enfants de ${toFrench(n[0])} à ${toFrench(n[1])} ans entrent gratuitement`,slots:[G.ageChild,()=>randInt(12,16)],labels:['ans','ans']},
+  {cat:'ages',text:'Il a pris sa retraite à {0} ans après {1} ans de carrière.',audio:n=>`Il a pris sa retraite à ${toFrench(n[0])} ans après ${toFrench(n[1])} ans de carrière`,slots:[()=>randInt(60,67),()=>randInt(30,45)],labels:['ans','ans']},
+
+  // ── DISTANCES & GEOGRAPHY ──────────────────────────────────────────────────
+  {cat:'distances',text:'La ville est à {0} kilomètres.',audio:n=>`La ville est à ${toFrench(n[0])} kilomètres`,slots:[G.dist],labels:['km']},
+  {cat:'distances',text:'Il faut rouler {0} kilomètres pour arriver.',audio:n=>`Il faut rouler ${toFrench(n[0])} kilomètres pour arriver`,slots:[G.dist],labels:['km']},
+  {cat:'distances',text:'L\'aéroport est à {0} kilomètres du centre-ville.',audio:n=>`L'aéroport est à ${toFrench(n[0])} kilomètres du centre-ville`,slots:[G.distShort],labels:['km']},
+  {cat:'distances',text:'De Paris à Lyon, c\'est {0} km. De Lyon à Marseille, c\'est {1} km.',audio:n=>`De Paris à Lyon c'est ${toFrench(n[0])} kilomètres. De Lyon à Marseille c'est ${toFrench(n[1])} kilomètres`,slots:[()=>465,()=>315],labels:['km','km']},
+  {cat:'distances',text:'La prochaine sortie est dans {0} kilomètres.',audio:n=>`La prochaine sortie est dans ${toFrench(n[0])} kilomètres`,slots:[G.distShort],labels:['km']},
+  {cat:'distances',text:'L\'hôtel se trouve à {0} mètres de la plage.',audio:n=>`L'hôtel se trouve à ${toFrench(n[0])} mètres de la plage`,slots:[G.distWalk],labels:['m']},
+  {cat:'distances',text:'Le marathon fait {0} kilomètres et {1} mètres.',audio:n=>`Le marathon fait ${toFrench(n[0])} kilomètres et ${toFrench(n[1])} mètres`,slots:[()=>42,()=>195],labels:['km','m']},
+  {cat:'distances',text:'Le sommet culmine à {0} mètres d\'altitude.',audio:n=>`Le sommet culmine à ${toFrench(n[0])} mètres d'altitude`,slots:[()=>randInt(1000,4807)],labels:['m']},
+
+  // ── YEARS & DATES ──────────────────────────────────────────────────────────
+  {cat:'years',text:'Ça s\'est passé en {0}.',audio:n=>`Ça s'est passé en ${toFrench(n[0])}`,slots:[G.year],labels:['an']},
+  {cat:'years',text:'Il est né en {0}.',audio:n=>`Il est né en ${toFrench(n[0])}`,slots:[G.year],labels:['an']},
+  {cat:'years',text:'Ce bâtiment a été construit en {0}.',audio:n=>`Ce bâtiment a été construit en ${toFrench(n[0])}`,slots:[()=>randInt(1500,1999)],labels:['an']},
+  {cat:'years',text:'Nous sommes en {0}.',audio:n=>`Nous sommes en ${toFrench(n[0])}`,slots:[()=>randInt(1990,2024)],labels:['an']},
+  {cat:'years',text:'La Révolution française a eu lieu en {0}.',audio:n=>`La Révolution française a eu lieu en ${toFrench(n[0])}`,slots:[()=>1789],labels:['an']},
+  {cat:'years',text:'Il y a {0} ans, tout était différent.',audio:n=>`Il y a ${toFrench(n[0])} ans, tout était différent`,slots:[()=>randInt(10,80)],labels:['ans']},
+  {cat:'years',text:'La Première Guerre mondiale a duré de {0} à {1}.',audio:n=>`La Première Guerre mondiale a duré de ${toFrench(n[0])} à ${toFrench(n[1])}`,slots:[()=>1914,()=>1918],labels:['an','an']},
+  {cat:'years',text:'L\'entreprise a été fondée en {0} et emploie aujourd\'hui {1} personnes.',audio:n=>`L'entreprise a été fondée en ${toFrench(n[0])} et emploie aujourd'hui ${toFrench(n[1])} personnes`,slots:[G.yearModern,G.qty],labels:['an','']},
+  {cat:'years',text:'Le traité a été signé en {0}.',audio:n=>`Le traité a été signé en ${toFrench(n[0])}`,slots:[G.yearHist],labels:['an']},
+  {cat:'years',text:'En {0}, la population mondiale était de {1} milliards.',audio:n=>`En ${toFrench(n[0])}, la population mondiale était de ${toFrench(n[1])} milliards`,slots:[()=>randInt(1950,2020),()=>randInt(2,8)],labels:['an','mrd']},
+
+  // ── PHONE & ADDRESSES ──────────────────────────────────────────────────────
+  {cat:'phone',text:'Mon numéro, c\'est le 0{0} {1} {2} {3} {4}.',audio:n=>`Mon numéro c'est le zéro ${toFrench(n[0])}, ${toFrench(n[1])}, ${toFrench(n[2])}, ${toFrench(n[3])}, ${toFrench(n[4])}`,slots:[G.phone2,G.phone2,G.phone2,G.phone2,G.phone2],labels:['','','','','']},
+  {cat:'phone',text:'Appelez le 0{0} {1} {2} {3} {4}.',audio:n=>`Appelez le zéro ${toFrench(n[0])}, ${toFrench(n[1])}, ${toFrench(n[2])}, ${toFrench(n[3])}, ${toFrench(n[4])}`,slots:[G.phone2,G.phone2,G.phone2,G.phone2,G.phone2],labels:['','','','','']},
+  {cat:'phone',text:'Le numéro du cabinet est le 0{0} {1} {2} {3} {4}.',audio:n=>`Le numéro du cabinet est le zéro ${toFrench(n[0])}, ${toFrench(n[1])}, ${toFrench(n[2])}, ${toFrench(n[3])}, ${toFrench(n[4])}`,slots:[G.phone2,G.phone2,G.phone2,G.phone2,G.phone2],labels:['','','','','']},
+  {cat:'phone',text:'Pour rappeler, composez le 0{0} {1} {2} {3} {4}.',audio:n=>`Pour rappeler, composez le zéro ${toFrench(n[0])}, ${toFrench(n[1])}, ${toFrench(n[2])}, ${toFrench(n[3])}, ${toFrench(n[4])}`,slots:[G.phone2,G.phone2,G.phone2,G.phone2,G.phone2],labels:['','','','','']},
+  {cat:'phone',text:'J\'habite au {0}, rue de la Paix.',audio:n=>`J'habite au ${toFrench(n[0])}, rue de la Paix`,slots:[G.streetNum],labels:['n°']},
+  {cat:'phone',text:'Le colis sera livré au {0}, avenue des Fleurs.',audio:n=>`Le colis sera livré au ${toFrench(n[0])}, avenue des Fleurs`,slots:[G.streetNum],labels:['n°']},
+  {cat:'phone',text:'Rendez-vous au {0}, boulevard Haussmann, au {1}ème étage.',audio:n=>`Rendez-vous au ${toFrench(n[0])}, boulevard Haussmann, au ${toFrench(n[1])}ème étage`,slots:[G.streetNum,G.floorLow],labels:['n°','ét.']},
+
+  // ── QUANTITIES & STATISTICS ────────────────────────────────────────────────
+  {cat:'quantities',text:'Il y a {0} étudiants dans la classe.',audio:n=>`Il y a ${toFrench(n[0])} étudiants dans la classe`,slots:[G.qtySmall],labels:['']},
+  {cat:'quantities',text:'Nous avons vendu {0} billets ce soir.',audio:n=>`Nous avons vendu ${toFrench(n[0])} billets ce soir`,slots:[G.qty],labels:['']},
+  {cat:'quantities',text:'Il reste {0} places disponibles.',audio:n=>`Il reste ${toFrench(n[0])} places disponibles`,slots:[()=>randInt(1,80)],labels:['']},
+  {cat:'quantities',text:'La conférence a réuni {0} participants dans {1} pays.',audio:n=>`La conférence a réuni ${toFrench(n[0])} participants dans ${toFrench(n[1])} pays`,slots:[G.qty,()=>randInt(2,50)],labels:['','pays']},
+  {cat:'quantities',text:'{0}% des Français pensent que...',audio:n=>`${toFrench(n[0])} pour cent des Français pensent que`,slots:[G.pct],labels:['%']},
+  {cat:'quantities',text:'Le taux de chômage est de {0}%.',audio:n=>`Le taux de chômage est de ${toFrench(n[0])} pour cent`,slots:[G.pct],labels:['%']},
+  {cat:'quantities',text:'L\'usine produit {0} unités par jour.',audio:n=>`L'usine produit ${toFrench(n[0])} unités par jour`,slots:[G.qty],labels:['']},
+  {cat:'quantities',text:'Selon le sondage, {0}% approuvent et {1}% s\'y opposent.',audio:n=>`Selon le sondage, ${toFrench(n[0])} pour cent approuvent et ${toFrench(n[1])} pour cent s'y opposent`,slots:[()=>{const a=randInt(20,70);return a;},()=>{return randInt(20,70);}],labels:['%','%']},
+  {cat:'quantities',text:'La ville compte {0} habitants.',audio:n=>`La ville compte ${toFrench(n[0])} habitants`,slots:[G.qtyLarge],labels:['']},
+  {cat:'quantities',text:'Le rapport fait {0} pages.',audio:n=>`Le rapport fait ${toFrench(n[0])} pages`,slots:[G.pages],labels:['']},
+
+  // ── FLOORS & ADDRESSES ─────────────────────────────────────────────────────
+  {cat:'floors',text:'Il habite au {0}ème étage.',audio:n=>`Il habite au ${toFrench(n[0])}ème étage`,slots:[G.floor],labels:['ét.']},
+  {cat:'floors',text:'Le bureau est au {0}ème étage, salle {1}.',audio:n=>`Le bureau est au ${toFrench(n[0])}ème étage, salle ${toFrench(n[1])}`,slots:[G.floor,()=>randInt(1,50)],labels:['ét.','salle']},
+  {cat:'floors',text:'L\'appartement fait {0} mètres carrés et se situe au {1}ème étage.',audio:n=>`L'appartement fait ${toFrench(n[0])} mètres carrés et se situe au ${toFrench(n[1])}ème étage`,slots:[G.sqm,G.floorLow],labels:['m²','ét.']},
+  {cat:'floors',text:'Prenez l\'ascenseur jusqu\'au {0}ème étage.',audio:n=>`Prenez l'ascenseur jusqu'au ${toFrench(n[0])}ème étage`,slots:[G.floor],labels:['ét.']},
+  {cat:'floors',text:'Les bureaux de la direction sont au {0}ème étage.',audio:n=>`Les bureaux de la direction sont au ${toFrench(n[0])}ème étage`,slots:[G.floorLow],labels:['ét.']},
+  {cat:'floors',text:'Le sinistre a eu lieu au {0}ème étage d\'un immeuble de {1} étages.',audio:n=>`Le sinistre a eu lieu au ${toFrench(n[0])}ème étage d'un immeuble de ${toFrench(n[1])} étages`,slots:[G.floorLow,()=>randInt(6,20)],labels:['ét.','ét.']},
+
+  // ── SPEED ──────────────────────────────────────────────────────────────────
+  {cat:'speed',text:'La vitesse est limitée à {0} km/h.',audio:n=>`La vitesse est limitée à ${toFrench(n[0])} kilomètres par heure`,slots:[G.speed],labels:['km/h']},
+  {cat:'speed',text:'Il roulait à {0} km/h dans une zone {1}.',audio:n=>`Il roulait à ${toFrench(n[0])} kilomètres par heure dans une zone ${toFrench(n[1])}`,slots:[()=>randInt(50,180),G.speed],labels:['km/h','lim.']},
+  {cat:'speed',text:'Le TGV roule à {0} km/h en moyenne.',audio:n=>`Le TGV roule à ${toFrench(n[0])} kilomètres par heure en moyenne`,slots:[()=>randInt(200,320)],labels:['km/h']},
+  {cat:'speed',text:'La limite en agglomération est de {0} km/h.',audio:n=>`La limite en agglomération est de ${toFrench(n[0])} kilomètres par heure`,slots:[()=>50],labels:['km/h']},
+  {cat:'speed',text:'L\'avion vole à environ {0} km/h.',audio:n=>`L'avion vole à environ ${toFrench(n[0])} kilomètres par heure`,slots:[()=>randInt(800,950)],labels:['km/h']},
+  {cat:'speed',text:'Le cycliste roulait à {0} km/h lors de la descente.',audio:n=>`Le cycliste roulait à ${toFrench(n[0])} kilomètres par heure lors de la descente`,slots:[()=>randInt(60,100)],labels:['km/h']},
+
+  // ── TEMPERATURE ────────────────────────────────────────────────────────────
+  {cat:'temperature',text:'Il fait {0} degrés aujourd\'hui.',audio:n=>`Il fait ${toFrench(n[0])} degrés aujourd'hui`,slots:[G.temp],labels:['°C']},
+  {cat:'temperature',text:'La météo prévoit {0} degrés demain et {1} après-demain.',audio:n=>`La météo prévoit ${toFrench(n[0])} degrés demain et ${toFrench(n[1])} après-demain`,slots:[G.temp,G.temp],labels:['°C','°C']},
+  {cat:'temperature',text:'Les températures vont de {0} à {1} degrés cette semaine.',audio:n=>`Les températures vont de ${toFrench(n[0])} à ${toFrench(n[1])} degrés cette semaine`,slots:[()=>randInt(-5,15),()=>randInt(15,40)],labels:['°C','°C']},
+  {cat:'temperature',text:'Le record de chaleur est de {0} degrés.',audio:n=>`Le record de chaleur est de ${toFrench(n[0])} degrés`,slots:[()=>randInt(38,49)],labels:['°C']},
+  {cat:'temperature',text:'Les prévisions indiquent {0} degrés en plaine et {1} en montagne.',audio:n=>`Les prévisions indiquent ${toFrench(n[0])} degrés en plaine et ${toFrench(n[1])} en montagne`,slots:[G.temp,()=>randInt(-15,5)],labels:['°C','°C']},
+  {cat:'temperature',text:'Le four doit être préchauffé à {0} degrés.',audio:n=>`Le four doit être préchauffé à ${toFrench(n[0])} degrés`,slots:[()=>[150,160,170,180,190,200,210,220][randInt(0,7)]],labels:['°C']},
+
+  // ── GRADES & SCORES ────────────────────────────────────────────────────────
+  {cat:'grades',text:'J\'ai eu {0} sur 20 à l\'examen.',audio:n=>`J'ai eu ${toFrench(n[0])} sur vingt à l'examen`,slots:[G.grade],labels:['/20']},
+  {cat:'grades',text:'La moyenne de la classe est de {0} sur 20.',audio:n=>`La moyenne de la classe est de ${toFrench(n[0])} sur vingt`,slots:[G.grade],labels:['/20']},
+  {cat:'grades',text:'Il a obtenu {0} sur 20 à l\'oral et {1} à l\'écrit.',audio:n=>`Il a obtenu ${toFrench(n[0])} sur vingt à l'oral et ${toFrench(n[1])} à l'écrit`,slots:[G.grade,G.grade],labels:['/20','/20']},
+  {cat:'grades',text:'Pour être admis, il faut avoir au moins {0} sur 20.',audio:n=>`Pour être admis, il faut avoir au moins ${toFrench(n[0])} sur vingt`,slots:[()=>randInt(10,14)],labels:['/20']},
+  {cat:'grades',text:'L\'examinateur lui a donné {0} sur 20.',audio:n=>`L'examinateur lui a donné ${toFrench(n[0])} sur vingt`,slots:[G.grade],labels:['/20']},
+  {cat:'grades',text:'Sa note de {0} sur 20 le place dans le premier tiers.',audio:n=>`Sa note de ${toFrench(n[0])} sur vingt le place dans le premier tiers`,slots:[()=>randInt(14,20)],labels:['/20']},
+];
+
+// ── CATEGORIES ────────────────────────────────────────────────────────────────
+const CATEGORIES=[
+  {key:'times',label:'Times'},
+  {key:'prices',label:'Prices'},
+  {key:'ages',label:'Ages'},
+  {key:'distances',label:'Distances'},
+  {key:'years',label:'Years'},
+  {key:'phone',label:'Phone & Addresses'},
+  {key:'quantities',label:'Quantities'},
+  {key:'floors',label:'Floors'},
+  {key:'speed',label:'Speed'},
+  {key:'temperature',label:'Temperature'},
+  {key:'grades',label:'Grades'},
+];
+
+// Active focus filter — empty = all categories
+let activeCats=new Set();
+
+function buildFocusPills(){
+  const container=document.getElementById('focus-pills');
+  container.innerHTML=CATEGORIES.map(c=>
+    `<button class="focus-pill" data-cat="${c.key}" onclick="toggleCat('${c.key}',this)">${c.label}</button>`
+  ).join('');
+}
+
+function toggleCat(key,btn){
+  if(activeCats.has(key)){activeCats.delete(key);btn.classList.remove('active');}
+  else{activeCats.add(key);btn.classList.add('active');}
+  checkPoolSize();
+  if(sprintActive) loadSprintQ();
+}
+
+function toggleFocusPanel(){
+  const btn=document.getElementById('focus-toggle-btn');
+  const wrap=document.getElementById('focus-pills-wrap');
+  btn.classList.toggle('open');
+  wrap.classList.toggle('open');
+}
+
+function checkPoolSize(){
+  const pool=getTemplatePool();
+  const warn=document.getElementById('focus-pool-warn');
+  warn.classList.toggle('show',activeCats.size>0&&pool.length<5);
+}
+
+function getTemplatePool(){
+  if(activeCats.size===0) return TEMPLATES;
+  return TEMPLATES.filter(t=>activeCats.has(t.cat));
+}
+
+function generateContextQ(){
+  const pool=getTemplatePool();
+  const tmpl=pool[Math.floor(Math.random()*pool.length)];
+  const vals=tmpl.slots.map(fn=>fn());
+  const audioText=tmpl.audio(vals);
+  return{tmpl,vals,audioText};
+}
+
+// ── SPRINT STATE ──────────────────────────────────────────────────────────────
+let sprintSub='numbers',sprintPressure='sprint',sprintActive=false;
+let sprintTimer=null,sprintTimerRAF=null;
+const TIMER_MS=9000;
+let timerStart=null;
+let sp={seen:0,correct:0,streak:0,best:0};
+let spQ=null;
+
+function sprintReset(){sp={seen:0,correct:0,streak:0,best:0};updateSprintStats();}
+function updateSprintStats(){
+  document.getElementById('sp-streak').textContent=sp.best;
+  document.getElementById('sp-seen').textContent=sp.seen;
+  document.getElementById('sp-correct').textContent=sp.correct;
+}
+
+// ── TIMER ─────────────────────────────────────────────────────────────────────
+function startTimer(){
+  if(sprintPressure==='study')return;
+  clearTimer();timerStart=performance.now();
+  document.getElementById('timer-bar-wrap').style.display='';
+  document.getElementById('timer-label').style.display='';
+  tickTimer();
+  sprintTimer=setTimeout(timeExpired,TIMER_MS);
+}
+function tickTimer(){
+  const elapsed=performance.now()-timerStart;
+  const pct=Math.max(0,100-(elapsed/TIMER_MS)*100);
+  const secs=Math.max(0,Math.ceil((TIMER_MS-elapsed)/1000));
+  document.getElementById('timer-bar-fill').style.width=pct+'%';
+  document.getElementById('timer-label').textContent=secs+'s';
+  if(pct>0)sprintTimerRAF=requestAnimationFrame(tickTimer);
+}
+function clearTimer(){clearTimeout(sprintTimer);cancelAnimationFrame(sprintTimerRAF);sprintTimer=null;}
+function timeExpired(){
+  cancelAnimationFrame(sprintTimerRAF);
+  document.getElementById('timer-bar-fill').style.width='0%';
+  document.getElementById('timer-label').textContent='0s';
+  sp.streak=0;updateSprintStats();
+  showSprintResult(false,true);
+  setTimeout(()=>{if(sprintActive)loadSprintQ();},2200);
+}
+
+// ── SPRINT QUESTION ───────────────────────────────────────────────────────────
+function loadSprintQ(){
+  clearTimer();sprintActive=true;
+  if(sprintSub==='numbers'){spQ={type:'number',val:pickConfuser()};renderSprintNumber();}
+  else{spQ={type:'context',...generateContextQ()};renderSprintContext();}
+  setTimeout(()=>{
+    speak(sprintSub==='numbers'?toFrench(spQ.val):spQ.audioText);
+    if(sprintPressure==='sprint')startTimer();
+  },380);
+}
+
+const SPEAKER_SVG=`<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.97z"/></svg>`;
+
+function replayBtn(fn){
+  return sprintPressure==='study'?`<button class="audio-btn" style="margin-bottom:14px;" onclick="${fn}">${SPEAKER_SVG}Replay</button>`:'';
+}
+
+function renderSprintNumber(){
+  document.getElementById('sprint-content').innerHTML=`
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--faded);margin-bottom:10px;">Type the number you heard</div>
+      ${replayBtn("speak(toFrench(spQ.val))")}
+    </div>
+    <div class="sprint-inputs">
+      <div class="sprint-input-row" style="justify-content:center;">
+        <input class="sprint-input" id="sp-in-0" type="text" inputmode="numeric" placeholder="?" autocomplete="off" onkeydown="if(event.key==='Enter')checkSprintNumber()"/>
+      </div>
+      <div id="sp-reveal-0" class="sprint-reveal-inline" style="text-align:center;font-size:1rem;min-width:100%;margin-top:4px;"></div>
+    </div>
+    <div class="controls" style="margin-top:20px;padding-top:16px;border-top:1px solid var(--aged);">
+      <button class="primary-btn" id="sp-check" onclick="checkSprintNumber()" style="background:var(--red);border:none;">Check</button>
+    </div>
+    <div style="text-align:center;margin-top:18px;">
+      <button class="secondary-btn" onclick="endSprint()" style="font-size:0.7rem;padding:9px 18px;">Tap out — see results</button>
+    </div>`;
+  const inp=document.getElementById('sp-in-0');
+  if(inp)setTimeout(()=>inp.focus(),120);
+}
+
+function checkSprintNumber(){
+  const inp=document.getElementById('sp-in-0');
+  if(!inp||!inp.value.trim())return;
+  clearTimer();
+  const ok=parseInt(inp.value.trim())===spQ.val;
+  inp.disabled=true;inp.classList.add(ok?'correct':'wrong');
+  document.getElementById('sp-check').style.display='none';
+  const rev=document.getElementById('sp-reveal-0');
+  if(rev){rev.textContent=ok?`✓ ${spQ.val} — ${toFrench(spQ.val)}`:`→ ${spQ.val} — ${toFrench(spQ.val)}`;rev.style.color=ok?'var(--green)':'var(--red)';rev.classList.add('show');}
+  showSprintResult(ok,false);
+}
+
+function renderSprintContext(){
+  const{vals,tmpl}=spQ;
+  let sent=tmpl.text;
+  vals.forEach((v,i)=>{
+    const lbl=tmpl.labels&&tmpl.labels[i]?`<span style="font-size:0.55em;color:var(--faded);margin-left:2px">${tmpl.labels[i]}</span>`:'';
+    sent=sent.replace(`{${i}}`,`<span style="border-bottom:2px solid var(--ink);padding:0 6px;">&nbsp;&nbsp;&nbsp;&nbsp;</span>${lbl}`);
+  });
+  const inputs=vals.map((v,i)=>{
+    const lbl=tmpl.labels&&tmpl.labels[i]?tmpl.labels[i]:'blank '+(i+1);
+    const next=i<vals.length-1?`document.getElementById('sp-in-${i+1}').focus()`:`checkSprintContext()`;
+    return`<div class="sprint-input-row"><span class="sprint-input-label">${lbl}</span><input class="sprint-input" id="sp-in-${i}" type="text" inputmode="numeric" placeholder="?" autocomplete="off" onkeydown="if(event.key==='Enter'){${next};}"/><span class="sprint-reveal-inline" id="sp-rev-${i}"></span></div>`;
+  }).join('');
+  document.getElementById('sprint-content').innerHTML=`
+    <div style="text-align:center;font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--faded);margin-bottom:10px;">${sprintPressure==='study'?'Listen &amp; fill the blanks':'Listen once — fill the blanks'}</div>
+    ${replayBtn("speak(spQ.audioText)")}
+    <div class="sprint-sentence">${sent}</div>
+    <div class="sprint-inputs">${inputs}</div>
+    <div class="controls" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--aged);">
+      <button class="primary-btn" id="sp-check" onclick="checkSprintContext()" style="background:var(--red);border:none;">Check</button>
+    </div>
+    <div style="text-align:center;margin-top:18px;">
+      <button class="secondary-btn" onclick="endSprint()" style="font-size:0.7rem;padding:9px 18px;">Tap out — see results</button>
+    </div>`;
+  const first=document.getElementById('sp-in-0');
+  if(first)setTimeout(()=>first.focus(),120);
+}
+
+function checkSprintContext(){
+  clearTimer();
+  const{vals}=spQ;let allOk=true;
+  vals.forEach((v,i)=>{
+    const inp=document.getElementById(`sp-in-${i}`);const rev=document.getElementById(`sp-rev-${i}`);
+    if(!inp)return;
+    const ok=parseInt(inp.value.trim())===v;
+    if(!ok)allOk=false;
+    inp.disabled=true;inp.classList.add(ok?'correct':'wrong');
+    if(rev){rev.textContent=ok?'✓':'→ '+v;rev.style.color=ok?'var(--green)':'var(--red)';rev.classList.add('show');}
+  });
+  document.getElementById('sp-check').style.display='none';
+  showSprintResult(allOk,false);
+}
+
+function showSprintResult(ok,_timeout){
+  sp.seen++;
+  if(ok){sp.correct++;sp.streak++;if(sp.streak>sp.best)sp.best=sp.streak;flashCard('correct');}
+  else{sp.streak=0;flashCard('wrong');}
+  updateSprintStats();
+  if(sprintPressure==='sprint'){setTimeout(()=>{if(sprintActive)loadSprintQ();},ok?1100:2000);}
+  else{const btn=document.getElementById('sp-check');if(btn){btn.textContent='Next →';btn.style.display='';btn.style.background='var(--ink)';btn.onclick=()=>loadSprintQ();}}
+}
+
+function endSprint(){
+  sprintActive=false;clearTimer();cancelAnimationFrame(sprintTimerRAF);
+  document.getElementById('timer-bar-wrap').style.display='none';
+  document.getElementById('timer-label').style.display='none';
+  const pct=sp.seen>0?Math.round((sp.correct/sp.seen)*100):0;
+  const msg=sp.best>=10?'Serious momentum. Numbers are becoming instinctive.':sp.best>=5?'Good streaks. Keep the pressure on — the gaps will close.':'Every session builds the reflex. Run it again and watch the streak grow.';
+  document.getElementById('sprint-content').innerHTML=`
+    <div style="text-align:center;padding:12px 0;">
+      <p style="font-family:'Playfair Display',serif;font-size:clamp(1.4rem,4vw,2rem);font-style:italic;margin-bottom:12px;">Session done.</p>
+      <div class="sprint-done-score">${sp.best}</div>
+      <div class="sprint-done-label">Best streak</div>
+      <div class="sprint-done-detail">${sp.correct} correct out of ${sp.seen} — ${pct}%<br>${msg}</div>
+      <div class="controls" style="border-top:1px solid var(--aged);padding-top:20px;">
+        <button class="primary-btn" onclick="sprintReset();loadSprintQ();" style="background:var(--red);border:none;">Run again ↗</button>
+        <button class="secondary-btn" onclick="setMode('flash',document.querySelector('.mode-btn'))">Back to drills</button>
+      </div>
+    </div>`;
+}
+
+// ── SPEECH ────────────────────────────────────────────────────────────────────
+function speak(text){
+  return new Promise(resolve=>{
+    if(!window.speechSynthesis){resolve();return;}
+    speechSynthesis.cancel();
+    const utt=new SpeechSynthesisUtterance(text);
+    utt.lang='fr-FR';utt.rate=0.85;utt.pitch=1;
+    const voices=speechSynthesis.getVoices();
+    const frVoice=voices.find(v=>v.lang.startsWith('fr'));
+    if(frVoice)utt.voice=frVoice;
+    utt.onend=resolve;utt.onerror=resolve;
+    speechSynthesis.speak(utt);
+  });
+}
+function speakNumber(){if(currentNumber)speak(toFrench(currentNumber));}
+function speakAndWait(){speakNumber();}
+
+// ── NORMAL MODES ──────────────────────────────────────────────────────────────
+let currentMode='flash',currentRange='41-69',currentNumber=0;
+let stats={seen:0,correct:0,streak:0};
+
+function flashCard(type){
+  const c=document.getElementById('main-card');
+  c.classList.remove('flash-correct','flash-wrong');void c.offsetWidth;
+  c.classList.add('flash-'+type);setTimeout(()=>c.classList.remove('flash-'+type),600);
+}
+
+function loadQuestion(){
+  currentNumber=ranges[currentRange]();const fr=toFrench(currentNumber);
+  if(currentMode==='flash'){
+    document.getElementById('number-display').textContent=currentNumber.toLocaleString();
+    document.getElementById('answer-reveal').textContent=fr;
+    document.getElementById('answer-reveal').classList.remove('show');
+    document.getElementById('reveal-btn').style.display='';
+    document.getElementById('next-btn').style.display='none';
+    document.getElementById('breakdown-btn').style.display='none';
+    document.getElementById('flash-feedback').style.display='none';
+    const bp=document.getElementById('breakdown-panel');bp.classList.remove('show');bp.style.display='none';
+  }
+  if(currentMode==='type'){
+    document.getElementById('number-display-type').textContent=currentNumber.toLocaleString();
+    document.getElementById('type-input').value='';document.getElementById('type-input').disabled=false;document.getElementById('type-input').focus();
+    document.getElementById('answer-reveal-type').textContent=fr;document.getElementById('answer-reveal-type').classList.remove('show');
+    document.getElementById('type-badge').className='result-badge hidden';
+    document.getElementById('check-btn').style.display='';document.getElementById('next-btn-type').style.display='none';document.getElementById('breakdown-btn-type').style.display='none';
+    const bp=document.getElementById('breakdown-panel-type');bp.classList.remove('show');bp.style.display='none';
+  }
+  if(currentMode==='listen'){
+    document.getElementById('listen-input').value='';document.getElementById('listen-input').disabled=false;
+    document.getElementById('answer-reveal-listen').textContent=currentNumber.toLocaleString();document.getElementById('answer-reveal-listen').classList.remove('show');
+    document.getElementById('listen-badge').className='result-badge hidden';
+    document.getElementById('check-listen-btn').style.display='';document.getElementById('next-btn-listen').style.display='none';document.getElementById('breakdown-btn-listen').style.display='none';
+    const bp=document.getElementById('breakdown-panel-listen');bp.classList.remove('show');bp.style.display='none';
+    setTimeout(speakNumber,600);
+  }
+}
+
+function revealAnswer(){
+  document.getElementById('answer-reveal').classList.add('show');
+  document.getElementById('reveal-btn').style.display='none';
+  document.getElementById('next-btn').style.display='';
+  document.getElementById('breakdown-btn').style.display='';
+  document.getElementById('flash-feedback').style.display='block';
+  stats.seen++;updateStats();setTimeout(speakNumber,300);
+}
+function markCorrect(){stats.correct++;stats.streak++;flashCard('correct');updateStats();setTimeout(nextQuestion,400);}
+function markWrong(){stats.streak=0;flashCard('wrong');updateStats();setTimeout(nextQuestion,400);}
+
+function normalise(s){return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[-\s]+/g,' ').trim();}
+
+function checkType(){
+  const val=document.getElementById('type-input').value;if(!val.trim())return;
+  const correct=toFrench(currentNumber);const isRight=normalise(val)===normalise(correct);
+  const badge=document.getElementById('type-badge');badge.className='result-badge '+(isRight?'correct':'wrong');badge.textContent=isRight?'✓ Correct!':'✗ Not quite';
+  document.getElementById('answer-reveal-type').classList.add('show');
+  document.getElementById('type-input').disabled=true;
+  document.getElementById('check-btn').style.display='none';document.getElementById('next-btn-type').style.display='';document.getElementById('breakdown-btn-type').style.display='';
+  stats.seen++;if(isRight){stats.correct++;stats.streak++;flashCard('correct');}else{stats.streak=0;flashCard('wrong');}
+  updateStats();setTimeout(speakNumber,300);
+}
+function handleTypeKey(e){if(e.key==='Enter'){if(document.getElementById('check-btn').style.display!=='none')checkType();else nextQuestion();}}
+
+function checkListen(){
+  const val=document.getElementById('listen-input').value;if(!val.trim())return;
+  const isRight=parseInt(val.trim())===currentNumber;
+  const badge=document.getElementById('listen-badge');badge.className='result-badge '+(isRight?'correct':'wrong');badge.textContent=isRight?'✓ Correct!':`✗ It was ${currentNumber.toLocaleString()}`;
+  document.getElementById('answer-reveal-listen').classList.add('show');
+  document.getElementById('listen-input').disabled=true;
+  document.getElementById('check-listen-btn').style.display='none';document.getElementById('next-btn-listen').style.display='';document.getElementById('breakdown-btn-listen').style.display='';
+  stats.seen++;if(isRight){stats.correct++;stats.streak++;flashCard('correct');}else{stats.streak=0;flashCard('wrong');}
+  updateStats();setTimeout(()=>{document.getElementById('answer-reveal-listen').textContent=`${currentNumber.toLocaleString()} — ${toFrench(currentNumber)}`;speakNumber();},300);
+}
+function handleListenKey(e){if(e.key==='Enter'){if(document.getElementById('check-listen-btn').style.display!=='none')checkListen();else nextQuestion();}}
+
+function toggleBreakdown(mode){
+  const id=mode?`breakdown-panel-${mode}`:'breakdown-panel';const panel=document.getElementById(id);
+  panel.innerHTML=getBreakdown(currentNumber);
+  if(panel.classList.contains('show')){panel.classList.remove('show');setTimeout(()=>{panel.style.display='none';},300);}
+  else{panel.style.display='block';setTimeout(()=>panel.classList.add('show'),10);}
+}
+function nextQuestion(){loadQuestion();}
+function updateStats(){
+  document.getElementById('stat-seen').textContent=stats.seen;
+  document.getElementById('stat-correct').textContent=stats.correct;
+  document.getElementById('stat-streak').textContent=stats.streak;
+  const pct=stats.seen>0?Math.min(100,(stats.correct/Math.max(stats.seen,1))*100):0;
+  document.getElementById('progress').style.width=pct+'%';
+}
+
+// ── MODE / RANGE SWITCHING ────────────────────────────────────────────────────
+function setMode(mode,btn){
+  currentMode=mode;speechSynthesis.cancel();clearTimer();sprintActive=false;
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  const isSprint=mode==='sprint';const isContext=isSprint&&sprintSub==='context';
+  document.getElementById('normal-range-group').style.display=isSprint?'none':'';
+  document.getElementById('sprint-sub-row').style.display=isSprint?'':'none';
+  document.getElementById('sprint-pres-row').style.display=isSprint?'':'none';
+  document.getElementById('focus-toggle-wrap').style.display=isContext?'':'none';
+  document.getElementById('normal-progress-bar').style.display=isSprint?'none':'';
+  document.getElementById('normal-stats').style.display=isSprint?'none':'';
+  document.getElementById('sprint-stats').style.display=isSprint?'':'none';
+  if(!isSprint){document.getElementById('timer-bar-wrap').style.display='none';document.getElementById('timer-label').style.display='none';}
+  ['flash','type','listen','sprint'].forEach(m=>{document.getElementById('mode-'+m).style.display=m===mode?'':'none';});
+  if(isSprint){sprintReset();loadSprintQ();}else loadQuestion();
+}
+
+function setRange(range){
+  currentRange=range;
+  document.querySelectorAll('.range-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('range-'+range).classList.add('active');
+  loadQuestion();
+}
+
+function setSprintSub(sub,btn){
+  sprintSub=sub;
+  document.querySelectorAll('[id^="ssub-"]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  const isContext=sub==='context';
+  document.getElementById('focus-toggle-wrap').style.display=isContext?'':'none';
+  if(!isContext){
+    // close focus panel when switching away
+    document.getElementById('focus-toggle-btn').classList.remove('open');
+    document.getElementById('focus-pills-wrap').classList.remove('open');
+  }
+  sprintReset();loadSprintQ();
+}
+
+function setSprintPressure(pres,btn){
+  sprintPressure=pres;clearTimer();
+  document.querySelectorAll('[id^="spres-"]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  sprintReset();loadSprintQ();
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+window.speechSynthesis.onvoiceschanged=()=>{};
+window.onload=()=>{buildFocusPills();setTimeout(loadQuestion,200);};
+</script>
+</body>
+</html>

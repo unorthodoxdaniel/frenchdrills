@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les Verbes — French Verb Preposition Drill</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1209;
+  --paper: #f5efe0;
+  --aged: #e8dcc8;
+  --red: #c0392b;
+  --gold: #b8860b;
+  --faded: #8a7a5e;
+  --green: #2d6a4f;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Courier Prime', monospace;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px 60px;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(180,160,120,0.15) 28px),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+header {
+  text-align: center;
+  margin-bottom: 36px;
+  border-bottom: 2px solid var(--gold);
+  padding-bottom: 24px;
+  width: 100%;
+  max-width: 700px;
+}
+
+header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-style: italic;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+header p {
+  color: var(--faded);
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+
+.noble-intro {
+  background: var(--ink);
+  color: var(--paper);
+  max-width: 700px;
+  width: 100%;
+  padding: 32px 36px;
+  margin-bottom: 32px;
+  border-radius: 2px;
+}
+
+.noble-intro h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-style: italic;
+  margin-bottom: 14px;
+  color: var(--gold);
+}
+
+.noble-intro p {
+  font-size: 0.82rem;
+  line-height: 1.8;
+  color: rgba(245,239,224,0.8);
+  margin-bottom: 8px;
+}
+
+.noble-intro p:last-child { margin-bottom: 0; }
+.noble-intro strong { color: var(--paper); }
+
+.category-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 28px;
+  max-width: 700px;
+  width: 100%;
+}
+
+.cat-btn {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  border: 1.5px solid var(--faded);
+  background: transparent;
+  color: var(--faded);
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 2px;
+}
+
+.cat-btn:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+  background: var(--aged);
+}
+
+.cat-btn.active {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+.cat-btn.mix-btn.active {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--paper);
+}
+
+.progress-bar {
+  max-width: 700px;
+  width: 100%;
+  height: 3px;
+  background: var(--aged);
+  margin-bottom: 20px;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--gold);
+  transition: width 0.4s ease;
+  border-radius: 2px;
+}
+
+.stats {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  max-width: 700px;
+  width: 100%;
+  margin-bottom: 20px;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--faded);
+}
+
+.stats strong {
+  color: var(--ink);
+  font-size: 1.1rem;
+  display: block;
+  font-family: 'Playfair Display', serif;
+}
+
+.card {
+  background: white;
+  border: 1px solid var(--aged);
+  max-width: 700px;
+  width: 100%;
+  padding: 36px 36px 32px;
+  box-shadow: 4px 4px 0 var(--aged);
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 12px; left: 12px;
+  right: -12px; bottom: -12px;
+  border: 1px solid var(--aged);
+  z-index: -1;
+}
+
+@keyframes flash-correct {
+  0% { background: white; }
+  30% { background: #d4f5e2; }
+  100% { background: white; }
+}
+
+@keyframes flash-wrong {
+  0% { background: white; }
+  30% { background: #fde8e8; }
+  100% { background: white; }
+}
+
+.card.flash-correct { animation: flash-correct 0.5s ease; }
+.card.flash-wrong { animation: flash-wrong 0.5s ease; }
+
+.item-counter {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--faded);
+  margin-bottom: 8px;
+}
+
+.noble-hint {
+  font-style: italic;
+  color: var(--faded);
+  font-size: 0.85rem;
+  line-height: 1.7;
+  border-left: 3px solid var(--gold);
+  padding-left: 16px;
+  margin-bottom: 28px;
+}
+
+.say-aloud {
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.prompt-en {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.1rem, 3vw, 1.35rem);
+  font-style: italic;
+  color: var(--ink);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.verb-tag {
+  display: inline-block;
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 4px 12px;
+  margin-bottom: 20px;
+}
+
+.answer-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.answer-area {
+  flex: 1;
+  min-height: 52px;
+  border: none;
+  border-bottom: 2px solid var(--aged);
+  padding: 0.6rem 0.25rem;
+  font-family: 'Courier Prime', monospace;
+  font-size: 1rem;
+  color: var(--ink);
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: border-color 0.2s;
+}
+
+.answer-area:hover { border-color: var(--ink); }
+.answer-area.revealed { cursor: default; border-color: var(--gold); }
+
+.answer-hint {
+  font-size: 0.82rem;
+  color: var(--aged);
+  font-style: italic;
+}
+
+.answer-reveal {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.1rem, 3vw, 1.4rem);
+  font-style: italic;
+  color: var(--red);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.answer-reveal.show { opacity: 1; }
+
+.audio-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 10px 18px;
+  border: 1.5px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.audio-btn:hover { background: var(--ink); color: var(--paper); }
+.audio-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.audio-btn.speaking { background: var(--red); color: white; border-color: var(--red); }
+.audio-btn svg { width: 14px; height: 14px; fill: currentColor; }
+
+.breakdown-panel {
+  background: var(--aged);
+  padding: 18px 20px;
+  margin-top: 20px;
+  font-size: 0.85rem;
+  line-height: 1.9;
+  display: none;
+}
+
+.breakdown-panel.show { display: block; }
+
+.breakdown-row {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  margin-bottom: 4px;
+}
+
+.bd-fr {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  color: var(--red);
+  min-width: 160px;
+  font-size: 0.95rem;
+}
+
+.bd-en { color: var(--faded); font-size: 0.82rem; }
+
+.tip-panel {
+  margin-top: 16px;
+  padding: 14px 18px;
+  background: #fdf8ef;
+  border-left: 3px solid var(--gold);
+  font-size: 0.82rem;
+  color: var(--faded);
+  line-height: 1.7;
+  font-style: italic;
+  display: none;
+}
+
+.tip-panel.show { display: block; }
+.tip-panel strong { color: var(--ink); font-style: normal; }
+
+.contrast-panel {
+  margin-top: 14px;
+  padding: 14px 18px;
+  background: white;
+  border: 1px solid var(--gold);
+  font-size: 0.82rem;
+  line-height: 1.9;
+  display: none;
+}
+
+.contrast-panel.show { display: block; }
+.contrast-panel strong { color: var(--ink); }
+.contrast-fr { font-family: 'Playfair Display', serif; font-style: italic; color: var(--red); }
+
+.controls {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--aged);
+}
+
+.primary-btn {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 13px 28px;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 2px;
+  flex: 1;
+  min-width: 140px;
+}
+
+.primary-btn:hover { background: var(--red); }
+
+.secondary-btn {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 13px 22px;
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 2px;
+}
+
+.secondary-btn:hover { background: var(--aged); }
+
+.ref-section {
+  max-width: 700px;
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.ref-header {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--aged);
+}
+
+.ref-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 6px;
+}
+
+.ref-chip {
+  background: white;
+  border: 1px solid var(--aged);
+  padding: 7px 10px;
+  font-size: 0.78rem;
+}
+
+.ref-fr {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  color: var(--red);
+  display: block;
+  margin-bottom: 1px;
+}
+
+.ref-en { color: var(--faded); font-size: 0.72rem; }
+
+.done-section {
+  max-width: 700px;
+  width: 100%;
+}
+
+.done-card {
+  background: white;
+  border: 1px solid var(--aged);
+  padding: 48px 36px;
+  box-shadow: 4px 4px 0 var(--aged);
+  text-align: center;
+  position: relative;
+}
+
+.done-card::before {
+  content: '';
+  position: absolute;
+  top: 12px; left: 12px;
+  right: -12px; bottom: -12px;
+  border: 1px solid var(--aged);
+  z-index: -1;
+}
+
+.done-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  font-style: italic;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+
+.done-score {
+  font-size: 0.82rem;
+  color: var(--faded);
+  line-height: 1.9;
+  margin-bottom: 28px;
+  letter-spacing: 0.04em;
+}
+
+.done-score strong {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  color: var(--ink);
+  font-style: italic;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.done-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+footer {
+  max-width: 700px;
+  width: 100%;
+  text-align: center;
+  margin-top: 48px;
+  color: var(--faded);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  line-height: 1.8;
+  border-top: 1px solid var(--aged);
+  padding-top: 20px;
+}
+
+@media (max-width: 480px) {
+  body { padding: 24px 14px 48px; }
+  .card { padding: 24px 18px 20px; }
+  .noble-intro { padding: 24px 20px; }
+  .controls { gap: 8px; }
+  .primary-btn, .secondary-btn { padding: 11px 16px; font-size: 0.75rem; }
+  .ref-grid { grid-template-columns: 1fr 1fr; }
+  .stats { gap: 14px; font-size: 0.72rem; }
+}
+
+.back-home{display:inline-flex;align-items:center;gap:7px;font-family:"Courier Prime",monospace;font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--faded);text-decoration:none;padding:8px 0;border-bottom:1px solid transparent;transition:color 0.2s,border-color 0.2s;margin-bottom:20px;align-self:flex-start;}
+.back-home:hover{color:var(--ink);border-bottom-color:var(--ink);}
+.back-home svg{width:12px;height:12px;fill:currentColor;}
+</style>
+</head>
+<body>
+<a href="f-index.html" class="back-home"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Home</a>
+
+<header>
+  <h1>Les Verbes</h1>
+  <p>French Verb Prepositions — Noble Method</p>
+</header>
+
+<div class="noble-intro">
+  <h2>How this works...</h2>
+  <p>French verbs are <strong>opinionated about prepositions</strong>. Some demand <strong>à</strong>, some demand <strong>de</strong>, some want nothing at all — and a handful change meaning entirely depending on which you use.</p>
+  <p>Each sentence shows the verb in real context. After you reveal, you'll see the breakdown and a note explaining the logic. <strong>Say everything out loud</strong> — your mouth needs to learn this, not just your brain.</p>
+  <p>Pick a category to focus, or choose <strong>Mix</strong> to see verbs from all categories in random order — the verb and its preposition stay hidden until you reveal.</p>
+</div>
+
+<div class="category-group" id="cat-group"></div>
+
+<div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+
+<div class="stats">
+  <div><strong id="stat-seen">0</strong>Seen</div>
+  <div><strong id="stat-correct">0</strong>Correct</div>
+  <div><strong id="stat-streak">0</strong>Streak</div>
+</div>
+
+<div id="ref-area"></div>
+<div id="card-area"></div>
+<div id="done-area"></div>
+
+<footer>
+  Uses your browser's built-in speech synthesis (French voice).<br>
+  Verbs recycle automatically when you miss them — keep going until they stick.
+</footer>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+
+const STAGES = [
+  {
+    id: 'a',
+    label: 'À verbs',
+    title: 'Verbs with \u00e0',
+    sub: 'The verb reaches forward with \u00e0 to grab its object.',
+    note: 'Think of \u00e0 as a bridge the verb builds toward what it wants. Many of these can replace \u00e0\u00a0+\u00a0thing with y\u00a0: je pense \u00e0 \u00e7a \u2192 j\u2019y pense.',
+    ref: [
+      ['penser \u00e0','think about'],['r\u00e9ussir \u00e0','succeed in'],['commencer \u00e0','start doing'],
+      ['apprendre \u00e0','learn to'],['inviter \u00e0','invite to'],['aider \u00e0','help to'],
+      ["s'int\u00e9resser \u00e0",'be interested in'],['r\u00e9fl\u00e9chir \u00e0','think/reflect on'],
+      ['tenir \u00e0','care about / insist on'],['renoncer \u00e0','give up'],["s'habituer \u00e0",'get used to'],
+      ['se mettre \u00e0','start doing'],['faire attention \u00e0','pay attention to'],["s'opposer \u00e0",'oppose'],
+      ['se pr\u00e9parer \u00e0','prepare for'],['ob\u00e9ir \u00e0','obey'],['se consacrer \u00e0','dedicate oneself to'],
+      ['assister \u00e0','attend'],['r\u00e9pondre \u00e0','answer / respond to'],["s'adresser \u00e0",'speak to / address'],
+      ['contribuer \u00e0','contribute to'],['r\u00e9agir \u00e0','react to'],["s'attaquer \u00e0",'tackle / take on'],
+      ['avoir recours \u00e0','resort to'],['avoir affaire \u00e0','deal with'],["s'adonner \u00e0",'devote oneself to'],
+      ["s'attacher \u00e0",'become attached to'],['se fier \u00e0','trust / rely on'],['faire r\u00e9f\u00e9rence \u00e0','refer to']
+    ],
+    items: [
+      { verb:'penser \u00e0', en:'I often think about my trip.', fr:'Je pense souvent \u00e0 mon voyage.', parts:[['Je pense','I think'],['souvent','often'],['\u00e0 mon voyage','about my trip']], tip:'penser \u00e0 = think about something/someone. \u2192 y replacement: J\u2019y pense souvent. Note: penser de = have an opinion about (see stage 4).' },
+      { verb:'r\u00e9ussir \u00e0', en:'She finally succeeded in passing her exam.', fr:'Elle a finalement r\u00e9ussi \u00e0 passer son examen.', parts:[['Elle a r\u00e9ussi','she succeeded'],['finalement','finally'],['\u00e0 passer son examen','in passing her exam']], tip:'r\u00e9ussir \u00e0 + infinitive = succeed in doing. The \u00e0 is essential \u2014 r\u00e9ussir alone means succeed in a general sense.' },
+      { verb:'commencer \u00e0', en:"It's starting to rain.", fr:'\u00c7a commence \u00e0 pleuvoir.', parts:[['Commence','is starting'],['\u00e0 pleuvoir','to rain']], tip:'commencer \u00e0 + infinitive = start doing. Can also use commencer par (start by doing), which changes the meaning slightly.' },
+      { verb:"s'int\u00e9resser \u00e0", en:"He's interested in French cinema.", fr:'Il s\u2019int\u00e9resse au cin\u00e9ma fran\u00e7ais.', parts:[['Il s\u2019int\u00e9resse','he is interested'],['au cin\u00e9ma fran\u00e7ais','in French cinema']], tip:'\u00e0 + le = au. So s\u2019int\u00e9resser \u00e0 + le cin\u00e9ma \u2192 au cin\u00e9ma. \u2192 y replacement: Il s\u2019y int\u00e9resse.' },
+      { verb:'tenir \u00e0', en:'She really cares about this project.', fr:'Elle tient beaucoup \u00e0 ce projet.', parts:[['Elle tient','she cares'],['beaucoup','a lot'],['\u00e0 ce projet','about this project']], tip:'tenir \u00e0 = care about / insist on. It conveys emotional importance \u2014 stronger than just \u2018like\u2019.' },
+      { verb:'se mettre \u00e0', en:'He suddenly started crying.', fr:'Il s\u2019est mis \u00e0 pleurer.', parts:[['Il s\u2019est mis','he started'],['\u00e0 pleurer','to cry']], tip:'se mettre \u00e0 + infinitive = start doing (often suddenly). A very natural alternative to commencer \u00e0.' },
+      { verb:'renoncer \u00e0', en:'I gave up smoking two years ago.', fr:"J'ai renonc\u00e9 \u00e0 fumer il y a deux ans.", parts:[["J'ai renonc\u00e9","I gave up"],['\u00e0 fumer','smoking'],['il y a deux ans','two years ago']], tip:'renoncer \u00e0 = give up / renounce. Takes \u00e0 + infinitive or \u00e0 + noun.' },
+      { verb:"s'habituer \u00e0", en:"You'll get used to the noise.", fr:'Tu t\u2019habitueras au bruit.', parts:[['Tu t\u2019habitueras',"you'll get used"],['au bruit','to the noise']], tip:"s'habituer \u00e0 + noun or infinitive. \u00e0 + le = au. \u2192 y replacement: Tu t\u2019y habitueras." },
+      { verb:'r\u00e9fl\u00e9chir \u00e0', en:'I need to think about that.', fr:"Il faut que j'y r\u00e9fl\u00e9chisse.", parts:[['Il faut que','it is necessary that'],["j'y r\u00e9fl\u00e9chisse","I think about it"]], tip:'r\u00e9fl\u00e9chir \u00e0 = think carefully about. The y replacement is built into this sentence. The subjunctive r\u00e9fl\u00e9chisse is triggered by il faut que.' },
+      { verb:'faire attention \u00e0', en:'Pay attention to the details.', fr:'Fais attention aux d\u00e9tails.', parts:[['Fais attention','pay attention'],['aux d\u00e9tails','to the details']], tip:'\u00e0 + les = aux. faire attention \u00e0 is a fixed expression. \u2192 y replacement: Fais-y attention.' },
+      { verb:'se pr\u00e9parer \u00e0', en:"They're preparing for the competition.", fr:'Ils se pr\u00e9parent \u00e0 la comp\u00e9tition.', parts:[['Ils se pr\u00e9parent','they are preparing'],['\u00e0 la comp\u00e9tition','for the competition']], tip:'se pr\u00e9parer \u00e0 + noun or infinitive. The se makes this reflexive \u2014 you prepare yourself.' },
+      { verb:'ob\u00e9ir \u00e0', en:'Children must obey their parents.', fr:'Les enfants doivent ob\u00e9ir \u00e0 leurs parents.', parts:[['Les enfants doivent','children must'],['ob\u00e9ir','obey'],['\u00e0 leurs parents','their parents']], tip:'ob\u00e9ir \u00e0 is a common trap \u2014 English says \u2018obey someone\u2019 (no preposition) but French always needs \u00e0. \u2192 replacement: Les enfants doivent leur ob\u00e9ir.' },
+      { verb:'se consacrer \u00e0', en:'She dedicated her life to music.', fr:'Elle s\u2019est consacr\u00e9e \u00e0 la musique.', parts:[['Elle s\u2019est consacr\u00e9e','she dedicated herself'],['\u00e0 la musique','to music']], tip:'se consacrer \u00e0 = dedicate oneself to. Past participle agrees with elle (feminine \u2192 consacr\u00e9e).' },
+      { verb:"s'opposer \u00e0", en:'Many people oppose this law.', fr:'Beaucoup de gens s\u2019opposent \u00e0 cette loi.', parts:[['Beaucoup de gens','many people'],["s'opposent",'oppose'],['\u00e0 cette loi','this law']], tip:"s'opposer \u00e0 = to oppose / resist. Always takes \u00e0. \u2192 y replacement: Ils s\u2019y opposent." },
+      { verb:'assister \u00e0', en:'Did you attend the meeting?', fr:'Tu as assist\u00e9 \u00e0 la r\u00e9union\u00a0?', parts:[['Tu as assist\u00e9','did you attend'],['\u00e0 la r\u00e9union','the meeting']], tip:'assister \u00e0 = attend / be present at. A false friend \u2014 assist in English means help, but assister \u00e0 in French means attend. Always needs \u00e0.' },
+      { verb:'apprendre \u00e0', en:"I'm learning to drive.", fr:"J'apprends \u00e0 conduire.", parts:[["J'apprends","I'm learning"],['\u00e0 conduire','to drive']], tip:"apprendre \u00e0 + infinitive = learn to do. Contrast with apprendre quelque chose (direct object, no preposition) = learn something: J'apprends le fran\u00e7ais." },
+      { verb:'inviter \u00e0', en:'She invited us to dinner.', fr:'Elle nous a invit\u00e9s \u00e0 d\u00eener.', parts:[['Elle nous a invit\u00e9s','she invited us'],['\u00e0 d\u00eener','to dinner']], tip:'inviter \u00e0 + infinitive or noun = invite to. Past participle invit\u00e9s agrees with nous (masc. plural).' },
+      { verb:'aider \u00e0', en:'Can you help me move this table?', fr:'Tu peux m\u2019aider \u00e0 d\u00e9placer cette table\u00a0?', parts:[['Tu peux','can you'],['m\u2019aider','help me'],['\u00e0 d\u00e9placer cette table','to move this table']], tip:'aider \u00e0 + infinitive = help to do. Always \u00e0, never de. The indirect object (m\u2019) tells you who is being helped.' },
+      { verb:'r\u00e9pondre \u00e0', en:'She answered all my questions.', fr:'Elle a r\u00e9pondu \u00e0 toutes mes questions.', parts:[['Elle a r\u00e9pondu','she answered'],['\u00e0 toutes mes questions','all my questions']], tip:'r\u00e9pondre \u00e0 = answer / respond to. English says answer with no preposition, French always needs \u00e0. \u2192 y replacement: Elle y a r\u00e9pondu.' },
+      { verb:"s'adresser \u00e0", en:'You should speak to the manager.', fr:'Tu devrais t\u2019adresser au directeur.', parts:[['Tu devrais','you should'],["t'adresser",'speak / address yourself'],['au directeur','to the manager']], tip:"s'adresser \u00e0 = speak to / address someone. \u00e0 + le = au. More formal than parler \u00e0 \u2014 implies going to the right person for a purpose." },
+      { verb:'contribuer \u00e0', en:'Everyone contributed to the project.', fr:'Tout le monde a contribu\u00e9 au projet.', parts:[['Tout le monde a contribu\u00e9','everyone contributed'],['au projet','to the project']], tip:'contribuer \u00e0 + noun = contribute to. \u00e0 + le = au. \u2192 y replacement: Tout le monde y a contribu\u00e9.' },
+      { verb:'r\u00e9agir \u00e0', en:'How did he react to the news?', fr:'Comment a-t-il r\u00e9agi \u00e0 la nouvelle\u00a0?', parts:[['Comment a-t-il r\u00e9agi','how did he react'],['\u00e0 la nouvelle','to the news']], tip:'r\u00e9agir \u00e0 = react to. Always takes \u00e0. \u2192 y replacement: Comment y a-t-il r\u00e9agi?' },
+      { verb:"s'attaquer \u00e0", en:"It's time to tackle the problem.", fr:"Il est temps de s'attaquer au probl\u00e8me.", parts:[["Il est temps de","it's time to"],["s'attaquer",'tackle'],['au probl\u00e8me','the problem']], tip:"s'attaquer \u00e0 = tackle / take on something difficult. \u00e0 + le = au. More energetic than s'occuper de \u2014 implies real effort." },
+      { verb:'avoir recours \u00e0', en:'We had to resort to a lawyer.', fr:'Nous avons d\u00fb avoir recours \u00e0 un avocat.', parts:[['Nous avons d\u00fb','we had to'],['avoir recours','resort'],['a un avocat','to a lawyer']], tip:'avoir recours \u00e0 = resort to / use as a last option. A fixed expression \u2014 recours never changes. \u2192 y replacement: Nous avons d\u00fb y avoir recours.' },
+      { verb:'avoir affaire \u00e0', en:"You're dealing with a professional.", fr:'Tu as affaire \u00e0 un professionnel.', parts:[['Tu as affaire','you are dealing'],['\u00e0 un professionnel','with a professional']], tip:"avoir affaire \u00e0 = deal with. A fixed expression. Don't confuse with avoir affaires (business matters)." },
+      { verb:"s'adonner \u00e0", en:'In retirement he devoted himself to painting.', fr:'En retraite, il s\u2019est adonn\u00e9 \u00e0 la peinture.', parts:[['En retraite','in retirement'],["il s'est adonn\u00e9",'he devoted himself'],['\u00e0 la peinture','to painting']], tip:"s'adonner \u00e0 = devote oneself to / indulge in. Implies deep, sustained engagement. Slightly literary but common in writing and formal speech." },
+      { verb:"s'attacher \u00e0", en:"She's become very attached to this neighbourhood.", fr:'Elle s\u2019est beaucoup attach\u00e9e \u00e0 ce quartier.', parts:[["Elle s'est attach\u00e9e",'she has become attached'],['beaucoup','very'],['a ce quartier','to this neighbourhood']], tip:"s'attacher \u00e0 + noun = become attached to. Also s'attacher \u00e0 + infinitive = strive to / make a point of: Je m'attache \u00e0 \u00eatre pr\u00e9cis = I make a point of being precise." },
+      { verb:'se fier \u00e0', en:"Don't trust everything you read online.", fr:'Ne te fie pas \u00e0 tout ce que tu lis en ligne.', parts:[['Ne te fie pas','don\u2019t trust'],['\u00e0 tout ce que tu lis','everything you read'],['en ligne','online']], tip:'se fier \u00e0 = trust / rely on. Always takes \u00e0. \u2192 y replacement: Ne t\u2019y fie pas.' },
+      { verb:'faire r\u00e9f\u00e9rence \u00e0', en:'She was referring to an earlier conversation.', fr:'Elle faisait r\u00e9f\u00e9rence \u00e0 une conversation ant\u00e9rieure.', parts:[['Elle faisait r\u00e9f\u00e9rence','she was referring'],['\u00e0 une conversation ant\u00e9rieure','to an earlier conversation']], tip:'faire r\u00e9f\u00e9rence \u00e0 = refer to. A fixed expression. \u2192 y replacement: Elle y faisait r\u00e9f\u00e9rence.' },
+      { verb:'se pr\u00e9parer \u00e0', en:"He's been preparing to give a speech for weeks.", fr:'Il se pr\u00e9pare \u00e0 faire un discours depuis des semaines.', parts:[['Il se pr\u00e9pare','he is preparing'],['\u00e0 faire un discours','to give a speech'],['depuis des semaines','for weeks']], tip:'se pr\u00e9parer \u00e0 + infinitive = prepare to do. depuis + present = has been doing for (action still ongoing).' },
+      { verb:'renoncer \u00e0', en:"She gave up her career to travel the world.", fr:'Elle a renonc\u00e9 \u00e0 sa carri\u00e8re pour voyager dans le monde.', parts:[['Elle a renonc\u00e9','she gave up'],['\u00e0 sa carri\u00e8re','her career'],['pour voyager dans le monde','to travel the world']], tip:'renoncer \u00e0 + noun = give up something. Notice how the idea of sacrifice is built into the verb \u2014 no need for extra words.' },
+      { verb:'tenir \u00e0', en:"I insist on doing it myself.", fr:'Je tiens \u00e0 le faire moi-m\u00eame.', parts:[['Je tiens \u00e0','I insist on'],['le faire','doing it'],['moi-m\u00eame','myself']], tip:'tenir \u00e0 + infinitive = insist on doing. moi-m\u00eame = myself (stressed pronoun + m\u00eame). The le refers to the action already understood from context.' },
+      { verb:'s\u2019opposer \u00e0', en:'The union opposed the new measures.', fr:'Le syndicat s\u2019est oppos\u00e9 aux nouvelles mesures.', parts:[['Le syndicat s\u2019est oppos\u00e9','the union opposed'],['aux nouvelles mesures','the new measures']], tip:'\u00e0 + les = aux. The past tense uses \u00eatre as the auxiliary for reflexive verbs \u2014 s\u2019est oppos\u00e9, not a oppos\u00e9.' },
+      { verb:'r\u00e9pondre \u00e0', en:"You haven't answered my question.", fr:'Tu n\u2019as pas r\u00e9pondu \u00e0 ma question.', parts:[['Tu n\u2019as pas r\u00e9pondu','you have not answered'],['\u00e0 ma question','my question']], tip:'r\u00e9pondre \u00e0 = answer / respond to. English says answer with no preposition; French always needs \u00e0. \u2192 y replacement: Tu n\u2019y as pas r\u00e9pondu.' },
+      { verb:'s\u2019adresser \u00e0', en:'For complaints, please contact the customer service team.', fr:'Pour les r\u00e9clamations, veuillez vous adresser au service client.', parts:[['Pour les r\u00e9clamations','for complaints'],['veuillez vous adresser','please address yourself'],['au service client','to the customer service']], tip:'s\u2019adresser \u00e0 = go to / contact / address. \u00e0 + le = au. Veuillez + infinitive is the formal polite imperative.' },
+      { verb:'r\u00e9agir \u00e0', en:'She reacted very calmly to the criticism.', fr:'Elle a r\u00e9agi tr\u00e8s calmement \u00e0 la critique.', parts:[['Elle a r\u00e9agi','she reacted'],['tr\u00e8s calmement','very calmly'],['\u00e0 la critique','to the criticism']], tip:'r\u00e9agir \u00e0 + noun = react to. Adverbs like calmement come between the auxiliary and the past participle in compound tenses.' },
+      { verb:'contribuer \u00e0', en:'Each member contributed to the group\u2019s success.', fr:'Chaque membre a contribu\u00e9 au succ\u00e8s du groupe.', parts:[['Chaque membre a contribu\u00e9','each member contributed'],['au succ\u00e8s du groupe','to the group\u2019s success']], tip:'contribuer \u00e0 + noun. \u00e0 + le = au. du = de + le (succ\u00e8s du groupe = success of the group). \u2192 y replacement: Chaque membre y a contribu\u00e9.' }
+    ]
+  },
+  {
+    id: 'de',
+    label: 'De verbs',
+    title: 'Verbs with de',
+    sub: 'The verb looks back with de at where it came from.',
+    note: 'De often signals the verb is about something you are distancing from, reporting on, or have feelings about. Many replace de\u00a0+\u00a0thing with en\u00a0: j\u2019ai besoin de \u00e7a \u2192 j\u2019en ai besoin.',
+    ref: [
+      ['arr\u00eater de','stop doing'],['d\u00e9cider de','decide to'],['essayer de','try to'],
+      ['oublier de','forget to'],['refuser de','refuse to'],['finir de','finish doing'],
+      ['se souvenir de','remember'],['avoir peur de','be afraid of'],['avoir besoin de','need'],
+      ['avoir envie de','feel like / want'],["s'occuper de",'take care of'],['parler de','talk about'],
+      ['se plaindre de','complain about'],['profiter de','take advantage of'],['se m\u00e9fier de','be wary of'],
+      ['se d\u00e9barrasser de','get rid of'],['refuser de','refuse to'],['se moquer de','make fun of'],
+      ['douter de','doubt'],['se servir de','make use of'],['avoir honte de','be ashamed of'],
+      ['se passer de','do without'],["s'inqui\u00e9ter de",'worry about'],['d\u00e9pendre de','depend on'],
+      ['disposer de','have at disposal'],['\u00eatre content de','be happy about'],['\u00eatre fier de','be proud of'],
+      ['\u00eatre s\u00fbr de','be sure of'],['se d\u00e9fendre de','defend from'],['se r\u00e9jouir de','rejoice about'],
+      ["avoir l'intention de",'intend to'],["avoir l'occasion de",'have the opportunity to'],
+      ['avoir le temps de','have time to'],["s'abstenir de",'refrain from'],
+      ['\u00eatre capable de','be capable of'],['\u00eatre convaincu de','be convinced of'],
+      ['\u00eatre responsable de','be responsible for'],['tenir compte de','take into account']
+    ],
+    items: [
+      { verb:'arr\u00eater de', en:'Stop complaining!', fr:'Arr\u00eate de te plaindre\u00a0!', parts:[['Arr\u00eate','stop'],['de te plaindre','complaining']], tip:"arr\u00eater de + infinitive = stop doing. s'arr\u00eater de (with reflexive se) also exists but arr\u00eater de is far more common in speech." },
+      { verb:'d\u00e9cider de', en:'We decided to leave early.', fr:'Nous avons d\u00e9cid\u00e9 de partir t\u00f4t.', parts:[['Nous avons d\u00e9cid\u00e9','we decided'],['de partir','to leave'],['t\u00f4t','early']], tip:'d\u00e9cider de + infinitive = decide to do. Compare: se d\u00e9cider \u00e0 + infinitive = make up one\u2019s mind to do (more effort implied \u2014 see stage 4).' },
+      { verb:'essayer de', en:'Try to stay calm.', fr:'Essaie de rester calme.', parts:[['Essaie','try'],['de rester','to stay'],['calme','calm']], tip:'essayer de + infinitive = try to do. Always de, never \u00e0.' },
+      { verb:'oublier de', en:'I forgot to call her back.', fr:"J'ai oubli\u00e9 de la rappeler.", parts:[["J'ai oubli\u00e9","I forgot"],['de la rappeler','to call her back']], tip:'oublier de + infinitive = forget to do. The direct object pronoun (la) goes before the infinitive it belongs to.' },
+      { verb:'avoir peur de', en:"She's afraid of flying.", fr:"Elle a peur de prendre l'avion.", parts:[['Elle a peur','she is afraid'],["de prendre l'avion",'of flying']], tip:"avoir peur de + noun or infinitive = be afraid of. \u2192 en replacement (with a noun): Elle en a peur." },
+      { verb:'avoir besoin de', en:'I need more time.', fr:"J'ai besoin de plus de temps.", parts:[["J'ai besoin","I need"],['de plus de temps','more time']], tip:'avoir besoin de + noun = need something. \u2192 en replacement: J\u2019en ai besoin. Note the double de \u2014 the first belongs to avoir besoin, the second to plus\u00a0de (more of).' },
+      { verb:'avoir envie de', en:'Do you feel like going out tonight?', fr:'Tu as envie de sortir ce soir\u00a0?', parts:[['Tu as envie','do you feel like'],['de sortir','going out'],['ce soir','tonight']], tip:'avoir envie de + infinitive or noun = feel like / want. Very colloquial \u2014 often more natural than vouloir in spoken French.' },
+      { verb:'se souvenir de', en:'Do you remember that evening?', fr:'Tu te souviens de cette soir\u00e9e\u00a0?', parts:[['Tu te souviens','do you remember'],['de cette soir\u00e9e','that evening']], tip:'se souvenir de + noun = remember something. \u2192 en replacement: Tu t\u2019en souviens? Note: se rappeler takes a direct object (no de): Je me rappelle cette soir\u00e9e.' },
+      { verb:"s'occuper de", en:"I'll take care of it.", fr:"Je m'en occupe.", parts:[["Je m'en occupe","I'll take care of it"]], tip:"s'occuper de + noun = take care of / deal with. This sentence shows en replacement in action \u2014 de \u00e7a \u2192 en." },
+      { verb:'parler de', en:'We need to talk about this.', fr:"Il faut qu'on parle de \u00e7a.", parts:[['Il faut','it is necessary'],["qu'on parle",'that we talk'],['de \u00e7a','about this']], tip:'parler de = talk about. \u2192 en replacement: Il faut qu\u2019on en parle. Note: parler \u00e0 = speak to someone (see stage 4 for the contrast).' },
+      { verb:'profiter de', en:'Take advantage of the good weather.', fr:'Profite du beau temps.', parts:[['Profite','take advantage'],['du beau temps','of the good weather']], tip:'de + le = du. profiter de = enjoy / make the most of. \u2192 en replacement: Profites-en! (very common expression).' },
+      { verb:'se plaindre de', en:"He's always complaining about his boss.", fr:'Il se plaint toujours de son patron.', parts:[['Il se plaint','he complains'],['toujours','always'],['de son patron','about his boss']], tip:'se plaindre de + noun = complain about. \u2192 en replacement: Il s\u2019en plaint toujours.' },
+      { verb:'se m\u00e9fier de', en:'Be careful with that person.', fr:'M\u00e9fie-toi de cette personne.', parts:[['M\u00e9fie-toi','be wary'],['de cette personne','of that person']], tip:'se m\u00e9fier de = be wary of / mistrust. The imperative m\u00e9fie-toi adds the reflexive pronoun toi after the verb in commands.' },
+      { verb:'finir de', en:'Have you finished eating?', fr:'Tu as fini de manger\u00a0?', parts:[['Tu as fini','have you finished'],['de manger','eating']], tip:'finir de + infinitive = finish doing. Contrast with finir par + infinitive = end up doing: Il a fini par accepter = he ended up accepting.' },
+      { verb:'se d\u00e9barrasser de', en:'I need to get rid of all this stuff.', fr:"J'ai besoin de me d\u00e9barrasser de tout \u00e7a.", parts:[["J'ai besoin de","I need to"],['me d\u00e9barrasser','get rid'],['de tout \u00e7a','of all this stuff']], tip:"se d\u00e9barrasser de + noun = get rid of. \u2192 en replacement: J'ai besoin de m'en d\u00e9barrasser. Two de in the sentence \u2014 the first from avoir besoin, the second from se d\u00e9barrasser." },
+      { verb:'refuser de', en:'He refused to answer.', fr:'Il a refus\u00e9 de r\u00e9pondre.', parts:[['Il a refus\u00e9','he refused'],['de r\u00e9pondre','to answer']], tip:'refuser de + infinitive = refuse to do. Always de. A very common structure in both spoken and written French.' },
+      { verb:'se moquer de', en:"Don't make fun of him.", fr:'Ne te moque pas de lui.', parts:[['Ne te moque pas','don\u2019t make fun'],['de lui','of him']], tip:'se moquer de = make fun of / mock. \u2192 en replacement (with a thing): Ne t\u2019en moque pas. With a person, use the stressed pronoun: de lui, d\u2019elle, d\u2019eux.' },
+      { verb:'douter de', en:'I doubt the sincerity of his excuse.', fr:'Je doute de la sinc\u00e9rit\u00e9 de son excuse.', parts:[['Je doute','I doubt'],['de la sinc\u00e9rit\u00e9','the sincerity'],['de son excuse','of his excuse']], tip:'douter de = doubt. \u2192 en replacement: J\u2019en doute. Note: se douter de = suspect (a very different meaning): Je me doutais de quelque chose = I suspected something.' },
+      { verb:'se servir de', en:'Do you know how to use this tool?', fr:'Tu sais te servir de cet outil\u00a0?', parts:[['Tu sais','do you know how'],['te servir','to use (lit. serve yourself)'],['de cet outil','with this tool']], tip:'se servir de = use / make use of. \u2192 en replacement: Tu sais t\u2019en servir? More idiomatic than utiliser in many contexts.' },
+      { verb:'avoir honte de', en:"She's ashamed of what she said.", fr:"Elle a honte de ce qu'elle a dit.", parts:[['Elle a honte','she is ashamed'],["de ce qu'elle a dit",'of what she said']], tip:"avoir honte de + noun or infinitive = be ashamed of. \u2192 en replacement (with a noun): Elle en a honte." },
+      { verb:'se passer de', en:'I can do without my phone for a week.', fr:'Je peux me passer de mon t\u00e9l\u00e9phone pendant une semaine.', parts:[['Je peux','I can'],['me passer','do without'],['de mon t\u00e9l\u00e9phone','my phone'],['pendant une semaine','for a week']], tip:'se passer de = do without / manage without. \u2192 en replacement: Je peux m\u2019en passer. Note: se passer (without de) = happen: Qu\u2019est-ce qui s\u2019est pass\u00e9? = What happened?' },
+      { verb:"s'inqui\u00e9ter de", en:"Don't worry about the details.", fr:'Ne t\u2019inqui\u00e8te pas des d\u00e9tails.', parts:[['Ne t\u2019inqui\u00e8te pas','don\u2019t worry'],['des d\u00e9tails','about the details']], tip:"s'inqui\u00e9ter de = worry about. de + les = des. \u2192 en replacement: Ne t'en inqui\u00e8te pas." },
+      { verb:'se rappeler de', en:'Do you remember that trip?', fr:'Tu te rappelles de ce voyage\u00a0?', parts:[['Tu te rappelles','do you remember'],['de ce voyage','that trip']], tip:'se rappeler de = remember. In careful French, se rappeler takes a direct object (no de): Je me rappelle ce voyage. But se rappeler de is very common in spoken French. Both are acceptable.' },
+      { verb:'d\u00e9pendre de', en:'It depends on the weather.', fr:'Cela d\u00e9pend du temps qu\u2019il fait.', parts:[['Cela d\u00e9pend','it depends'],['du temps qu\u2019il fait','on the weather']], tip:'d\u00e9pendre de = depend on. de + le = du. \u2192 en replacement: \u00c7a en d\u00e9pend (it depends on it \u2014 very common standalone phrase).' },
+      { verb:'disposer de', en:'We have two hours at our disposal.', fr:'Nous disposons de deux heures.', parts:[['Nous disposons','we have at our disposal'],['de deux heures','two hours']], tip:'disposer de = have at one\u2019s disposal / have available. More formal than avoir. \u2192 en replacement: Nous en disposons.' },
+      { verb:'\u00eatre content de', en:"She's happy with the result.", fr:'Elle est contente du r\u00e9sultat.', parts:[['Elle est contente','she is happy'],['du r\u00e9sultat','with the result']], tip:'\u00eatre content(e) de + noun or infinitive = be happy with / about. de + le = du. Adjective agrees with the subject: contente (feminine).' },
+      { verb:'\u00eatre fier de', en:"He's proud of his children.", fr:'Il est fier de ses enfants.', parts:[['Il est fier','he is proud'],['de ses enfants','of his children']], tip:'\u00eatre fier / fi\u00e8re de = be proud of. Adjective agrees: fi\u00e8re (feminine). \u2192 en replacement: Il en est fier.' },
+      { verb:'\u00eatre s\u00fbr de', en:"Are you sure of what you're saying?", fr:'Tu es s\u00fbr de ce que tu dis\u00a0?', parts:[['Tu es s\u00fbr','are you sure'],['de ce que tu dis','of what you are saying']], tip:'\u00eatre s\u00fbr(e) de = be sure of. ce que = what (the thing that). \u2192 en replacement (with a noun): Tu en es s\u00fbr?' },
+      { verb:'se d\u00e9fendre de', en:'She defended herself against the accusations.', fr:'Elle s\u2019est d\u00e9fendue des accusations.', parts:[["Elle s'est d\u00e9fendue",'she defended herself'],['des accusations','from the accusations']], tip:'se d\u00e9fendre de = defend oneself from. de + les = des. Also used figuratively: se d\u00e9fendre de faire quelque chose = refrain from doing something.' },
+      { verb:'se r\u00e9jouir de', en:"I'm delighted to hear this news.", fr:'Je me r\u00e9jouis d\u2019apprendre cette nouvelle.', parts:[['Je me r\u00e9jouis','I am delighted'],["d'apprendre",'to hear / learn'],['cette nouvelle','this news']], tip:'se r\u00e9jouir de + noun or infinitive = rejoice about / be delighted about. De elides to d\u2019 before a vowel: d\u2019apprendre.' },
+      { verb:"avoir l'intention de", en:'I intend to finish this by Friday.', fr:"J'ai l'intention de finir \u00e7a avant vendredi.", parts:[["J'ai l'intention","I intend (lit. I have the intention)"],['de finir','to finish'],['\u00e7a avant vendredi','this by Friday']], tip:"avoir l'intention de + infinitive = intend to do. A fixed expression. \u2192 en replacement not applicable here since it's an infinitive, not a noun." },
+      { verb:"avoir l'occasion de", en:"I've never had the chance to visit Japan.", fr:"Je n'ai jamais eu l'occasion de visiter le Japon.", parts:[["Je n'ai jamais eu l'occasion","I've never had the opportunity"],['de visiter le Japon','to visit Japan']], tip:"avoir l'occasion de + infinitive = have the opportunity to do. A fixed expression. Very natural in both spoken and written French." },
+      { verb:'avoir le temps de', en:"I didn't have time to read the report.", fr:"Je n'ai pas eu le temps de lire le rapport.", parts:[["Je n'ai pas eu le temps","I didn't have time"],['de lire le rapport','to read the report']], tip:'avoir le temps de + infinitive = have time to do. A fixed expression. The negation (pas) wraps avoir, and de stays attached to the infinitive.' },
+      { verb:"s'abstenir de", en:'Please refrain from using your phone during the meeting.', fr:'Veuillez vous abstenir d\u2019utiliser votre t\u00e9l\u00e9phone pendant la r\u00e9union.', parts:[['Veuillez','please (formal)'],['vous abstenir','refrain'],["d'utiliser votre t\u00e9l\u00e9phone",'from using your phone'],['pendant la r\u00e9union','during the meeting']], tip:"s'abstenir de + infinitive or noun = refrain from / abstain from. Formal register. Veuillez + infinitive is the polite imperative for vous." },
+      { verb:'\u00eatre capable de', en:"She's capable of managing the whole team.", fr:"Elle est capable de g\u00e9rer toute l'\u00e9quipe.", parts:[['Elle est capable','she is capable'],["de g\u00e9rer toute l'\u00e9quipe",'of managing the whole team']], tip:'\u00eatre capable de + infinitive or noun = be capable of. \u2192 en replacement (with noun): Elle en est capable.' },
+      { verb:'\u00eatre convaincu de', en:"I'm convinced of his innocence.", fr:'Je suis convaincu de son innocence.', parts:[['Je suis convaincu','I am convinced'],['de son innocence','of his innocence']], tip:'\u00eatre convaincu(e) de + noun = be convinced of. Adjective agrees: convaincu (masc.), convaincue (fem.). \u2192 en replacement: J\u2019en suis convaincu.' },
+      { verb:'\u00eatre responsable de', en:'Who is responsible for this decision?', fr:'Qui est responsable de cette d\u00e9cision\u00a0?', parts:[['Qui est responsable','who is responsible'],['de cette d\u00e9cision','for this decision']], tip:'\u00eatre responsable de + noun = be responsible for. \u2192 en replacement: Qui en est responsable?' },
+      { verb:'tenir compte de', en:'You need to take the costs into account.', fr:'Il faut tenir compte des co\u00fbts.', parts:[['Il faut','it is necessary'],['tenir compte','take into account'],['des co\u00fbts','the costs']], tip:'tenir compte de = take into account. A fixed expression \u2014 compte never changes. de + les = des. \u2192 en replacement: Il faut en tenir compte.' },
+      { verb:'avoir envie de', en:"I really feel like a coffee right now.", fr:"J'ai vraiment envie d'un caf\u00e9 l\u00e0.", parts:[["J'ai vraiment envie","I really feel like"],["d'un caf\u00e9","a coffee"],['l\u00e0','right now']], tip:"avoir envie de + noun = feel like something. de + un \u2192 d'un (elision before vowel). Very natural in spoken French; more idiomatic than je veux." },
+      { verb:'avoir peur de', en:'Are you afraid of the dark?', fr:'Tu as peur du noir\u00a0?', parts:[['Tu as peur','are you afraid'],['du noir','of the dark']], tip:'avoir peur de + noun. de + le = du. \u2192 en replacement: Tu en as peur? Compare: avoir peur que + subjunctive = be afraid that...' },
+      { verb:'se souvenir de', en:"I can't remember his name.", fr:'Je ne me souviens plus de son nom.', parts:[['Je ne me souviens plus','I no longer remember'],['de son nom','his name']], tip:'ne... plus = no longer. se souvenir de + noun = remember. \u2192 en replacement: Je ne m\u2019en souviens plus.' },
+      { verb:"s'inqui\u00e9ter de", en:'Stop worrying about things you can\u2019t control.', fr:'Arr\u00eate de t\u2019inqui\u00e9ter de choses que tu ne peux pas contr\u00f4ler.', parts:[['Arr\u00eate de','stop'],["t'inqui\u00e9ter",'worrying'],['de choses que tu ne peux pas contr\u00f4ler','about things you cannot control']], tip:'Two de in a row here \u2014 the first from arr\u00eater de, the second from s\u2019inqui\u00e9ter de. Both are mandatory and separate.' },
+      { verb:'profiter de', en:'Make the most of this opportunity.', fr:'Profite de cette opportunit\u00e9.', parts:[['Profite','make the most'],['de cette opportunit\u00e9','of this opportunity']], tip:'profiter de = take advantage of / make the most of. \u2192 en replacement: Profites-en! One of the most common uses of en in everyday French.' },
+      { verb:'douter de', en:'I suspected something was going on.', fr:'Je me doutais de quelque chose.', parts:[['Je me doutais','I suspected'],['de quelque chose','something']], tip:'se douter de = suspect (very different from douter de = doubt). This is a common false friend trap. Je doute de lui = I doubt him. Je me doute de quelque chose = I suspect something.' },
+      { verb:'\u00eatre fier de', en:"She's very proud of her son's achievements.", fr:'Elle est tr\u00e8s fi\u00e8re des r\u00e9alisations de son fils.', parts:[['Elle est tr\u00e8s fi\u00e8re','she is very proud'],['des r\u00e9alisations de son fils','of her son\u2019s achievements']], tip:'\u00eatre fi\u00e8re de (feminine form). de + les = des. \u2192 en replacement: Elle en est tr\u00e8s fi\u00e8re.' },
+      { verb:'\u00eatre capable de', en:'I know he\u2019s capable of doing better.', fr:'Je sais qu\u2019il est capable de faire mieux.', parts:[['Je sais','I know'],["qu'il est capable",'that he is capable'],['de faire mieux','of doing better']], tip:'\u00eatre capable de + infinitive = be capable of doing. Mieux = better (adverb). Contrast with meilleur = better (adjective).' }
+    ]
+  },
+  {
+    id: 'direct',
+    label: 'Direct object',
+    title: 'Direct object verbs',
+    sub: 'No preposition \u2014 the verb grabs its object straight.',
+    note: 'These verbs take their object directly, no preposition bridge. Watch the articles: verbs of consuming (manger, boire, prendre, acheter) use du\u00a0/\u00a0de\u00a0la\u00a0/\u00a0de\u00a0l\u2019 for unspecified quantities \u2014 and in negation, that article shrinks to just de.',
+    ref: [
+      ['Je mange du pain','I eat (some) bread \u2014 unspecified qty'],
+      ['Je ne mange pas de pain','I don\u2019t eat bread \u2014 de after negation'],
+      ['Je bois du vin','I drink (some) wine'],
+      ['Je ne bois pas de vin','I don\u2019t drink wine'],
+      ['Je prends du sucre','I take (some) sugar'],
+      ["J'ach\u00e8te de la viande","I buy (some) meat"]
+    ],
+    items: [
+      { verb:'manger', en:'I always eat bread in the morning.', fr:'Je mange toujours du pain le matin.', parts:[['Je mange','I eat'],['toujours','always'],['du pain','(some) bread'],['le matin','in the morning']], tip:'du = de + le. With manger and unspecified quantities, French uses du/de la/de l\u2019 where English uses no article or \u2018some\u2019. Negation: Je ne mange pas de pain le matin.' },
+      { verb:'boire', en:'She drinks a lot of coffee.', fr:'Elle boit beaucoup de caf\u00e9.', parts:[['Elle boit','she drinks'],['beaucoup de caf\u00e9','a lot of coffee']], tip:'After expressions of quantity (beaucoup, peu, trop, assez), the article disappears \u2014 just de + noun. Not du caf\u00e9 but beaucoup de caf\u00e9.' },
+      { verb:'prendre', en:'Do you take sugar in your coffee?', fr:'Tu prends du sucre dans ton caf\u00e9\u00a0?', parts:[['Tu prends','do you take'],['du sucre','(some) sugar'],['dans ton caf\u00e9','in your coffee']], tip:'prendre du sucre \u2014 unspecified quantity \u2192 du. Negation: Tu ne prends pas de sucre?' },
+      { verb:'voir', en:'I saw a great film last night.', fr:"J'ai vu un excellent film hier soir.", parts:[["J'ai vu","I saw"],['un excellent film','a great film'],['hier soir','last night']], tip:'voir takes a direct object with no preposition. Not a consuming verb, so un/une/des apply normally.' },
+      { verb:'\u00e9couter', en:'She listens to music while working.', fr:'Elle \u00e9coute de la musique en travaillant.', parts:[['Elle \u00e9coute','she listens to'],['de la musique','(some) music'],['en travaillant','while working']], tip:'\u00e9couter takes a direct object with no preposition \u2014 unlike English \u2018listen to\u2019, the \u00e0 is already built into the verb. De la musique = unspecified music (use en in negation: elle n\u2019en \u00e9coute pas).' },
+      { verb:'chercher', en:"I'm looking for my keys.", fr:'Je cherche mes cl\u00e9s.', parts:[['Je cherche',"I'm looking for"],['mes cl\u00e9s','my keys']], tip:'chercher = look for \u2014 no preposition needed, unlike English. The \u2018for\u2019 is built in. Similarly: attendre = wait for, payer = pay for, demander = ask for.' },
+      { verb:'attendre', en:"We've been waiting for the bus for twenty minutes.", fr:"On attend le bus depuis vingt minutes.", parts:[['On attend',"we're waiting for"],['le bus','the bus'],['depuis vingt minutes','for twenty minutes']], tip:'attendre = wait for \u2014 the \u2018for\u2019 is built in. depuis + present tense = action that started in the past and is still ongoing.' },
+      { verb:'aimer', en:'I love travelling by train.', fr:"J'aime voyager en train.", parts:[["J'aime","I love"],['voyager','travelling'],['en train','by train']], tip:'aimer + infinitive (no preposition) = like/love doing. No word between aimer and the infinitive.' },
+      { verb:'conna\u00eetre', en:'Do you know Paris well?', fr:'Tu connais bien Paris\u00a0?', parts:[['Tu connais','do you know'],['bien','well'],['Paris','Paris']], tip:'conna\u00eetre = know / be familiar with (people, places, works). Contrast with savoir = know facts, know how to. Je connais cette chanson vs Je sais chanter.' },
+      { verb:'comprendre', en:"I don't understand what he's saying.", fr:"Je ne comprends pas ce qu'il dit.", parts:[['Je ne comprends pas','I don\u2019t understand'],["ce qu'il dit","what he's saying"]], tip:'comprendre takes a direct object. ce que = what (the thing that). No preposition needed.' },
+      { verb:'regarder', en:'We watched the match together.', fr:'On a regard\u00e9 le match ensemble.', parts:[['On a regard\u00e9','we watched'],['le match','the match'],['ensemble','together']], tip:'regarder = watch/look at \u2014 the \u2018at\u2019 is built in. No preposition needed, unlike English.' },
+      { verb:'acheter', en:"I'm going to buy some vegetables at the market.", fr:"Je vais acheter des l\u00e9gumes au march\u00e9.", parts:[['Je vais acheter',"I'm going to buy"],['des l\u00e9gumes','some vegetables'],['au march\u00e9','at the market']], tip:'acheter + des l\u00e9gumes = unspecified plural quantity \u2192 des. Negation: Je n\u2019ach\u00e8te pas de l\u00e9gumes (des \u2192 de after negation).' },
+      { verb:'porter', en:"She's wearing a beautiful dress.", fr:'Elle porte une belle robe.', parts:[['Elle porte',"she's wearing"],['une belle robe','a beautiful dress']], tip:'porter = carry or wear. One verb covers both meanings. No preposition needed.' },
+      { verb:'demander', en:'I asked him for directions.', fr:'Je lui ai demand\u00e9 son chemin.', parts:[['Je lui ai demand\u00e9','I asked him'],['son chemin','the way']], tip:'demander = ask for \u2014 no preposition on the thing asked. But demander \u00e0 = ask someone (indirect object). Je lui ai demand\u00e9 = I asked him (lui = indirect object pronoun).' },
+      { verb:'envoyer', en:'She sent me a message this morning.', fr:"Elle m'a envoy\u00e9 un message ce matin.", parts:[["Elle m'a envoy\u00e9","she sent me"],['un message','a message'],['ce matin','this morning']], tip:'envoyer + direct object (the thing sent). No preposition on the thing sent. The indirect object (m\u2019 = to me) appears as a pronoun.' },
+      { verb:'lire', en:"I'm reading an interesting book at the moment.", fr:'Je lis un livre int\u00e9ressant en ce moment.', parts:[['Je lis','I am reading'],['un livre int\u00e9ressant','an interesting book'],['en ce moment','at the moment']], tip:'lire takes a direct object with no preposition. en ce moment = at the moment (not actuellement, which is more formal).' },
+      { verb:'\u00e9crire', en:'He wrote a long email to his colleague.', fr:'Il a \u00e9crit un long email \u00e0 son coll\u00e8gue.', parts:[['Il a \u00e9crit','he wrote'],['un long email','a long email'],['a son coll\u00e8gue','to his colleague']], tip:'\u00e9crire + direct object (the thing written). The recipient takes \u00e0 as an indirect object: \u00e9crire \u00e0 quelqu\u2019un = write to someone.' },
+      { verb:'d\u00e9tester', en:"She hates getting up early.", fr:'Elle d\u00e9teste se lever t\u00f4t.', parts:[['Elle d\u00e9teste','she hates'],['se lever t\u00f4t','getting up early']], tip:'d\u00e9tester + infinitive (no preposition) = hate doing. Just like aimer, no word between the verb and the infinitive.' },
+      { verb:'pr\u00e9f\u00e9rer', en:'I prefer taking the train to driving.', fr:'Je pr\u00e9f\u00e8re prendre le train plut\u00f4t que conduire.', parts:[['Je pr\u00e9f\u00e8re','I prefer'],['prendre le train','taking the train'],['plut\u00f4t que conduire','rather than driving']], tip:'pr\u00e9f\u00e9rer + infinitive (no preposition) = prefer doing. plut\u00f4t que = rather than (for comparisons).' },
+      { verb:'trouver', en:'I find this exercise quite difficult.', fr:'Je trouve cet exercice assez difficile.', parts:[['Je trouve','I find'],['cet exercice','this exercise'],['assez difficile','quite difficult']], tip:'trouver + direct object = find / think. Je trouve que... = I think that... Very useful for giving opinions.' },
+      { verb:'vendre', en:'They sold their house last year.', fr:'Ils ont vendu leur maison l\u2019ann\u00e9e derni\u00e8re.', parts:[['Ils ont vendu','they sold'],['leur maison','their house'],["l'ann\u00e9e derni\u00e8re",'last year']], tip:'vendre + direct object = sell. No preposition needed on the thing sold. The buyer takes \u00e0: vendre quelque chose \u00e0 quelqu\u2019un.' },
+      { verb:'ouvrir', en:'Can you open the window please?', fr:'Tu peux ouvrir la fen\u00eatre s\u2019il te pla\u00eet\u00a0?', parts:[['Tu peux','can you'],['ouvrir la fen\u00eatre','open the window'],['s\u2019il te pla\u00eet','please']], tip:'ouvrir takes a direct object. Note the irregular conjugation: j\u2019ouvre, tu ouvres, il ouvre (like -er verbs despite ending in -ir).' },
+      { verb:'fermer', en:'Did you remember to close the door?', fr:'Tu as pens\u00e9 \u00e0 fermer la porte\u00a0?', parts:[['Tu as pens\u00e9 \u00e0','did you remember to'],['fermer la porte','close the door']], tip:'fermer takes a direct object. This sentence also shows penser \u00e0 + infinitive = remember to / think to do (in addition to its main meaning of thinking about something).' },
+      { verb:'apporter', en:'Bring something to drink.', fr:'Apporte quelque chose \u00e0 boire.', parts:[['Apporte','bring'],['quelque chose','something'],['a boire','to drink']], tip:'apporter = bring (to the speaker). Contrast with emporter = take away (away from the speaker). Both take direct objects.' },
+      { verb:'donner', en:'She gave him a book for his birthday.', fr:'Elle lui a donn\u00e9 un livre pour son anniversaire.', parts:[['Elle lui a donn\u00e9','she gave him'],['un livre','a book'],['pour son anniversaire','for his birthday']], tip:'donner + direct object (the thing given). The recipient takes \u00e0 or the indirect object pronoun lui/leur: donner quelque chose \u00e0 quelqu\u2019un.' },
+      { verb:'mettre', en:"Put your coat on, it's cold.", fr:'Mets ton manteau, il fait froid.', parts:[['Mets ton manteau','put your coat on'],['il fait froid',"it's cold"]], tip:'mettre + direct object = put / place / put on (clothing). Very versatile verb. Also used in many fixed expressions: mettre du temps = take time, mettre en place = set up.' },
+      { verb:'poser', en:'Put the bag down on the table.', fr:'Pose le sac sur la table.', parts:[['Pose','put down'],['le sac','the bag'],['sur la table','on the table']], tip:'poser = put down / place (gently, horizontally). Contrast with mettre (more general) and accrocher (hang up). All take direct objects.' },
+      { verb:'utiliser', en:'Do you know how to use this software?', fr:'Tu sais utiliser ce logiciel\u00a0?', parts:[['Tu sais','do you know how'],['utiliser ce logiciel','to use this software']], tip:'utiliser takes a direct object. More formal than se servir de but both are correct. savoir + infinitive = know how to do.' },
+      { verb:'pr\u00e9parer', en:"I'm preparing dinner for tonight.", fr:'Je pr\u00e9pare le d\u00eener pour ce soir.', parts:[['Je pr\u00e9pare','I am preparing'],['le d\u00eener','dinner'],['pour ce soir','for tonight']], tip:'pr\u00e9parer takes a direct object. Contrast with se pr\u00e9parer \u00e0 (reflexive + \u00e0) = prepare oneself for something.' },
+      { verb:'applaudir', en:'The audience applauded for a long time.', fr:'Le public a applaudi longtemps.', parts:[['Le public a applaudi','the audience applauded'],['longtemps','for a long time']], tip:'applaudir = applaud. Can be used with or without a direct object: applaudir quelqu\u2019un = applaud someone; applaudir alone = clap.' },
+      { verb:'garder', en:'Can you keep a secret?', fr:'Tu peux garder un secret\u00a0?', parts:[['Tu peux','can you'],['garder un secret','keep a secret']], tip:'garder = keep / hold onto / look after. Takes a direct object. Also garder les enfants = babysit (look after the children).' },
+      { verb:'perdre', en:"I've lost my keys again.", fr:"J'ai encore perdu mes cl\u00e9s.", parts:[["J'ai encore perdu","I've lost again"],['mes cl\u00e9s','my keys']], tip:'perdre takes a direct object. encore = again (or still, depending on context). Contrast with manquer \u00e0 (to miss someone) or rater (to miss a train/opportunity).' },
+      { verb:'souhaiter', en:'I wish you a happy new year.', fr:'Je vous souhaite une bonne ann\u00e9e.', parts:[['Je vous souhaite','I wish you'],['une bonne ann\u00e9e','a happy new year']], tip:'souhaiter + direct object (the thing wished). The recipient takes \u00e0 or the indirect object pronoun: je vous souhaite (vous = indirect object here).' },
+      { verb:'r\u00e9p\u00e9ter', en:'Can you repeat that please?', fr:'Vous pouvez r\u00e9p\u00e9ter\u00a0?', parts:[['Vous pouvez','can you'],['r\u00e9p\u00e9ter','repeat']], tip:'r\u00e9p\u00e9ter takes a direct object (here omitted as understood from context). More formal than Quoi? or Pardon? for asking someone to repeat.' },
+      { verb:'r\u00e9server', en:"I'd like to book a table for two.", fr:"Je voudrais r\u00e9server une table pour deux.", parts:[['Je voudrais','I would like'],["r\u00e9server une table",'to book a table'],['pour deux','for two']], tip:'r\u00e9server takes a direct object. je voudrais = I would like (conditional of vouloir) \u2014 the polite way to make requests in French.' },
+      { verb:'appeler', en:'Call me tomorrow morning.', fr:'Appelle-moi demain matin.', parts:[['Appelle-moi','call me'],['demain matin','tomorrow morning']], tip:'appeler = call / name. Direct object. In the imperative, the direct object pronoun comes after the verb with a hyphen: appelle-moi, appelle-le.' },
+      { verb:'changer', en:'This experience changed everything.', fr:'Cette exp\u00e9rience a tout chang\u00e9.', parts:[['Cette exp\u00e9rience','this experience'],['a tout chang\u00e9','changed everything']], tip:'changer = change (transitive, with a direct object). Contrast with changer de = change/switch something: Il a chang\u00e9 d\u2019avis = He changed his mind.' },
+      { verb:'montrer', en:'Show me what you mean.', fr:'Montre-moi ce que tu veux dire.', parts:[['Montre-moi','show me'],['ce que tu veux dire','what you mean']], tip:'montrer + direct object (the thing shown). The person shown takes \u00e0 or the indirect object pronoun: montrer quelque chose \u00e0 quelqu\u2019un.' },
+      { verb:'contacter', en:"I'll contact you next week.", fr:'Je vous contacterai la semaine prochaine.', parts:[['Je vous contacterai','I will contact you'],['la semaine prochaine','next week']], tip:'contacter takes a direct object (the person contacted). No preposition needed, unlike English-influenced French. The future tense: contacterai.' },
+      { verb:'visiter', en:'We visited three museums in one day.', fr:'Nous avons visit\u00e9 trois mus\u00e9es en une journ\u00e9e.', parts:[['Nous avons visit\u00e9','we visited'],['trois mus\u00e9es','three museums'],['en une journ\u00e9e','in one day']], tip:'visiter = visit (places). Takes a direct object. Note: for visiting people, French uses rendre visite \u00e0: Je vais rendre visite \u00e0 mes parents.' },
+      { verb:'\u00e9tudier', en:'She studied law at university.', fr:'Elle a \u00e9tudi\u00e9 le droit \u00e0 l\u2019universit\u00e9.', parts:[["Elle a \u00e9tudi\u00e9",'she studied'],['le droit','law'],["a l'universit\u00e9",'at university']], tip:'\u00e9tudier takes a direct object. Use le/la/les for subjects of study (le droit, la m\u00e9decine, les sciences). \u00e0 + the institution.' },
+      { verb:'examiner', en:'The doctor examined the patient carefully.', fr:'Le m\u00e9decin a examin\u00e9 le patient avec soin.', parts:[['Le m\u00e9decin a examin\u00e9','the doctor examined'],['le patient','the patient'],['avec soin','carefully']], tip:'examiner = examine / review / look at closely. Takes a direct object. avec soin = carefully / with care.' },
+      { verb:'organiser', en:"She organised the whole event herself.", fr:'Elle a organis\u00e9 tout l\u2019\u00e9v\u00e9nement elle-m\u00eame.', parts:[['Elle a organis\u00e9','she organised'],["tout l'\u00e9v\u00e9nement",'the whole event'],['elle-m\u00eame','herself']], tip:'organiser takes a direct object. elle-m\u00eame = herself (stressed pronoun + m\u00eame). Stressed pronoun + m\u00eame is used for all persons: moi-m\u00eame, toi-m\u00eame, lui-m\u00eame...' },
+      { verb:'d\u00e9crire', en:'Describe what you saw.', fr:'D\u00e9cris ce que tu as vu.', parts:[['D\u00e9cris','describe'],['ce que tu as vu','what you saw']], tip:'d\u00e9crire takes a direct object. Irregular verb \u2014 conjugated like \u00e9crire: je d\u00e9cris, tu d\u00e9cris, il d\u00e9crit. ce que = what (the thing that).' },
+      { verb:'d\u00e9velopper', en:'We need to develop a new strategy.', fr:'Il faut d\u00e9velopper une nouvelle strat\u00e9gie.', parts:[['Il faut','it is necessary'],['d\u00e9velopper','to develop'],['une nouvelle strat\u00e9gie','a new strategy']], tip:'d\u00e9velopper takes a direct object. il faut + infinitive = it is necessary to / we need to. Very common structure in French.' },
+      { verb:'corriger', en:'The teacher corrected the essays.', fr:'La professeure a corrig\u00e9 les dissertations.', parts:[['La professeure a corrig\u00e9','the teacher corrected'],['les dissertations','the essays']], tip:'corriger takes a direct object. Note: professeure (feminine form) is now standard and increasingly used in official contexts.' },
+      { verb:'commander', en:'What are you going to order?', fr:'Qu\u2019est-ce que tu vas commander\u00a0?', parts:[['Qu\u2019est-ce que tu vas','what are you going to'],['commander','order']], tip:'commander = order (in a restaurant or online). Takes a direct object. Also means command / lead: commander une arm\u00e9e.' },
+      { verb:'signer', en:'Please sign here.', fr:'Veuillez signer ici.', parts:[['Veuillez','please (formal)'],['signer','sign'],['ici','here']], tip:'signer takes a direct object (the thing signed) or can be used absolutely (just sign). Veuillez + infinitive is the formal polite imperative.' },
+      { verb:'perdre', en:"Don't waste your time on this.", fr:'Ne perdez pas votre temps l\u00e0-dessus.', parts:[['Ne perdez pas','don\u2019t waste'],['votre temps','your time'],['l\u00e0-dessus','on this']], tip:'perdre = lose or waste (time, an opportunity). Direct object. l\u00e0-dessus = on this / about this. The vous form used here for a more general address.' },
+      { verb:'changer', en:'He changed his mind at the last minute.', fr:'Il a chang\u00e9 d\u2019avis \u00e0 la derni\u00e8re minute.', parts:[['Il a chang\u00e9 d\u2019avis','he changed his mind'],['\u00e0 la derni\u00e8re minute','at the last minute']], tip:'changer d\u2019avis = change one\u2019s mind \u2014 a fixed expression using changer de (switch/change + noun). Contrast with changer quelque chose = change something (direct object).' },
+      { verb:'trouver', en:"I find his attitude very irritating.", fr:'Je trouve son attitude tr\u00e8s irritante.', parts:[['Je trouve','I find'],['son attitude','his attitude'],['tr\u00e8s irritante','very irritating']], tip:'trouver + object + adjective = find something [adjective]. The adjective agrees with the object: attitude (feminine) \u2192 irritante.' },
+      { verb:'\u00e9crire', en:'She writes poetry in her spare time.', fr:'Elle \u00e9crit de la po\u00e9sie pendant son temps libre.', parts:[['Elle \u00e9crit','she writes'],['de la po\u00e9sie','poetry (some poetry)'],['pendant son temps libre','in her spare time']], tip:'\u00e9crire de la po\u00e9sie \u2014 unspecified amount of poetry \u2192 de la. If it were a specific work: Elle \u00e9crit un poème (un/une for a specific thing).' },
+      { verb:'lire', en:'Have you read this article?', fr:'Tu as lu cet article\u00a0?', parts:[['Tu as lu','have you read'],['cet article','this article']], tip:'lire takes a direct object. Irregular past participle: lu. cet (not ce) before a masculine noun starting with a vowel sound.' },
+      { verb:'pr\u00e9parer', en:'Who prepared this report?', fr:'Qui a pr\u00e9par\u00e9 ce rapport\u00a0?', parts:[['Qui a pr\u00e9par\u00e9','who prepared'],['ce rapport','this report']], tip:'pr\u00e9parer = prepare (a thing, direct object). Contrast with se pr\u00e9parer \u00e0 = prepare oneself for something.' },
+      { verb:'utiliser', en:'We used all the available resources.', fr:'Nous avons utilis\u00e9 toutes les ressources disponibles.', parts:[['Nous avons utilis\u00e9','we used'],['toutes les ressources disponibles','all the available resources']], tip:'utiliser = use (direct object). Adjectives in French generally follow the noun: ressources disponibles (not disponibles ressources).' },
+      { verb:'visiter', en:'I\u2019d love to visit Bordeaux one day.', fr:'J\u2019aimerais visiter Bordeaux un jour.', parts:[["J'aimerais",'I would love to'],['visiter Bordeaux','to visit Bordeaux'],['un jour','one day']], tip:'visiter = visit a place (direct object). For visiting people: rendre visite \u00e0 \u2014 Je rends visite \u00e0 mes grands-parents.' },
+      { verb:'souhaiter', en:'I hope everything goes well for you.', fr:'Je vous souhaite bonne chance.', parts:[['Je vous souhaite','I wish you'],['bonne chance','good luck']], tip:'souhaiter + indirect object pronoun + noun = wish someone something. bonne chance is a direct object; vous is the indirect object (to whom the wish is directed).' }
+    ]
+  },
+  {
+    id: 'shift',
+    label: 'Meaning shifts',
+    title: 'Verbs that shift meaning',
+    sub: 'Same verb, different preposition, different world.',
+    note: 'These verbs are the trickiest because you cannot just memorise one form \u2014 you have to know both, and feel the difference. The contrast is the lesson. Say both versions aloud each time.',
+    ref: [
+      ['jouer \u00e0','play a game / sport'],['jouer de','play an instrument'],
+      ['penser \u00e0','think about (on your mind)'],['penser de','have an opinion about'],
+      ['parler \u00e0','speak to (a person)'],['parler de','speak about (a topic)'],
+      ['manquer \u00e0','be missed by (backwards!)'],['manquer de','lack / be short of'],
+      ['d\u00e9cider de','decide to do'],['se d\u00e9cider \u00e0','make up one\u2019s mind to'],
+      ['r\u00eaver de','dream of / aspire to'],['r\u00eaver \u00e0','daydream about']
+    ],
+    items: [
+      { verb:'jouer \u00e0 / jouer de', en:'She plays tennis and also plays the piano.', fr:'Elle joue au tennis et elle joue aussi du piano.', parts:[['Elle joue au tennis','she plays tennis'],['et','and'],['elle joue aussi du piano','she also plays the piano']], tip:'jouer \u00e0 + sport/game (\u00e0 + le = au). jouer de + instrument (de + le = du). Games you compete at \u2192 \u00e0. Instruments you produce sound from \u2192 de.', contrast:'<strong>jouer \u00e0</strong> = play a game/sport \u2192 <span class="contrast-fr">Elle joue au foot.</span><br><strong>jouer de</strong> = play an instrument \u2192 <span class="contrast-fr">Il joue de la guitare.</span>' },
+      { verb:'penser \u00e0 / penser de', en:'I\u2019m thinking about you. \u2014 What do you think of this idea?', fr:'Je pense \u00e0 toi. \u2014 Qu\u2019est-ce que tu penses de cette id\u00e9e\u00a0?', parts:[['Je pense \u00e0 toi','I\u2019m thinking of you'],['Qu\u2019est-ce que tu penses de cette id\u00e9e\u00a0?','What do you think of this idea?']], tip:'penser \u00e0 = have someone/something on your mind (\u2192 y: J\u2019y pense). penser de = have an opinion about (\u2192 en: Qu\u2019est-ce que tu en penses?).', contrast:'<strong>penser \u00e0</strong> = think about (on your mind) \u2192 <span class="contrast-fr">Je pense \u00e0 mon voyage.</span><br><strong>penser de</strong> = have an opinion about \u2192 <span class="contrast-fr">Que penses-tu de ce film\u00a0?</span>' },
+      { verb:'parler \u00e0 / parler de', en:'I spoke to the manager about the problem.', fr:'J\u2019ai parl\u00e9 au directeur du probl\u00e8me.', parts:[["J'ai parl\u00e9","I spoke"],['au directeur','to the manager'],['du probl\u00e8me','about the problem']], tip:'parler \u00e0 = speak to a person (\u2192 lui/leur). parler de = speak about a topic (\u2192 en). Both in one sentence: J\u2019ai parl\u00e9 au directeur (lui) du probl\u00e8me (en).', contrast:'<strong>parler \u00e0</strong> = speak to someone \u2192 <span class="contrast-fr">Elle parle \u00e0 son ami.</span><br><strong>parler de</strong> = speak about something \u2192 <span class="contrast-fr">Elle parle de son ami.</span>' },
+      { verb:'manquer \u00e0 / manquer de', en:'I miss Paris. \u2014 He lacks confidence.', fr:'Paris me manque. \u2014 Il manque de confiance.', parts:[['Paris me manque','Paris is missing to me (I miss Paris)'],['Il manque de confiance','he lacks confidence']], tip:'manquer \u00e0 is famously backwards: Paris me manque = Paris is missing to me = I miss Paris. The subject is what is missed; me/te/lui is who misses it. manquer de = lack something.', contrast:'<strong>manquer \u00e0</strong> = be missed by (backwards!) \u2192 <span class="contrast-fr">Tu me manques. (I miss you.)</span><br><strong>manquer de</strong> = lack \u2192 <span class="contrast-fr">Elle manque de patience.</span>' },
+      { verb:'d\u00e9cider de / se d\u00e9cider \u00e0', en:'She decided to leave. \u2014 He finally made up his mind to accept.', fr:'Elle a d\u00e9cid\u00e9 de partir. \u2014 Il s\u2019est finalement d\u00e9cid\u00e9 \u00e0 accepter.', parts:[['Elle a d\u00e9cid\u00e9 de partir','she decided to leave'],["Il s'est finalement d\u00e9cid\u00e9 \u00e0 accepter","he finally made up his mind to accept"]], tip:'d\u00e9cider de + infinitive = decide to do (straightforward). se d\u00e9cider \u00e0 + infinitive = finally make up one\u2019s mind \u2014 implies hesitation or long deliberation before the decision.', contrast:'<strong>d\u00e9cider de</strong> = decide to \u2192 <span class="contrast-fr">J\u2019ai d\u00e9cid\u00e9 de rester.</span><br><strong>se d\u00e9cider \u00e0</strong> = make up one\u2019s mind \u2192 <span class="contrast-fr">Il s\u2019est d\u00e9cid\u00e9 \u00e0 partir.</span>' },
+      { verb:'r\u00eaver de / r\u00eaver \u00e0', en:'She dreams of becoming a doctor. \u2014 He daydreams about his holidays.', fr:'Elle r\u00eave de devenir m\u00e9decin. \u2014 Il r\u00eave \u00e0 ses vacances.', parts:[['Elle r\u00eave de devenir m\u00e9decin','she dreams of becoming a doctor'],['Il r\u00eave \u00e0 ses vacances','he daydreams about his holidays']], tip:'r\u00eaver de = dream of / aspire to (concrete goal). r\u00eaver \u00e0 = muse / daydream (more passive). In practice r\u00eaver de is far more common \u2014 r\u00eaver \u00e0 is mostly literary.', contrast:'<strong>r\u00eaver de</strong> = dream of (aspiration) \u2192 <span class="contrast-fr">Je r\u00eave de voyager.</span><br><strong>r\u00eaver \u00e0</strong> = daydream about \u2192 <span class="contrast-fr">Il r\u00eave \u00e0 son pass\u00e9.</span>' },
+      { verb:"s'int\u00e9resser \u00e0 / se d\u00e9sint\u00e9resser de", en:"She's interested in politics but he's lost interest in it.", fr:"Elle s'int\u00e9resse \u00e0 la politique mais lui s'en est d\u00e9sint\u00e9ress\u00e9.", parts:[["Elle s'int\u00e9resse \u00e0 la politique","she's interested in politics"],["mais lui s'en est d\u00e9sint\u00e9ress\u00e9","but he has lost interest in it"]], tip:"s'int\u00e9resser \u00e0 = be interested in (\u2192 s'y int\u00e9resser). se d\u00e9sint\u00e9resser de = lose interest in (\u2192 s'en d\u00e9sint\u00e9resser). The en replacement is already shown in this sentence.", contrast:"<strong>s'int\u00e9resser \u00e0</strong> = be interested in \u2192 <span class='contrast-fr'>Il s'int\u00e9resse au sport.</span><br><strong>se d\u00e9sint\u00e9resser de</strong> = lose interest in \u2192 <span class='contrast-fr'>Il s'est d\u00e9sint\u00e9ress\u00e9 du sport.</span>" },
+      { verb:'tenir \u00e0 / tenir de', en:'She insists on coming. \u2014 He takes after his father.', fr:'Elle tient \u00e0 venir. \u2014 Il tient de son p\u00e8re.', parts:[['Elle tient \u00e0 venir','she insists on coming'],['Il tient de son p\u00e8re','he takes after his father']], tip:'tenir \u00e0 + infinitive/noun = care about / insist on (emotional commitment). tenir de + person = take after / inherit traits from (used for resemblance).', contrast:'<strong>tenir \u00e0</strong> = care about / insist \u2192 <span class="contrast-fr">Je tiens \u00e0 toi.</span><br><strong>tenir de</strong> = take after \u2192 <span class="contrast-fr">Elle tient de sa m\u00e8re.</span>' }
+    ]
+  }
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+
+let currentCat = 'a';
+let queue = [];
+let qIdx = 0;
+let revealed = false;
+let stats = { seen: 0, correct: 0, streak: 0 };
+let frVoice = null;
+
+function loadVoice() {
+  const v = speechSynthesis.getVoices();
+  frVoice = v.find(x => x.lang.startsWith('fr')) || null;
+}
+if ('speechSynthesis' in window) {
+  speechSynthesis.onvoiceschanged = loadVoice;
+  loadVoice();
+}
+
+function speak(text) {
+  if (!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'fr-FR';
+  utt.rate = 0.88;
+  if (frVoice) utt.voice = frVoice;
+  speechSynthesis.speak(utt);
+  const btn = document.getElementById('audio-btn');
+  if (btn) {
+    btn.classList.add('speaking');
+    utt.onend = () => btn.classList.remove('speaking');
+    utt.onerror = () => btn.classList.remove('speaking');
+  }
+}
+
+// ── QUEUE ─────────────────────────────────────────────────────────────────────
+
+function buildQueue(cat) {
+  if (cat === 'mix') {
+    const all = [];
+    STAGES.forEach(s => s.items.forEach(item => all.push({ ...item, _stageId: s.id })));
+    return shuffle(all);
+  }
+  const stage = STAGES.find(s => s.id === cat);
+  return stage ? [...stage.items] : [];
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+
+function setCategory(cat) {
+  currentCat = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('cat-' + cat).classList.add('active');
+  queue = buildQueue(cat);
+  qIdx = 0;
+  revealed = false;
+  stats = { seen: 0, correct: 0, streak: 0 };
+  updateStats();
+  renderRef();
+  renderCard();
+}
+
+function renderCategoryButtons() {
+  const g = document.getElementById('cat-group');
+  let html = '';
+  STAGES.forEach(s => {
+    html += `<button class="cat-btn${s.id === currentCat ? ' active' : ''}" id="cat-${s.id}" onclick="setCategory('${s.id}')">${s.label}</button>`;
+  });
+  html += `<button class="cat-btn mix-btn${currentCat === 'mix' ? ' active' : ''}" id="cat-mix" onclick="setCategory('mix')">&#127922; Mix</button>`;
+  g.innerHTML = html;
+}
+
+function renderRef() {
+  const area = document.getElementById('ref-area');
+  if (currentCat === 'mix') { area.innerHTML = ''; return; }
+  const stage = STAGES.find(s => s.id === currentCat);
+  if (!stage) { area.innerHTML = ''; return; }
+  let html = `<div class="ref-section"><p class="ref-header">Quick reference \u2014 ${stage.label}</p><div class="ref-grid">`;
+  stage.ref.forEach(([fr, en]) => {
+    html += `<div class="ref-chip"><span class="ref-fr">${fr}</span><span class="ref-en">${en}</span></div>`;
+  });
+  html += `</div></div>`;
+  area.innerHTML = html;
+}
+
+function renderCard() {
+  const cardArea = document.getElementById('card-area');
+  const doneArea = document.getElementById('done-area');
+  document.getElementById('done-area').innerHTML = '';
+
+  if (qIdx >= queue.length) {
+    cardArea.innerHTML = '';
+    renderDone();
+    return;
+  }
+
+  const item = queue[qIdx];
+  const isMix = currentCat === 'mix';
+  const stage = isMix ? STAGES.find(s => s.id === item._stageId) : STAGES.find(s => s.id === currentCat);
+  const total = queue.length;
+  const prog = Math.round((qIdx / total) * 100);
+  document.getElementById('prog-fill').style.width = prog + '%';
+
+  let html = `<div class="card" id="main-card">`;
+  html += `<p class="item-counter">Sentence ${qIdx + 1} of ${total}`;
+  if (isMix && revealed && stage) html += ` \u2014 ${stage.label}`;
+  html += `</p>`;
+
+  if (!isMix) {
+    html += `<p class="noble-hint">${stage.note}</p>`;
+  }
+
+  html += `<p class="say-aloud">\u25b6 say out loud</p>`;
+  html += `<p class="prompt-en">${item.en}</p>`;
+
+  if (revealed) {
+    html += `<div class="verb-tag">${item.verb}</div>`;
+  }
+
+  html += `<div class="answer-row">`;
+  if (!revealed) {
+    html += `<div class="answer-area" onclick="doReveal()" id="ans-area"><span class="answer-hint">\u2014 tap to reveal \u2014</span></div>`;
+    html += `<button class="audio-btn" disabled style="opacity:0.25"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.97z"/></svg></button>`;
+  } else {
+    html += `<div class="answer-area revealed" id="ans-area"><span class="answer-reveal show">${item.fr}</span></div>`;
+    html += `<button class="audio-btn" id="audio-btn" onclick="speak('${item.fr.replace(/'/g,"\\'")}')"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.97z"/></svg>Hear it</button>`;
+  }
+  html += `</div>`;
+
+  if (revealed) {
+    html += `<div class="breakdown-panel show">`;
+    item.parts.forEach(([fr, en]) => {
+      html += `<div class="breakdown-row"><span class="bd-fr">${fr}</span><span class="bd-en">= ${en}</span></div>`;
+    });
+    html += `</div>`;
+    if (item.tip) {
+      html += `<div class="tip-panel show"><strong>Note:</strong> ${item.tip}</div>`;
+    }
+    if (item.contrast) {
+      html += `<div class="contrast-panel show">${item.contrast}</div>`;
+    }
+  }
+
+  html += `<div class="controls">`;
+  if (!revealed) {
+    html += `<button class="secondary-btn" onclick="doReveal()">Reveal</button>`;
+  } else {
+    html += `<button class="primary-btn" onclick="mark(true)">&#10003; Got it</button>`;
+    html += `<button class="secondary-btn" onclick="mark(false)">Recycle \u2014 see again</button>`;
+  }
+  html += `</div>`;
+  html += `</div>`;
+
+  cardArea.innerHTML = html;
+
+  if (revealed) {
+    setTimeout(() => {
+      const btn = document.getElementById('audio-btn');
+      if (btn) speak(item.fr);
+    }, 200);
+  }
+}
+
+function doReveal() {
+  revealed = true;
+  stats.seen++;
+  updateStats();
+  renderCard();
+}
+
+function mark(correct) {
+  const card = document.getElementById('main-card');
+  if (card) {
+    card.classList.add(correct ? 'flash-correct' : 'flash-wrong');
+  }
+  if (correct) {
+    stats.correct++;
+    stats.streak++;
+  } else {
+    stats.streak = 0;
+    queue.push(queue[qIdx]);
+  }
+  updateStats();
+  qIdx++;
+  revealed = false;
+  setTimeout(renderCard, correct ? 100 : 100);
+}
+
+function updateStats() {
+  document.getElementById('stat-seen').textContent = stats.seen;
+  document.getElementById('stat-correct').textContent = stats.correct;
+  document.getElementById('stat-streak').textContent = stats.streak;
+  if (stats.seen > 0) {
+    const pct = Math.min(100, Math.round((stats.correct / stats.seen) * 100));
+    document.getElementById('prog-fill').style.width = pct + '%';
+  }
+}
+
+function renderDone() {
+  const p = stats.seen > 0 ? Math.round((stats.correct / stats.seen) * 100) : 0;
+  const msg = p >= 85
+    ? 'The preposition patterns are embedding themselves.'
+    : p >= 65
+    ? 'Good work. The meaning-shift verbs are the hardest \u2014 run it again focusing on those.'
+    : 'These take longer to stick than pronouns. Each run counts \u2014 go again.';
+  document.getElementById('done-area').innerHTML = `
+    <div class="done-section">
+      <div class="done-card">
+        <p class="done-title">Drill complete!</p>
+        <div class="done-score">
+          <strong>${stats.correct} / ${stats.seen} \u2014 ${p}%</strong>
+          ${msg}
+        </div>
+        <div class="done-actions">
+          <button class="primary-btn" onclick="setCategory('${currentCat}')">Run again</button>
+          <button class="secondary-btn" onclick="setCategory('mix')">&#127922; Try the mix</button>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('prog-fill').style.width = '100%';
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+
+renderCategoryButtons();
+setCategory('a');
+</script>
+</body>
+</html>

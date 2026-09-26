@@ -1,0 +1,1749 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Navigateur TCF</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1a1a2e;--accent:#c94a4a;--bg:#f7f6f2;--card:#fff;--border:#e4e0d8;--muted:#8a8680;
+  --pour-bg:#eef7ee;--pour-border:#4caf50;--contre-bg:#fdecea;--contre-border:#e57373;
+  --nuance-bg:#fff8e1;--nuance-border:#ffb300;--q-bg:#f0f4ff;--q-border:#5c7cfa;
+  --tag-bg:#f0ede8;--sg-bg:#f5f3ef;--sg-border:#d4cfc7;
+  --univ-bg:#fff8ee;--univ-border:#e8a020;
+  --date-color:#999390
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+.site-nav{background:var(--ink);padding:0 2rem;display:flex;align-items:center;gap:2rem;height:52px;position:sticky;top:0;z-index:100}
+.nav-logo{color:var(--accent);font-family:'Crimson Pro',serif;font-size:1.4rem;font-weight:600;text-decoration:none;letter-spacing:.05em}
+.nav-links{display:flex;gap:1.5rem}
+.nav-link{color:#ccc;text-decoration:none;font-size:.85rem;transition:color .15s}
+.nav-link:hover,.nav-link.active{color:#fff}
+.page-header{padding:2rem 2rem 0;max-width:1100px;margin:0 auto}
+.page-title{font-family:'Crimson Pro',serif;font-size:2rem;font-weight:600}
+.page-subtitle{color:var(--muted);font-size:.9rem;margin-top:.3rem}
+.tabs-outer{max-width:1100px;margin:1.5rem auto 0;padding:0 2rem}
+.tab-bar{display:flex;gap:.5rem;border-bottom:2px solid var(--border);margin-bottom:1.5rem;flex-wrap:wrap}
+.tab-btn{padding:.6rem 1.2rem;border:none;background:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.9rem;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;white-space:nowrap}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.view-bar{display:flex;gap:.75rem;margin-bottom:1rem;flex-wrap:wrap;align-items:center}
+.view-btn{padding:.4rem 1rem;border:1.5px solid var(--border);border-radius:20px;background:none;cursor:pointer;font-size:.82rem;color:var(--muted);transition:all .15s}
+.view-btn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.view-label{font-size:.82rem;color:var(--muted);font-weight:600;margin-right:.25rem}
+.controls{display:flex;gap:.75rem;margin-bottom:1.5rem;flex-wrap:wrap;align-items:center}
+.search-box{flex:1;min-width:180px;padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.88rem;background:var(--card);color:var(--ink)}
+.search-box:focus{outline:none;border-color:var(--accent)}
+.filter-select,.theme-select{padding:.55rem .9rem;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.88rem;background:var(--card);color:var(--ink);cursor:pointer;max-width:200px}
+.filter-select:focus,.theme-select:focus{outline:none;border-color:var(--accent)}
+.sort-toggle{display:flex;border:1.5px solid var(--border);border-radius:8px;overflow:hidden;flex-shrink:0}
+.sort-toggle-btn{padding:.5rem .85rem;border:none;background:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.8rem;color:var(--muted);transition:all .15s;border-right:1px solid var(--border);white-space:nowrap}
+.sort-toggle-btn:last-child{border-right:none}
+.sort-toggle-btn.active{background:var(--ink);color:#fff}
+.stats-line{font-size:.82rem;color:var(--muted);margin-left:auto}
+/* Cards */
+.clusters-grid{display:flex;flex-direction:column;gap:.75rem;padding-bottom:3rem}
+.cluster-card{background:var(--card);border:1.5px solid var(--border);border-radius:12px;overflow:hidden}
+.cluster-head{padding:1rem 1.25rem;cursor:pointer;display:flex;align-items:center;gap:.75rem;user-select:none}
+.cluster-head:hover{background:#fafaf8}
+.cluster-name{font-family:'Crimson Pro',serif;font-size:1.1rem;font-weight:600;flex:1}
+.cluster-badges{display:flex;gap:.4rem;align-items:center;flex-shrink:0;flex-wrap:wrap}
+.badge-apps{background:var(--accent);color:#fff;font-size:.72rem;padding:.2rem .55rem;border-radius:12px;font-weight:600;white-space:nowrap}
+.badge-unique{background:var(--tag-bg);color:var(--muted);font-size:.72rem;padding:.2rem .55rem;border-radius:12px;white-space:nowrap}
+.badge-recent{background:#e8f5e9;color:#2e7d32;font-size:.72rem;padding:.2rem .55rem;border-radius:12px;font-weight:600;white-space:nowrap}
+.chevron{color:var(--muted);font-size:.85rem;transition:transform .2s;flex-shrink:0}
+.cluster-card.open .chevron,.arg-block-card.open .chevron,.sg-card.open .sg-chevron{transform:rotate(90deg)}
+.cluster-body{display:none;border-top:1.5px solid var(--border)}
+.cluster-card.open .cluster-body{display:block}
+/* PCN */
+.hint-panel,.arg-pcn{padding:1rem 1.25rem;border-bottom:1.5px solid var(--border);display:grid;gap:.6rem}
+.hint-row{padding:.55rem .8rem;border-radius:8px;line-height:1.5}
+.hint-pour{background:var(--pour-bg);border-left:3px solid var(--pour-border)}
+.hint-contre{background:var(--contre-bg);border-left:3px solid var(--contre-border)}
+.hint-nuance{background:var(--nuance-bg);border-left:3px solid var(--nuance-border)}
+.hint-label{font-weight:600;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem;opacity:.8;display:block}
+.hint-list{margin:0;padding-left:1.1rem;display:flex;flex-direction:column;gap:.25rem}
+.hint-list li{font-size:.875rem;line-height:1.5}
+/* Question items */
+.q-row{display:flex;align-items:flex-start;gap:.45rem;padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.855rem;line-height:1.5}
+.q-row:last-child{border-bottom:none}
+.q-count{background:var(--tag-bg);color:var(--muted);font-size:.7rem;padding:.15rem .45rem;border-radius:8px;flex-shrink:0;margin-top:.15rem;font-weight:600;white-space:nowrap}
+.q-date{color:var(--date-color);font-size:.7rem;flex-shrink:0;margin-top:.2rem;white-space:nowrap}
+.recent-dot{width:6px;height:6px;border-radius:50%;background:#4caf50;flex-shrink:0;margin-top:.55rem}
+/* Variants panel */
+.variants-panel{padding:.75rem 1.25rem 1rem}
+.variants-toggle{font-size:.82rem;color:var(--accent);cursor:pointer;margin:.4rem 0 .5rem;display:inline-block;font-weight:500;background:none;border:none;font-family:inherit;padding:0}
+.variants-toggle:hover{text-decoration:underline}
+.variants-list{display:none}
+.variants-list.open{display:block}
+/* Arg qs */
+.arg-qs{padding:.75rem 1.25rem 1rem}
+.arg-qs-label{font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:.5rem}
+/* Raw list */
+.raw-list{display:flex;flex-direction:column;gap:0;padding-bottom:3rem}
+.raw-item{cursor:pointer;flex-wrap:wrap;display:flex;align-items:flex-start;gap:.6rem;padding:.6rem 0;border-bottom:1px solid var(--border);font-size:.875rem;line-height:1.5}
+.raw-item:first-child{border-top:1px solid var(--border)}
+.raw-item-main{display:flex;align-items:flex-start;gap:.6rem;width:100%;flex-wrap:wrap}
+.raw-chevron{font-size:.65rem;color:var(--muted);transition:transform .15s;flex-shrink:0;margin-top:.3rem}
+.raw-item.open .raw-chevron{transform:rotate(90deg)}
+.raw-hints{display:none;width:100%;padding:.5rem 0 .3rem 2rem;font-size:.8rem;color:var(--muted);line-height:1.5}
+.raw-item.open .raw-hints{display:block}
+.raw-hint-row{margin-bottom:.3rem}
+.raw-hint-label{display:inline;font-weight:600;font-size:.7rem;text-transform:uppercase;letter-spacing:.04em;margin-right:.35rem}
+.raw-hint-label.pour{color:#388e3c}
+.raw-hint-label.contre{color:#c62828}
+.raw-hint-label.nuance{color:#1565c0}
+.raw-q-list{list-style:none;padding:0;margin:0}
+.raw-q-list li{padding:.1rem 0;border-bottom:1px solid var(--border)}
+.raw-q-list li:last-child{border-bottom:none}
+.raw-badge{background:var(--tag-bg);color:var(--muted);font-size:.7rem;padding:.15rem .5rem;border-radius:8px;flex-shrink:0;margin-top:.18rem;font-weight:600;min-width:30px;text-align:center;white-space:nowrap}
+.raw-date{color:var(--date-color);font-size:.7rem;flex-shrink:0;margin-top:.2rem;white-space:nowrap}
+.raw-cluster{font-size:.7rem;color:var(--muted);background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.1rem .45rem;flex-shrink:0;margin-top:.18rem;white-space:nowrap;max-width:130px;overflow:hidden;text-overflow:ellipsis}
+/* T3 arg blocks */
+.arg-block-card{background:var(--card);border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:.75rem}
+.arg-block-head{padding:1rem 1.25rem;cursor:pointer;display:flex;align-items:center;gap:.75rem;user-select:none}
+.arg-block-head:hover{background:#fafaf8}
+.arg-block-name{font-family:'Crimson Pro',serif;font-size:1.1rem;font-weight:600;flex:1}
+.arg-block-body{display:none;border-top:1.5px solid var(--border)}
+.arg-block-card.open .arg-block-body{display:block}
+/* Subgroups */
+.subgroups-panel{padding:.5rem 1rem .75rem}
+.subgroups-label{font-size:.73rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:.4rem 0 .5rem}
+.sg-card{background:var(--sg-bg);border:1px solid var(--sg-border);border-radius:8px;margin-bottom:.4rem;overflow:hidden}
+.sg-head{padding:.6rem .9rem;cursor:pointer;display:flex;align-items:center;gap:.6rem;user-select:none}
+.sg-head:hover{background:#eeebe5}
+.sg-title{font-size:.88rem;font-weight:600;flex:1;color:var(--ink)}
+.sg-chevron{color:var(--muted);font-size:.75rem;transition:transform .2s;flex-shrink:0}
+.sg-badge{background:var(--tag-bg);color:var(--muted);font-size:.68rem;padding:.15rem .45rem;border-radius:8px;font-weight:600;white-space:nowrap}
+.sg-body{display:none;border-top:1px solid var(--sg-border)}
+.sg-card.open .sg-body{display:block}
+.sg-pcn{padding:.65rem .9rem;display:grid;gap:.45rem;border-bottom:1px solid var(--sg-border)}
+.sg-hint-row{padding:.4rem .65rem;border-radius:6px;line-height:1.5}
+.sg-qs{padding:.5rem .9rem .7rem}
+.sg-qs-label{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:.4rem}
+/* T2 subgroup desc */
+.sg-desc{font-size:.78rem;color:var(--muted);padding:.4rem .9rem .5rem;font-style:italic;border-bottom:1px solid var(--sg-border)}
+/* Universal args */
+.univ-banner{background:var(--univ-bg);border:1.5px solid var(--univ-border);border-radius:10px;padding:.8rem 1rem;margin-bottom:1.25rem}
+.univ-top{display:flex;gap:1rem;align-items:flex-start;flex-wrap:wrap}
+.univ-template{flex:1;min-width:200px}
+.univ-template-label{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#b45309;margin-bottom:.4rem}
+.univ-row{font-size:.83rem;line-height:1.7}
+.univ-row strong{font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;margin-right:.3rem}
+.univ-expand-btn{font-size:.8rem;color:var(--accent);cursor:pointer;background:none;border:none;font-family:inherit;padding:0;font-weight:500;white-space:nowrap;align-self:center;flex-shrink:0}
+.univ-expand-btn:hover{text-decoration:underline}
+.univ-verbs-panel{display:none;margin-top:.9rem;padding-top:.75rem;border-top:1px solid var(--univ-border)}
+.univ-verbs-panel.open{display:block}
+.univ-verb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.5rem}
+.univ-verb-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:.6rem .8rem}
+.univ-verb-label{font-size:.78rem;font-weight:600;margin-bottom:.25rem}
+.univ-verb-list{font-size:.76rem;color:var(--muted);margin-bottom:.4rem;font-style:italic}
+.univ-ex-line{font-size:.78rem;line-height:1.6}
+.univ-pour{color:#388e3c}.univ-contre{color:#c62828}
+/* Questions panel (T2 key questions) */
+.questions-panel{padding:.75rem 1.25rem;border-bottom:1.5px solid var(--border)}
+.questions-panel .ql{font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:.5rem}
+.q-item{padding:.4rem .7rem;background:var(--q-bg);border-left:3px solid var(--q-border);border-radius:0 6px 6px 0;font-size:.875rem;margin-bottom:.35rem}
+/* Empty / loading */
+.empty-state{text-align:center;padding:3rem 1rem;color:var(--muted);font-size:.9rem}
+.loading-state{text-align:center;padding:4rem 1rem;color:var(--muted)}
+.loading-spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 1rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:600px){
+  .page-header,.tabs-outer{padding:1rem}
+  .controls{flex-direction:column}
+  .stats-line{margin-left:0}
+  .cluster-name,.arg-block-name{font-size:1rem}
+  .raw-cluster{display:none}
+  .univ-verb-grid{grid-template-columns:1fr}
+  .filter-select,.theme-select{max-width:100%}
+}
+
+/* ── STATS TAB ── */
+.stats-tab-bar{display:flex;gap:.4rem;margin-bottom:1.5rem;border-bottom:2px solid var(--border);flex-wrap:wrap}
+.stats-sub-btn{padding:.55rem 1.1rem;border:none;background:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.87rem;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
+.stats-sub-btn.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.75rem;margin-bottom:2rem}
+.stat-card{background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:1rem 1.1rem}
+.stat-card-val{font-family:'Crimson Pro',serif;font-size:2rem;font-weight:600;color:var(--accent);line-height:1}
+.stat-card-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:.35rem}
+.stat-card-note{font-size:.78rem;color:var(--ink);margin-top:.3rem}
+.chart-section{background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:1.25rem 1.4rem;margin-bottom:1.25rem}
+.chart-title{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:1rem}
+.chart-legend{display:flex;gap:1rem;margin-bottom:.85rem;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:.4rem;font-size:.75rem;color:var(--muted)}
+.legend-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.bar-row{display:flex;align-items:center;gap:.65rem;margin-bottom:.55rem}
+.bar-label{font-size:.79rem;color:var(--ink);min-width:210px;max-width:210px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}
+.bar-track{flex:1;height:7px;background:var(--bg);border-radius:4px;position:relative}
+.bar-fill{height:100%;border-radius:4px;transition:width .5s ease}
+.bar-primary{background:var(--accent)}
+.bar-secondary{background:#6b9bd2;opacity:.7}
+.bar-pct{font-size:.74rem;color:var(--muted);min-width:38px;text-align:right;flex-shrink:0}
+.bar-delta{font-size:.71rem;min-width:44px;text-align:right;flex-shrink:0;font-weight:700}
+.delta-up{color:#2e7d32}.delta-dn{color:#c62828}.delta-fl{color:var(--muted)}
+.insight-box{background:#f0f4ff;border-left:3px solid #5c7cfa;border-radius:0 8px 8px 0;padding:.75rem 1rem;margin-bottom:.75rem;font-size:.84rem;line-height:1.6}
+.insight-box strong{color:#3451b2}
+.priority-table{width:100%;border-collapse:collapse;font-size:.81rem;margin-bottom:2rem}
+.priority-table th{text-align:left;font-size:.69rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);padding:.5rem .7rem;border-bottom:2px solid var(--border)}
+.priority-table td{padding:.52rem .7rem;border-bottom:1px solid var(--border);vertical-align:middle}
+.priority-table tr:last-child td{border-bottom:none}
+.priority-table tr:hover td{background:#fafaf8}
+.rank-num{background:var(--ink);color:#fff;font-size:.65rem;font-weight:700;padding:.18rem .45rem;border-radius:6px;display:inline-block;min-width:22px;text-align:center}
+.mode-pill{font-size:.64rem;font-weight:700;padding:.18rem .5rem;border-radius:10px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.mp1{background:#eef7ee;color:#2e7d32;border:1px solid #b7dfb8}
+.mp2{background:#e8f0fe;color:#1a56db;border:1px solid #b6cbf7}
+
+/* ── GUIDE TAB ── */
+.guide-nav{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.75rem;padding-bottom:1rem;border-bottom:2px solid var(--border)}
+.guide-nav-btn{padding:.42rem .95rem;border:1.5px solid var(--border);border-radius:16px;background:none;cursor:pointer;font-size:.79rem;color:var(--muted);font-family:'DM Sans',sans-serif;transition:all .15s;white-space:nowrap}
+.guide-nav-btn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.guide-section{display:none;padding-bottom:3rem}
+.guide-section.active{display:block}
+.guide-h1{font-family:'Crimson Pro',serif;font-size:1.45rem;font-weight:600;color:var(--ink);margin-bottom:.25rem}
+.guide-h2{font-family:'Crimson Pro',serif;font-size:1.1rem;font-weight:600;color:var(--ink);margin:1.5rem 0 .65rem}
+.guide-sub{font-size:.83rem;color:var(--muted);margin-bottom:1.25rem;line-height:1.6}
+.mode-selector{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.5rem}
+.mode-card{border:2px solid var(--border);border-radius:12px;padding:1rem 1.1rem;cursor:pointer;transition:all .15s;background:var(--card);user-select:none}
+.mode-card:hover{border-color:var(--accent)}
+.mode-card.selected{border-color:var(--accent);background:#fff8f8}
+.mode-card-title{font-weight:600;font-size:.9rem;margin-bottom:.3rem}
+.mode-card-sub{font-size:.76rem;color:var(--muted);line-height:1.5}
+.mode-card-when{font-size:.72rem;color:var(--accent);font-weight:600;margin-top:.45rem}
+.skeleton-panel{background:var(--card);border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:.65rem}
+.skeleton-head{padding:.85rem 1.1rem;cursor:pointer;display:flex;align-items:center;gap:.7rem;user-select:none}
+.skeleton-head:hover{background:#fafaf8}
+.skeleton-title{font-weight:600;font-size:.91rem;flex:1}
+.skel-chev{color:var(--muted);font-size:.82rem;transition:transform .2s}
+.skeleton-panel.open .skel-chev{transform:rotate(90deg)}
+.skeleton-body{display:none;border-top:1.5px solid var(--border)}
+.skeleton-panel.open .skeleton-body{display:block}
+.slot-block{padding:.85rem 1.1rem;border-bottom:1px solid var(--border)}
+.slot-block:last-child{border-bottom:none}
+.slot-lbl{font-size:.69rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.6rem;display:block}
+.sl-s1{color:#2e7d32}.sl-s2{color:#1a56db}.sl-s3{color:#b45309}
+.filler-list{display:flex;flex-direction:column;gap:.45rem}
+.filler-item{background:var(--bg);border-radius:8px;padding:.5rem .75rem}
+.filler-item-pour{background:#eef7ee;border-left:3px solid var(--pour-border)}
+.filler-item-contre{background:#fdecea;border-left:3px solid var(--contre-border)}
+.filler-item-close{background:#fff8ee;border-left:3px solid #e8a020}
+.filler-fr{font-size:.87rem;color:var(--ink);font-weight:500}
+.filler-eg{font-size:.74rem;color:var(--muted);margin-top:.18rem;font-style:italic}
+.filler-coverage{font-size:.68rem;font-weight:700;padding:.15rem .45rem;border-radius:8px;float:right;margin-left:.5rem;margin-top:.1rem}
+.cov-high{background:#dcfce7;color:#166534}
+.cov-mid{background:#fef9c3;color:#854d0e}
+.cov-low{background:#f1f5f9;color:#64748b}
+/* Generator */
+.gen-controls{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;margin-bottom:1.25rem}
+.gen-select{padding:.5rem .9rem;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.85rem;background:var(--card);color:var(--ink);cursor:pointer;flex:1;min-width:180px}
+.gen-select:focus{outline:none;border-color:var(--accent)}
+.gen-btn{padding:.52rem 1.25rem;background:var(--accent);color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.87rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:opacity .15s}
+.gen-btn:hover{opacity:.88}
+.gen-btn-sec{background:var(--ink)}
+.gen-output{background:var(--card);border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1rem}
+.gen-question{background:var(--ink);color:#fff;padding:.9rem 1.1rem;font-family:'Crimson Pro',serif;font-size:1.1rem;font-weight:600;line-height:1.4}
+.gen-question-meta{font-size:.72rem;color:rgba(255,255,255,.55);font-family:'DM Sans',sans-serif;font-weight:400;margin-top:.25rem}
+.gen-body{padding:1rem 1.1rem;display:flex;flex-direction:column;gap:.65rem}
+.gen-para{border-radius:8px;padding:.75rem .9rem;line-height:1.7;font-size:.87rem}
+.gen-para-for{background:var(--pour-bg);border-left:3px solid var(--pour-border)}
+.gen-para-against{background:var(--contre-bg);border-left:3px solid var(--contre-border)}
+.gen-para-nuance{background:var(--nuance-bg);border-left:3px solid var(--nuance-border)}
+.gen-para-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.4rem;opacity:.75;display:block}
+.gen-slot{display:inline}.gen-slot-opinion{font-weight:600}.gen-slot-effet{color:#2d5a1b}.gen-slot-exemple{color:#1a3a6b}.gen-slot-concl{color:#6b1a1a}
+.gen-legend{display:flex;gap:1rem;flex-wrap:wrap;margin-top:.5rem;padding:.65rem .9rem;background:var(--bg);border-top:1px solid var(--border);font-size:.73rem}
+.gen-legend-item{display:flex;align-items:center;gap:.35rem;color:var(--muted)}
+.gen-legend-dot{width:8px;height:8px;border-radius:50%}
+.gen-empty{text-align:center;padding:2.5rem 1rem;color:var(--muted);font-size:.88rem}
+.gen-type-btns{display:flex;gap:.5rem;margin-bottom:1.25rem}
+.gen-type-btn{flex:1;padding:.6rem;border:1.5px solid var(--border);border-radius:8px;background:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.82rem;color:var(--muted);text-align:center;transition:all .15s}
+.gen-type-btn.active{border-color:var(--accent);color:var(--accent);background:#fff8f8;font-weight:600}
+.nuance-box{background:var(--nuance-bg);border-left:3px solid var(--nuance-border);border-radius:0 8px 8px 0;padding:.8rem 1rem;margin:.85rem 1.1rem}
+.nuance-formula{font-size:.9rem;font-weight:500;margin-bottom:.5rem}
+.nuance-em{color:#b45309;font-weight:700}
+.adj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.55rem;margin:.85rem 1.1rem 1rem}
+.adj-card{background:var(--card);border:1.5px solid var(--border);border-radius:8px;padding:.6rem .8rem}
+.adj-mood{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.35rem}
+.am-limit{color:#2e7d32}.am-merit{color:#1a56db}.am-risk{color:#b45309}.am-univ{color:var(--muted)}
+.adj-words{font-size:.84rem;color:var(--ink);line-height:1.7}
+.hinge-list{padding:.85rem 1.1rem 1.1rem;display:flex;flex-direction:column;gap:.4rem}
+.hinge-row{display:flex;align-items:flex-start;gap:.6rem}
+.hinge-rank{background:var(--ink);color:#fff;font-size:.64rem;font-weight:700;padding:.18rem .42rem;border-radius:5px;flex-shrink:0;margin-top:.12rem}
+.hinge-fr{font-size:.85rem;font-weight:500;flex:1}
+.hinge-eg{font-size:.74rem;color:var(--muted);font-style:italic}
+.ref-wrap{overflow-x:auto}
+.ref-table{width:100%;border-collapse:collapse;font-size:.81rem;margin-bottom:1.5rem}
+.ref-table th{text-align:left;font-size:.69rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:.48rem .7rem;border-bottom:2px solid var(--border);background:var(--bg);white-space:nowrap}
+.ref-table td{padding:.5rem .7rem;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.5}
+.ref-table tr:hover td{background:#fafaf8}
+.guide-tip{background:var(--univ-bg);border:1.5px solid var(--univ-border);border-radius:10px;padding:.8rem 1rem;margin-bottom:1rem;font-size:.83rem;line-height:1.6}
+.guide-tip-lbl{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#b45309;margin-bottom:.3rem}
+@media(max-width:600px){
+  .mode-selector{grid-template-columns:1fr}
+  .adj-grid{grid-template-columns:1fr}
+  .bar-label{min-width:130px;max-width:130px}
+  .priority-table td:nth-child(4),.priority-table th:nth-child(4){display:none}
+}
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <a class="nav-logo" href="tcf_home.html">TCF</a>
+  <div class="nav-links">
+    <a href="tcf_home.html" class="nav-link">Accueil</a>
+    <a href="tcf_feed.html" class="nav-link">Lecture EE</a>
+    <a href="tcf_navigator.html" class="nav-link active">Navigateur</a>
+  </div>
+</nav>
+<div class="page-header">
+  <div class="page-title">Navigateur TCF</div>
+  <div class="page-subtitle">Expression Écrite & Orale — questions classées par thème</div>
+</div>
+<div class="tabs-outer">
+  <div class="tab-bar" id="mainTabBar">
+    <button class="tab-btn active" data-tab="ee">Expression Écrite</button>
+    <button class="tab-btn" data-tab="eo">Expression Orale</button>
+  </div>
+
+  <!-- EE TAB -->
+  <div id="tab-ee">
+    <div class="tab-bar" id="eeTabBar">
+      <button class="tab-btn active" data-task="t1">T1 — Courriel / message</button>
+      <button class="tab-btn" data-task="t2">T2 — Texte long (blog, forum…)</button>
+    </div>
+    <div class="view-bar">
+      <span class="view-label">Vue :</span>
+      <button class="view-btn active" id="ee-mode-clusters">Groupes</button>
+      <button class="view-btn" id="ee-mode-raw">Toutes</button>
+    </div>
+    <div class="controls">
+      <input class="search-box" id="ee-search" placeholder="Rechercher..." type="text">
+      <select class="filter-select" id="ee-cluster-filter"></select>
+      <div class="sort-toggle">
+        <button class="sort-toggle-btn active" id="ee-sort-freq">🔁 Fréquence</button>
+        <button class="sort-toggle-btn" id="ee-sort-recent">🕐 Récents</button>
+      </div>
+      <span class="stats-line" id="ee-stats"></span>
+    </div>
+    <div id="ee-content"><div class="loading-state"><div class="loading-spinner"></div>Chargement…</div></div>
+  </div>
+
+  <!-- EO TAB -->
+  <div id="tab-eo" style="display:none">
+    <div class="tab-bar" id="eoTabBar">
+      <button class="tab-btn active" data-view="scenarios">T2 — Scénarios</button>
+      <button class="tab-btn" data-view="t3">T3 — Arguments</button>
+      <button class="tab-btn" data-view="stats">Statistiques</button>
+      <button class="tab-btn" data-view="guide">Guide de production</button>
+    </div>
+    <div id="eo-browse">
+    <div class="view-bar">
+      <span class="view-label">Vue :</span>
+      <button class="view-btn active" id="eo-mode-clusters">Groupes</button>
+      <button class="view-btn" id="eo-mode-raw">Toutes</button>
+    </div>
+    <div class="controls">
+      <input class="search-box" id="eo-search" placeholder="Rechercher..." type="text">
+      <select class="filter-select" id="eo-cluster-filter"></select>
+      <select class="theme-select" id="eo-theme-filter"><option value="">Tous les thèmes</option></select>
+      <div class="sort-toggle">
+        <button class="sort-toggle-btn active" id="eo-sort-freq">🔁 Fréquence</button>
+        <button class="sort-toggle-btn" id="eo-sort-recent">🕐 Récents</button>
+      </div>
+      <span class="stats-line" id="eo-stats"></span>
+    </div>
+    <div id="eo-content"><div class="loading-state"><div class="loading-spinner"></div>Chargement…</div></div>
+    </div>
+  <div id="tab-stats" style="display:none">
+    <div class="stats-tab-bar">
+      <button class="stats-sub-btn active" data-stab="t2">T2 Scénarios</button>
+      <button class="stats-sub-btn" data-stab="t3">T3 Arguments</button>
+    </div>
+
+    <!-- T2 stats -->
+    <div id="stab-t2">
+      <div style="margin-bottom:1.5rem">
+        <div style="font-family:'Crimson Pro',serif;font-size:1.35rem;font-weight:600;margin-bottom:.2rem">T2 — Scénarios de jeu de rôle</div>
+        <div style="font-size:.82rem;color:var(--muted)">1 821 questions · 27 clusters · archive Jan 2022 – Juin 2026</div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-card-val">1 821</div><div class="stat-card-label">Questions totales</div></div>
+        <div class="stat-card"><div class="stat-card-val">27</div><div class="stat-card-label">Clusters distincts</div></div>
+        <div class="stat-card"><div class="stat-card-val">62.6%</div><div class="stat-card-label">Top 3 clusters</div><div class="stat-card-note">Nouveau quartier · Agence voyages · Cours</div></div>
+        <div class="stat-card"><div class="stat-card-val">+4.1pp</div><div class="stat-card-label">Bigger shift (récent)</div><div class="stat-card-note">Cours inscriptions ↑ vs Emploi ↓</div></div>
+      </div>
+
+      <div class="insight-box"><strong>Insight clé :</strong> Les top 3 clusters couvrent 62.6% de toutes les questions. «&nbsp;Nouveau dans le quartier / orientation ville&nbsp;» seul représente 30.8%. Maîtriser ces 3 scénarios = connaître 2/3 de l'examen T2.</div>
+
+      <div class="chart-section">
+        <div class="chart-title">Fréquence brute vs Pondération récente (top 12)</div>
+        <div class="chart-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Brut</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#6b9bd2"></div>Récent (pondéré)</div>
+        </div>
+        <div id="t2-bars"></div>
+      </div>
+
+      <div style="font-family:'Crimson Pro',serif;font-size:1.1rem;font-weight:600;margin-bottom:.75rem">Table de priorité T2</div>
+      <table class="priority-table">
+        <thead><tr><th>#</th><th>Cluster</th><th>Brut%</th><th>Récent%</th><th>Δ</th></tr></thead>
+        <tbody id="t2-table"></tbody>
+      </table>
+    </div>
+
+    <!-- T3 stats -->
+    <div id="stab-t3" style="display:none">
+      <div style="margin-bottom:1.5rem">
+        <div style="font-family:'Crimson Pro',serif;font-size:1.35rem;font-weight:600;margin-bottom:.2rem">T3 — Arguments thématiques</div>
+        <div style="font-size:.82rem;color:var(--muted)">1 792 questions · 23 clusters · archive Jan 2022 – Juin 2026</div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-card-val">1 792</div><div class="stat-card-label">Questions totales</div></div>
+        <div class="stat-card"><div class="stat-card-val">23</div><div class="stat-card-label">Clusters distincts</div></div>
+        <div class="stat-card"><div class="stat-card-val">61%</div><div class="stat-card-label">Top 5 clusters</div><div class="stat-card-note">Travail · Tech · Famille · Immigration · Éducation</div></div>
+        <div class="stat-card"><div class="stat-card-val">+1.3pp</div><div class="stat-card-label">Bigger shift (récent)</div><div class="stat-card-note">Éducation ↑ · Tech légèrement ↓</div></div>
+      </div>
+
+      <div class="insight-box"><strong>Insight clé :</strong> Top 5 clusters = 61% de toutes les questions T3. Travail/télétravail est n°1 en pondération récente (16.9%). Éducation monte (+1.3pp). Technologie domine en volume mais recule légèrement en récence — le sujet se stabilise.</div>
+
+      <div class="chart-section">
+        <div class="chart-title">Fréquence brute vs Pondération récente (top 12)</div>
+        <div class="chart-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Brut</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#6b9bd2"></div>Récent (pondéré)</div>
+        </div>
+        <div id="t3-bars"></div>
+      </div>
+
+      <div style="font-family:'Crimson Pro',serif;font-size:1.1rem;font-weight:600;margin-bottom:.75rem">Table de priorité T3</div>
+      <table class="priority-table">
+        <thead><tr><th>#</th><th>Cluster</th><th>Brut%</th><th>Récent%</th><th>Δ</th></tr></thead>
+        <tbody id="t3-table"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- GUIDE TAB -->
+  <div id="tab-guide" style="display:none">
+    <div class="guide-nav">
+      <button class="guide-nav-btn active" data-gsec="skeleton">Squelettes</button>
+      <button class="guide-nav-btn" data-gsec="nuance">Nuance (Slot 3)</button>
+      <button class="guide-nav-btn" data-gsec="connectors">Connecteurs</button>
+      <button class="guide-nav-btn" data-gsec="ref">Référence rapide</button>
+      <button class="guide-nav-btn" data-gsec="generator">Générateur</button>
+    </div>
+
+    <!-- SKELETON SECTION -->
+    <div class="guide-section active" id="gsec-skeleton">
+      <div class="guide-h1">Choisir son mode</div>
+      <div class="guide-sub">Deux modes selon le type de question. Le Slot 3 nuance est identique dans les deux.</div>
+      <div class="mode-selector">
+        <div class="mode-card selected" id="mode-m1" onclick="selectMode('m1')">
+          <div class="mode-card-title">Mode 1 — Individuel / Collectif</div>
+          <div class="mode-card-sub">Slot 1 = bénéfice ou coût individuel. Slot 2 = impact collectif ou sociétal.</div>
+          <div class="mode-card-when">→ Bien-être, liberté, stress, relations, égalité, cohésion</div>
+        </div>
+        <div class="mode-card" id="mode-m2" onclick="selectMode('m2')">
+          <div class="mode-card-title">Mode 2 — Pour / Contre (libre)</div>
+          <div class="mode-card-sub">Pas de cadre individuel/collectif. Les deux arguments les plus forts du sujet.</div>
+          <div class="mode-card-when">→ Fiscal, éthique, faisabilité, valeur culturelle, légitimité</div>
+        </div>
+      </div>
+
+      <!-- M1 panels -->
+      <div id="m1-panels">
+        <div class="guide-h2">Paragraphe complet — Mode 1</div>
+
+        <div style="margin-bottom:.6rem">
+          <div style="display:flex;gap:.5rem;margin-bottom:.75rem">
+            <button class="toggle-pill active" onclick="showFullSkel('m1','pour',this)">POUR</button>
+            <button class="toggle-pill" onclick="showFullSkel('m1','contre',this)">CONTRE</button>
+          </div>
+          <div id="full-skel-m1-pour" class="nuance-box" style="background:var(--pour-bg);border-color:var(--pour-border);font-size:.87rem;line-height:1.9">
+            <div style="font-size:.69rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#2e7d32;margin-bottom:.6rem">Structure complète — un paragraphe POUR</div>
+            <div><span style="color:#2e7d32;font-weight:700">[Connecteur P1]</span> Tout d'abord, / D'une part, / En premier lieu,</div>
+            <div><span style="color:#2e7d32;font-weight:700">[Opinion S1]</span> <em>ça facilite la vie quotidienne / ça améliore la qualité de vie / ça offre plus de liberté…</em></div>
+            <div style="margin-top:.35rem"><span style="color:#1a5c1a;font-weight:700">[En effet]</span> En effet, lorsqu'on [situation], [conséquence], ce qui peut rapidement devenir [adj].</div>
+            <div style="margin-top:.35rem"><span style="color:#1a3a6b;font-weight:700">[Par exemple]</span> Par exemple, un/une [personne + contexte] peut [conséquence spécifique].</div>
+            <div style="margin-top:.35rem"><span style="color:#6b1a1a;font-weight:700">[Conclusion]</span> C'est la raison pour laquelle beaucoup de [personnes] cherchent à / ont tendance à [verbe].</div>
+            <div style="margin-top:.6rem;padding-top:.6rem;border-top:1px solid var(--pour-border)">
+              <span style="color:#2e7d32;font-weight:700">[Connecteur P2]</span> De plus, / Par ailleurs, / En outre,<br>
+              <span style="color:#2e7d32;font-weight:700">[Opinion S2]</span> <em>ça renforce le lien social / ça réduit les inégalités / ça bénéficie à l'ensemble de la société…</em><br>
+              <span style="color:#1a5c1a;font-weight:700">[En effet]</span> En effet, le fait de [action] entraîne souvent [conséquence].<br>
+              <span style="color:#1a3a6b;font-weight:700">[Par exemple]</span> C'est le cas de [groupe] qui [comportement / conséquence].<br>
+              <span style="color:#6b1a1a;font-weight:700">[Conclusion]</span> C'est pourquoi il est essentiel de [solution].
+            </div>
+            <div style="margin-top:.6rem;padding-top:.6rem;border-top:1px solid var(--pour-border)">
+              <span style="color:#b45309;font-weight:700">[P3 Nuance]</span> Cependant, bien que ce soit [utile / bénéfique / nécessaire], tout dépend de [l'usage / la mise en œuvre…] et du contexte.<br>
+              <span style="color:#1a5c1a;font-weight:700">[En effet]</span> En effet, ce n'est pas [X] qui pose problème, c'est [Y].<br>
+              <span style="color:#1a3a6b;font-weight:700">[Par exemple]</span> Il suffit de penser à [groupe ou situation] pour comprendre que [nuance].<br>
+              <span style="color:#6b1a1a;font-weight:700">[Conclusion]</span> C'est pourquoi il est important de ne pas oublier que [nuance] / En définitive, c'est à chacun de trouver l'équilibre qui lui convient.
+            </div>
+          </div>
+          <div id="full-skel-m1-contre" class="nuance-box" style="display:none;background:var(--contre-bg);border-color:var(--contre-border);font-size:.87rem;line-height:1.9">
+            <div style="font-size:.69rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#c62828;margin-bottom:.6rem">Structure complète — un paragraphe CONTRE</div>
+            <div><span style="color:#c62828;font-weight:700">[Connecteur P1]</span> Tout d'abord, / D'une part, / En premier lieu,</div>
+            <div><span style="color:#c62828;font-weight:700">[Opinion S1]</span> <em>ça crée une dépendance / ça nuit au bien-être / ça limite la liberté individuelle…</em></div>
+            <div style="margin-top:.35rem"><span style="color:#1a5c1a;font-weight:700">[En effet]</span> En effet, plus on [action], plus on [conséquence négative].</div>
+            <div style="margin-top:.35rem"><span style="color:#1a3a6b;font-weight:700">[Par exemple]</span> Prenons le cas de [personne] qui [situation problématique].</div>
+            <div style="margin-top:.35rem"><span style="color:#6b1a1a;font-weight:700">[Conclusion]</span> C'est la raison pour laquelle beaucoup de [personnes] cherchent à éviter / limitent / remettent en question [sujet].</div>
+            <div style="margin-top:.6rem;padding-top:.6rem;border-top:1px solid var(--contre-border)">
+              <span style="color:#c62828;font-weight:700">[Connecteur P2]</span> De plus, / Par ailleurs, / En outre,<br>
+              <span style="color:#c62828;font-weight:700">[Opinion S2]</span> <em>ça accentue les inégalités / ça fragilise le lien social / ça représente un coût pour la société…</em><br>
+              <span style="color:#1a5c1a;font-weight:700">[En effet]</span> En effet, il est difficile de [objectif] sans [condition nécessaire].<br>
+              <span style="color:#1a3a6b;font-weight:700">[Par exemple]</span> Imaginons une personne qui [situation] — les conséquences sont rapidement visibles.<br>
+              <span style="color:#6b1a1a;font-weight:700">[Conclusion]</span> Force est de constater que [réalité problématique].
+            </div>
+            <div style="margin-top:.6rem;padding-top:.6rem;border-top:1px solid var(--contre-border)">
+              <span style="color:#b45309;font-weight:700">[P3 Nuance]</span> Cependant, bien que ce soit [populaire / répandu / défendable], tout dépend de [l'usage / la mise en œuvre…] et du contexte.<br>
+              <span style="color:#1a5c1a;font-weight:700">[En effet]</span> En effet, on ne peut pas nier que [réalité positive côté opposé].<br>
+              <span style="color:#1a3a6b;font-weight:700">[Par exemple]</span> Il suffit de penser à [contre-exemple] pour nuancer le propos.<br>
+              <span style="color:#6b1a1a;font-weight:700">[Conclusion]</span> En fin de compte, la question n'est pas de savoir si [X], mais de savoir [Y].
+            </div>
+          </div>
+        </div>
+
+        <div class="guide-h2">Fillers par slot</div>
+        <div class="skeleton-panel">
+          <div class="skeleton-head"><span class="skeleton-title">Slot 1 — Bénéfice individuel</span><span class="skel-chev">▶</span></div>
+          <div class="skeleton-body">
+            <div class="slot-block"><span class="slot-lbl sl-s1">Fillers</span>
+              <div class="filler-list">
+                <div class="filler-item filler-item-pour"><div class="filler-fr"><span class="filler-coverage cov-high">~37% T3</span>ça facilite la vie quotidienne</div><div class="filler-eg">télétravail, transports, technologie</div></div>
+                <div class="filler-item filler-item-pour"><div class="filler-fr"><span class="filler-coverage cov-high">~35% T3</span>ça améliore la qualité de vie</div><div class="filler-eg">santé, alimentation, sport, nature</div></div>
+                <div class="filler-item filler-item-pour"><div class="filler-fr"><span class="filler-coverage cov-mid">~22% T3</span>ça offre plus de liberté et d'autonomie</div><div class="filler-eg">télétravail, immigration, éducation, célibat</div></div>
+                <div class="filler-item filler-item-pour"><div class="filler-fr"><span class="filler-coverage cov-low">~12% T3</span>ça permet à chacun de s'épanouir</div><div class="filler-eg">arts, formation, langue, intégration</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="skeleton-panel">
+          <div class="skeleton-head"><span class="skeleton-title">Slot 2 — Bénéfice collectif</span><span class="skel-chev">▶</span></div>
+          <div class="skeleton-body">
+            <div class="slot-block"><span class="slot-lbl sl-s2">Fillers</span>
+              <div class="filler-list">
+                <div class="filler-item filler-item-pour"><div class="filler-fr"><span class="filler-coverage cov-mid">~18% T3</span>ça renforce le lien social</div><div class="filler-eg">volontariat, culture, sport, fêtes de quartier</div></div>
+                <div class="filler-item filler-item-pour"><div class="filler-fr"><span class="filler-coverage cov-mid">~20% T3</span>ça réduit les inégalités</div><div class="filler-eg">éducation publique, transports, accès aux soins</div></div>
+                <div class="filler-item filler-item-pour"><div class="filler-fr"><span class="filler-coverage cov-high">~40% T3</span>ça bénéficie à l'ensemble de la société</div><div class="filler-eg">environnement, information, recherche, santé publique</div></div>
+                <div class="filler-item filler-item-pour"><div class="filler-fr"><span class="filler-coverage cov-mid">~25% T3</span>ça contribue au développement collectif</div><div class="filler-eg">immigration, éducation, innovation, tourisme</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="guide-h2">Fillers CONTRE — Slot 1 (coût individuel)</div>
+        <div class="skeleton-panel">
+          <div class="skeleton-head"><span class="skeleton-title">Slot 1 — Coût individuel</span><span class="skel-chev">▶</span></div>
+          <div class="skeleton-body">
+            <div class="slot-block"><span class="slot-lbl sl-s1">Fillers</span>
+              <div class="filler-list">
+                <div class="filler-item filler-item-contre"><div class="filler-fr"><span class="filler-coverage cov-high">~30% T3</span>ça crée une dépendance</div><div class="filler-eg">réseaux sociaux, écrans, jeux vidéo, médicaments</div></div>
+                <div class="filler-item filler-item-contre"><div class="filler-fr"><span class="filler-coverage cov-mid">~25% T3</span>ça nuit au bien-être</div><div class="filler-eg">stress au travail, images violentes, pression sociale</div></div>
+                <div class="filler-item filler-item-contre"><div class="filler-fr"><span class="filler-coverage cov-mid">~22% T3</span>ça limite la liberté individuelle</div><div class="filler-eg">interdictions étatiques, contrôle, normes imposées</div></div>
+                <div class="filler-item filler-item-contre"><div class="filler-fr"><span class="filler-coverage cov-mid">~20% T3</span>ça génère du stress et de l'isolement</div><div class="filler-eg">télétravail, réseaux sociaux, pression scolaire</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="skeleton-panel">
+          <div class="skeleton-head"><span class="skeleton-title">Slot 2 — Coût collectif</span><span class="skel-chev">▶</span></div>
+          <div class="skeleton-body">
+            <div class="slot-block"><span class="slot-lbl sl-s2">Fillers</span>
+              <div class="filler-list">
+                <div class="filler-item filler-item-contre"><div class="filler-fr"><span class="filler-coverage cov-high">~35% T3</span>ça accentue les inégalités</div><div class="filler-eg">école privée, technologie, mondialisation</div></div>
+                <div class="filler-item filler-item-contre"><div class="filler-fr"><span class="filler-coverage cov-mid">~20% T3</span>ça fragilise le lien social</div><div class="filler-eg">télétravail, écrans, individualisme, urbanisation</div></div>
+                <div class="filler-item filler-item-contre"><div class="filler-fr"><span class="filler-coverage cov-mid">~22% T3</span>ça représente un coût pour la société</div><div class="filler-eg">chômage, pollution, maladies liées au mode de vie</div></div>
+                <div class="filler-item filler-item-contre"><div class="filler-fr"><span class="filler-coverage cov-low">~15% T3</span>ça exclut une partie de la population</div><div class="filler-eg">numérique, éducation élitiste, sport de haut niveau</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- M2 panels -->
+      <div id="m2-panels" style="display:none">
+        <div class="guide-h2">Paragraphe complet — Mode 2</div>
+        <div style="margin-bottom:.6rem">
+          <div style="display:flex;gap:.5rem;margin-bottom:.75rem">
+            <button class="toggle-pill active" onclick="showFullSkel('m2','pour',this)">POUR</button>
+            <button class="toggle-pill" onclick="showFullSkel('m2','contre',this)">CONTRE</button>
+          </div>
+          <div id="full-skel-m2-pour" class="nuance-box" style="background:var(--pour-bg);border-color:var(--pour-border);font-size:.87rem;line-height:1.9">
+            <div style="font-size:.69rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#2e7d32;margin-bottom:.6rem">Structure complète — Mode 2 POUR</div>
+            <div><span style="color:#2e7d32;font-weight:700">[P1 Argument FOR]</span> <em>ça démocratise l'accès / ça enrichit la vie culturelle / ça relève d'un choix personnel…</em></div>
+            <div style="margin-top:.35rem"><span style="color:#1a5c1a;font-weight:700">[En effet]</span> En effet, lorsqu'on [situation], [conséquence], ce qui peut rapidement [effet positif].</div>
+            <div style="margin-top:.35rem"><span style="color:#1a3a6b;font-weight:700">[Par exemple]</span> Par exemple, un/une [personne + contexte] peut [bénéfice concret].</div>
+            <div style="margin-top:.35rem"><span style="color:#6b1a1a;font-weight:700">[Conclusion]</span> C'est la raison pour laquelle de plus en plus de personnes [comportement / tendance].</div>
+            <div style="margin-top:.6rem;padding-top:.6rem;border-top:1px solid var(--pour-border)">
+              <span style="color:#2e7d32;font-weight:700">[P2 Argument FOR 2]</span> <em>ça génère des bénéfices à long terme / ça sensibilise à une prise de conscience / ça reflète une réalité légitime…</em><br>
+              <span style="color:#1a5c1a;font-weight:700">[En effet]</span> En effet, le fait de [action] entraîne souvent [conséquence positive].<br>
+              <span style="color:#1a3a6b;font-weight:700">[Par exemple]</span> C'est le cas de [groupe] qui [résultat concret].<br>
+              <span style="color:#6b1a1a;font-weight:700">[Conclusion]</span> C'est pourquoi il serait réducteur de [minimiser / ignorer / rejeter] cette réalité.
+            </div>
+            <div style="margin-top:.6rem;padding-top:.6rem;border-top:1px solid var(--pour-border)">
+              <span style="color:#b45309;font-weight:700">[P3 Nuance]</span> Cependant, bien que ce soit [risqué / coûteux / controversé], tout dépend de [l'usage / la mise en œuvre…] et du contexte.<br>
+              <span style="color:#1a5c1a;font-weight:700">[En effet]</span> En effet, on ne peut pas nier que [argument opposé réel].<br>
+              <span style="color:#1a3a6b;font-weight:700">[Par exemple]</span> Il suffit de penser à [groupe ou situation] pour comprendre que [nuance].<br>
+              <span style="color:#6b1a1a;font-weight:700">[Conclusion]</span> En définitive, c'est à chacun de trouver l'équilibre qui lui convient.
+            </div>
+          </div>
+          <div id="full-skel-m2-contre" class="nuance-box" style="display:none;background:var(--contre-bg);border-color:var(--contre-border);font-size:.87rem;line-height:1.9">
+            <div style="font-size:.69rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#c62828;margin-bottom:.6rem">Structure complète — Mode 2 CONTRE</div>
+            <div><span style="color:#c62828;font-weight:700">[P1 Argument AGAINST]</span> <em>ça représente un coût considérable / ça entretient des normes irréalistes / ça manque de légitimité…</em></div>
+            <div style="margin-top:.35rem"><span style="color:#1a5c1a;font-weight:700">[En effet]</span> En effet, plus on [action], plus les [conséquences négatives] se font sentir.</div>
+            <div style="margin-top:.35rem"><span style="color:#1a3a6b;font-weight:700">[Par exemple]</span> Prenons le cas de [personne / institution] confrontée à [situation problématique].</div>
+            <div style="margin-top:.35rem"><span style="color:#6b1a1a;font-weight:700">[Conclusion]</span> C'est la raison pour laquelle beaucoup de spécialistes remettent en question [sujet].</div>
+            <div style="margin-top:.6rem;padding-top:.6rem;border-top:1px solid var(--contre-border)">
+              <span style="color:#c62828;font-weight:700">[P2 Argument AGAINST 2]</span> <em>ça risque de saturer le système / ça aggrave les inégalités / ça mobilise des ressources au détriment…</em><br>
+              <span style="color:#1a5c1a;font-weight:700">[En effet]</span> En effet, il est difficile de [objectif] sans [condition] préalable.<br>
+              <span style="color:#1a3a6b;font-weight:700">[Par exemple]</span> Imaginons une situation où [contexte] — les limites deviennent rapidement évidentes.<br>
+              <span style="color:#6b1a1a;font-weight:700">[Conclusion]</span> Force est de constater que [réalité problématique qui persiste].
+            </div>
+            <div style="margin-top:.6rem;padding-top:.6rem;border-top:1px solid var(--contre-border)">
+              <span style="color:#b45309;font-weight:700">[P3 Nuance]</span> Cependant, bien que ce soit [populaire / séduisant / défendable], tout dépend de [la mise en œuvre / des politiques en place…] et du contexte.<br>
+              <span style="color:#1a5c1a;font-weight:700">[En effet]</span> En effet, on ne peut pas nier que [mérite du côté opposé].<br>
+              <span style="color:#1a3a6b;font-weight:700">[Par exemple]</span> Il suffit de penser à [contre-exemple positif] pour nuancer le propos.<br>
+              <span style="color:#6b1a1a;font-weight:700">[Conclusion]</span> En fin de compte, la question n'est pas de savoir si [X], mais de savoir [Y].
+            </div>
+          </div>
+        </div>
+
+        <div class="guide-h2">Fillers — arguments POUR (Mode 2)</div>
+        <div class="skeleton-panel">
+          <div class="skeleton-head"><span class="skeleton-title">Fillers POUR — choisir les 2 qui conviennent</span><span class="skel-chev">▶</span></div>
+          <div class="skeleton-body">
+            <div class="slot-block"><span class="slot-lbl sl-s1">Fillers</span>
+              <div class="filler-list">
+                <div class="filler-item"><div class="filler-fr">ça démocratise l'accès / élargit les possibilités pour tous</div><div class="filler-eg">soins gratuits, transports gratuits, vols low-cost</div></div>
+                <div class="filler-item"><div class="filler-fr">ça enrichit la vie culturelle et sociale</div><div class="filler-eg">métiers artistiques, zoos, sorties culturelles</div></div>
+                <div class="filler-item"><div class="filler-fr">ça relève d'un choix personnel et d'une liberté légitime</div><div class="filler-eg">vivre seul, ne pas avoir d'enfant, paraître jeune</div></div>
+                <div class="filler-item"><div class="filler-fr">ça génère des avancées et des bénéfices à long terme</div><div class="filler-eg">exploration spatiale, recherche scientifique, zoos/conservation</div></div>
+                <div class="filler-item"><div class="filler-fr">ça sensibilise et contribue à une prise de conscience collective</div><div class="filler-eg">zoos, médias, célébrités en politique</div></div>
+                <div class="filler-item"><div class="filler-fr">ça reflète une réalité économique ou sociale légitime</div><div class="filler-eg">salaires des sportifs, vols low-cost, habitudes alimentaires</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="guide-h2">Fillers — arguments CONTRE (Mode 2)</div>
+        <div class="skeleton-panel">
+          <div class="skeleton-head"><span class="skeleton-title">Fillers CONTRE — choisir les 2 qui conviennent</span><span class="skel-chev">▶</span></div>
+          <div class="skeleton-body">
+            <div class="slot-block"><span class="slot-lbl sl-s2">Fillers</span>
+              <div class="filler-list">
+                <div class="filler-item"><div class="filler-fr">ça représente un coût considérable pour les finances publiques</div><div class="filler-eg">soins gratuits, transports gratuits, exploration spatiale</div></div>
+                <div class="filler-item"><div class="filler-fr">ça risque de saturer le système et d'en dégrader la qualité</div><div class="filler-eg">soins gratuits, transports gratuits</div></div>
+                <div class="filler-item"><div class="filler-fr">ça mobilise des ressources au détriment de problèmes plus urgents</div><div class="filler-eg">exploration spatiale, grands projets d'infrastructure</div></div>
+                <div class="filler-item"><div class="filler-fr">ça entretient des normes sociales irréalistes ou inégalitaires</div><div class="filler-eg">paraître jeune, célébrités en politique, salaires sportifs</div></div>
+                <div class="filler-item"><div class="filler-fr">ça manque de légitimité ou de compétence réelle</div><div class="filler-eg">célébrités en politique, influenceurs comme experts</div></div>
+                <div class="filler-item"><div class="filler-fr">ça aggrave les inégalités ou l'impact environnemental</div><div class="filler-eg">vols low-cost, consommation, tourisme de masse</div></div>
+                <div class="filler-item"><div class="filler-fr">ça prive de liberté ou crée un déséquilibre difficile à justifier</div><div class="filler-eg">zoos (bien-être animal), interdictions étatiques</div></div>
+                <div class="filler-item"><div class="filler-fr">ça peut mener à l'isolement ou à une perte culturelle</div><div class="filler-eg">vivre seul, habitudes alimentaires, immigration sans intégration</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NUANCE SECTION -->
+    <div class="guide-section" id="gsec-nuance">
+      <div class="guide-h1">Slot 3 — La nuance</div>
+      <div class="guide-sub">Identique dans Mode 1 et Mode 2. Toujours en P3 (troisième paragraphe). <em>et du contexte</em> est un bloc permanent — ne jamais le retirer.</div>
+
+      <div class="nuance-box">
+        <div class="nuance-formula">Cependant, bien que ce soit <span class="nuance-em">[adjectif]</span>, tout dépend de <span class="nuance-em">[charnière]</span> et du contexte.</div>
+        <div style="font-size:.78rem;color:var(--muted)">1 charnière suffit. 2 maximum. «&nbsp;et du contexte&nbsp;» toujours en clôture.</div>
+      </div>
+
+      <div class="guide-h2">Adjectif — trois humeurs</div>
+      <div class="adj-grid">
+        <div class="adj-card">
+          <div class="adj-mood am-limit">Concéder une limite (squelette POUR)</div>
+          <div class="adj-words">utile · bénéfique · attrayant · nécessaire · inévitable</div>
+        </div>
+        <div class="adj-card">
+          <div class="adj-mood am-merit">Concéder un mérite (squelette CONTRE)</div>
+          <div class="adj-words">populaire · répandu · séduisant · tentant · défendable</div>
+        </div>
+        <div class="adj-card">
+          <div class="adj-mood am-risk">Concéder un risque (squelette POUR, sujet dangereux)</div>
+          <div class="adj-words">risqué · dangereux · coûteux · exigeant · controversé</div>
+        </div>
+        <div class="adj-card">
+          <div class="adj-mood am-univ">Universel — ne prend jamais parti</div>
+          <div class="adj-words" style="font-weight:600;font-size:.92rem">compréhensible</div>
+        </div>
+      </div>
+
+      <div class="guide-h2">Charnière — classement par universalité</div>
+      <div class="skeleton-panel open">
+        <div class="skeleton-body" style="display:block">
+          <div class="hinge-list">
+            <div class="hinge-row"><span class="hinge-rank">1</span><div><div class="hinge-fr">de l'usage</div><div class="hinge-eg">technologie, réseaux sociaux, médicaments — convient à presque tout</div></div></div>
+            <div class="hinge-row"><span class="hinge-rank">2</span><div><div class="hinge-fr">de l'application</div><div class="hinge-eg">IA en classe, télétravail, recyclage</div></div></div>
+            <div class="hinge-row"><span class="hinge-rank">3</span><div><div class="hinge-fr">de la mise en œuvre</div><div class="hinge-eg">soins gratuits, transports, développement durable</div></div></div>
+            <div class="hinge-row"><span class="hinge-rank">4</span><div><div class="hinge-fr">du profil de la personne</div><div class="hinge-eg">célibat, voyage solo, sans enfant, paraître jeune</div></div></div>
+            <div class="hinge-row"><span class="hinge-rank">5</span><div><div class="hinge-fr">des moyens disponibles</div><div class="hinge-eg">transport, santé, logement, formation</div></div></div>
+            <div class="hinge-row"><span class="hinge-rank">6</span><div><div class="hinge-fr">du contexte culturel</div><div class="hinge-eg">intégration, traditions, francophonie</div></div></div>
+            <div class="hinge-row"><span class="hinge-rank">7</span><div><div class="hinge-fr">des politiques en place</div><div class="hinge-eg">interdictions, célébrités en politique, surveillance</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="guide-tip" style="margin-top:1.25rem">
+        <div class="guide-tip-lbl">Exemple complet</div>
+        Cependant, bien que ce soit <strong>utile</strong>, tout dépend de <strong>l'usage qu'on en fait</strong> et du contexte. → Fonctionne verbatim pour ~80% des questions T3.
+      </div>
+    </div>
+
+    <!-- CONNECTORS SECTION -->
+    <div class="guide-section" id="gsec-connectors">
+      <div class="guide-h1">Connecteurs & flux</div>
+      <div class="guide-sub">Trois paragraphes, trois connecteurs d'ouverture. Ne jamais ouvrir P3 avec «&nbsp;mais&nbsp;» seul.</div>
+
+      <div class="guide-h2">Flux sur trois paragraphes</div>
+      <div class="skeleton-panel open">
+        <div class="skeleton-body" style="display:block">
+          <div class="slot-block"><span class="slot-lbl sl-s1">P1 — Slot individuel / premier argument</span>
+            <div class="filler-list">
+              <div class="filler-item"><div class="filler-fr">Tout d'abord,</div></div>
+              <div class="filler-item"><div class="filler-fr">D'une part,</div></div>
+              <div class="filler-item"><div class="filler-fr">En premier lieu,</div></div>
+            </div>
+          </div>
+          <div class="slot-block"><span class="slot-lbl sl-s2">P2 — Slot collectif / deuxième argument</span>
+            <div class="filler-list">
+              <div class="filler-item"><div class="filler-fr">De plus,</div></div>
+              <div class="filler-item"><div class="filler-fr">Par ailleurs,</div></div>
+              <div class="filler-item"><div class="filler-fr">En outre,</div></div>
+            </div>
+          </div>
+          <div class="slot-block"><span class="slot-lbl sl-s3">P3 — Nuance (toujours Cependant)</span>
+            <div class="filler-list">
+              <div class="filler-item"><div class="filler-fr">Cependant, bien que ce soit…</div><div class="filler-eg">connecteur de nuance — défaut absolu pour P3</div></div>
+              <div class="filler-item"><div class="filler-fr">Il convient toutefois de nuancer…</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="guide-h2">Expansion En effet (Slot 2 dans le paragraphe)</div>
+      <div class="skeleton-panel">
+        <div class="skeleton-head"><span class="skeleton-title">8 templates En effet — ne jamais répéter</span><span class="skel-chev">▶</span></div>
+        <div class="skeleton-body">
+          <div class="slot-block">
+            <div class="filler-list">
+              <div class="filler-item"><div class="filler-fr">En effet, lorsqu'on [situation], [conséquence], ce qui peut rapidement devenir [adj/nom].</div><div class="filler-eg">lorsqu'on travaille seul, on perd le contact humain, ce qui peut rapidement devenir isolant.</div></div>
+              <div class="filler-item"><div class="filler-fr">En effet, il est difficile de [objectif] sans [condition nécessaire].</div><div class="filler-eg">maintenir un bon équilibre sans limiter ses heures de travail.</div></div>
+              <div class="filler-item"><div class="filler-fr">En effet, plus on [action], plus on [conséquence].</div><div class="filler-eg">plus on utilise les réseaux sociaux, plus on devient dépendant.</div></div>
+              <div class="filler-item"><div class="filler-fr">En effet, le fait de [action] entraîne souvent [conséquence].</div><div class="filler-eg">passer trop de temps devant les écrans entraîne souvent une baisse de concentration.</div></div>
+              <div class="filler-item"><div class="filler-fr">En effet, bien que [positif], [réalité négative].</div><div class="filler-eg">bien que la technologie soit utile, elle peut rapidement devenir une source de dépendance.</div></div>
+              <div class="filler-item"><div class="filler-fr">En effet, si [imparfait], [conditionnel].</div><div class="filler-eg">si tout le monde utilisait les transports en commun, la pollution diminuerait.</div></div>
+              <div class="filler-item"><div class="filler-fr">En effet, ce n'est pas [X] qui pose problème, c'est [Y].</div><div class="filler-eg">ce n'est pas la technologie en elle-même, c'est l'usage qu'on en fait.</div></div>
+              <div class="filler-item"><div class="filler-fr">En effet, on ne peut pas nier que [réalité].</div><div class="filler-eg">les réseaux sociaux ont transformé notre façon de communiquer.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      </div>
+
+      <div class="guide-h2">Exemples — opérateurs Par exemple</div>
+      <div class="skeleton-panel">
+        <div class="skeleton-head"><span class="skeleton-title">5 formes — ne jamais répéter dans une réponse</span><span class="skel-chev">▶</span></div>
+        <div class="skeleton-body">
+          <div class="slot-block">
+            <div class="filler-list">
+              <div class="filler-item"><div class="filler-fr">Par exemple, un/une [personne + contexte] peut [conséquence spécifique].</div></div>
+              <div class="filler-item"><div class="filler-fr">C'est le cas de [groupe] qui [comportement / conséquence].</div></div>
+              <div class="filler-item">
+                <div class="filler-fr">Il suffit de penser à <strong>[art. + nom (+ adj.)]</strong> (+ qui [situation]) pour comprendre que [nuance].</div>
+                <div class="filler-eg" style="font-size:.78rem;color:var(--muted);margin-top:.35rem">Le groupe doit être une personne concrète, pas une abstraction. Le <em>qui</em> n'est nécessaire que si le groupe seul ne charge pas la situation.</div>
+                <div style="margin-top:.6rem;font-size:.8rem;border-left:2px solid var(--nuance-border);padding-left:.6rem">
+                  <div style="font-weight:700;margin-bottom:.3rem;color:#b45309">Fillers pour «&nbsp;pour comprendre que ___&nbsp;»</div>
+                  <div style="margin-bottom:.2rem"><span style="font-weight:600">RESTRICTION</span> — ne garantit pas toujours / ne suffit pas à / ne signifie pas forcément / n'est pas synonyme de / ne se traduit pas automatiquement par</div>
+                  <div style="margin-bottom:.2rem"><span style="font-weight:600">CONDITION</span> — ne fonctionne vraiment que si [condition]</div>
+                  <div style="margin-bottom:.2rem"><span style="font-weight:600">SELON QUI</span> — ne s'applique pas à tous — tout dépend de [variable]</div>
+                  <div style="margin-bottom:.2rem"><span style="font-weight:600">DEGRÉ</span> — n'a qu'un impact limité sur [Y] si [facteur] n'est pas pris en compte</div>
+                  <div><span style="font-weight:600">EFFET INVERSE</span> — mal utilisé(e), [X] risque de produire l'effet contraire</div>
+                </div>
+              </div>
+              <div class="filler-item"><div class="filler-fr">Prenons le cas de [personne] qui [situation].</div></div>
+              <div class="filler-item"><div class="filler-fr">Imaginons une personne qui [situation].</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="skeleton-panel">
+        <div class="skeleton-head"><span class="skeleton-title">Banque de groupes — [art. + nom (+ adj.)]</span><span class="skel-chev">▶</span></div>
+        <div class="skeleton-body">
+        <div class="guide-sub" style="margin-bottom:.75rem">Le groupe doit toujours être un type de personne concret. Si l'adjectif charge déjà la situation → pas besoin de <em>qui</em>. Si le groupe est neutre → ajouter <em>qui [situation]</em>.</div>
+
+      <div class="slot-block" style="margin-bottom:.5rem">
+        <span class="slot-lbl" style="color:#2d5a1b">Auto-suffisants — pas besoin de qui</span>
+        <div class="filler-list">
+          <div class="filler-item"><div class="filler-fr">un travailleur manuel</div><div class="filler-eg">travail, technologie, télétravail</div></div>
+          <div class="filler-item"><div class="filler-fr">une mère isolée</div><div class="filler-eg">société, famille, solitude, immigration</div></div>
+          <div class="filler-item"><div class="filler-fr">un retraité isolé</div><div class="filler-eg">société, solitude, technologie, seniors</div></div>
+          <div class="filler-item"><div class="filler-fr">un sans-abri</div><div class="filler-eg">société, économie, transports gratuits</div></div>
+          <div class="filler-item"><div class="filler-fr">un immigré récent</div><div class="filler-eg">immigration, langue, intégration</div></div>
+          <div class="filler-item"><div class="filler-fr">une personne âgée dépendante</div><div class="filler-eg">santé, société, technologie, seniors</div></div>
+          <div class="filler-item"><div class="filler-fr">un jeune déscolarisé</div><div class="filler-eg">éducation, emploi, diplômes</div></div>
+          <div class="filler-item"><div class="filler-fr">un enfant surdoué</div><div class="filler-eg">éducation, compétition, sport</div></div>
+          <div class="filler-item"><div class="filler-fr">une personne célibataire par choix</div><div class="filler-eg">célibat, famille, bonheur</div></div>
+          <div class="filler-item"><div class="filler-fr">un habitant de banlieue sans autre moyen de transport</div><div class="filler-eg">voiture, centres-villes, environnement</div></div>
+          <div class="filler-item"><div class="filler-fr">un enfant issu d'un milieu défavorisé</div><div class="filler-eg">éducation, égalité, école</div></div>
+        </div>
+      </div>
+
+      <div class="slot-block" style="margin-bottom:1rem">
+        <span class="slot-lbl" style="color:#1a3a6b">Nécessitent qui [situation]</span>
+        <div class="filler-list">
+          <div class="filler-item"><div class="filler-fr">un étudiant boursier qui cumule deux emplois</div><div class="filler-eg">diplômes, argent, réussite</div></div>
+          <div class="filler-item"><div class="filler-fr">un adolescent qui passe ses soirées sur les réseaux sociaux</div><div class="filler-eg">technologie, éducation, parents</div></div>
+          <div class="filler-item"><div class="filler-fr">un travailleur de 60 ans qui se retrouve au chômage</div><div class="filler-eg">emploi, retraite, technologie</div></div>
+          <div class="filler-item"><div class="filler-fr">un employé en télétravail qui ne voit plus ses collègues</div><div class="filler-eg">télétravail, solitude, technologie</div></div>
+          <div class="filler-item"><div class="filler-fr">une famille modeste qui ne peut pas se permettre le bio</div><div class="filler-eg">environnement, consommation, argent</div></div>
+          <div class="filler-item"><div class="filler-fr">un automobiliste qui vit loin de tout transport en commun</div><div class="filler-eg">transport, environnement, voiture</div></div>
+          <div class="filler-item"><div class="filler-fr">un enfant élevé sans écrans qui se retrouve isolé de ses camarades</div><div class="filler-eg">technologie, éducation, parents</div></div>
+          <div class="filler-item"><div class="filler-fr">une adolescente qui se compare aux influenceuses</div><div class="filler-eg">beauté, réseaux sociaux, apparence</div></div>
+          <div class="filler-item"><div class="filler-fr">un patient qui ne peut pas payer ses soins</div><div class="filler-eg">santé, argent, société</div></div>
+          <div class="filler-item"><div class="filler-fr">un sportif professionnel qui gagne des millions</div><div class="filler-eg">argent, sport, salaires</div></div>
+          <div class="filler-item"><div class="filler-fr">certains employés en télétravail qui peinent à décrocher</div><div class="filler-eg">télétravail, bien-être, flexibilité</div></div>
+          <div class="filler-item"><div class="filler-fr">de nombreux jeunes qui passent plusieurs heures sur leur téléphone sans s'en rendre compte</div><div class="filler-eg">technologie, réseaux sociaux, parents</div></div>
+          <div class="filler-item"><div class="filler-fr">un consommateur convaincu qui ne trouve pas de produits bio près de chez lui</div><div class="filler-eg">bio, environnement, consommation</div></div>
+          <div class="filler-item"><div class="filler-fr">un enfant qui n'a jamais vu ses parents lire</div><div class="filler-eg">lecture, culture, éducation</div></div>
+        </div>
+      </div>
+
+        </div>
+      </div>
+
+      <div class="skeleton-panel">
+        <div class="skeleton-head"><span class="skeleton-title">Table complète — Groupe · Pont · Completion par thème</span><span class="skel-chev">▶</span></div>
+        <div class="skeleton-body">
+          <style>.eg-table{width:100%;border-collapse:collapse;font-size:.8rem;margin-bottom:.5rem}.eg-table th{background:var(--sur);padding:.4rem .6rem;text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);border-bottom:2px solid var(--border)}.eg-table td{padding:.45rem .6rem;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.5}.eg-table tr:last-child td{border-bottom:none}.eg-table .topic-row td{background:var(--sur);font-weight:700;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:.3rem .6rem}.eg-table td:first-child{color:#1a3a6b;font-weight:500}.eg-table td:nth-child(2){color:#6b1a1a}.eg-table td:nth-child(3){color:#2d5a1b}</style>
+          <table class="eg-table">
+            <thead><tr><th>Groupe (après "penser à")</th><th>Pont ("pour comprendre que…")</th><th>Completion</th></tr></thead>
+            <tbody>
+              <tr class="topic-row"><td colspan="3">Télétravail</td></tr>
+              <tr><td>certains employés en télétravail</td><td>la flexibilité</td><td>ne garantit pas toujours le bien-être</td></tr>
+              <tr><td>un employé en télétravail qui passe des journées entières sans parler à personne</td><td>l'isolement</td><td>ne suffit pas à justifier ce mode de travail</td></tr>
+              <tr><td>une personne qui travaille à distance sans jamais voir ses collègues</td><td>le télétravail</td><td>ne s'applique pas à tous — tout dépend du secteur et du profil</td></tr>
+              <tr><td>un employé en télétravail qui ne voit plus ses collègues</td><td>ce système</td><td>ne fonctionne vraiment que si l'entreprise assure un suivi régulier</td></tr>
+              <tr><td>un travailleur manuel</td><td>le télétravail</td><td>ne s'applique pas à tous — tout dépend du type de métier</td></tr>
+
+              <tr class="topic-row"><td colspan="3">Technologie / Réseaux sociaux</td></tr>
+              <tr><td>de nombreux jeunes qui passent plusieurs heures par jour sur leur téléphone sans s'en rendre compte</td><td>l'accès à la technologie</td><td>ne garantit pas toujours un usage responsable</td></tr>
+              <tr><td>un étudiant qui passe ses nuits sur les réseaux sociaux</td><td>la connectivité</td><td>ne suffit pas à remplacer un apprentissage structuré</td></tr>
+              <tr><td>un adolescent qui passe ses soirées sur les réseaux sociaux</td><td>l'accès libre aux écrans</td><td>ne fonctionne vraiment que si les parents posent des limites claires</td></tr>
+              <tr><td>un enfant élevé sans écrans qui se retrouve isolé de ses camarades</td><td>l'interdiction totale</td><td>risque de produire l'effet contraire et d'exclure l'enfant socialement</td></tr>
+              <tr><td>une adolescente qui se compare aux influenceuses</td><td>l'exposition aux réseaux sociaux</td><td>n'a qu'un impact limité sur la confiance en soi si les normes restent irréalistes</td></tr>
+
+              <tr class="topic-row"><td colspan="3">Diplômes / Réussite</td></tr>
+              <tr><td>un étudiant boursier qui cumule deux emplois</td><td>le diplôme</td><td>ne garantit pas toujours la réussite professionnelle</td></tr>
+              <tr><td>un jeune déscolarisé</td><td>l'absence de diplôme</td><td>ne signifie pas forcément l'échec dans la vie</td></tr>
+              <tr><td>un enfant surdoué</td><td>l'intelligence</td><td>ne suffit pas à assurer une carrière épanouissante</td></tr>
+              <tr><td>un étudiant boursier qui cumule deux emplois</td><td>ce système</td><td>ne fonctionne vraiment que si les conditions d'étude sont réunies</td></tr>
+              <tr><td>un étudiant boursier qui cumule deux emplois</td><td>trop de pression</td><td>risque de produire l'effet contraire et de décourager les plus méritants</td></tr>
+
+              <tr class="topic-row"><td colspan="3">Immigration / Intégration</td></tr>
+              <tr><td>un immigré récent</td><td>l'intégration</td><td>ne garantit pas toujours l'épanouissement dans le pays d'accueil</td></tr>
+              <tr><td>une mère isolée</td><td>la volonté de s'intégrer</td><td>ne suffit pas à surmonter la barrière linguistique et culturelle</td></tr>
+              <tr><td>un immigré récent</td><td>ce processus</td><td>ne fonctionne vraiment que si le pays d'accueil offre un vrai accompagnement</td></tr>
+              <tr><td>un immigré récent</td><td>l'intégration forcée</td><td>risque de produire l'effet contraire et de renforcer le repli communautaire</td></tr>
+              <tr><td>un immigré récent</td><td>cette réalité</td><td>ne s'applique pas à tous — tout dépend du pays d'origine et du contexte familial</td></tr>
+
+              <tr class="topic-row"><td colspan="3">Transport / Environnement</td></tr>
+              <tr><td>un automobiliste qui vit loin de tout transport en commun</td><td>la suppression de la voiture</td><td>ne garantit pas toujours une mobilité équitable</td></tr>
+              <tr><td>un sans-abri</td><td>l'accès aux transports gratuits</td><td>ne suffit pas à résoudre les problèmes de précarité</td></tr>
+              <tr><td>un habitant de banlieue sans autre moyen de transport</td><td>cette mesure</td><td>ne fonctionne vraiment que si le réseau couvre les zones périurbaines</td></tr>
+              <tr><td>un automobiliste qui vit loin de tout transport en commun</td><td>une interdiction mal planifiée</td><td>risque de produire l'effet contraire et de pénaliser les plus précaires</td></tr>
+              <tr><td>un automobiliste qui vit loin de tout transport en commun</td><td>cette politique</td><td>ne s'applique pas à tous — tout dépend du lieu de résidence</td></tr>
+
+              <tr class="topic-row"><td colspan="3">Retraite / Emploi seniors</td></tr>
+              <tr><td>un travailleur de 60 ans qui se retrouve au chômage</td><td>travailler jusqu'à 70 ans</td><td>ne garantit pas toujours une retraite plus confortable</td></tr>
+              <tr><td>une personne âgée dépendante</td><td>l'allongement de la vie</td><td>ne suffit pas à garantir une vieillesse digne</td></tr>
+              <tr><td>un travailleur de 60 ans qui se retrouve au chômage</td><td>cette réforme</td><td>ne fonctionne vraiment que si des formations adaptées sont accessibles</td></tr>
+              <tr><td>un travailleur de 60 ans qui se retrouve au chômage</td><td>mal accompagnée, cette politique</td><td>risque de produire l'effet contraire et d'aggraver la précarité</td></tr>
+              <tr><td>un retraité isolé</td><td>la retraite</td><td>ne s'applique pas à tous — tout dépend du secteur et du niveau de qualification</td></tr>
+
+              <tr class="topic-row"><td colspan="3">Beauté / Apparence</td></tr>
+              <tr><td>une adolescente qui se compare aux influenceuses</td><td>vouloir paraître jeune</td><td>ne garantit pas toujours une meilleure estime de soi</td></tr>
+              <tr><td>une adolescente qui se compare aux influenceuses</td><td>l'injonction à la beauté</td><td>ne s'applique pas à tous — tout dépend du degré d'exposition et de l'entourage</td></tr>
+              <tr><td>une adolescente qui se compare aux influenceuses</td><td>mal encadrée, cette exposition</td><td>risque de produire l'effet contraire et d'alimenter des troubles de l'image corporelle</td></tr>
+
+              <tr class="topic-row"><td colspan="3">Santé</td></tr>
+              <tr><td>un patient qui ne peut pas payer ses soins</td><td>l'accès aux soins</td><td>ne garantit pas toujours l'égalité devant la santé</td></tr>
+              <tr><td>un sans-abri</td><td>la médecine gratuite</td><td>ne suffit pas à résoudre les problèmes de santé liés à la précarité</td></tr>
+              <tr><td>un patient qui ne peut pas payer ses soins</td><td>ce système</td><td>ne fonctionne vraiment que si les soins de base sont pris en charge pour tous</td></tr>
+              <tr><td>un patient qui ne peut pas payer ses soins</td><td>mal financé, ce système</td><td>risque de produire l'effet contraire et d'aggraver les inégalités</td></tr>
+
+              <tr class="topic-row"><td colspan="3">Sport / Salaires</td></tr>
+              <tr><td>un sportif professionnel qui gagne des millions</td><td>un salaire élevé</td><td>ne garantit pas toujours un modèle positif pour les jeunes</td></tr>
+              <tr><td>un sportif professionnel qui gagne des millions</td><td>cette réalité</td><td>ne s'applique pas à tous — tout dépend du sport et de la visibilité médiatique</td></tr>
+              <tr><td>un sportif professionnel qui gagne des millions</td><td>ce système</td><td>ne fonctionne vraiment que si la formation est accessible dès le plus jeune âge</td></tr>
+              <tr><td>un sportif professionnel qui gagne des millions</td><td>mal encadré, ce système</td><td>risque de produire l'effet contraire et de creuser les inégalités</td></tr>
+
+              <tr class="topic-row"><td colspan="3">Éducation / École</td></tr>
+              <tr><td>un enfant issu d'un milieu défavorisé</td><td>l'école obligatoire</td><td>ne garantit pas toujours l'égalité des chances</td></tr>
+              <tr><td>un enfant surdoué</td><td>un programme scolaire unique</td><td>ne suffit pas à répondre aux besoins de chaque élève</td></tr>
+              <tr><td>un enfant issu d'un milieu défavorisé</td><td>ce système</td><td>ne fonctionne vraiment que si l'école dispose de ressources suffisantes</td></tr>
+              <tr><td>un enfant issu d'un milieu défavorisé</td><td>mal soutenu, ce dispositif</td><td>risque de produire l'effet contraire et de reproduire les inégalités</td></tr>
+              <tr><td>un enfant issu d'un milieu défavorisé</td><td>cette réforme</td><td>ne s'applique pas à tous — tout dépend du milieu familial et du soutien à la maison</td></tr>
+
+              <tr class="topic-row"><td colspan="3">Voiture / Centres-villes</td></tr>
+              <tr><td>un habitant de banlieue sans autre moyen de transport</td><td>l'interdiction des voitures en centre-ville</td><td>ne garantit pas toujours une ville plus propre et plus équitable</td></tr>
+              <tr><td>un habitant de banlieue sans autre moyen de transport</td><td>cette mesure</td><td>ne fonctionne vraiment que si des alternatives crédibles existent au préalable</td></tr>
+              <tr><td>un habitant de banlieue sans autre moyen de transport</td><td>mal planifiée, cette interdiction</td><td>risque de produire l'effet contraire et de pénaliser les classes populaires</td></tr>
+
+              <tr class="topic-row"><td colspan="3">Végétarisme / Bio</td></tr>
+              <tr><td>une famille modeste qui ne peut pas se permettre le bio</td><td>consommer bio</td><td>ne garantit pas toujours un impact environnemental réel</td></tr>
+              <tr><td>un consommateur convaincu qui ne trouve pas de produits bio près de chez lui</td><td>cette démarche</td><td>ne fonctionne vraiment que si l'offre est accessible géographiquement et financièrement</td></tr>
+              <tr><td>une famille modeste qui ne peut pas se permettre le bio</td><td>mal diffusée, cette tendance</td><td>risque de produire l'effet contraire et de rester un privilège de classe</td></tr>
+              <tr><td>une famille modeste qui ne peut pas se permettre le bio</td><td>le bio</td><td>ne s'applique pas à tous — tout dépend du lieu de résidence et du budget disponible</td></tr>
+
+              <tr class="topic-row"><td colspan="3">Célibat / Vie de famille</td></tr>
+              <tr><td>une personne célibataire par choix</td><td>vivre seul</td><td>ne garantit pas toujours l'épanouissement personnel</td></tr>
+              <tr><td>une mère isolée</td><td>la vie en famille</td><td>ne garantit pas toujours le bonheur</td></tr>
+              <tr><td>une personne célibataire par choix</td><td>ce choix</td><td>ne fonctionne vraiment que si le regard social ne pèse pas trop lourd</td></tr>
+              <tr><td>une personne célibataire par choix</td><td>mal vécu, cet isolement</td><td>risque de produire l'effet contraire et de mener à une solitude subie</td></tr>
+
+              <tr class="topic-row"><td colspan="3">Lecture / Culture</td></tr>
+              <tr><td>un enfant qui n'a jamais vu ses parents lire</td><td>la lecture obligatoire à l'école</td><td>ne garantit pas toujours un rapport positif à la culture</td></tr>
+              <tr><td>un enfant qui n'a jamais vu ses parents lire</td><td>ce dispositif</td><td>ne fonctionne vraiment que si l'école prend le relais du foyer</td></tr>
+              <tr><td>un enfant qui n'a jamais vu ses parents lire</td><td>mal accompagné, cet effort</td><td>risque de produire l'effet contraire et de creuser les inégalités culturelles</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="guide-h2">Clôture de paragraphe (Slot 4)</div>
+      <div class="guide-sub" style="margin-top:-.75rem;margin-bottom:.75rem">Ferme chaque paragraphe après l'exemple. Ce n'est pas une conclusion globale — c'est le dernier battement de P1, P2 et P3.</div>
+      <div class="skeleton-panel">
+        <div class="skeleton-head"><span class="skeleton-title">6 formes — varier à chaque paragraphe</span><span class="skel-chev">▶</span></div>
+        <div class="skeleton-body">
+          <div class="slot-block">
+            <div class="filler-list">
+              <div class="filler-item filler-item-close">
+                <div class="filler-fr">C'est la raison pour laquelle beaucoup de [personnes] cherchent à / ont tendance à / évitent de [verbe].</div>
+                <div class="filler-eg">→ C'est la raison pour laquelle beaucoup de personnes cherchent à limiter leur temps sur les réseaux sociaux.</div>
+              </div>
+              <div class="filler-item filler-item-close">
+                <div class="filler-fr">C'est pourquoi il est essentiel / important de [solution / action].</div>
+                <div class="filler-eg">→ C'est pourquoi il est essentiel de mettre en place des règles claires.</div>
+              </div>
+              <div class="filler-item filler-item-close">
+                <div class="filler-fr">C'est pourquoi il est important de ne pas oublier que [nuance].</div>
+                <div class="filler-eg">→ Idéal pour P3 — rappelle la limite sans abandonner sa position.</div>
+              </div>
+              <div class="filler-item filler-item-close">
+                <div class="filler-fr">En définitive, c'est à chacun de trouver l'équilibre qui lui convient.</div>
+                <div class="filler-eg">Swap : à chaque famille / à chaque société / à chaque contexte.</div>
+              </div>
+              <div class="filler-item filler-item-close">
+                <div class="filler-fr">Force est de constater que [réalité].</div>
+                <div class="filler-eg">→ Force est de constater que cette situation ne peut pas durer.</div>
+              </div>
+              <div class="filler-item filler-item-close">
+                <div class="filler-fr">En fin de compte, la question n'est pas de savoir si [X], mais de savoir [Y].</div>
+                <div class="filler-eg">→ ...si la technologie est bonne ou mauvaise, mais comment on choisit de l'utiliser.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUICK REFERENCE SECTION -->
+    <div class="guide-section" id="gsec-ref">
+      <div class="guide-h1">Référence rapide</div>
+      <div class="guide-sub">Quel mode utiliser par cluster, et quelle est sa fréquence dans l'examen.</div>
+
+      <div class="guide-tip">
+        <div class="guide-tip-lbl">Règle de sélection</div>
+        Mode 1 par défaut. Passer en Mode 2 si la question est fiscale, éthique, de faisabilité, ou si aucun filler Mode 1 ne sonne naturellement pour le sujet.
+      </div>
+
+      <div class="guide-h2">T3 — Tous les clusters</div>
+      <div class="ref-wrap">
+        <table class="ref-table" id="ref-t3-table"></table>
+      </div>
+
+      <div class="guide-h2">T2 — Top clusters avec squelette de questions</div>
+      <div class="ref-wrap">
+        <table class="ref-table" id="ref-t2-table"></table>
+      </div>
+    </div>
+
+    <!-- GENERATOR SECTION -->
+    <div class="guide-section" id="gsec-generator">
+      <div class="guide-h1">Générateur de pratique</div>
+      <div class="guide-sub">Questions réelles de l'archive. Génère un paragraphe complet ou une réponse T3 entière.</div>
+
+      <div class="gen-type-btns">
+        <button class="gen-type-btn active" id="gen-type-para" onclick="setGenType('para')">Un paragraphe</button>
+        <button class="gen-type-btn" id="gen-type-full" onclick="setGenType('full')">Réponse complète T3</button>
+      </div>
+
+      <div class="gen-controls">
+        <select class="gen-select" id="gen-cluster">
+          <option value="random">Cluster aléatoire</option>
+        </select>
+        <select class="gen-select" id="gen-direction" style="flex:0;min-width:140px">
+          <option value="random">Direction aléatoire</option>
+          <option value="pour">Pour</option>
+          <option value="contre">Contre</option>
+        </select>
+        <button class="gen-btn" onclick="generateOutput()">⚡ Générer</button>
+      </div>
+
+      <div id="gen-output">
+        <div class="gen-empty">Cliquez sur Générer pour commencer.</div>
+      </div>
+
+      <div class="gen-legend" id="gen-legend" style="display:none;border-radius:0 0 10px 10px;border:1.5px solid var(--border);border-top:none">
+        <div class="gen-legend-item"><div class="gen-legend-dot" style="background:#2d5a1b"></div>En effet (expansion)</div>
+        <div class="gen-legend-item"><div class="gen-legend-dot" style="background:#1a3a6b"></div>Par exemple</div>
+        <div class="gen-legend-item"><div class="gen-legend-dot" style="background:#6b1a1a"></div>C'est la raison pour laquelle</div>
+      </div>
+    </div>
+
+  </div><!-- /tab-guide -->
+
+  </div><!-- /tab-eo -->
+</div><!-- /tabs-outer -->
+
+<script>
+(function(){
+var D=null;
+var eeTask='t1', eoView='scenarios';
+var eeMode='clusters', eoMode='clusters';
+var eeSort='freq', eoSort='freq';
+var RECENT=202500;
+
+// Month display
+var MN=['','Jan','Fév','Mar','Avr','Mai','Juin','Juil','Aoû','Sep','Oct','Nov','Déc'];
+function lmStr(lm){if(!lm)return'';return MN[lm%100]+'&nbsp;'+(Math.floor(lm/100));}
+function isR(lm){return lm>=RECENT;}
+function rdot(lm){return isR(lm)?'<span class="recent-dot"></span>':'';}
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function sortItems(arr,sort){
+  var a=arr.slice();
+  return sort==='recent'?a.sort(function(x,y){return(y.lm||0)-(x.lm||0);}):a.sort(function(x,y){return y.n-x.n;});
+}
+function sortClusters(arr,sort){
+  var a=arr.slice();
+  return sort==='recent'?a.sort(function(x,y){return(y.lm||0)-(x.lm||0);}):a.sort(function(x,y){return y.apps-x.apps;});
+}
+
+function populateSelect(id,opts,allLabel){
+  var s=document.getElementById(id),p=s.value;
+  s.innerHTML='<option value="">'+allLabel+'</option>';
+  opts.forEach(function(n){var o=document.createElement('option');o.value=n;o.textContent=n;s.appendChild(o);});
+  if(p&&opts.indexOf(p)>=0)s.value=p;
+}
+
+// Render a q-row (question + count + date)
+function qRowHtml(p,n,lm){
+  return'<div class="q-row"><span class="q-count">'+n+'×</span>'+rdot(lm)
+    +(lm?'<span class="q-date">'+lmStr(lm)+'</span>':'')
+    +'<span>'+esc(p)+'</span></div>';
+}
+
+// PCN block
+function pcnHtml(pour,contre,nuance,compact){
+  var pc=compact?'sg-hint-row ':'hint-row ';
+  function listOf(v){var a=Array.isArray(v)?v:[v];return'<ul class="hint-list">'+a.map(function(x){return'<li>'+esc(x)+'</li>';}).join('')+'</ul>';}
+  return'<div class="'+pc+'hint-pour"><span class="hint-label">Pour</span>'+listOf(pour)+'</div>'
+    +'<div class="'+pc+'hint-contre"><span class="hint-label">Contre</span>'+listOf(contre)+'</div>'
+    +'<div class="'+pc+'hint-nuance"><span class="hint-label">Nuance</span>'+esc(nuance)+'</div>';
+}
+
+// Subgroup panel (works for both T3 and T2)
+function sgPanelHtml(subgroups, questions, sort, showPcn){
+  if(!subgroups||!subgroups.length)return'';
+  var html='<div class="subgroups-panel"><div class="subgroups-label">Sous-thèmes</div>';
+  subgroups.forEach(function(sg){
+    var qs=questions.filter(function(q){return q.subgroup===sg.id;});
+    if(!qs.length)return;
+    var sorted=sortItems(qs,sort);
+    var top=sorted.slice(0,4),rest=sorted.slice(4);
+    var sgLm=Math.max.apply(null,qs.map(function(q){return q.lm||0;}));
+    var rb=isR(sgLm)?'<span class="badge-recent">'+lmStr(sgLm)+'</span>':'';
+    var restHtml=rest.length
+      ?'<button class="variants-toggle">▶ Voir toutes ('+rest.length+')</button>'
+       +'<div class="variants-list">'+rest.map(function(q){return qRowHtml(q.p,q.n,q.lm);}).join('')+'</div>':'';
+    var descHtml=sg.desc?'<div class="sg-desc">'+esc(sg.desc)+'</div>':'';
+    var pcnBlock=showPcn&&sg.pour?'<div class="sg-pcn">'+pcnHtml(sg.pour,sg.contre,sg.nuance,true)+'</div>':'';
+    html+='<div class="sg-card">'
+      +'<div class="sg-head"><span class="sg-title">'+esc(sg.title)+'</span>'+rb
+      +'<span class="sg-badge">'+qs.length+'q</span><span class="sg-chevron">▶</span></div>'
+      +'<div class="sg-body">'+descHtml+pcnBlock
+      +'<div class="sg-qs"><div class="sg-qs-label">Questions</div>'
+      +top.map(function(q){return qRowHtml(q.p,q.n,q.lm);}).join('')
+      +restHtml+'</div></div></div>';
+  });
+  html+='</div>';
+  return html;
+}
+
+// Universal args banner
+function univHtml(){
+  if(!D||!D.universal_args)return'';
+  var t=D.universal_args.template;
+  var cards=D.universal_args.verbs.map(function(v){
+    return'<div class="univ-verb-card">'
+      +'<div class="univ-verb-label">'+v.emoji+' '+esc(v.label)+'</div>'
+      +'<div class="univ-verb-list">'+v.verbs.map(esc).join(' · ')+'</div>'
+      +'<div class="univ-ex-line univ-pour">✓ '+esc(v.pour[0])+'</div>'
+      +'<div class="univ-ex-line univ-contre">✗ '+esc(v.contre[0])+'</div>'
+      +'</div>';
+  }).join('');
+  return'<div class="univ-banner">'
+    +'<div class="univ-top"><div class="univ-template"><div class="univ-template-label">Modèle universel</div>'
+    +'<div class="univ-row"><strong style="color:#388e3c">Pour :</strong>'+esc(t.pour)+'</div>'
+    +'<div class="univ-row"><strong style="color:#c62828">Contre :</strong>'+esc(t.contre)+'</div>'
+    +'<div class="univ-row"><strong style="color:#b45309">Nuance :</strong>'+esc(t.nuance)+'</div>'
+    +'</div>'
+    +'<button class="univ-expand-btn" onclick="var p=this.nextElementSibling;p.classList.toggle(\'open\');this.textContent=p.classList.contains(\'open\')?\'▲ Masquer\':\'▶ Arguments universels\'">▶ Arguments universels</button>'
+    +'</div><div class="univ-verbs-panel"><div class="univ-verb-grid">'+cards+'</div></div></div>';
+}
+
+// Cluster card (EE)
+function clusterCardHtml(c,innerTop,unit,sort){
+  var items=sortItems(c.items,sort);
+  var top3=items.slice(0,3),rest=items.slice(3);
+  var rb=isR(c.lm)?'<span class="badge-recent">'+lmStr(c.lm)+'</span>':'';
+  var restHtml=rest.length
+    ?'<button class="variants-toggle">▶ Voir les variantes ('+rest.length+')</button>'
+     +'<div class="variants-list">'+rest.map(function(i){return qRowHtml(i.p,i.n,i.lm);}).join('')+'</div>':'';
+  return'<div class="cluster-card"><div class="cluster-head"><div class="cluster-name">'+esc(c.cluster)+'</div>'
+    +'<div class="cluster-badges">'+rb+'<span class="badge-apps">'+c.apps+'×</span><span class="badge-unique">'+c.items.length+' '+unit+'</span></div>'
+    +'<span class="chevron">▶</span></div>'
+    +'<div class="cluster-body">'+innerTop
+    +'<div class="variants-panel">'+top3.map(function(i){return qRowHtml(i.p,i.n,i.lm);}).join('')+restHtml+'</div></div></div>';
+}
+
+// T2 subgroup panel — shows sub-scenario question guides (no item filtering)
+function t2SgPanelHtml(subgroups){
+  if(!subgroups||!subgroups.length)return'';
+  var html='<div class="subgroups-panel"><div class="subgroups-label">Sous-scénarios</div>';
+  subgroups.forEach(function(sg){
+    var descHtml=sg.desc?'<div class="sg-desc">'+esc(sg.desc)+'</div>':'';
+    var qsHtml=sg.questions&&sg.questions.length
+      ?'<div class="sg-qs"><div class="sg-qs-label">Questions à poser</div>'
+        +sg.questions.map(function(q){return'<div class="q-row"><span>'+esc(q)+'</span></div>';}).join('')
+        +'</div>':'';
+    html+='<div class="sg-card">'
+      +'<div class="sg-head"><span class="sg-title">'+esc(sg.title)+'</span>'
+      +'<span class="sg-chevron">▶</span></div>'
+      +'<div class="sg-body">'+descHtml+qsHtml+'</div></div>';
+  });
+  html+='</div>';
+  return html;
+}
+
+// T2 scenario cluster card (with optional subgroups)
+function t2ClusterCardHtml(c, sort){
+  var allItems=sortItems(c.items,sort);
+  // Exclude items already shown in subgroups from "Tous les scénarios"
+  var sgKeys=c.subgroups?c.subgroups.map(function(sg){return sg.id;}).filter(Boolean):[];
+  var rootItems=sgKeys.length?allItems.filter(function(i){return!i.subgroup||sgKeys.indexOf(i.subgroup)<0;}):allItems;
+  var showItems=rootItems.length?rootItems:allItems;
+  var top3=showItems.slice(0,3),rest=showItems.slice(3);
+  var rb=isR(c.lm)?'<span class="badge-recent">'+lmStr(c.lm)+'</span>':'';
+  var qHtml=c.questions&&c.questions.length?'<div class="questions-panel"><div class="ql">Questions clés</div>'+c.questions.map(function(qq){return'<div class="q-item">'+esc(qq)+'</div>';}).join('')+'</div>':'';
+  var sgHtml=c.subgroups&&c.subgroups.length?t2SgPanelHtml(c.subgroups):'';
+  var restHtml=rest.length
+    ?'<button class="variants-toggle">▶ Voir les variantes ('+rest.length+')</button>'
+     +'<div class="variants-list">'+rest.map(function(i){return qRowHtml(i.p,i.n,i.lm);}).join('')+'</div>':'';
+  var tousLabel=sgHtml?'Autres scénarios':'Tous les scénarios';
+  return'<div class="cluster-card"><div class="cluster-head"><div class="cluster-name">'+esc(c.cluster)+'</div>'
+    +'<div class="cluster-badges">'+rb+'<span class="badge-apps">'+c.apps+'×</span><span class="badge-unique">'+c.items.length+' scénarios</span></div>'
+    +'<span class="chevron">▶</span></div>'
+    +'<div class="cluster-body">'+qHtml+sgHtml
+    +(showItems.length?'<div class="variants-panel"><div class="arg-qs-label" style="font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:.5rem">'+tousLabel+'</div>'
+    +top3.map(function(i){return qRowHtml(i.p,i.n,i.lm);}).join('')+restHtml+'</div>':'')+'</div></div>';
+}
+
+// Theme maps
+var T3_THEMES={
+  'Technologie & numérique':['technologie_numerique'],
+  'Éducation':['education_systeme','education_enfants'],
+  'Immigration & culture':['integration_culturelle','vivre_etranger'],
+  'Travail & emploi':['travail_epanouissement','stress_burnout'],
+  'Famille & relations':['relations_sociales','liberte_individuelle','egalite_genre'],
+  'Environnement':['impact_environnemental'],
+  'Santé & bien-être':['sante_bien_etre','sport_apparence'],
+  'Ville & transport':['ville_campagne_transport','inegalites_acces'],
+  'Vieillissement':['retraite_vieillissement'],
+  'Médias & expression':['medias_liberte_expression','solidarite_politique'],
+  'Voyages':['voyager_tourisme'],
+  'Vie quotidienne':['vie_quotidienne'],
+  'Divers':['autres','animaux','argent_bonheur']
+};
+var T2_THEMES={
+  'Logement':['Location de logement','Achat immobilier','Hôtel & hébergement','Voisins & immeuble'],
+  'Arrivée au Canada':['Arrivée dans ville / au Canada','Nouveau dans le quartier / au Canada','Cours de langue / français'],
+  'Vacances & voyages':['Vacances & destinations (office du tourisme)','Agence de voyages / séjour organisé'],
+  'Travail':['Collègue & conditions de travail','Entretien d\'embauche / emploi','Centre de formation / cours professionnels'],
+  'Social & famille':['Invitation & fête sociale','Garde d\'enfant / baby-sitter','Recevoir des amis / conseils pratiques','École (inscription enfant)'],
+  'Bénévolat & associations':['Association & bénévolat'],
+  'Culture & loisirs':['Sport & clubs sportifs','Centre culturel & loisirs','Théâtre / concert / spectacle','Musée','Émission TV / jeu télévisé','Bibliothèque / médiathèque','Cinéma','Cours de cuisine'],
+  'Services & commerces':['Restaurant & repas','Vente d\'objets / occasion','Assurance','Rénovation / bricolage','Transports en commun','Animalerie / adoption d\'animal','Santé & médecin','Poste / envoi de colis','Services divers','Mairie & services publics'],
+  'Divers':['Autres scénarios','Conversations improvisées']
+};
+
+// ── GENERATOR ──
+var genType = 'para';
+
+function setGenType(t){
+  genType = t;
+  document.getElementById('gen-type-para').classList.toggle('active', t==='para');
+  document.getElementById('gen-type-full').classList.toggle('active', t==='full');
+}
+window._setGenType = setGenType;
+
+function buildGenClusterSelect(){
+  if(!window.D||!window.D.eo||!window.D.eo.t3_args)return;
+  var sel=document.getElementById('gen-cluster');
+  if(sel.options.length>1)return; // already built
+  window.D.eo.t3_args.forEach(function(b){
+    var clean=b.questions.filter(function(q){return q.p&&!q.p.startsWith('(')&&q.p.length>20;});
+    if(!clean.length)return;
+    var o=document.createElement('option');
+    o.value=b.id;
+    o.textContent=b.title+' ('+clean.length+'q)';
+    sel.appendChild(o);
+  });
+}
+
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+var EFFET_TEMPLATES=[
+  function(s,dir){ return 'En effet, lorsqu\'on '+pick(['réfléchit à cette question','considère les faits','analyse la situation'])+', on constate que '+s+'.'; },
+  function(s,dir){ return 'En effet, il est difficile de '+pick(['ignorer','nier','minimiser'])+' le fait que '+s+'.'; },
+  function(s,dir){ return 'En effet, plus on '+pick(['y réfléchit','observe la réalité','examine les données'])+', plus il apparaît que '+s+'.'; },
+  function(s,dir){ return 'En effet, on ne peut pas nier que '+s+'.'; },
+  function(s,dir){ return 'En effet, le fait de prendre du recul montre clairement que '+s+'.'; },
+];
+
+var EXEMPLE_INTROS=['Par exemple,','C\'est le cas de','Il suffit de penser à','Prenons le cas de','Imaginons'];
+
+var GROUPE_BANK=[
+  'un travailleur manuel',
+  'une mère isolée',
+  'un retraité isolé',
+  'un sans-abri',
+  'un immigré récent',
+  'une personne âgée dépendante',
+  'un jeune déscolarisé',
+  'un enfant surdoué',
+  'un étudiant boursier qui cumule deux emplois',
+  'un adolescent qui passe ses soirées sur les réseaux sociaux',
+  'un travailleur de 60 ans qui se retrouve au chômage',
+  'un employé en télétravail qui ne voit plus ses collègues',
+  'une famille modeste qui ne peut pas se permettre le bio',
+  'un automobiliste qui vit loin de tout transport en commun',
+  'un enfant élevé sans écrans qui se retrouve isolé de ses camarades',
+  'une adolescente qui se compare aux influenceuses',
+  'un patient qui ne peut pas payer ses soins',
+  'un sportif professionnel qui gagne des millions'
+];
+
+var CONCL_TEMPLATES=[
+  'C\'est la raison pour laquelle beaucoup de personnes cherchent à adapter leur comportement en conséquence.',
+  'C\'est pourquoi il est essentiel de trouver un équilibre adapté à chaque situation.',
+  'C\'est la raison pour laquelle cette question mérite une réflexion approfondie.',
+  'En définitive, c\'est à chacun de trouver l\'équilibre qui lui convient.',
+  'C\'est pourquoi il est important de ne pas généraliser sans tenir compte des contextes individuels.',
+];
+
+var NUANCE_OPENERS=[
+  'Cependant, bien que ce soit ',
+  'Il convient toutefois de nuancer : bien que ce soit ',
+];
+
+var NUANCE_HINGES=[
+  'l\'usage qu\'on en fait',
+  'la mise en œuvre choisie',
+  'le profil de la personne concernée',
+  'les moyens disponibles',
+  'le contexte dans lequel on se trouve',
+  'les politiques en place',
+];
+
+var NUANCE_ADJS_LIMIT=['utile','bénéfique','attrayant','nécessaire','inévitable','compréhensible'];
+var NUANCE_ADJS_MERIT=['populaire','répandu','séduisant','tentant','défendable','compréhensible'];
+
+function buildParagraph(direction, blockPour, blockContre, questionP, label){
+  var isFor = direction==='pour';
+  var argCore = isFor ? blockPour : blockContre;
+  // Shorten to a clause
+  var coreShort = argCore.replace(/\.$/, '').toLowerCase();
+  var connP1 = isFor ? 'Tout d\'abord, ' : 'Tout d\'abord, ';
+  var opinion = connP1 + (isFor
+    ? 'il faut reconnaître que '+coreShort+'.'
+    : 'force est de constater que '+coreShort+'.');
+  var effet = pick(EFFET_TEMPLATES)(coreShort, direction);
+  var exIntro = pick(EXEMPLE_INTROS);
+  var exemple = exIntro+' une personne confrontée à cette situation peut rapidement réaliser l\'impact réel de ce phénomène dans son quotidien.';
+  var concl = pick(CONCL_TEMPLATES);
+
+  return '<span class="gen-slot gen-slot-opinion">'+opinion+'</span> '
+    +'<span class="gen-slot gen-slot-effet">'+effet+'</span> '
+    +'<span class="gen-slot gen-slot-exemple">'+exemple+'</span> '
+    +'<span class="gen-slot gen-slot-concl">'+concl+'</span>';
+}
+
+function buildNuancePara(pour, contre){
+  var adj = pick(NUANCE_ADJS_LIMIT);
+  var hinge = pick(NUANCE_HINGES);
+  var opener = pick(NUANCE_OPENERS);
+  return 'Cependant, bien que ce soit <strong>'+adj+'</strong>, tout dépend de <strong>'+hinge+'</strong> et du contexte. '
+    +pick(EFFET_TEMPLATES)(contre.toLowerCase().replace(/\.$/,''), 'contre')+' '
+    +'Il suffit de penser à '+pick(GROUPE_BANK)+' pour comprendre que cette réalité ne s\'applique pas de la même façon à tout le monde. '
+    +'C\'est la raison pour laquelle il est essentiel d\'adapter la réflexion au contexte de chacun.';
+}
+
+function generateOutput(){
+  if(!window.D||!window.D.eo||!window.D.eo.t3_args){
+    document.getElementById('gen-output').innerHTML='<div class="gen-empty">Les données JSON ne sont pas encore chargées. Ouvrez d\'abord T3 — Arguments.</div>';
+    return;
+  }
+  buildGenClusterSelect();
+
+  var clusterId=document.getElementById('gen-cluster').value;
+  var dirPref=document.getElementById('gen-direction').value;
+
+  // Pick block
+  var blocks=window.D.eo.t3_args.filter(function(b){
+    var clean=b.questions.filter(function(q){return q.p&&!q.p.startsWith('(')&&q.p.length>20;});
+    return clean.length>0&&(clusterId==='random'||b.id===clusterId);
+  });
+  if(!blocks.length){document.getElementById('gen-output').innerHTML='<div class="gen-empty">Aucune question disponible.</div>';return;}
+  var block=clusterId==='random'?pick(blocks):blocks[0];
+
+  // Pick question
+  var cleanQs=block.questions.filter(function(q){return q.p&&!q.p.startsWith('(')&&q.p.length>20;});
+  var q=pick(cleanQs);
+
+  // Direction
+  var dir=dirPref==='random'?(Math.random()>0.5?'pour':'contre'):dirPref;
+
+  var lmStr='';
+  if(q.lm){var y=Math.floor(q.lm/100),m=q.lm%100;var mn=['','Jan','Fév','Mar','Avr','Mai','Juin','Juil','Aoû','Sep','Oct','Nov','Déc'];lmStr=mn[m]+' '+y;}
+
+  var header='<div class="gen-question">'+q.p+'<div class="gen-question-meta">'+block.title+(lmStr?' · '+lmStr:'')+'</div></div>';
+  var body='';
+
+  if(genType==='para'){
+    var para=buildParagraph(dir, block.pour, block.contre, q.p, dir);
+    var dirLabel=dir==='pour'?'Argument POUR':'Argument CONTRE';
+    var paraClass=dir==='pour'?'gen-para-for':'gen-para-against';
+    body='<div class="gen-body"><div class="gen-para '+paraClass+'"><span class="gen-para-label">'+dirLabel+'</span>'+para+'</div></div>';
+  } else {
+    var p1=buildParagraph('pour', block.pour, block.contre, q.p, 'pour');
+    var p2=buildParagraph('contre', block.pour, block.contre, q.p, 'contre');
+    var p3=buildNuancePara(block.pour, block.contre);
+    body='<div class="gen-body">'
+      +'<div class="gen-para gen-para-for"><span class="gen-para-label">P1 — Pour</span>'+p1+'</div>'
+      +'<div class="gen-para gen-para-against"><span class="gen-para-label">P2 — Contre</span>'+p2+'</div>'
+      +'<div class="gen-para gen-para-nuance"><span class="gen-para-label">P3 — Nuance</span>'+p3+'</div>'
+      +'</div>';
+  }
+
+  document.getElementById('gen-output').innerHTML='<div class="gen-output">'+header+body+'</div>';
+  document.getElementById('gen-legend').style.display='flex';
+}
+window._generateOutput = generateOutput;
+
+var T2_STATS=[
+  {label:'Nouveau quartier / orientation ville',raw:38.9,wtd:39.6},
+  {label:'Cours (cuisine / langue / formation)',raw:13.5,wtd:17.6},
+  {label:'Agence voyages / vacances',raw:13.4,wtd:12.4},
+  {label:'Recherche d\'emploi / carrière',raw:9.0,wtd:7.3},
+  {label:'Club sportif / centre d\'activité',raw:4.2,wtd:4.5},
+  {label:'Restaurant / dîner',raw:3.3,wtd:3.1},
+  {label:'Logement / recherche appartement',raw:2.7,wtd:2.0},
+  {label:'Garde d\'enfant / baby-sitter',raw:1.0,wtd:0.5},
+  {label:'Déménagement / vente de meubles',raw:1.4,wtd:0.8},
+  {label:'Événement social / fête',raw:2.1,wtd:2.0},
+  {label:'Transports en commun',raw:1.9,wtd:1.9},
+  {label:'Bénévolat / associations',raw:1.9,wtd:2.0},
+];
+var T3_STATS=[
+  {label:'Travail / télétravail / carrière',raw:16.1,wtd:16.9,mode:1},
+  {label:'Technologie / IA / écrans',raw:14.7,wtd:14.0,mode:1},
+  {label:'Famille / relations / célibat',raw:10.6,wtd:10.3,mode:1},
+  {label:'Immigration / vie à l\'étranger',raw:10.2,wtd:10.3,mode:1},
+  {label:'Éducation / école / apprentissage',raw:8.0,wtd:9.3,mode:1},
+  {label:'Arts / culture / lecture / loisirs',raw:6.6,wtd:6.4,mode:2},
+  {label:'Santé / médecine / alimentation',raw:5.3,wtd:5.0,mode:1},
+  {label:'Voyage / tourisme',raw:3.4,wtd:3.3,mode:2},
+  {label:'Vie urbaine / transport / ville',raw:3.7,wtd:3.1,mode:1},
+  {label:'Médias / presse / information',raw:2.7,wtd:2.5,mode:1},
+  {label:'Environnement / écologie / climat',raw:1.6,wtd:1.9,mode:1},
+  {label:'Société / égalité / discrimination',raw:2.1,wtd:2.4,mode:1},
+  {label:'Vieillissement / apparence',raw:1.4,wtd:1.3,mode:2},
+  {label:'Jeunesse / adolescence',raw:2.0,wtd:1.9,mode:1},
+  {label:'Bénévolat / citoyenneté',raw:1.6,wtd:1.6,mode:2},
+  {label:'Vie privée / État / politique',raw:1.6,wtd:1.3,mode:2},
+  {label:'Langue / francophonie / identité',raw:1.6,wtd:1.3,mode:1},
+  {label:'Économie / consommation / argent',raw:1.2,wtd:1.0,mode:2},
+  {label:'Alimentation / gastronomie',raw:0.7,wtd:0.9,mode:2},
+  {label:'Sport / compétition / athlètes',raw:0.3,wtd:0.4,mode:2},
+  {label:'Science / innovation / espace',raw:0.2,wtd:0.5,mode:2},
+  {label:'Animaux / biodiversité / zoos',raw:0.8,wtd:1.0,mode:2},
+  {label:'Bonheur / valeurs / philosophie',raw:0.1,wtd:0.1,mode:2},
+];
+
+function renderBars(data, containerId){
+  var max=Math.max.apply(null,data.map(function(d){return Math.max(d.raw,d.wtd);}));
+  var html=data.map(function(d){
+    var delta=d.wtd-d.raw;
+    var dClass=delta>0.3?'delta-up':delta<-0.3?'delta-dn':'delta-fl';
+    var dStr=(delta>=0?'+':'')+delta.toFixed(1)+'pp';
+    return'<div class="bar-row">'
+      +'<span class="bar-label" title="'+d.label+'">'+d.label+'</span>'
+      +'<div style="flex:1;display:flex;flex-direction:column;gap:2px">'
+      +'<div class="bar-track"><div class="bar-fill bar-primary" style="width:'+(d.raw/max*100).toFixed(1)+'%"></div></div>'
+      +'<div class="bar-track"><div class="bar-fill bar-secondary" style="width:'+(d.wtd/max*100).toFixed(1)+'%"></div></div>'
+      +'</div>'
+      +'<span class="bar-pct">'+d.raw.toFixed(1)+'%</span>'
+      +'<span class="bar-delta '+dClass+'">'+dStr+'</span>'
+      +'</div>';
+  }).join('');
+  document.getElementById(containerId).innerHTML=html;
+}
+
+function renderPriorityTable(data, tbodyId, hasMode){
+  var rows=data.map(function(d,i){
+    var delta=d.wtd-d.raw;
+    var dClass=delta>0.3?'delta-up':delta<-0.3?'delta-dn':'delta-fl';
+    var dStr=(delta>=0?'+':'')+delta.toFixed(1)+'pp';
+    var modeCell=hasMode?'<td><span class="mode-pill '+(d.mode===1?'mp1':'mp2')+'">'+(d.mode===1?'Mode 1':'Mode 2')+'</span></td>':'';
+    return'<tr><td><span class="rank-num">'+(i+1)+'</span></td>'
+      +'<td>'+d.label+'</td>'
+      +'<td>'+d.raw.toFixed(1)+'%</td>'
+      +'<td>'+d.wtd.toFixed(1)+'%</td>'
+      +'<td class="'+dClass+'">'+dStr+'</td>'
+      +modeCell+'</tr>';
+  }).join('');
+  document.getElementById(tbodyId).innerHTML=rows;
+}
+
+function renderRefTables(){
+  // T3 ref table
+  var t3Head='<thead><tr><th>#</th><th>Cluster</th><th>Récent%</th><th>Mode</th><th>Quand utiliser Mode 2</th></tr></thead>';
+  var t3Body=T3_STATS.map(function(d,i){
+    var when=d.mode===2?'Fiscal, éthique, valeur culturelle, légitimité':'—';
+    return'<tr><td><span class="rank-num">'+(i+1)+'</span></td>'
+      +'<td>'+d.label+'</td>'
+      +'<td>'+d.wtd.toFixed(1)+'%</td>'
+      +'<td><span class="mode-pill '+(d.mode===1?'mp1':'mp2')+'">'+(d.mode===1?'Mode 1':'Mode 2')+'</span></td>'
+      +'<td style="color:var(--muted);font-size:.76rem">'+when+'</td></tr>';
+  }).join('');
+  document.getElementById('ref-t3-table').innerHTML=t3Head+'<tbody>'+t3Body+'</tbody>';
+
+  // T2 ref table
+  var t2Head='<thead><tr><th>#</th><th>Cluster</th><th>Récent%</th><th>Questions clés (squelette T2)</th></tr></thead>';
+  var t2Q={
+    'Nouveau quartier / orientation ville':'Depuis combien de temps habitez-vous ici ? / Quels commerces sont à proximité ? / Comment sont les transports ?',
+    'Cours (cuisine / langue / formation)':'Quels cours proposez-vous ? / Quels sont les tarifs et horaires ? / Combien de participants ? / Faut-il un niveau préalable ?',
+    'Agence voyages / vacances':'Quelles destinations proposez-vous ? / Quel est le tarif tout compris ? / Quand partent les départs ? / Qu\'est-ce qui est inclus ?',
+    'Recherche d\'emploi / carrière':'Quelles sont les missions du poste ? / Quel est le salaire ? / Quelles sont les conditions de travail ? / Comment se passe l\'intégration ?',
+    'Club sportif / centre d\'activité':'Quelles activités proposez-vous ? / Quels sont les horaires et tarifs ? / Faut-il apporter son équipement ? / Y a-t-il des cours pour débutants ?',
+  };
+  var t2Body=T2_STATS.slice(0,8).map(function(d,i){
+    var qs=t2Q[d.label]||'Quel type ? / Quel tarif ? / Quels horaires ? / Quelle procédure ? / Y a-t-il des conditions ?';
+    return'<tr><td><span class="rank-num">'+(i+1)+'</span></td>'
+      +'<td>'+d.label+'</td>'
+      +'<td>'+d.wtd.toFixed(1)+'%</td>'
+      +'<td style="font-size:.76rem;color:var(--muted)">'+qs+'</td></tr>';
+  }).join('');
+  document.getElementById('ref-t2-table').innerHTML=t2Head+'<tbody>'+t2Body+'</tbody>';
+}
+
+// Guide section nav
+document.querySelectorAll('.guide-nav-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var sec=btn.getAttribute('data-gsec');
+    document.querySelectorAll('.guide-nav-btn').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-gsec')===sec);});
+    document.querySelectorAll('.guide-section').forEach(function(s){s.classList.toggle('active',s.id==='gsec-'+sec);});
+    if(sec==='generator')buildGenClusterSelect();
+  });
+});
+
+// Stats sub-tabs
+document.querySelectorAll('.stats-sub-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var stab=btn.getAttribute('data-stab');
+    document.querySelectorAll('.stats-sub-btn').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-stab')===stab);});
+    document.getElementById('stab-t2').style.display=stab==='t2'?'':'none';
+    document.getElementById('stab-t3').style.display=stab==='t3'?'':'none';
+  });
+});
+
+// Skeleton accordion delegation for guide tab
+document.addEventListener('click',function(e){
+  if(!e.target.closest('#tab-guide'))return;
+  var sh=e.target.closest('.skeleton-head');
+  if(sh){sh.closest('.skeleton-panel').classList.toggle('open');}
+});
+
+// Render stats on first show
+var statsRendered=false;
+function maybeRenderStats(){
+  if(statsRendered)return;
+  statsRendered=true;
+  renderBars(T2_STATS,'t2-bars');
+  renderBars(T3_STATS,'t3-bars');
+  renderPriorityTable(T2_STATS,'t2-table',false);
+  renderPriorityTable(T3_STATS,'t3-table',true);
+  renderRefTables();
+}
+
+// Tab switches
+document.querySelectorAll('#mainTabBar .tab-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var tab=btn.getAttribute('data-tab');
+    document.querySelectorAll('#mainTabBar .tab-btn').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-tab')===tab);});
+    document.getElementById('tab-ee').style.display=tab==='ee'?'':'none';
+    document.getElementById('tab-eo').style.display=tab==='eo'?'':'none';
+  });
+});
+document.querySelectorAll('#eeTabBar .tab-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    eeTask=btn.getAttribute('data-task');
+    document.querySelectorAll('#eeTabBar .tab-btn').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-task')===eeTask);});
+    renderEE();
+  });
+});
+document.querySelectorAll('#eoTabBar .tab-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    eoView=btn.getAttribute('data-view');
+    document.querySelectorAll('#eoTabBar .tab-btn').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-view')===eoView);});
+    var isBrowse=eoView==='scenarios'||eoView==='t3';
+    document.getElementById('eo-browse').style.display=isBrowse?'':'none';
+    document.getElementById('tab-stats').style.display=eoView==='stats'?'':'none';
+    document.getElementById('tab-guide').style.display=eoView==='guide'?'':'none';
+    if(isBrowse){populateThemeFilter();renderEO();}
+    if(eoView==='stats'||eoView==='guide')maybeRenderStats();
+  });
+});
+function setMode(which,m){
+  if(which==='ee'){eeMode=m;document.getElementById('ee-mode-clusters').classList.toggle('active',m==='clusters');document.getElementById('ee-mode-raw').classList.toggle('active',m==='raw');renderEE();}
+  else{eoMode=m;document.getElementById('eo-mode-clusters').classList.toggle('active',m==='clusters');document.getElementById('eo-mode-raw').classList.toggle('active',m==='raw');renderEO();}
+}
+document.getElementById('ee-mode-clusters').addEventListener('click',function(){setMode('ee','clusters');});
+document.getElementById('ee-mode-raw').addEventListener('click',function(){setMode('ee','raw');});
+document.getElementById('eo-mode-clusters').addEventListener('click',function(){setMode('eo','clusters');});
+document.getElementById('eo-mode-raw').addEventListener('click',function(){setMode('eo','raw');});
+function setSortBtn(which,sort){
+  if(which==='ee'){eeSort=sort;document.getElementById('ee-sort-freq').classList.toggle('active',sort==='freq');document.getElementById('ee-sort-recent').classList.toggle('active',sort==='recent');renderEE();}
+  else{eoSort=sort;document.getElementById('eo-sort-freq').classList.toggle('active',sort==='freq');document.getElementById('eo-sort-recent').classList.toggle('active',sort==='recent');renderEO();}
+}
+document.getElementById('ee-sort-freq').addEventListener('click',function(){setSortBtn('ee','freq');});
+document.getElementById('ee-sort-recent').addEventListener('click',function(){setSortBtn('ee','recent');});
+document.getElementById('eo-sort-freq').addEventListener('click',function(){setSortBtn('eo','freq');});
+document.getElementById('eo-sort-recent').addEventListener('click',function(){setSortBtn('eo','recent');});
+document.getElementById('ee-search').addEventListener('input',renderEE);
+document.getElementById('ee-cluster-filter').addEventListener('change',renderEE);
+document.getElementById('eo-search').addEventListener('input',renderEO);
+document.getElementById('eo-cluster-filter').addEventListener('change',renderEO);
+document.getElementById('eo-theme-filter').addEventListener('change',renderEO);
+
+function populateThemeFilter(){
+  var map=eoView==='t3'?T3_THEMES:T2_THEMES;
+  var s=document.getElementById('eo-theme-filter'),p=s.value;
+  s.innerHTML='<option value="">Tous les thèmes</option>';
+  Object.keys(map).forEach(function(k){var o=document.createElement('option');o.value=k;o.textContent=k;s.appendChild(o);});
+  if(p&&map[p])s.value=p; else s.value='';
+}
+
+// Delegated clicks
+function addDelegation(id){
+  document.getElementById(id).addEventListener('click',function(e){
+    var vt=e.target.closest('.variants-toggle');
+    if(vt){e.stopPropagation();var vl=vt.nextElementSibling;if(vl){vl.classList.toggle('open');vt.textContent=vl.classList.contains('open')?vt.textContent.replace('▶','▼'):vt.textContent.replace('▼','▶');}return;}
+    var ri=e.target.closest('.raw-item.expandable');
+    if(ri&&!e.target.closest('.variants-toggle')){ri.classList.toggle('open');return;}
+    var sh=e.target.closest('.sg-head');if(sh){sh.closest('.sg-card').classList.toggle('open');return;}
+    var ch=e.target.closest('.cluster-head');if(ch){ch.closest('.cluster-card').classList.toggle('open');return;}
+    var ah=e.target.closest('.arg-block-head');if(ah){ah.closest('.arg-block-card').classList.toggle('open');return;}
+  });
+}
+
+// EE render
+function renderEE(){
+  if(!D)return;
+  var el=document.getElementById('ee-content');
+  var q=document.getElementById('ee-search').value.toLowerCase().trim();
+  var clf=document.getElementById('ee-cluster-filter').value;
+  var sort=eeSort;
+  var task=D.ee&&D.ee[eeTask];
+  if(!task){el.innerHTML='<div class="empty-state">Aucune donnée.</div>';return;}
+  var clusters=JSON.parse(JSON.stringify(task));
+  populateSelect('ee-cluster-filter',clusters.map(function(c){return c.cluster;}),'Tous les types');
+  if(clf)clusters=clusters.filter(function(c){return c.cluster===clf;});
+  if(q)clusters=clusters.filter(function(c){return c.cluster.toLowerCase().indexOf(q)>=0||c.items.some(function(i){return i.p.toLowerCase().indexOf(q)>=0;});});
+  clusters=sortClusters(clusters,sort);
+  var allItems=[];
+  clusters.forEach(function(c){var its=q?c.items.filter(function(i){return i.p.toLowerCase().indexOf(q)>=0;}):c.items;its.forEach(function(i){allItems.push({p:i.p,n:i.n,lm:i.lm||0,cluster:c.cluster});});});
+  allItems=sortItems(allItems,sort);
+  document.getElementById('ee-stats').textContent=eeMode==='raw'?allItems.length+' questions':clusters.length+' types · '+allItems.length+' questions';
+  if(!clusters.length){el.innerHTML='<div class="empty-state">Aucun résultat.</div>';return;}
+  if(eeMode==='raw'){
+    el.className='raw-list';
+    el.innerHTML=allItems.map(function(i){return'<div class="raw-item"><div class="raw-item-main"><span class="raw-badge">'+i.n+'×</span>'+rdot(i.lm)+(i.lm?'<span class="raw-date">'+lmStr(i.lm)+'</span>':'')+'<span class="raw-cluster" title="'+esc(i.cluster)+'">'+esc(i.cluster)+'</span><span>'+esc(i.p)+'</span></div></div>';}).join('');
+  }else{
+    el.className='clusters-grid';
+    el.innerHTML=clusters.map(function(c){var its=q?c.items.filter(function(i){return i.p.toLowerCase().indexOf(q)>=0;}):c.items;return clusterCardHtml(Object.assign({},c,{items:its}),'','questions',sort);}).join('');
+  }
+}
+
+// EO render
+function renderEO(){
+  if(!D)return;
+  var el=document.getElementById('eo-content');
+  var q=document.getElementById('eo-search').value.toLowerCase().trim();
+  var clf=document.getElementById('eo-cluster-filter').value;
+  var tf=document.getElementById('eo-theme-filter').value;
+  var sort=eoSort;
+
+  if(eoView==='scenarios'){
+    var clusters=JSON.parse(JSON.stringify(D.eo.t2));
+    populateSelect('eo-cluster-filter',clusters.map(function(c){return c.cluster;}),'Tous les groupes');
+    // theme filter
+    if(tf&&T2_THEMES[tf]){var al=T2_THEMES[tf];clusters=clusters.filter(function(c){return al.indexOf(c.cluster)>=0;});}
+    if(clf)clusters=clusters.filter(function(c){return c.cluster===clf;});
+    if(q)clusters=clusters.filter(function(c){return c.cluster.toLowerCase().indexOf(q)>=0||c.items.some(function(i){return i.p.toLowerCase().indexOf(q)>=0;});});
+    clusters=sortClusters(clusters,sort);
+    var allItems=[];
+    clusters.forEach(function(c){var its=q?c.items.filter(function(i){return i.p.toLowerCase().indexOf(q)>=0;}):c.items;its.forEach(function(i){allItems.push({p:i.p,n:i.n,lm:i.lm||0,cluster:c.cluster});});});
+    allItems=sortItems(allItems,sort);
+    document.getElementById('eo-stats').textContent=eoMode==='raw'?allItems.length+' scénarios':clusters.length+' groupes · '+allItems.length+' scénarios';
+    if(!clusters.length){el.innerHTML='<div class="empty-state">Aucun résultat.</div>';return;}
+    if(eoMode==='raw'){
+      el.className='raw-list';
+      var lookup={};D.eo.t2.forEach(function(c){lookup[c.cluster]=c;});
+      el.innerHTML=allItems.map(function(i){
+        var cl=lookup[i.cluster],hintsHtml='';
+        if(cl&&cl.questions&&cl.questions.length)hintsHtml='<div class="raw-hints"><ul class="raw-q-list">'+cl.questions.map(function(qq){return'<li>'+esc(qq)+'</li>';}).join('')+'</ul></div>';
+        return'<div class="raw-item'+(hintsHtml?' expandable':'')+'"><div class="raw-item-main">'+(hintsHtml?'<span class="raw-chevron">▶</span>':'')+'<span class="raw-badge">'+i.n+'×</span>'+rdot(i.lm)+(i.lm?'<span class="raw-date">'+lmStr(i.lm)+'</span>':'')+'<span class="raw-cluster" title="'+esc(i.cluster)+'">'+esc(i.cluster)+'</span><span>'+esc(i.p)+'</span></div>'+hintsHtml+'</div>';
+      }).join('');
+    }else{
+      el.className='clusters-grid';
+      el.innerHTML=clusters.map(function(c){
+        var cc=JSON.parse(JSON.stringify(c));
+        if(q)cc.items=cc.items.filter(function(i){return i.p.toLowerCase().indexOf(q)>=0;});
+        return t2ClusterCardHtml(cc,sort);
+      }).join('');
+    }
+  }else{
+    // T3 arguments
+    var blocks=JSON.parse(JSON.stringify(D.eo.t3_args));
+    populateSelect('eo-cluster-filter',blocks.map(function(b){return b.title;}),'Tous les blocs');
+    if(tf&&T3_THEMES[tf]){var al2=T3_THEMES[tf];blocks=blocks.filter(function(b){return al2.indexOf(b.id)>=0;});}
+    if(clf)blocks=blocks.filter(function(b){return b.title===clf;});
+    if(q)blocks=blocks.filter(function(b){return b.title.toLowerCase().indexOf(q)>=0||(b.pour&&b.pour.toString().toLowerCase().indexOf(q)>=0)||b.questions.some(function(qq){return qq.p.toLowerCase().indexOf(q)>=0;});});
+    if(sort==='recent')blocks.sort(function(a,b){return(b.lm||0)-(a.lm||0);});
+    else blocks.sort(function(a,b){return b.apps-a.apps;});
+    var allQs=[];
+    blocks.forEach(function(b){var qs=q?b.questions.filter(function(qq){return qq.p.toLowerCase().indexOf(q)>=0;}):b.questions;qs.forEach(function(qq){allQs.push({p:qq.p,n:qq.n,lm:qq.lm||0,cluster:b.title});});});
+    allQs=sortItems(allQs,sort);
+    document.getElementById('eo-stats').textContent=eoMode==='raw'?allQs.length+' questions':blocks.length+' blocs · '+allQs.length+' questions';
+    if(!blocks.length){el.innerHTML='<div class="empty-state">Aucun résultat.</div>';return;}
+    if(eoMode==='raw'){
+      el.className='raw-list';
+      var blookup={};D.eo.t3_args.forEach(function(b){blookup[b.title]=b;});
+      el.innerHTML=allQs.map(function(i){
+        var bl=blookup[i.cluster],hintsHtml='';
+        if(bl){var p=Array.isArray(bl.pour)?bl.pour[0]:bl.pour,c2=Array.isArray(bl.contre)?bl.contre[0]:bl.contre;hintsHtml='<div class="raw-hints"><div class="raw-hint-row"><span class="raw-hint-label pour">Pour</span>'+esc(p)+'</div><div class="raw-hint-row"><span class="raw-hint-label contre">Contre</span>'+esc(c2)+'</div><div class="raw-hint-row"><span class="raw-hint-label nuance">Nuance</span>'+esc(bl.nuance)+'</div></div>';}
+        return'<div class="raw-item'+(hintsHtml?' expandable':'')+'"><div class="raw-item-main">'+(hintsHtml?'<span class="raw-chevron">▶</span>':'')+'<span class="raw-badge">'+i.n+'×</span>'+rdot(i.lm)+(i.lm?'<span class="raw-date">'+lmStr(i.lm)+'</span>':'')+'<span class="raw-cluster" title="'+esc(i.cluster)+'">'+esc(i.cluster)+'</span><span>'+esc(i.p)+'</span></div>'+hintsHtml+'</div>';
+      }).join('');
+    }else{
+      el.className='clusters-grid';
+      el.innerHTML=univHtml()+blocks.map(function(b){
+        var sgIds=b.subgroups?b.subgroups.map(function(sg){return sg.id;}).filter(Boolean):[];
+        var rootQs=b.questions.filter(function(qq){return!qq.subgroup||sgIds.indexOf(qq.subgroup)<0;});
+        var topQs=sortItems(rootQs.length?rootQs:b.questions,sort).slice(0,4);
+        var rb=isR(b.lm)?'<span class="badge-recent">'+lmStr(b.lm)+'</span>':'';
+        return'<div class="arg-block-card">'
+          +'<div class="arg-block-head"><div class="arg-block-name">'+esc(b.title)+'</div>'
+          +'<div class="cluster-badges">'+rb+'<span class="badge-apps">'+b.apps+'×</span><span class="badge-unique">'+b.n+' questions</span></div>'
+          +'<span class="chevron">▶</span></div>'
+          +'<div class="arg-block-body">'
+          +'<div class="arg-pcn">'+pcnHtml(b.pour,b.contre,b.nuance,false)+'</div>'
+          +sgPanelHtml(b.subgroups,b.questions,sort,true)
+          +(rootQs.length?'<div class="arg-qs"><div class="arg-qs-label">Questions fréquentes</div>'
+          +topQs.map(function(q){return qRowHtml(q.p,q.n,q.lm);}).join('')
+          +'</div>':'')+'</div></div>';
+      }).join('');
+    }
+  }
+}
+
+// Load
+fetch('tcf_data.json')
+  .then(function(r){return r.json();})
+  .then(function(data){
+    // Recompute apps and lm from item counts so stored values are never stale
+    function reapps(clusters){
+      clusters.forEach(function(c){
+        c.apps=c.items.reduce(function(s,i){return s+(i.n||1);},0);
+        c.lm=c.items.reduce(function(m,i){return Math.max(m,i.lm||0);},0);
+      });
+    }
+    if(data.ee){if(data.ee.t1)reapps(data.ee.t1);if(data.ee.t2)reapps(data.ee.t2);}
+    if(data.eo){
+      if(data.eo.t2)reapps(data.eo.t2);
+      if(data.eo.t3_args)data.eo.t3_args.forEach(function(b){
+        b.apps=b.questions.reduce(function(s,q){return s+(q.n||1);},0);
+        b.n=b.questions.length;
+        b.lm=Math.max.apply(null,b.questions.map(function(q){return q.lm||0;}).concat([0]));
+      });
+    }
+    D=data;
+    window.D=data; // expose globally for generator
+    addDelegation('ee-content');
+    addDelegation('eo-content');
+    populateThemeFilter();
+    renderEE();
+    renderEO();
+  })
+  .catch(function(){
+    var msg='<div class="empty-state">Erreur de chargement. Placez <code>tcf_data.json</code> dans le même dossier et servez via HTTP (<code>python3 -m http.server</code>).</div>';
+    document.getElementById('ee-content').innerHTML=msg;
+    document.getElementById('eo-content').innerHTML=msg;
+  });
+})();
+function selectMode(m){
+  document.getElementById('mode-m1').classList.toggle('selected',m==='m1');
+  document.getElementById('mode-m2').classList.toggle('selected',m==='m2');
+  document.getElementById('m1-panels').style.display=m==='m1'?'':'none';
+  document.getElementById('m2-panels').style.display=m==='m2'?'':'none';
+}
+function showFullSkel(mode, dir, btn){
+  var pour=document.getElementById('full-skel-'+mode+'-pour');
+  var contre=document.getElementById('full-skel-'+mode+'-contre');
+  if(pour)pour.style.display=dir==='pour'?'':'none';
+  if(contre)contre.style.display=dir==='contre'?'':'none';
+  var btns=btn.parentElement.querySelectorAll('.toggle-pill');
+  btns.forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+}
+function setGenType(t){ if(window._setGenType)window._setGenType(t); }
+function generateOutput(){ if(window._generateOutput)window._generateOutput(); }
+</script>
+</body>
+</html>

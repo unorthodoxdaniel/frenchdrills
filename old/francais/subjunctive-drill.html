@@ -1,0 +1,1978 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subjonctif — Noble Method Drill</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f5f0e8;
+    --cream-dark: #ede7d9;
+    --ink: #1a1209;
+    --ink-light: #3d3a2e;
+    --ink-faint: #7a7060;
+    --gold: #b8952a;
+    --gold-light: #d4b04a;
+    --gold-pale: #f0e4b8;
+    --red: #8b2a2a;
+    --green: #2a5c3a;
+    --rule: #c8bfa0;
+    --shadow: rgba(26,26,20,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* Texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+  }
+
+  /* Header */
+  .masthead {
+    text-align: center;
+    padding-bottom: 28px;
+    border-bottom: 2px solid var(--rule);
+    margin-bottom: 36px;
+  }
+
+  .home-nav {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+  }
+
+  .home-nav a {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .home-nav a:hover { color: var(--gold); border-color: var(--gold); }
+
+  .masthead-label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+
+  .masthead h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2.6rem;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.15;
+    margin-bottom: 6px;
+  }
+
+  .masthead h1 em {
+    font-style: italic;
+    color: var(--ink-light);
+  }
+
+  .masthead-sub {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--ink-faint);
+  }
+
+  /* Noble intro box */
+  .noble-intro {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 28px 36px;
+    margin-bottom: 36px;
+    border-radius: 2px;
+  }
+
+  .noble-intro h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--gold-light);
+    font-weight: 400;
+    margin-bottom: 14px;
+  }
+
+  .noble-intro p {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.95rem;
+    line-height: 1.85;
+    color: rgba(245,240,232,0.82);
+    margin-bottom: 10px;
+  }
+
+  .noble-intro p:last-child { margin-bottom: 0; }
+
+  .noble-intro strong { color: var(--cream); }
+  .noble-intro em { color: rgba(245,240,232,0.7); font-style: italic; }
+
+  .noble-intro-warning {
+    border-left: 2px solid var(--gold);
+    padding-left: 14px;
+    color: rgba(245,240,232,0.75) !important;
+    margin-top: 4px;
+  }
+
+  /* Understanding section in reference */
+  .understanding-block {
+    background: var(--cream-dark);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+  }
+
+  .understanding-block h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+
+  .understanding-block p {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.95rem;
+    line-height: 1.85;
+    color: var(--ink-light);
+    margin-bottom: 10px;
+  }
+
+  .understanding-block p:last-child { margin-bottom: 0; }
+
+  .understanding-block strong { color: var(--ink); }
+
+  .understanding-block .example {
+    font-family: 'Courier Prime', monospace;
+    font-size: 13px;
+    color: var(--ink);
+    background: #fff;
+    border-left: 2px solid var(--gold);
+    padding: 8px 14px;
+    margin: 10px 0;
+    display: block;
+    line-height: 1.9;
+  }
+
+  .understanding-block .example .label {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .trap-box {
+    background: #fff0f0;
+    border: 1px solid #d4a0a0;
+    border-left: 3px solid var(--red);
+    border-radius: 2px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+  }
+
+  .trap-box h4 {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 8px;
+  }
+
+  .trap-box p {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.92rem;
+    line-height: 1.8;
+    color: var(--ink-light);
+    margin-bottom: 6px;
+  }
+
+  .trap-box p:last-child { margin-bottom: 0; }
+  .trap-box strong { color: var(--ink); }
+  .trap-box .example { font-family:'Courier Prime',monospace; font-size:12px; color:var(--ink); display:block; margin-top:6px; }
+
+  /* Tab nav */
+  .tab-nav {
+    display: flex;
+    gap: 0;
+    border-bottom: 1.5px solid var(--rule);
+    margin-bottom: 36px;
+  }
+
+  .tab-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1.5px;
+    padding: 10px 22px;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .tab-btn:hover { color: var(--ink); }
+  .tab-btn.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* Score bar */
+  .score-bar {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 14px 20px;
+    background: var(--cream-dark);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    margin-bottom: 32px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+  }
+
+  .score-item { display: flex; align-items: center; gap: 8px; color: var(--ink-faint); }
+  .score-val { color: var(--ink); font-weight: 700; font-size: 15px; }
+  .score-streak .score-val { color: var(--gold); }
+  .score-bar .divider { width: 1px; height: 20px; background: var(--rule); }
+
+  /* Question card */
+  .question-card {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 36px 40px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 12px var(--shadow);
+    position: relative;
+  }
+
+  .q-number {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+
+  .q-trigger {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 10px;
+  }
+
+  .q-sentence {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.45rem;
+    line-height: 1.5;
+    color: var(--ink);
+    margin-bottom: 28px;
+  }
+
+  .q-sentence .blank {
+    display: inline-block;
+    min-width: 90px;
+    border-bottom: 1.5px solid var(--ink);
+    margin: 0 4px;
+    vertical-align: bottom;
+    color: var(--ink-faint);
+    font-style: italic;
+    font-size: 1.1rem;
+  }
+
+  .q-sentence .infinitive {
+    font-family: 'Courier Prime', monospace;
+    font-size: 1rem;
+    color: var(--gold);
+    background: var(--gold-pale);
+    padding: 1px 8px;
+    border-radius: 2px;
+    margin-left: 6px;
+  }
+
+  /* Input row */
+  .input-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .answer-input {
+    font-family: 'Courier Prime', monospace;
+    font-size: 1.1rem;
+    color: var(--ink);
+    background: var(--cream);
+    border: 1.5px solid var(--rule);
+    border-radius: 2px;
+    padding: 10px 16px;
+    flex: 1;
+    max-width: 260px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .answer-input:focus { border-color: var(--gold); }
+  .answer-input.correct { border-color: var(--green); background: #f0f7f2; }
+  .answer-input.incorrect { border-color: var(--red); background: #fdf2f2; }
+
+  .submit-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--cream);
+    background: var(--ink);
+    border: none;
+    border-radius: 2px;
+    padding: 11px 22px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .submit-btn:hover { background: var(--ink-light); }
+  .submit-btn:disabled { background: var(--rule); cursor: default; }
+
+  .next-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: none;
+    border: 1.5px solid var(--gold);
+    border-radius: 2px;
+    padding: 10px 22px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .next-btn:hover { background: var(--gold); color: var(--cream); }
+
+  .audio-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 13px;
+    color: var(--ink-faint);
+    background: none;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    line-height: 1;
+  }
+
+  .audio-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* Feedback */
+  .feedback {
+    font-family: 'EB Garamond', serif;
+    font-size: 1rem;
+    padding: 10px 0;
+    min-height: 28px;
+    display: none;
+  }
+
+  .feedback.correct { color: var(--green); }
+  .feedback.incorrect { color: var(--red); }
+
+  /* Hint */
+  .hint-toggle {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    background: none;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+
+  .hint-toggle:hover { border-color: var(--gold); color: var(--gold); }
+
+  .hint-panel {
+    display: none;
+    margin-top: 16px;
+    padding: 16px 20px;
+    background: var(--gold-pale);
+    border-left: 2px solid var(--gold);
+    border-radius: 0 2px 2px 0;
+  }
+
+  .hint-panel.open { display: block; }
+
+  .hint-title {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+
+  .conj-table {
+    font-family: 'Courier Prime', monospace;
+    font-size: 13px;
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 340px;
+  }
+
+  .conj-table td {
+    padding: 3px 12px 3px 0;
+    color: var(--ink-light);
+  }
+
+  .conj-table td:first-child {
+    color: var(--ink-faint);
+    font-style: italic;
+    width: 80px;
+  }
+
+  .conj-table td.form {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  /* Progress bar */
+  .progress-wrap {
+    height: 3px;
+    background: var(--rule);
+    border-radius: 2px;
+    margin-bottom: 28px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  /* Reference panel */
+  .ref-section {
+    margin-bottom: 40px;
+  }
+
+  .ref-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--ink);
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 20px;
+  }
+
+  .ref-heading em { font-style: italic; color: var(--ink-faint); font-size: 1rem; }
+
+  .ref-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+  }
+
+  .ref-card {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 18px 20px;
+  }
+
+  .ref-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+
+  .ref-card-sub {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .ref-rule { font-style: italic; color: var(--ink-faint); font-size: 0.9rem; margin-bottom: 12px; }
+
+  /* Divider rule */
+  .ornament {
+    text-align: center;
+    color: var(--gold);
+    font-size: 1.1rem;
+    letter-spacing: 0.3em;
+    margin: 32px 0;
+  }
+
+  /* Accuracy tracker */
+  .verb-accuracy {
+    margin-top: 32px;
+  }
+
+  .acc-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--cream-dark);
+    font-size: 0.95rem;
+  }
+
+  .acc-verb {
+    font-family: 'Courier Prime', monospace;
+    font-size: 13px;
+    color: var(--ink);
+    min-width: 100px;
+  }
+
+  .acc-bar-wrap {
+    flex: 1;
+    height: 4px;
+    background: var(--rule);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .acc-bar { height: 100%; border-radius: 2px; transition: width 0.4s; }
+  .acc-pct { font-family: 'Courier Prime', monospace; font-size: 11px; color: var(--ink-faint); min-width: 36px; text-align: right; }
+
+  /* ── PHRASES TAB ─────────────────────────────────────────────────────────── */
+
+  .phrases-intro {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.97rem;
+    font-style: italic;
+    color: var(--ink-faint);
+    line-height: 1.8;
+    border-left: 2px solid var(--rule);
+    padding-left: 14px;
+    margin-bottom: 32px;
+  }
+
+  .phrases-group-label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin: 28px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--gold-pale);
+  }
+
+  .phrase-card {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    overflow: hidden;
+  }
+
+  .phrase-card:hover { border-color: var(--gold); }
+  .phrase-card.open { border-color: var(--gold); }
+
+  .phrase-main {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding: 14px 18px;
+    flex-wrap: wrap;
+  }
+
+  .phrase-chunk {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    color: var(--ink);
+    flex-shrink: 0;
+  }
+
+  .phrase-chunk em {
+    font-style: italic;
+    color: var(--ink-faint);
+    font-size: 1rem;
+  }
+
+  .phrase-tag {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--ink-faint);
+    flex: 1;
+  }
+
+  .phrase-arrow {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    margin-left: auto;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+
+  .phrase-card.open .phrase-arrow { transform: rotate(90deg); }
+
+  .phrase-body {
+    display: none;
+    padding: 0 18px 18px;
+    border-top: 1px solid var(--cream-dark);
+  }
+
+  .phrase-card.open .phrase-body { display: block; }
+
+  .phrase-body p {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.95rem;
+    line-height: 1.85;
+    color: var(--ink-light);
+    margin: 14px 0 10px;
+  }
+
+  .phrase-examples {
+    margin: 10px 0;
+  }
+
+  .phrase-ex {
+    font-family: 'Courier Prime', monospace;
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--cream);
+    border-left: 2px solid var(--gold);
+    padding: 7px 12px;
+    margin-bottom: 6px;
+    line-height: 1.7;
+  }
+
+  .phrase-ex strong {
+    color: var(--gold);
+  }
+
+  .phrase-tip {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.88rem !important;
+    font-style: italic;
+    color: var(--ink-faint) !important;
+    margin-top: 12px !important;
+    padding-left: 4px;
+  }
+
+
+  .mode-bar {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    padding: 12px 20px;
+    background: var(--cream-dark);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .mode-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mode-label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-right: 4px;
+  }
+
+  .mode-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    background: none;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 5px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .mode-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  .mode-btn.active {
+    background: var(--ink);
+    color: var(--cream);
+    border-color: var(--ink);
+  }
+
+  /* Trigger mode */
+  .trigger-english {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--ink-faint);
+    margin-bottom: 14px;
+    border-left: 2px solid var(--rule);
+    padding-left: 12px;
+  }
+
+  .q-trigger-blank {
+    display: inline-block;
+    min-width: 130px;
+    border-bottom: 1.5px solid var(--ink);
+    margin: 0 2px;
+    vertical-align: baseline;
+    margin-bottom: 1px;
+  }
+
+  .core8-badge {
+    display: inline-block;
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    border-radius: 2px;
+    padding: 1px 6px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  @media (max-width: 600px) {
+    .page { padding: 28px 18px 60px; }
+    .masthead h1 { font-size: 1.9rem; }
+    .question-card { padding: 24px 20px; }
+    .ref-grid { grid-template-columns: 1fr 1fr; }
+    .input-row { flex-wrap: wrap; }
+    .mode-bar { gap: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="home-nav">
+    <a href="f-index.html">← All drills</a>
+  </div>
+
+  <div class="masthead">
+    <div class="masthead-label">The Noble Method — French Grammar Series</div>
+    <h1>Le <em>Subjonctif</em></h1>
+    <div class="masthead-sub">Present tense · Conjugation drill with reference</div>
+  </div>
+
+  <div class="noble-intro">
+    <h2>What is the subjunctive?</h2>
+    <p>The subjunctive (<em>le subjonctif</em>) is a verbal <strong>mode</strong> — not a tense — used to express actions or states that are uncertain, desired, hypothetical, or subjective. It almost always appears in a subordinate clause introduced by <strong>que</strong>, after a main clause containing an emotion, desire, doubt, necessity, or certain fixed conjunctions.</p>
+    <p>The key rule: <strong>two different subjects, one per clause.</strong> <em>Je veux partir</em> (one subject → infinitive). <em>Je veux qu'il parte</em> (two subjects → subjunctive). If the subject is the same in both clauses, use the infinitive instead.</p>
+    <p class="noble-intro-warning">⚠ Not every <em>que</em> triggers the subjunctive. <em>Je pense que</em>, <em>je crois que</em>, and <em>je sais que</em> use the <strong>indicative</strong> — they express belief or knowledge, not doubt. It is only the <strong>negative</strong> form — <em>je ne pense pas que, je ne crois pas que</em> — that introduces enough uncertainty to require the subjunctive.</p>
+  </div>
+
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('drill')">Drill</button>
+    <button class="tab-btn" onclick="switchTab('reference')">Reference</button>
+    <button class="tab-btn" onclick="switchTab('progress')">Progress</button>
+    <button class="tab-btn" onclick="switchTab('phrases')">Phrases</button>
+  </div>
+
+  <!-- DRILL TAB -->
+  <div id="tab-drill" class="tab-panel active">
+
+    <div class="mode-bar">
+      <div class="mode-group">
+        <span class="mode-label">Mode</span>
+        <button class="mode-btn active" id="mode-conj" onclick="setMode('conjugation')">Conjugation</button>
+        <button class="mode-btn" id="mode-trig" onclick="setMode('trigger')">Trigger</button>
+      </div>
+      <div class="mode-group">
+        <span class="mode-label">Focus</span>
+        <button class="mode-btn active" id="focus-all" onclick="setFocus('all')">All verbs</button>
+        <button class="mode-btn" id="focus-irreg" onclick="setFocus('irregular')">Core 8 only</button>
+      </div>
+    </div>
+
+    <div class="score-bar">
+      <div class="score-item">
+        <span>Score</span>
+        <span class="score-val" id="score-correct">0</span>/<span class="score-val" id="score-total">0</span>
+      </div>
+      <div class="divider"></div>
+      <div class="score-item score-streak">
+        <span>Streak</span>
+        <span class="score-val" id="score-streak">0</span>
+      </div>
+      <div class="divider"></div>
+      <div class="score-item">
+        <span>Accuracy</span>
+        <span class="score-val" id="score-pct">—</span>
+      </div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+
+    <div class="question-card" id="question-card">
+      <div class="q-number" id="q-number">Question 1</div>
+      <div class="q-trigger" id="q-trigger"></div>
+      <div class="q-sentence" id="q-sentence"></div>
+
+      <!-- Trigger mode: English cue + full sentence with blank trigger -->
+      <div id="trigger-cue" style="display:none">
+        <div class="trigger-english" id="trigger-english"></div>
+        <div class="q-sentence" id="trigger-sentence"></div>
+      </div>
+
+      <div class="input-row">
+        <input type="text" class="answer-input" id="answer-input" placeholder="votre réponse…" autocomplete="off" autocorrect="off" spellcheck="false">
+        <button class="submit-btn" id="submit-btn" onclick="checkAnswer()">Vérifier</button>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()" style="display:none">Suivant →</button>
+        <button class="audio-btn" id="audio-btn" onclick="playAudio()" title="Écouter">🔊</button>
+      </div>
+
+      <div class="feedback" id="feedback"></div>
+
+      <!-- Conjugation mode hint -->
+      <button class="hint-toggle" id="hint-toggle" onclick="toggleHint()" style="">▸ Conjugaison</button>
+      <div class="hint-panel" id="hint-panel">
+        <div class="hint-title" id="hint-title"></div>
+        <table class="conj-table" id="hint-table"></table>
+      </div>
+
+      <!-- Trigger mode hint -->
+      <button class="hint-toggle" id="trigger-hint-toggle" onclick="toggleTriggerHint()" style="display:none">▸ Indice</button>
+      <div class="hint-panel" id="trigger-hint-panel">
+        <div class="hint-title">Triggers in this category</div>
+        <div id="trigger-hint-list" style="font-family:'Courier Prime',monospace;font-size:13px;color:var(--ink-light);line-height:2"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- REFERENCE TAB -->
+  <div id="tab-reference" class="tab-panel">
+
+    <div class="ref-section">
+      <div class="ref-heading">Understanding the subjunctive <em>— read this until it sticks</em></div>
+
+      <div class="understanding-block">
+        <h3>The core idea</h3>
+        <p>The subjunctive expresses something <strong>filtered through a mind</strong> — a desire, a fear, a doubt, a judgment. The indicative expresses facts and beliefs held as true. That's the real difference: not certainty vs uncertainty exactly, but whether you're stating a fact or colouring it with feeling or subjectivity.</p>
+        <p>It almost always lives in a subordinate clause after <strong>que</strong>, triggered by the main clause. The formula is:</p>
+        <span class="example">Main clause (trigger) + <strong>que</strong> + subject + <strong>subjunctive verb</strong></span>
+        <p>And the golden rule: <strong>two different subjects</strong> are required. Same subject → use the infinitive instead.</p>
+        <span class="example"><span class="label">same subject → infinitive</span>Je veux <strong>partir</strong>. &nbsp;(I want to leave.)<br><span class="label">different subjects → subjunctive</span>Je veux qu'il <strong>parte</strong>. &nbsp;(I want him to leave.)</span>
+      </div>
+
+      <div class="trap-box">
+        <h4>⚠ Common trap — je pense que vs je ne pense pas que</h4>
+        <p><strong>Je pense que, je crois que, je sais que</strong> → <strong>indicative</strong>. These express a belief held as true, not a doubt. The verb after <em>que</em> conjugates normally.</p>
+        <span class="example">Je pense qu'il <strong>est</strong> là. &nbsp;(indicative — I believe this to be true)</span>
+        <p>But negate them and you introduce enough doubt to flip to subjunctive:</p>
+        <span class="example">Je ne pense pas qu'il <strong>soit</strong> là. &nbsp;(subjunctive — I'm not sure)</span>
+        <p>Same applies to <em>je crois que → je ne crois pas que</em>, and <em>il est certain que → il n'est pas certain que</em>.</p>
+      </div>
+
+      <div class="trap-box">
+        <h4>⚠ Common trap — il est probable que vs il est possible que</h4>
+        <p><strong>Il est probable que</strong> → <strong>indicative</strong>. High probability is treated like a fact.<br>
+        <strong>Il est possible que</strong> → <strong>subjunctive</strong>. Possibility is uncertain enough to require it.</p>
+        <span class="example">Il est probable qu'il <strong>viendra</strong>. &nbsp;(indicative)<br>Il est possible qu'il <strong>vienne</strong>. &nbsp;(subjunctive)</span>
+      </div>
+
+      <div class="understanding-block">
+        <h3>Five categories of triggers</h3>
+        <p><strong>1. Desire & preference</strong> — wanting, wishing, preferring something for someone else.<br>
+        <em>vouloir que, souhaiter que, désirer que, préférer que, aimer que, exiger que</em></p>
+        <p><strong>2. Emotion</strong> — happiness, fear, sadness, anger, surprise about something.<br>
+        <em>être content que, avoir peur que, être triste que, être fâché que, être surpris que, craindre que</em></p>
+        <p><strong>3. Necessity & judgment</strong> — something must happen or is important/essential.<br>
+        <em>il faut que, il est nécessaire que, il est essentiel que, il est important que, il est temps que, il convient que</em></p>
+        <p><strong>4. Doubt & possibility</strong> — uncertainty about whether something is or will be true.<br>
+        <em>douter que, il est possible que, il se peut que, il est peu probable que, ne pas penser que, ne pas croire que</em></p>
+        <p><strong>5. Fixed conjunctions</strong> — certain linking words always require subjunctive, no exception.<br>
+        <em>bien que, quoique, pour que, afin que, avant que, à moins que, de peur que, à condition que, sans que</em></p>
+      </div>
+
+      <div class="understanding-block">
+        <h3>The conjunction list — no exceptions</h3>
+        <p>These conjunctions <strong>always</strong> take the subjunctive regardless of the meaning of the sentence around them. Memorise them as a fixed list.</p>
+        <span class="example">bien que / quoique &nbsp;→&nbsp; although<br>pour que / afin que &nbsp;→&nbsp; so that<br>avant que &nbsp;→&nbsp; before<br>à moins que &nbsp;→&nbsp; unless<br>de peur que &nbsp;→&nbsp; for fear that<br>à condition que &nbsp;→&nbsp; provided that<br>sans que &nbsp;→&nbsp; without</span>
+        <p>Note: <strong>après que</strong> (after) technically takes the indicative in standard French — the opposite of <em>avant que</em>. Worth knowing because it surprises people.</p>
+      </div>
+
+      <div class="ornament">· · ·</div>
+    </div>
+
+    <div class="ref-section">
+      <div class="ref-heading">Formation <em>— the general rule</em></div>
+      <p style="font-style:italic; color:var(--ink-light); margin-bottom:18px; font-size:1rem;">
+        Take the <strong>ils/elles</strong> form of the present indicative → drop <strong>-ent</strong> → add the subjunctive endings:<br>
+        <span style="font-family:'Courier Prime',monospace; color:var(--ink); font-size:0.95rem;">-e &nbsp;·&nbsp; -es &nbsp;·&nbsp; -e &nbsp;·&nbsp; -ions &nbsp;·&nbsp; -iez &nbsp;·&nbsp; -ent</span>
+      </p>
+      <div class="ornament">· · ·</div>
+    </div>
+
+    <div class="ref-section">
+      <div class="ref-heading">Regular verbs <em>— one model each</em></div>
+      <div class="ref-grid" id="ref-regular"></div>
+    </div>
+
+    <div class="ornament">✦</div>
+
+    <div class="ref-section">
+      <div class="ref-heading">Irregular verbs <em>— memorise these</em></div>
+      <div class="ref-grid" id="ref-irregular"></div>
+    </div>
+
+    <div class="ornament">· · ·</div>
+
+    <div class="ref-section">
+      <div class="ref-heading">Trigger phrases <em>— when to use the subjunctive</em></div>
+      <div style="font-family:'Courier Prime',monospace; font-size:13px; line-height:2.1; color:var(--ink-light);">
+        <div><span style="color:var(--gold);">il faut que</span> &nbsp;·&nbsp; necessity / obligation</div>
+        <div><span style="color:var(--gold);">je veux que / je voudrais que</span> &nbsp;·&nbsp; desire</div>
+        <div><span style="color:var(--gold);">bien que / quoique</span> &nbsp;·&nbsp; concession (although)</div>
+        <div><span style="color:var(--gold);">pour que</span> &nbsp;·&nbsp; purpose (so that)</div>
+        <div><span style="color:var(--gold);">il est possible que / il se peut que</span> &nbsp;·&nbsp; possibility</div>
+        <div><span style="color:var(--gold);">je ne pense pas que</span> &nbsp;·&nbsp; qualified doubt</div>
+        <div><span style="color:var(--gold);">avant que</span> &nbsp;·&nbsp; before</div>
+        <div><span style="color:var(--gold);">à moins que</span> &nbsp;·&nbsp; unless</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PROGRESS TAB -->
+  <div id="tab-progress" class="tab-panel">
+    <div class="ref-heading" style="font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:400; padding-bottom:10px; border-bottom:1px solid var(--rule); margin-bottom:20px;">Accuracy by verb</div>
+    <div class="verb-accuracy" id="verb-accuracy">
+      <p style="color:var(--ink-faint); font-style:italic;">Complete some questions to see your progress.</p>
+    </div>
+  </div>
+
+  <!-- PHRASES TAB -->
+  <div id="tab-phrases" class="tab-panel">
+
+    <div class="ref-heading">Fallback phrase bank <em>— deploy these when in doubt</em></div>
+
+    <div class="phrases-intro">
+      The strategy: anchor your sentence on a pre-learned chunk containing the subjunctive conjugation, then build freely around it. The examiner hears correct subjunctive — you never fumble the conjugation because it's already baked in.
+    </div>
+
+    <div class="phrases-group-label">Escape hatches — purpose &amp; necessity</div>
+
+    <div class="phrase-card" onclick="togglePhrase(this)">
+      <div class="phrase-main">
+        <span class="phrase-chunk">pour que je puisse + <em>infinitif</em></span>
+        <span class="phrase-tag">so that I can…</span>
+        <span class="phrase-arrow">▸</span>
+      </div>
+      <div class="phrase-body">
+        <p>Your single most useful escape hatch. Lock in <em>puisse</em> (subj. of <em>pouvoir</em>), then add any infinitive you like — you never have to conjugate the second verb.</p>
+        <div class="phrase-examples">
+          <div class="phrase-ex">Je travaille pour que je puisse <strong>partir</strong> à l'heure.</div>
+          <div class="phrase-ex">J'étudie pour que je puisse <strong>réussir</strong> l'examen.</div>
+          <div class="phrase-ex">Je le note pour que je puisse <strong>m'en souvenir</strong>.</div>
+        </div>
+        <p class="phrase-tip">✦ Works for any situation where you want to express purpose or goal. Extremely natural — native speakers use it constantly.</p>
+      </div>
+    </div>
+
+    <div class="phrase-card" onclick="togglePhrase(this)">
+      <div class="phrase-main">
+        <span class="phrase-chunk">afin que tu puisses + <em>infinitif</em></span>
+        <span class="phrase-tag">so that you can… (formal)</span>
+        <span class="phrase-arrow">▸</span>
+      </div>
+      <div class="phrase-body">
+        <p><em>Afin que</em> is the slightly more formal twin of <em>pour que</em> — same structure, instantly sounds more sophisticated. Swap in <em>il puisse / vous puissiez</em> to vary the subject.</p>
+        <div class="phrase-examples">
+          <div class="phrase-ex">Je t'explique afin que tu puisses <strong>comprendre</strong>.</div>
+          <div class="phrase-ex">Je le répète afin qu'il puisse <strong>noter</strong>.</div>
+        </div>
+        <p class="phrase-tip">✦ Reserve this for written tasks or formal oral contexts — it signals register awareness.</p>
+      </div>
+    </div>
+
+    <div class="phrase-card" onclick="togglePhrase(this)">
+      <div class="phrase-main">
+        <span class="phrase-chunk">il faut que je + <em>subjonctif</em></span>
+        <span class="phrase-tag">I need to… / I must…</span>
+        <span class="phrase-arrow">▸</span>
+      </div>
+      <div class="phrase-body">
+        <p>Your Swiss Army knife. <em>Il faut que</em> is impersonal, extremely common, and sounds natural at every register. You only need to conjugate the one verb that follows — so pair it with your Core 8.</p>
+        <div class="phrase-examples">
+          <div class="phrase-ex">Il faut que je <strong>sois</strong> plus attentif.</div>
+          <div class="phrase-ex">Il faut que nous <strong>fassions</strong> un effort.</div>
+          <div class="phrase-ex">Il faut qu'on <strong>aille</strong> voir ça ensemble.</div>
+        </div>
+        <p class="phrase-tip">✦ In the oral, drop this at the start of an answer to buy yourself a second and guarantee a correct subjunctive right out of the gate.</p>
+      </div>
+    </div>
+
+    <div class="phrases-group-label">Concession — sounds instantly advanced</div>
+
+    <div class="phrase-card" onclick="togglePhrase(this)">
+      <div class="phrase-main">
+        <span class="phrase-chunk">bien que ce soit + <em>adjectif</em></span>
+        <span class="phrase-tag">although it is…</span>
+        <span class="phrase-arrow">▸</span>
+      </div>
+      <div class="phrase-body">
+        <p>Lock in <em>ce soit</em> (subj. of <em>être</em>, impersonal) and you can say "although it is [anything]" without touching another conjugation. One of the clearest B2→C1 signals.</p>
+        <div class="phrase-examples">
+          <div class="phrase-ex">Bien que ce soit difficile, je vais continuer.</div>
+          <div class="phrase-ex">Bien que ce soit une bonne idée, il y a des risques.</div>
+          <div class="phrase-ex">Bien que ce soit important, on manque de temps.</div>
+        </div>
+        <p class="phrase-tip">✦ Pair with a contrasting clause and you've constructed a complex sentence in one move. Examiners notice this.</p>
+      </div>
+    </div>
+
+    <div class="phrase-card" onclick="togglePhrase(this)">
+      <div class="phrase-main">
+        <span class="phrase-chunk">bien qu'il soit + <em>adjectif / nom</em></span>
+        <span class="phrase-tag">although he/it is…</span>
+        <span class="phrase-arrow">▸</span>
+      </div>
+      <div class="phrase-body">
+        <p>Same structure with a third-person subject. <em>Soit</em> is already locked in — just vary what follows. Flip to <em>bien qu'elle soit</em> freely.</p>
+        <div class="phrase-examples">
+          <div class="phrase-ex">Bien qu'il soit fatigué, il travaille sans arrêt.</div>
+          <div class="phrase-ex">Bien qu'elle soit compétente, elle manque d'expérience.</div>
+          <div class="phrase-ex">Bien qu'il soit tard, on peut essayer.</div>
+        </div>
+        <p class="phrase-tip">✦ The contrast structure (bien que… + main clause) is a complete, exam-ready sentence pattern on its own.</p>
+      </div>
+    </div>
+
+    <div class="phrases-group-label">Doubt &amp; negated opinion — shows nuance</div>
+
+    <div class="phrase-card" onclick="togglePhrase(this)">
+      <div class="phrase-main">
+        <span class="phrase-chunk">je ne pense pas que ce soit + <em>adjectif</em></span>
+        <span class="phrase-tag">I don't think it is…</span>
+        <span class="phrase-arrow">▸</span>
+      </div>
+      <div class="phrase-body">
+        <p>Negated opinion triggers subjunctive — and <em>ce soit</em> is your anchor. Use it to express doubt or disagreement with any adjective, instantly sounding nuanced.</p>
+        <div class="phrase-examples">
+          <div class="phrase-ex">Je ne pense pas que ce soit une bonne idée.</div>
+          <div class="phrase-ex">Je ne pense pas que ce soit si simple.</div>
+          <div class="phrase-ex">Je ne pense pas que ce soit suffisant.</div>
+        </div>
+        <p class="phrase-tip">✦ Great for TCF oral opinion tasks — gives you a sophisticated disagreement structure without any conjugation risk.</p>
+      </div>
+    </div>
+
+    <div class="phrase-card" onclick="togglePhrase(this)">
+      <div class="phrase-main">
+        <span class="phrase-chunk">je doute que cela soit + <em>adjectif</em></span>
+        <span class="phrase-tag">I doubt that this is…</span>
+        <span class="phrase-arrow">▸</span>
+      </div>
+      <div class="phrase-body">
+        <p><em>Douter que</em> always triggers subjunctive. <em>Cela soit</em> locks the conjugation — then add any adjective. Sounds more formal and considered than <em>je ne pense pas que</em>.</p>
+        <div class="phrase-examples">
+          <div class="phrase-ex">Je doute que cela soit vraiment efficace.</div>
+          <div class="phrase-ex">Je doute que cela soit la meilleure solution.</div>
+        </div>
+        <p class="phrase-tip">✦ Use when you want to express scepticism. The word <em>doute</em> itself adds register.</p>
+      </div>
+    </div>
+
+    <div class="phrases-group-label">Condition &amp; time — structural complexity</div>
+
+    <div class="phrase-card" onclick="togglePhrase(this)">
+      <div class="phrase-main">
+        <span class="phrase-chunk">à moins que ce soit + <em>adjectif / nom</em></span>
+        <span class="phrase-tag">unless it is…</span>
+        <span class="phrase-arrow">▸</span>
+      </div>
+      <div class="phrase-body">
+        <p><em>À moins que</em> always requires subjunctive and sounds impressively advanced. Anchor with <em>ce soit</em> and append anything — a noun, adjective, or phrase.</p>
+        <div class="phrase-examples">
+          <div class="phrase-ex">On continue, à moins que ce soit trop tard.</div>
+          <div class="phrase-ex">Je suis d'accord, à moins que ce soit un problème pour toi.</div>
+        </div>
+        <p class="phrase-tip">✦ Bolting this onto the end of any statement instantly adds a sophisticated conditional layer.</p>
+      </div>
+    </div>
+
+    <div class="phrase-card" onclick="togglePhrase(this)">
+      <div class="phrase-main">
+        <span class="phrase-chunk">avant que je puisse + <em>infinitif</em></span>
+        <span class="phrase-tag">before I can…</span>
+        <span class="phrase-arrow">▸</span>
+      </div>
+      <div class="phrase-body">
+        <p><em>Avant que</em> always triggers subjunctive. Using <em>puisse</em> as your anchor gives you the escape hatch again — the infinitive does the heavy lifting.</p>
+        <div class="phrase-examples">
+          <div class="phrase-ex">Il est parti avant que je puisse répondre.</div>
+          <div class="phrase-ex">Il faut agir avant que je puisse changer d'avis.</div>
+        </div>
+        <p class="phrase-tip">✦ Also works with <em>avant qu'il soit trop tard</em> — a ready-made phrase worth memorising whole.</p>
+      </div>
+    </div>
+
+    <div class="phrases-group-label">Desire &amp; emotion — personal expression</div>
+
+    <div class="phrase-card" onclick="togglePhrase(this)">
+      <div class="phrase-main">
+        <span class="phrase-chunk">je voudrais que cela soit + <em>adjectif</em></span>
+        <span class="phrase-tag">I would like this to be…</span>
+        <span class="phrase-arrow">▸</span>
+      </div>
+      <div class="phrase-body">
+        <p><em>Je voudrais que</em> (conditional of vouloir) triggers subjunctive and is softer than <em>je veux que</em>. Anchor with <em>cela soit</em> for instant variety.</p>
+        <div class="phrase-examples">
+          <div class="phrase-ex">Je voudrais que cela soit possible.</div>
+          <div class="phrase-ex">Je voudrais que cela soit différent.</div>
+        </div>
+        <p class="phrase-tip">✦ In the oral, expresses a wish or aspiration naturally — useful for any personal opinion task.</p>
+      </div>
+    </div>
+
+    <div class="phrase-card" onclick="togglePhrase(this)">
+      <div class="phrase-main">
+        <span class="phrase-chunk">il est important que nous fassions + <em>nom</em></span>
+        <span class="phrase-tag">it's important that we do…</span>
+        <span class="phrase-arrow">▸</span>
+      </div>
+      <div class="phrase-body">
+        <p>Lock in <em>fassions</em> (nous, subj. of <em>faire</em>) and append any noun object. Sounds authoritative and structured — good for any discussion or argumentation task.</p>
+        <div class="phrase-examples">
+          <div class="phrase-ex">Il est important que nous fassions un effort collectif.</div>
+          <div class="phrase-ex">Il est important que nous fassions attention à ce problème.</div>
+        </div>
+        <p class="phrase-tip">✦ <em>Faire un effort / faire attention / faire face</em> — three anchor nouns that work with this phrase in almost any topic.</p>
+      </div>
+    </div>
+
+    <div class="phrases-group-label">Possibility &amp; emotion — reaction phrases</div>
+
+    <div class="phrase-card" onclick="togglePhrase(this)">
+      <div class="phrase-main">
+        <span class="phrase-chunk">il est possible que ce soit + <em>adjectif / nom</em></span>
+        <span class="phrase-tag">it's possible that this is…</span>
+        <span class="phrase-arrow">▸</span>
+      </div>
+      <div class="phrase-body">
+        <p><em>Il est possible que</em> always triggers subjunctive — unlike <em>il est probable que</em> which uses the indicative (a classic TCF trap). Anchoring on <em>ce soit</em> keeps it safe and flexible.</p>
+        <div class="phrase-examples">
+          <div class="phrase-ex">Il est possible que ce soit la meilleure option.</div>
+          <div class="phrase-ex">Il est possible que ce soit plus compliqué que prévu.</div>
+          <div class="phrase-ex">Il est possible que ce soit un malentendu.</div>
+        </div>
+        <p class="phrase-tip">✦ Contrasts cleanly with <em>il est probable qu'il viendra</em> (indicative) — knowing the difference is worth marks in itself.</p>
+      </div>
+    </div>
+
+    <div class="phrase-card" onclick="togglePhrase(this)">
+      <div class="phrase-main">
+        <span class="phrase-chunk">j'ai peur que ce soit + <em>adjectif / nom</em></span>
+        <span class="phrase-tag">I'm afraid that this might be…</span>
+        <span class="phrase-arrow">▸</span>
+      </div>
+      <div class="phrase-body">
+        <p>Emotional reaction triggers subjunctive. <em>Ce soit</em> is your anchor again — vary the adjective freely. Sounds natural and personal, useful in any oral task involving concern or risk.</p>
+        <div class="phrase-examples">
+          <div class="phrase-ex">J'ai peur que ce soit trop tard.</div>
+          <div class="phrase-ex">J'ai peur que ce soit un problème sérieux.</div>
+          <div class="phrase-ex">J'ai peur que ce soit impossible dans ce délai.</div>
+        </div>
+        <p class="phrase-tip">✦ Swap in <em>je suis surpris que ce soit</em> or <em>je suis content que ce soit</em> for different emotions — same structure, same anchor.</p>
+      </div>
+    </div>
+
+    <div class="phrase-card" onclick="togglePhrase(this)">
+      <div class="phrase-main">
+        <span class="phrase-chunk">sans que je puisse + <em>infinitif</em></span>
+        <span class="phrase-tag">without being able to…</span>
+        <span class="phrase-arrow">▸</span>
+      </div>
+      <div class="phrase-body">
+        <p><em>Sans que</em> always requires subjunctive and sounds elegantly literary. Anchoring on <em>puisse</em> gives you the infinitive escape again — you never have to conjugate the second verb.</p>
+        <div class="phrase-examples">
+          <div class="phrase-ex">Il est parti sans que je puisse répondre.</div>
+          <div class="phrase-ex">Ça s'est passé sans que je puisse intervenir.</div>
+          <div class="phrase-ex">Elle a décidé sans que je puisse donner mon avis.</div>
+        </div>
+        <p class="phrase-tip">✦ Conveys helplessness or speed — very useful for narrating events. The <em>puisse</em> anchor makes it foolproof.</p>
+      </div>
+    </div>
+
+    <div class="phrases-group-label">C1 signals — the examiner-notice tier</div>
+
+    <div class="phrase-card" onclick="togglePhrase(this)">
+      <div class="phrase-main">
+        <span class="phrase-chunk">quoi que ce soit</span>
+        <span class="phrase-tag">whatever it may be / anything at all</span>
+        <span class="phrase-arrow">▸</span>
+      </div>
+      <div class="phrase-body">
+        <p>A frozen chunk — memorise it whole. <em>Quoi que</em> always triggers subjunctive, and <em>ce soit</em> is already locked in. Use it as a sweeping qualifier or to express open-endedness.</p>
+        <div class="phrase-examples">
+          <div class="phrase-ex">Quoi que ce soit, on peut en parler.</div>
+          <div class="phrase-ex">Je suis prêt à faire quoi que ce soit pour réussir.</div>
+          <div class="phrase-ex">Quoi que ce soit, il faut agir rapidement.</div>
+        </div>
+        <p class="phrase-tip">✦ Native speakers use this constantly. Dropping it naturally signals C1 fluency — it's one of those phrases that sounds effortless but requires subjunctive knowledge.</p>
+      </div>
+    </div>
+
+    <div class="phrase-card" onclick="togglePhrase(this)">
+      <div class="phrase-main">
+        <span class="phrase-chunk">où que tu ailles</span>
+        <span class="phrase-tag">wherever you go</span>
+        <span class="phrase-arrow">▸</span>
+      </div>
+      <div class="phrase-body">
+        <p>Another frozen chunk — memorise whole. <em>Où que</em> triggers subjunctive, and <em>ailles</em> (subj. of <em>aller</em>) is already in your Core 8. Swap <em>tu</em> for <em>il/vous</em> freely: <em>où qu'il aille, où que vous alliez</em>.</p>
+        <div class="phrase-examples">
+          <div class="phrase-ex">Où que tu ailles, tu trouveras des gens bienveillants.</div>
+          <div class="phrase-ex">Où qu'il aille, il emporte ses habitudes.</div>
+        </div>
+        <p class="phrase-tip">✦ The <em>où que / quoi que / qui que</em> family all follow the same pattern. Learn one, and the others come free.</p>
+      </div>
+    </div>
+
+    <div class="phrase-card" onclick="togglePhrase(this)">
+      <div class="phrase-main">
+        <span class="phrase-chunk">quel que soit + <em>nom</em></span>
+        <span class="phrase-tag">whatever / whichever… may be</span>
+        <span class="phrase-arrow">▸</span>
+      </div>
+      <div class="phrase-body">
+        <p>Very high-frequency in written French — you will see this in TCF reading passages. <em>Quel</em> agrees with the noun that follows: <em>quelle que soit, quels que soient, quelles que soient</em>. The subjunctive is baked in.</p>
+        <div class="phrase-examples">
+          <div class="phrase-ex">Quel que soit le résultat, nous continuerons.</div>
+          <div class="phrase-ex">Quelle que soit la raison, ce n'est pas acceptable.</div>
+          <div class="phrase-ex">Quels que soient les obstacles, il faut avancer.</div>
+        </div>
+        <p class="phrase-tip">✦ In the oral, <em>quel que soit le contexte</em> or <em>quel que soit le problème</em> are powerful opening phrases for argumentation tasks — they signal that you're about to make a general, principled point.</p>
+      </div>
+    </div>
+
+    <div class="phrases-group-label">TCF topic anchors — societal &amp; formal</div>
+
+    <div class="phrase-card" onclick="togglePhrase(this)">
+      <div class="phrase-main">
+        <span class="phrase-chunk">il est essentiel que nous fassions face à + <em>nom</em></span>
+        <span class="phrase-tag">it is essential that we face / address…</span>
+        <span class="phrase-arrow">▸</span>
+      </div>
+      <div class="phrase-body">
+        <p>An exam-ready anchor for societal topics — environment, health, inequality, technology. <em>Fassions</em> is locked in; <em>faire face à</em> works with almost any problem noun.</p>
+        <div class="phrase-examples">
+          <div class="phrase-ex">Il est essentiel que nous fassions face à ce défi climatique.</div>
+          <div class="phrase-ex">Il est essentiel que nous fassions face aux inégalités sociales.</div>
+          <div class="phrase-ex">Il est essentiel que nous fassions face à cette crise sanitaire.</div>
+        </div>
+        <p class="phrase-tip">✦ Pair with <em>avant qu'il soit trop tard</em> for a complete, sophisticated sentence that uses two subjunctive triggers at once.</p>
+      </div>
+    </div>
+
+    <div class="phrase-card" onclick="togglePhrase(this)">
+      <div class="phrase-main">
+        <span class="phrase-chunk">il est urgent que les gouvernements agissent</span>
+        <span class="phrase-tag">it is urgent that governments act</span>
+        <span class="phrase-arrow">▸</span>
+      </div>
+      <div class="phrase-body">
+        <p>Memorise this whole. <em>Agissent</em> is the subjunctive of <em>agir</em> (regular -ir pattern: ils agissent → agiss- → agisse). The full phrase is a complete, exam-quality sentence on its own — deploy it in any environmental or political task.</p>
+        <div class="phrase-examples">
+          <div class="phrase-ex">Il est urgent que les gouvernements agissent sur ce dossier.</div>
+          <div class="phrase-ex">Il est urgent que les entreprises agissent de manière responsable.</div>
+          <div class="phrase-ex">Il est urgent que nous agissions ensemble.</div>
+        </div>
+        <p class="phrase-tip">✦ Swap the subject freely: <em>les entreprises, les citoyens, nous</em>. The structure stays identical. A single memorised frame becomes infinitely productive.</p>
+      </div>
+    </div>
+
+    <div class="phrase-card" onclick="togglePhrase(this)">
+      <div class="phrase-main">
+        <span class="phrase-chunk">avant qu'il soit trop tard</span>
+        <span class="phrase-tag">before it is too late</span>
+        <span class="phrase-arrow">▸</span>
+      </div>
+      <div class="phrase-body">
+        <p>Memorise this whole — it's a complete subordinate clause ready to bolt onto the end of any sentence. <em>Soit</em> is already in your Core 8. Native speakers use this phrase constantly in discussions about urgency.</p>
+        <div class="phrase-examples">
+          <div class="phrase-ex">Il faut agir avant qu'il soit trop tard.</div>
+          <div class="phrase-ex">Nous devons trouver une solution avant qu'il soit trop tard.</div>
+          <div class="phrase-ex">Parle-lui avant qu'il soit trop tard.</div>
+        </div>
+        <p class="phrase-tip">✦ Works in personal, professional, and societal contexts equally. Three words of subjunctive, zero conjugation effort — <em>soit</em> is already memorised.</p>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+
+const CONJUNCTIONS = {
+  parler:    { type:'regular-er', label:'parler (-er)',  rule:'parlent → parl-', forms:{je:'parle',tu:'parles','il/elle':'parle',nous:'parlions',vous:'parliez','ils/elles':'parlent'} },
+  finir:     { type:'regular-ir', label:'finir (-ir)',   rule:'finissent → finiss-', forms:{je:'finisse',tu:'finisses','il/elle':'finisse',nous:'finissions',vous:'finissiez','ils/elles':'finissent'} },
+  attendre:  { type:'regular-re', label:'attendre (-re)',rule:'attendent → attend-', forms:{je:'attende',tu:'attendes','il/elle':'attende',nous:'attendions',vous:'attendiez','ils/elles':'attendent'} },
+  être:      { type:'irregular',  label:'être',          rule:'irregular — memorise', forms:{je:'sois',tu:'sois','il/elle':'soit',nous:'soyons',vous:'soyez','ils/elles':'soient'} },
+  avoir:     { type:'irregular',  label:'avoir',         rule:'irregular — memorise', forms:{je:'aie',tu:'aies','il/elle':'ait',nous:'ayons',vous:'ayez','ils/elles':'aient'} },
+  aller:     { type:'irregular',  label:'aller',         rule:'irregular — memorise', forms:{je:'aille',tu:'ailles','il/elle':'aille',nous:'allions',vous:'alliez','ils/elles':'aillent'} },
+  faire:     { type:'irregular',  label:'faire',         rule:'irregular — memorise', forms:{je:'fasse',tu:'fasses','il/elle':'fasse',nous:'fassions',vous:'fassiez','ils/elles':'fassent'} },
+  pouvoir:   { type:'irregular',  label:'pouvoir',       rule:'irregular — memorise', forms:{je:'puisse',tu:'puisses','il/elle':'puisse',nous:'puissions',vous:'puissiez','ils/elles':'puissent'} },
+  savoir:    { type:'irregular',  label:'savoir',        rule:'irregular — memorise', forms:{je:'sache',tu:'saches','il/elle':'sache',nous:'sachions',vous:'sachiez','ils/elles':'sachent'} },
+  vouloir:   { type:'irregular',  label:'vouloir',       rule:'irregular — memorise', forms:{je:'veuille',tu:'veuilles','il/elle':'veuille',nous:'voulions',vous:'vouliez','ils/elles':'veuillent'} },
+};
+
+const VF = {
+  voir:      {je:'voie',tu:'voies','il/elle':'voie',nous:'voyions',vous:'voyiez','ils/elles':'voient'},
+  venir:     {je:'vienne',tu:'viennes','il/elle':'vienne',nous:'venions',vous:'veniez','ils/elles':'viennent'},
+  comprendre:{je:'comprenne',tu:'comprennes','il/elle':'comprenne',nous:'comprenions',vous:'compreniez','ils/elles':'comprennent'},
+  partir:    {je:'parte',tu:'partes','il/elle':'parte',nous:'partions',vous:'partiez','ils/elles':'partent'},
+  prendre:   {je:'prenne',tu:'prennes','il/elle':'prenne',nous:'prenions',vous:'preniez','ils/elles':'prennent'},
+  dire:      {je:'dise',tu:'dises','il/elle':'dise',nous:'disions',vous:'disiez','ils/elles':'disent'},
+  choisir:   {je:'choisisse',tu:'choisisses','il/elle':'choisisse',nous:'choisissions',vous:'choisissiez','ils/elles':'choisissent'},
+  réussir:   {je:'réussisse',tu:'réussisses','il/elle':'réussisse',nous:'réussissions',vous:'réussissiez','ils/elles':'réussissent'},
+  maigrir:   {je:'maigrisse',tu:'maigrisses','il/elle':'maigrisse',nous:'maigrissions',vous:'maigrissiez','ils/elles':'maigrissent'},
+  trouver:   {je:'trouve',tu:'trouves','il/elle':'trouve',nous:'trouvions',vous:'trouviez','ils/elles':'trouvent'},
+  aimer:     {je:'aime',tu:'aimes','il/elle':'aime',nous:'aimions',vous:'aimiez','ils/elles':'aiment'},
+  ranger:    {je:'range',tu:'ranges','il/elle':'range',nous:'rangions',vous:'rangiez','ils/elles':'rangent'},
+  applaudir: {je:'applaudisse',tu:'applaudisses','il/elle':'applaudisse',nous:'applaudissions',vous:'applaudissiez','ils/elles':'applaudissent'},
+};
+
+const QUESTIONS = [
+  // il faut que
+  { trigger:'il faut que', sentence:'Il faut que tu ___ à l\'heure.', verb:'être', person:'tu' },
+  { trigger:'il faut que', sentence:'Il faut qu\'il ___ la vérité.', verb:'savoir', person:'il/elle' },
+  { trigger:'il faut que', sentence:'Il faut que nous ___ ensemble.', verb:'aller', person:'nous' },
+  { trigger:'il faut que', sentence:'Il faut que vous ___ patient.', verb:'être', person:'vous' },
+  { trigger:'il faut que', sentence:'Il faut qu\'on ___ plus attention.', verb:'faire', person:'il/elle' },
+  { trigger:'il faut que', sentence:'Il faut que tu ___ de la patience.', verb:'avoir', person:'tu' },
+  { trigger:'il faut que', sentence:'Il faut que nous ___ attention.', verb:'faire', person:'nous' },
+  { trigger:'il faut que', sentence:'Il faut que tu ___ avec lui.', verb:'parler', person:'tu' },
+  { trigger:'il faut que', sentence:'Il faut que vous ___ avant de partir.', verb:'attendre', person:'vous' },
+  { trigger:'il faut que', sentence:'Il faut qu\'on ___ la vérité.', verb:'dire', person:'il/elle', altVerb:'dire', altForms:VF.dire },
+  { trigger:'il est nécessaire que', sentence:'Il est nécessaire que nous ___ cet examen.', verb:'réussir', person:'nous', altVerb:'réussir', altForms:VF.réussir },
+  { trigger:'il est nécessaire que', sentence:'Il est nécessaire que vous ___ vos devoirs.', verb:'faire', person:'vous' },
+  { trigger:'il est essentiel que', sentence:'Il est essentiel que tu ___ là.', verb:'être', person:'tu' },
+  { trigger:'il est important que', sentence:'Il est important que vous ___ une décision.', verb:'prendre', person:'vous', altVerb:'prendre', altForms:VF.prendre },
+  // je veux / je souhaite / je désire
+  { trigger:'je veux que', sentence:'Je veux que tu ___ ce film.', verb:'voir', person:'tu', altVerb:'voir', altForms:VF.voir },
+  { trigger:'je voudrais que', sentence:'Je voudrais qu\'il ___ plus tôt.', verb:'venir', person:'il/elle', altVerb:'venir', altForms:VF.venir },
+  { trigger:'je veux que', sentence:'Je veux que nous ___ une solution.', verb:'trouver', person:'nous', altVerb:'trouver', altForms:VF.trouver },
+  { trigger:'je veux que', sentence:'Je veux qu\'elles ___ la réunion.', verb:'finir', person:'ils/elles' },
+  { trigger:'je veux que', sentence:'Je veux que tu ___ heureux.', verb:'être', person:'tu' },
+  { trigger:'je souhaite que', sentence:'Je souhaite que vous ___ ce projet.', verb:'aimer', person:'vous', altVerb:'aimer', altForms:VF.aimer },
+  { trigger:'je souhaite que', sentence:'Je souhaite qu\'ils ___ venir.', verb:'pouvoir', person:'ils/elles' },
+  { trigger:'je désire que', sentence:'Je désire que tu ___ à ton examen.', verb:'réussir', person:'tu', altVerb:'réussir', altForms:VF.réussir },
+  { trigger:'j\'aimerais que', sentence:'J\'aimerais qu\'il ___ la bonne réponse.', verb:'choisir', person:'il/elle', altVerb:'choisir', altForms:VF.choisir },
+  // j'ai peur que / je suis content que / je crains que
+  { trigger:'j\'ai peur que', sentence:'J\'ai peur que tu ___.', verb:'partir', person:'tu', altVerb:'partir', altForms:VF.partir },
+  { trigger:'je suis content que', sentence:'Je suis content qu\'elle ___.', verb:'réussir', person:'il/elle', altVerb:'réussir', altForms:VF.réussir },
+  { trigger:'je crains que', sentence:'Je crains qu\'il ne ___ pas la vérité.', verb:'savoir', person:'il/elle' },
+  { trigger:'je doute que', sentence:'Je doute qu\'elle ___ à la réunion.', verb:'aller', person:'il/elle' },
+  { trigger:'je doute que', sentence:'Je doute qu\'ils ___ la bonne réponse.', verb:'choisir', person:'ils/elles', altVerb:'choisir', altForms:VF.choisir },
+  // bien que / quoique
+  { trigger:'bien que', sentence:'Bien qu\'il ___ fatigué, il continue.', verb:'être', person:'il/elle' },
+  { trigger:'bien que', sentence:'Bien qu\'elle ___ la réponse, elle hésite.', verb:'savoir', person:'il/elle' },
+  { trigger:'bien que', sentence:'Bien que nous ___ le temps, on attend.', verb:'avoir', person:'nous' },
+  { trigger:'bien que', sentence:'Bien qu\'il ___ le français, il hésite.', verb:'parler', person:'il/elle' },
+  { trigger:'bien que', sentence:'Bien qu\'elle ___, elle mange bien.', verb:'maigrir', person:'il/elle', altVerb:'maigrir', altForms:VF.maigrir },
+  { trigger:'bien que', sentence:'Bien que tu ___ aider, ce n\'est pas possible.', verb:'vouloir', person:'tu' },
+  // pour que / afin que
+  { trigger:'pour que', sentence:'Je parle lentement pour qu\'il ___.', verb:'comprendre', person:'il/elle', altVerb:'comprendre', altForms:VF.comprendre },
+  { trigger:'pour que', sentence:'Elle écrit pour que tu ___ répondre.', verb:'pouvoir', person:'tu' },
+  { trigger:'pour que', sentence:'Je répète pour qu\'ils ___ noter.', verb:'pouvoir', person:'ils/elles' },
+  { trigger:'pour que', sentence:'Je reviens pour que tu ___ partir.', verb:'pouvoir', person:'tu' },
+  { trigger:'afin que', sentence:'Je travaille afin que mes enfants ___ une meilleure vie.', verb:'avoir', person:'ils/elles' },
+  // il est possible que / il se peut que / il est probable que
+  { trigger:'il est possible que', sentence:'Il est possible qu\'il ___ en retard.', verb:'être', person:'il/elle' },
+  { trigger:'il est possible que', sentence:'Il est possible que tu ___ raison.', verb:'avoir', person:'tu' },
+  { trigger:'il est possible que', sentence:'Il est possible qu\'ils ___ partir.', verb:'vouloir', person:'ils/elles' },
+  { trigger:'il est possible que', sentence:'Il est possible qu\'il ___ un rendez-vous.', verb:'avoir', person:'il/elle' },
+  { trigger:'il se peut que', sentence:'Il se peut qu\'ils ___ après la réunion.', verb:'venir', person:'ils/elles', altVerb:'venir', altForms:VF.venir },
+  // je ne pense pas que / je ne crois pas que
+  { trigger:'je ne pense pas que', sentence:'Je ne pense pas qu\'elle ___ ça.', verb:'faire', person:'il/elle' },
+  { trigger:'je ne pense pas que', sentence:'Je ne pense pas qu\'il ___ venir.', verb:'pouvoir', person:'il/elle' },
+  { trigger:'je ne pense pas que', sentence:'Je ne pense pas que tu ___ tort.', verb:'avoir', person:'tu' },
+  { trigger:'je ne crois pas que', sentence:'Je ne crois pas qu\'il ___ là.', verb:'être', person:'il/elle' },
+  // avant que / à moins que / de peur que / à condition que
+  { trigger:'avant que', sentence:'Appelle-moi avant qu\'il ___.', verb:'partir', person:'il/elle', altVerb:'partir', altForms:VF.partir },
+  { trigger:'avant que', sentence:'Finis ça avant que je ___.', verb:'partir', person:'je', altVerb:'partir', altForms:VF.partir },
+  { trigger:'avant que', sentence:'Il est parti de peur que tu ne le ___.', verb:'voir', person:'tu', altVerb:'voir', altForms:VF.voir },
+  { trigger:'à moins que', sentence:'On part, à moins que tu ___ venir.', verb:'vouloir', person:'tu' },
+  { trigger:'à moins que', sentence:'Ils restent, à moins qu\'il ___ trop tard.', verb:'être', person:'il/elle' },
+  { trigger:'il est temps que', sentence:'Il est temps que vous ___ une décision.', verb:'prendre', person:'vous', altVerb:'prendre', altForms:VF.prendre },
+  // from class notes sentences
+  { trigger:'je souhaite que', sentence:'Je souhaite que tu ___ ton exposé avant vendredi.', verb:'finir', person:'tu' },
+  { trigger:'je veux que', sentence:'Je veux que vous ___ à la fin.', verb:'applaudir', person:'vous', altVerb:'applaudir', altForms:VF.applaudir },
+  { trigger:'mes parents exigent que', sentence:'Mes parents exigent que je ___ ma chambre.', verb:'ranger', person:'je', altVerb:'ranger', altForms:VF.ranger },
+  { trigger:'il est possible que', sentence:'Il est possible que le train n\'___ pas à l\'heure.', verb:'arriver', person:'il/elle', altVerb:'arriver', altForms:{je:'arrive',tu:'arrives','il/elle':'arrive',nous:'arrivions',vous:'arriviez','ils/elles':'arrivent'} },
+  { trigger:'je suis surpris que', sentence:'Je suis surpris qu\'elle ___ si tôt.', verb:'venir', person:'il/elle', altVerb:'venir', altForms:VF.venir },
+  { trigger:'nous voudrions que', sentence:'Nous voudrions que vous ___ notre offre.', verb:'accepter', person:'vous', altVerb:'accepter', altForms:{je:'accepte',tu:'acceptes','il/elle':'accepte',nous:'acceptions',vous:'acceptiez','ils/elles':'acceptent'} },
+
+  // ── ALLER — bulked up ────────────────────────────────────────────────────────
+  { trigger:'il faut que', sentence:'Il faut que tu ___ chez le médecin.', verb:'aller', person:'tu' },
+  { trigger:'il faut que', sentence:'Il faut qu\'il ___ voir son patron.', verb:'aller', person:'il/elle' },
+  { trigger:'il faut que', sentence:'Il faut que vous ___ au bureau demain.', verb:'aller', person:'vous' },
+  { trigger:'il faut que', sentence:'Il faut qu\'elles ___ chercher les résultats.', verb:'aller', person:'ils/elles' },
+  { trigger:'je veux que', sentence:'Je veux que tu ___ lui parler.', verb:'aller', person:'tu' },
+  { trigger:'je voudrais que', sentence:'Je voudrais qu\'on ___ au marché ce matin.', verb:'aller', person:'il/elle' },
+  { trigger:'bien que', sentence:'Bien qu\'il ___ mieux, il reste prudent.', verb:'aller', person:'il/elle' },
+  { trigger:'pour que', sentence:'Je te donne le plan pour que tu ___ directement.', verb:'aller', person:'tu' },
+  { trigger:'avant que', sentence:'Appelle-les avant qu\'ils ___ au travail.', verb:'aller', person:'ils/elles', altVerb:'aller', altForms:CONJUNCTIONS.aller.forms },
+  { trigger:'à moins que', sentence:'On commence, à moins qu\'elle ___ chercher Marie.', verb:'aller', person:'il/elle' },
+  { trigger:'il est possible que', sentence:'Il est possible qu\'il ___ vivre à l\'étranger.', verb:'aller', person:'il/elle' },
+  { trigger:'je ne pense pas que', sentence:'Je ne pense pas qu\'il ___ accepter ça.', verb:'aller', person:'il/elle' },
+  { trigger:'je doute que', sentence:'Je doute qu\'ils ___ changer d\'avis.', verb:'aller', person:'ils/elles' },
+  { trigger:'afin que', sentence:'Je lui envoie l\'adresse afin qu\'il ___ directement.', verb:'aller', person:'il/elle' },
+
+  // ── AVOIR — bulked up ────────────────────────────────────────────────────────
+  { trigger:'il faut que', sentence:'Il faut que j\'___ plus de patience.', verb:'avoir', person:'je' },
+  { trigger:'il faut que', sentence:'Il faut qu\'elle ___ confiance en elle.', verb:'avoir', person:'il/elle' },
+  { trigger:'il faut que', sentence:'Il faut que vous ___ les documents prêts.', verb:'avoir', person:'vous' },
+  { trigger:'il faut que', sentence:'Il faut qu\'ils ___ une bonne raison.', verb:'avoir', person:'ils/elles' },
+  { trigger:'je veux que', sentence:'Je veux que tu ___ un bon résultat.', verb:'avoir', person:'tu' },
+  { trigger:'je voudrais que', sentence:'Je voudrais qu\'il ___ plus de temps pour lui.', verb:'avoir', person:'il/elle' },
+  { trigger:'bien que', sentence:'Bien qu\'il ___ tort, il insiste.', verb:'avoir', person:'il/elle' },
+  { trigger:'bien que', sentence:'Bien que tu ___ raison, ce n\'est pas simple.', verb:'avoir', person:'tu' },
+  { trigger:'pour que', sentence:'Je t\'explique pour que tu ___ une idée claire.', verb:'avoir', person:'tu' },
+  { trigger:'avant que', sentence:'Dis-le avant qu\'il ___ le temps de partir.', verb:'avoir', person:'il/elle' },
+  { trigger:'à moins que', sentence:'On continue, à moins qu\'on ___ un problème.', verb:'avoir', person:'il/elle' },
+  { trigger:'il est possible que', sentence:'Il est possible qu\'il ___ raison après tout.', verb:'avoir', person:'il/elle' },
+  { trigger:'je ne crois pas que', sentence:'Je ne crois pas qu\'ils ___ assez d\'expérience.', verb:'avoir', person:'ils/elles' },
+  { trigger:'je doute que', sentence:'Je doute que tu ___ le temps de finir.', verb:'avoir', person:'tu' },
+  { trigger:'afin que', sentence:'Je le note afin que vous ___ l\'information.', verb:'avoir', person:'vous' },
+
+  // ── QUOIQUE ───────────────────────────────────────────────────────────────────
+  { trigger:'quoique', sentence:'Quoiqu\'il ___ fatigué, il travaille dur.', verb:'être', person:'il/elle' },
+  { trigger:'quoique', sentence:'Quoiqu\'elle ___ raison, elle se tait.', verb:'avoir', person:'il/elle' },
+  { trigger:'quoique', sentence:'Quoique tu ___ là, je me sens seul.', verb:'être', person:'tu' },
+
+  // ── DE PEUR QUE ───────────────────────────────────────────────────────────────
+  { trigger:'de peur que', sentence:'Il chuchote de peur qu\'on ne l\'___.', verb:'entendre', person:'il/elle', altVerb:'entendre', altForms:{je:'entende',tu:'entendes','il/elle':'entende',nous:'entendions',vous:'entendiez','ils/elles':'entendent'} },
+  { trigger:'de peur que', sentence:'Elle part tôt de peur qu\'il ne ___ en retard.', verb:'être', person:'il/elle' },
+  { trigger:'de peur que', sentence:'Je l\'appelle de peur qu\'il ne ___ pas la route.', verb:'savoir', person:'il/elle' },
+
+  // ── À CONDITION QUE ───────────────────────────────────────────────────────────
+  { trigger:'à condition que', sentence:'Je t\'aide, à condition que tu ___ un effort.', verb:'faire', person:'tu' },
+  { trigger:'à condition que', sentence:'On y va, à condition qu\'il ___ beau.', verb:'faire', person:'il/elle' },
+  { trigger:'à condition que', sentence:'Tu peux partir, à condition que tu ___ ici demain.', verb:'être', person:'tu' },
+
+  // ── SANS QUE ──────────────────────────────────────────────────────────────────
+  { trigger:'sans que', sentence:'Il est parti sans qu\'on le ___.', verb:'savoir', person:'il/elle' },
+  { trigger:'sans que', sentence:'Elle a réussi sans qu\'on lui ___ de l\'aide.', verb:'donner', person:'il/elle', altVerb:'donner', altForms:{je:'donne',tu:'donnes','il/elle':'donne',nous:'donnions',vous:'donniez','ils/elles':'donnent'} },
+  { trigger:'sans que', sentence:'Il a décidé sans qu\'on ___ au courant.', verb:'être', person:'il/elle' },
+];
+
+
+
+// ── TRIGGER DATA ──────────────────────────────────────────────────────────────
+
+const CORE_8_VERBS = ['être','avoir','faire','pouvoir','aller','savoir','vouloir','venir'];
+
+// For each question, what's the English meaning cue and the sentence with trigger blanked out?
+// We derive these from the existing QUESTIONS array using a lookup.
+const TRIGGER_CUES = {
+  'il faut que':          { en: 'It is necessary that / One must…',       category: 'necessity' },
+  'il est nécessaire que':{ en: 'It is necessary that…',                  category: 'necessity' },
+  'il est essentiel que': { en: 'It is essential that…',                  category: 'necessity' },
+  'il est important que': { en: 'It is important that…',                  category: 'necessity' },
+  'il est temps que':     { en: 'It is time that…',                       category: 'necessity' },
+  'je veux que':          { en: 'I want (someone) to… / I want that…',    category: 'desire' },
+  'je voudrais que':      { en: 'I would like (someone) to…',             category: 'desire' },
+  'je souhaite que':      { en: 'I hope / wish that…',                    category: 'desire' },
+  'je désire que':        { en: 'I desire / wish that…',                  category: 'desire' },
+  "j'aimerais que":       { en: 'I would like it if… / I\'d love for…',   category: 'desire' },
+  'nous voudrions que':   { en: 'We would like (someone) to…',            category: 'desire' },
+  "j'ai peur que":        { en: 'I am afraid that…',                      category: 'emotion' },
+  'je suis content que':  { en: 'I am happy that…',                       category: 'emotion' },
+  'je suis surpris que':  { en: 'I am surprised that…',                   category: 'emotion' },
+  'je crains que':        { en: 'I fear that…',                           category: 'emotion' },
+  'je doute que':         { en: 'I doubt that…',                          category: 'doubt' },
+  'je ne pense pas que':  { en: 'I don\'t think that… (negated belief)',  category: 'doubt' },
+  'je ne crois pas que':  { en: 'I don\'t believe that… (negated belief)',category: 'doubt' },
+  'il est possible que':  { en: 'It is possible that…',                   category: 'doubt' },
+  'il se peut que':       { en: 'It may be that… / It is possible that…', category: 'doubt' },
+  'bien que':             { en: 'Although… / Even though…',               category: 'concession' },
+  'pour que':             { en: 'So that… / In order for…',               category: 'purpose' },
+  'afin que':             { en: 'So that… / In order that… (formal)',      category: 'purpose' },
+  'avant que':            { en: 'Before… (+ subjunctive)',                 category: 'time' },
+  'à moins que':          { en: 'Unless…',                                 category: 'condition' },
+  'mes parents exigent que': { en: 'My parents insist / demand that…',    category: 'desire' },
+  'quoique':              { en: 'Although… / Even though… (literary)',     category: 'concession' },
+  'de peur que':          { en: 'For fear that… / In case…',              category: 'condition' },
+  'à condition que':      { en: 'On the condition that… / As long as…',   category: 'condition' },
+  'sans que':             { en: 'Without… (someone doing something)',      category: 'condition' },
+};
+
+// Category → list of triggers (for hint panel)
+const TRIGGER_CATEGORIES = {
+  necessity:  ['il faut que','il est nécessaire que','il est essentiel que','il est important que','il est temps que'],
+  desire:     ['je veux que','je voudrais que','je souhaite que','je désire que',"j'aimerais que",'nous voudrions que','mes parents exigent que'],
+  emotion:    ["j'ai peur que",'je suis content que','je suis surpris que','je crains que'],
+  doubt:      ['je doute que','je ne pense pas que','je ne crois pas que','il est possible que','il se peut que'],
+  concession: ['bien que', 'quoique'],
+  purpose:    ['pour que','afin que'],
+  time:       ['avant que'],
+  condition:  ['à moins que', 'à condition que', 'de peur que', 'sans que'],
+};
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+
+let queue = [];
+let current = null;
+let qIndex = 0;
+let correct = 0;
+let total = 0;
+let streak = 0;
+let hintOpen = false;
+let triggerHintOpen = false;
+let answered = false;
+const verbStats = {};
+let drillMode = 'conjugation'; // 'conjugation' | 'trigger'
+let focusMode = 'all';         // 'all' | 'irregular'
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function getFilteredQuestions() {
+  let pool = [...QUESTIONS];
+  if (focusMode === 'irregular') {
+    pool = pool.filter(q => CORE_8_VERBS.includes(q.verb));
+  }
+  // In trigger mode, only include questions that have a known trigger cue
+  if (drillMode === 'trigger') {
+    pool = pool.filter(q => TRIGGER_CUES[q.trigger]);
+  }
+  return pool;
+}
+
+function buildQueue() {
+  queue = shuffle(getFilteredQuestions());
+  if (queue.length === 0) queue = shuffle([...QUESTIONS]);
+}
+
+function setMode(mode) {
+  drillMode = mode;
+  document.getElementById('mode-conj').classList.toggle('active', mode === 'conjugation');
+  document.getElementById('mode-trig').classList.toggle('active', mode === 'trigger');
+  correct = 0; total = 0; streak = 0;
+  updateScoreDisplay();
+  buildQueue();
+  qIndex = 0;
+  renderQuestion();
+}
+
+function setFocus(focus) {
+  focusMode = focus;
+  document.getElementById('focus-all').classList.toggle('active', focus === 'all');
+  document.getElementById('focus-irreg').classList.toggle('active', focus === 'irregular');
+  buildQueue();
+  qIndex = 0;
+  renderQuestion();
+}
+
+function updateScoreDisplay() {
+  document.getElementById('score-correct').textContent = correct;
+  document.getElementById('score-total').textContent = total;
+  document.getElementById('score-streak').textContent = streak;
+  const pct = total > 0 ? Math.round(correct / total * 100) : 0;
+  document.getElementById('score-pct').textContent = total > 0 ? pct + '%' : '—';
+}
+
+function getAnswer(q) {
+  if (drillMode === 'trigger') return q.trigger;
+  if (q.altForms) return q.altForms[q.person];
+  const conj = CONJUNCTIONS[q.verb];
+  if (conj) return conj.forms[q.person];
+  return '';
+}
+
+function getVerbLabel(q) {
+  if (q.altVerb) return q.altVerb;
+  return q.verb;
+}
+
+function getVerbForms(q) {
+  if (q.altForms) return q.altForms;
+  const conj = CONJUNCTIONS[q.verb];
+  if (conj) return conj.forms;
+  const vf = VF[q.verb];
+  if (vf) return vf;
+  return {};
+}
+
+function renderQuestion() {
+  if (qIndex >= queue.length) {
+    buildQueue();
+    qIndex = 0;
+  }
+  current = queue[qIndex];
+  answered = false;
+  hintOpen = false;
+  triggerHintOpen = false;
+
+  document.getElementById('q-number').textContent = `Question ${total + 1}`;
+
+  const isCore8 = CORE_8_VERBS.includes(current.verb);
+  const core8Html = isCore8 ? '<span class="core8-badge">Core 8</span>' : '';
+
+  if (drillMode === 'conjugation') {
+    // Show trigger, hide trigger-mode cue
+    document.getElementById('q-trigger').style.display = '';
+    document.getElementById('q-trigger').innerHTML = current.trigger.toUpperCase() + core8Html;
+    document.getElementById('q-sentence').style.display = '';
+    document.getElementById('trigger-cue').style.display = 'none';
+    document.getElementById('hint-toggle').style.display = '';
+    document.getElementById('trigger-hint-toggle').style.display = 'none';
+
+    const infinitiveTag = `<span class="infinitive">${current.verb}</span>`;
+    const blankTag = `<span class="blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>`;
+    document.getElementById('q-sentence').innerHTML = current.sentence.replace('___', blankTag + infinitiveTag);
+
+    // Populate conjugation hint
+    const verbLabel = getVerbLabel(current);
+    document.getElementById('hint-title').textContent = `Subjonctif de « ${verbLabel} »`;
+    const forms = getVerbForms(current);
+    const persons = ['je','tu','il/elle','nous','vous','ils/elles'];
+    let rows = '';
+    for (const p of persons) {
+      const highlight = p === current.person ? ' style="color:var(--gold);font-weight:700;"' : '';
+      rows += `<tr><td>${p}</td><td class="form"${highlight}>${forms[p] || '—'}</td></tr>`;
+    }
+    document.getElementById('hint-table').innerHTML = rows;
+    document.getElementById('hint-panel').className = 'hint-panel';
+    document.getElementById('hint-toggle').textContent = '▸ Conjugaison';
+
+    document.getElementById('answer-input').placeholder = 'votre réponse…';
+
+  } else {
+    // Trigger mode: hide conjugation elements, show trigger cue
+    document.getElementById('q-trigger').style.display = 'none';
+    document.getElementById('q-sentence').style.display = 'none';
+    document.getElementById('trigger-cue').style.display = '';
+    document.getElementById('hint-toggle').style.display = 'none';
+    document.getElementById('trigger-hint-toggle').style.display = '';
+
+    const cueData = TRIGGER_CUES[current.trigger] || { en: '…', category: '' };
+
+    // Show the conjugated sentence with the trigger blanked out
+    const correctConj = (() => {
+      if (current.altForms) return current.altForms[current.person];
+      const conj = CONJUNCTIONS[current.verb];
+      return conj ? conj.forms[current.person] : current.verb;
+    })();
+    const completeSentence = current.sentence.replace('___', correctConj);
+
+    // Blank the trigger phrase. Handle que->qu' elision (case-insensitive).
+    const escapedTrigger = current.trigger.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const flexPattern = escapedTrigger.replace(/\bque\b/g, "qu(?:e(?= |$)|')");
+    const triggerPattern = new RegExp(flexPattern, 'i');
+    const blankSpan = '<span class="q-trigger-blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>';
+    const blankedSentence = completeSentence.replace(triggerPattern, blankSpan);
+
+    document.getElementById('trigger-english').textContent = `"${cueData.en}"`;
+    document.getElementById('trigger-sentence').innerHTML = blankedSentence + core8Html;
+
+    // Populate trigger hint with category triggers
+    const catTriggers = TRIGGER_CATEGORIES[cueData.category] || [];
+    document.getElementById('trigger-hint-list').innerHTML = catTriggers
+      .map(t => `<div style="padding:2px 0; ${t === current.trigger ? 'color:var(--gold);font-weight:700' : ''}">${t}</div>`)
+      .join('');
+    document.getElementById('trigger-hint-panel').className = 'hint-panel';
+    document.getElementById('trigger-hint-toggle').textContent = '▸ Indice — triggers similaires';
+
+    document.getElementById('answer-input').placeholder = 'saisissez la phrase déclencheur…';
+  }
+
+  // Reset input
+  const inp = document.getElementById('answer-input');
+  inp.value = '';
+  inp.className = 'answer-input';
+  inp.disabled = false;
+  inp.focus();
+
+  document.getElementById('submit-btn').style.display = '';
+  document.getElementById('submit-btn').disabled = false;
+  document.getElementById('next-btn').style.display = 'none';
+
+  const fb = document.getElementById('feedback');
+  fb.style.display = 'none';
+  fb.className = 'feedback';
+
+  const pct = Math.min(100, Math.round((total % 30) / 30 * 100));
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+function toggleHint() {
+  hintOpen = !hintOpen;
+  document.getElementById('hint-panel').className = 'hint-panel' + (hintOpen ? ' open' : '');
+  document.getElementById('hint-toggle').textContent = (hintOpen ? '▾' : '▸') + ' Conjugaison';
+}
+
+function toggleTriggerHint() {
+  triggerHintOpen = !triggerHintOpen;
+  document.getElementById('trigger-hint-panel').className = 'hint-panel' + (triggerHintOpen ? ' open' : '');
+  document.getElementById('trigger-hint-toggle').textContent = (triggerHintOpen ? '▾' : '▸') + ' Indice — triggers similaires';
+}
+
+function normalise(s) {
+  return s.trim().toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/['']/g, "'");
+}
+
+// ── AUDIO ─────────────────────────────────────────────────────────────────────
+
+function buildFullSentence() {
+  const expected = drillMode === 'trigger' ? (() => {
+    if (current.altForms) return current.altForms[current.person];
+    const conj = CONJUNCTIONS[current.verb];
+    return conj ? conj.forms[current.person] : current.verb;
+  })() : getAnswer(current);
+  return current.sentence.replace('___', expected);
+}
+
+function playAudio(text) {
+  const toSpeak = text || buildFullSentence();
+  if (!toSpeak) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(toSpeak);
+  utt.lang = 'fr-FR';
+  utt.rate = 0.9;
+  const voices = window.speechSynthesis.getVoices();
+  const frVoice = voices.find(v => v.lang.startsWith('fr'));
+  if (frVoice) utt.voice = frVoice;
+  window.speechSynthesis.speak(utt);
+}
+
+if (window.speechSynthesis.onvoiceschanged !== undefined) {
+  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+}
+
+function checkAnswer() {
+  if (answered) return;
+  const inp = document.getElementById('answer-input');
+  const raw = inp.value;
+  const expected = getAnswer(current);
+  const correct_answer = normalise(raw) === normalise(expected);
+
+  answered = true;
+  inp.disabled = true;
+  document.getElementById('submit-btn').style.display = 'none';
+  document.getElementById('next-btn').style.display = '';
+
+  const vk = current.verb;
+  if (!verbStats[vk]) verbStats[vk] = { correct:0, total:0 };
+  verbStats[vk].total++;
+  total++;
+
+  const fb = document.getElementById('feedback');
+  fb.style.display = 'block';
+
+  if (correct_answer) {
+    correct++;
+    streak++;
+    inp.className = 'answer-input correct';
+    fb.className = 'feedback correct';
+    fb.textContent = '✓ Correct.';
+    verbStats[vk].correct++;
+    if (streak > 2) qIndex++;
+  } else {
+    streak = 0;
+    inp.className = 'answer-input incorrect';
+    fb.className = 'feedback incorrect';
+    fb.innerHTML = `✗ &nbsp;La réponse correcte est <strong style="font-family:'Courier Prime',monospace">${expected}</strong>.`;
+    const reInsert = Math.min(qIndex + 3, queue.length);
+    queue.splice(reInsert, 0, current);
+  }
+
+  updateScoreDisplay();
+  setTimeout(() => playAudio(), 300);
+}
+
+function nextQuestion() {
+  qIndex++;
+  renderQuestion();
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    if (!answered) checkAnswer();
+    else nextQuestion();
+  }
+});
+
+// ── REFERENCE PANEL ───────────────────────────────────────────────────────────
+
+function buildRefGrid(containerId, verbs) {
+  const container = document.getElementById(containerId);
+  let html = '';
+  for (const [key, data] of Object.entries(verbs)) {
+    const persons = ['je','tu','il/elle','nous','vous','ils/elles'];
+    let rows = '';
+    for (const p of persons) {
+      rows += `<tr><td>${p}</td><td class="form">${data.forms[p] || '—'}</td></tr>`;
+    }
+    html += `
+      <div class="ref-card">
+        <div class="ref-card-title">${data.label}</div>
+        <div class="ref-card-sub">${data.type || 'irrégulier'}</div>
+        ${data.rule ? `<div class="ref-rule">${data.rule}</div>` : ''}
+        <table class="conj-table">${rows}</table>
+      </div>`;
+  }
+  container.innerHTML = html;
+}
+
+const regularVerbs = {
+  parler:   CONJUNCTIONS.parler,
+  finir:    CONJUNCTIONS.finir,
+  attendre: CONJUNCTIONS.attendre,
+};
+
+const irregularVerbs = {
+  être:    CONJUNCTIONS.être,
+  avoir:   CONJUNCTIONS.avoir,
+  aller:   CONJUNCTIONS.aller,
+  faire:   CONJUNCTIONS.faire,
+  pouvoir: CONJUNCTIONS.pouvoir,
+  savoir:  CONJUNCTIONS.savoir,
+  vouloir: CONJUNCTIONS.vouloir,
+};
+
+buildRefGrid('ref-regular', regularVerbs);
+buildRefGrid('ref-irregular', irregularVerbs);
+
+// ── PROGRESS TAB ──────────────────────────────────────────────────────────────
+
+function renderProgress() {
+  const container = document.getElementById('verb-accuracy');
+  const keys = Object.keys(verbStats);
+  if (keys.length === 0) {
+    container.innerHTML = '<p style="color:var(--ink-faint); font-style:italic;">Complete some questions to see your progress.</p>';
+    return;
+  }
+  let html = '';
+  keys.sort((a,b) => {
+    const pa = verbStats[a].correct / verbStats[a].total;
+    const pb = verbStats[b].correct / verbStats[b].total;
+    return pa - pb;
+  });
+  for (const v of keys) {
+    const s = verbStats[v];
+    const pct = Math.round(s.correct / s.total * 100);
+    const color = pct >= 80 ? 'var(--green)' : pct >= 50 ? 'var(--gold)' : 'var(--red)';
+    html += `
+      <div class="acc-row">
+        <div class="acc-verb">${v}</div>
+        <div class="acc-bar-wrap"><div class="acc-bar" style="width:${pct}%;background:${color}"></div></div>
+        <div class="acc-pct">${pct}%</div>
+        <div style="font-family:'Courier Prime',monospace;font-size:11px;color:var(--ink-faint);min-width:60px;text-align:right">${s.correct}/${s.total}</div>
+      </div>`;
+  }
+  container.innerHTML = html;
+}
+
+// ── TABS ──────────────────────────────────────────────────────────────────────
+
+function togglePhrase(card) {
+  card.classList.toggle('open');
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    if (b.textContent.toLowerCase().startsWith(name === 'drill' ? 'drill' : name === 'reference' ? 'ref' : 'prog')) {
+      b.classList.add('active');
+    }
+  });
+  // fix tab matching
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    const map = { drill:'drill', reference:'reference', progress:'progress' };
+    if (b.getAttribute('onclick') === `switchTab('${name}')`) b.classList.add('active');
+    else b.classList.remove('active');
+  });
+  if (name === 'progress') renderProgress();
+}
+
+// ── START ─────────────────────────────────────────────────────────────────────
+buildQueue();
+renderQuestion();
+updateScoreDisplay();
+</script>
+</body>
+</html>

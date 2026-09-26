@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les Phrases — French Sentence Drill</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1209;
+    --paper: #f5efe0;
+    --aged: #e8dcc8;
+    --red: #c0392b;
+    --gold: #b8860b;
+    --faded: #8a7a5e;
+    --green: #2d6a4f;
+    --blue: #1a4a6b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Courier Prime', monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(180,160,120,0.15) 28px),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 32px;
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 24px;
+    width: 100%;
+    max-width: 780px;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-style: italic;
+    letter-spacing: -0.02em;
+  }
+
+  header p { color: var(--faded); font-size: 0.82rem; letter-spacing: 0.15em; text-transform: uppercase; margin-top: 6px; }
+
+  /* ── Filter bar ── */
+  .filter-bar {
+    display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+    max-width: 780px; width: 100%; margin-bottom: 12px;
+  }
+
+  .filter-label {
+    width: 100%; text-align: center; font-size: 0.72rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--faded); margin-bottom: 4px;
+  }
+
+  .pill {
+    font-family: 'Courier Prime', monospace; font-size: 0.72rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 5px 13px; border: 1.5px solid var(--aged);
+    background: transparent; color: var(--faded); cursor: pointer;
+    border-radius: 2px; transition: all 0.2s;
+  }
+  .pill:hover { border-color: var(--gold); color: var(--gold); }
+  .pill.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  /* ── Mode tabs ── */
+  .mode-bar {
+    display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+    max-width: 780px; width: 100%; margin-bottom: 24px;
+  }
+
+  .mode-tab {
+    font-family: 'Courier Prime', monospace; font-size: 0.78rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 9px 20px; border: 1.5px solid var(--faded);
+    background: transparent; color: var(--faded); cursor: pointer;
+    border-radius: 2px; transition: all 0.2s;
+  }
+  .mode-tab.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .mode-tab:hover:not(.active) { border-color: var(--ink); color: var(--ink); background: var(--aged); }
+
+  /* ── Stats ── */
+  .stats {
+    display: flex; gap: 24px; justify-content: center;
+    max-width: 780px; width: 100%; margin-bottom: 16px;
+    font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faded);
+  }
+  .stat strong { color: var(--ink); font-size: 1.1rem; display: block; font-family: 'Playfair Display', serif; }
+
+  .progress-bar { max-width: 780px; width: 100%; height: 3px; background: var(--aged); margin-bottom: 24px; border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--gold); transition: width 0.4s ease; }
+
+  /* ── Card ── */
+  .card {
+    background: white; border: 1px solid var(--aged);
+    max-width: 780px; width: 100%; padding: 40px 44px;
+    box-shadow: 4px 4px 0 var(--aged); position: relative; margin-bottom: 24px;
+  }
+  .card::before {
+    content: ''; position: absolute; top: 12px; left: 12px;
+    right: -12px; bottom: -12px; border: 1px solid var(--aged); z-index: -1;
+  }
+
+  @keyframes flash-correct { 0%{background:white} 30%{background:#d4f5e2} 100%{background:white} }
+  @keyframes flash-wrong   { 0%{background:white} 30%{background:#fde8e8} 100%{background:white} }
+  .card.flash-correct { animation: flash-correct 0.5s ease; }
+  .card.flash-wrong   { animation: flash-wrong 0.5s ease; }
+
+  /* ── Tense / context tag ── */
+  .meta-row {
+    display: flex; gap: 10px; align-items: center; margin-bottom: 20px; flex-wrap: wrap;
+  }
+  .tense-tag {
+    font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 3px 10px; border: 1px solid var(--gold); color: var(--gold);
+    border-radius: 2px; font-family: 'Courier Prime', monospace;
+  }
+  .topic-tag {
+    font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 3px 10px; border: 1px solid var(--aged); color: var(--faded);
+    border-radius: 2px; font-family: 'Courier Prime', monospace;
+  }
+
+  /* ── Prompt text ── */
+  .prompt-label {
+    font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--faded); margin-bottom: 10px;
+  }
+
+  .sentence-display {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.3rem, 3vw, 1.85rem);
+    line-height: 1.5; color: var(--ink); margin-bottom: 24px;
+    font-style: italic;
+  }
+
+  /* gap-fill blank */
+  .blank {
+    display: inline-block; border-bottom: 2px solid var(--ink);
+    min-width: 120px; color: transparent; position: relative;
+  }
+  .blank::after {
+    content: '___'; color: var(--faded); font-style: normal;
+    font-size: 0.9em; letter-spacing: 0.1em;
+  }
+
+  /* ── Input area ── */
+  .input-wrap { margin-bottom: 16px; }
+
+  .type-input {
+    font-family: 'Playfair Display', serif; font-size: 1.35rem; font-style: italic;
+    text-align: left; border: none; border-bottom: 2px solid var(--ink);
+    background: transparent; color: var(--ink); padding: 8px 4px;
+    width: 100%; outline: none;
+  }
+  .type-input::placeholder { color: var(--aged); }
+  .type-input:disabled { opacity: 0.6; }
+
+  /* gap-fill inline input */
+  .gap-input {
+    font-family: 'Playfair Display', serif; font-size: 1.1em; font-style: italic;
+    border: none; border-bottom: 2px solid var(--gold); background: transparent;
+    color: var(--ink); padding: 2px 6px; outline: none; min-width: 100px;
+    text-align: center;
+  }
+
+  /* ── Hint / note ── */
+  .hint-box {
+    font-size: 0.83rem; color: var(--faded); font-style: italic;
+    border-left: 3px solid var(--gold); padding-left: 14px;
+    line-height: 1.7; margin-bottom: 20px; min-height: 0;
+  }
+
+  /* ── Answer reveal ── */
+  .answer-block {
+    margin-top: 16px; padding: 18px 20px;
+    background: var(--aged); border-left: 3px solid var(--green);
+    opacity: 0; transition: opacity 0.35s; display: none;
+  }
+  .answer-block.show { opacity: 1; display: block; }
+  .answer-block .correct-fr {
+    font-family: 'Playfair Display', serif; font-size: 1.2rem;
+    font-style: italic; color: var(--green); margin-bottom: 6px;
+  }
+  .answer-block .notes {
+    font-size: 0.82rem; color: var(--faded); line-height: 1.75;
+  }
+  .answer-block .notes strong { color: var(--ink); }
+
+  /* ── Result badge ── */
+  .result-badge {
+    font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 5px 14px; border-radius: 2px; display: none;
+    font-family: 'Courier Prime', monospace; margin-bottom: 12px;
+  }
+  .result-badge.correct { background: #d4edda; color: var(--green); display: inline-block; }
+  .result-badge.wrong   { background: #fde8e8; color: var(--red);   display: inline-block; }
+  .result-badge.partial { background: #fff3cd; color: #856404;       display: inline-block; }
+  .result-badge.revealed { background: #e8f0fe; color: var(--blue);  display: inline-block; }
+
+  .btn-reveal {
+    font-family: 'Courier Prime', monospace; font-size: 0.82rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 12px 20px; background: transparent; color: var(--gold);
+    border: 1.5px solid var(--gold); cursor: pointer; transition: all 0.2s; border-radius: 2px;
+  }
+  .btn-reveal:hover { background: #fdf6e3; }
+
+  /* ── Controls ── */
+  .controls {
+    display: flex; gap: 10px; justify-content: flex-start;
+    flex-wrap: wrap; margin-top: 20px; padding-top: 20px;
+    border-top: 1px solid var(--aged);
+  }
+
+  .btn-primary {
+    font-family: 'Courier Prime', monospace; font-size: 0.82rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 12px 28px; background: var(--ink); color: var(--paper);
+    border: none; cursor: pointer; transition: all 0.2s; border-radius: 2px;
+  }
+  .btn-primary:hover { background: var(--red); }
+
+  .btn-secondary {
+    font-family: 'Courier Prime', monospace; font-size: 0.82rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 12px 20px; background: transparent; color: var(--ink);
+    border: 1.5px solid var(--ink); cursor: pointer; transition: all 0.2s; border-radius: 2px;
+  }
+  .btn-secondary:hover { background: var(--aged); }
+
+  .btn-speak {
+    font-family: 'Courier Prime', monospace; font-size: 0.75rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 8px 16px; background: transparent; color: var(--faded);
+    border: 1.5px solid var(--aged); cursor: pointer; transition: all 0.2s; border-radius: 2px;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-speak:hover { border-color: var(--ink); color: var(--ink); }
+  .btn-speak svg { width: 12px; height: 12px; fill: currentColor; }
+
+  /* ── No sentences notice ── */
+  .empty-state {
+    text-align: center; padding: 40px 20px; color: var(--faded); font-style: italic;
+  }
+
+  /* ── Free-write mode specific ── */
+  .free-prompt {
+    font-family: 'Playfair Display', serif; font-size: 1.1rem;
+    color: var(--blue); font-style: italic; margin-bottom: 8px; line-height: 1.5;
+  }
+  .free-context {
+    font-size: 0.8rem; color: var(--faded); margin-bottom: 20px; line-height: 1.6;
+  }
+
+  footer {
+    max-width: 780px; width: 100%; text-align: center; margin-top: 24px;
+    color: var(--faded); font-size: 0.72rem; letter-spacing: 0.08em; line-height: 1.8;
+    border-top: 1px solid var(--aged); padding-top: 18px;
+  }
+
+  /* ── Keyboard shortcut hint ── */
+  .kbd-hint { font-size: 0.68rem; color: var(--faded); letter-spacing: 0.08em; margin-left: auto; align-self: center; }
+  kbd { background: var(--aged); border: 1px solid var(--faded); border-radius: 2px; padding: 1px 5px; font-size: 0.75em; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Les Phrases</h1>
+  <p>French Sentence Drill — TCF / Conversational Level</p>
+</header>
+
+<!-- Tense filter -->
+<div class="filter-bar">
+  <div class="filter-label">Tense</div>
+  <button class="pill active" data-tense="all" onclick="setTense('all',this)">All</button>
+  <button class="pill" data-tense="présent" onclick="setTense('présent',this)">Présent</button>
+  <button class="pill" data-tense="passé composé" onclick="setTense('passé composé',this)">Passé composé</button>
+  <button class="pill" data-tense="imparfait" onclick="setTense('imparfait',this)">Imparfait</button>
+  <button class="pill" data-tense="futur" onclick="setTense('futur',this)">Futur</button>
+  <button class="pill" data-tense="conditionnel" onclick="setTense('conditionnel',this)">Conditionnel</button>
+  <button class="pill" data-tense="subjonctif" onclick="setTense('subjonctif',this)">Subjonctif</button>
+  <button class="pill" data-tense="plus-que-parfait" onclick="setTense('plus-que-parfait',this)">Plus-que-parfait</button>
+</div>
+
+<!-- Topic filter -->
+<div class="filter-bar" style="margin-bottom:20px;">
+  <div class="filter-label">Topic</div>
+  <button class="pill active" data-topic="all" onclick="setTopic('all',this)">All</button>
+  <button class="pill" data-topic="daily life" onclick="setTopic('daily life',this)">Daily life</button>
+  <button class="pill" data-topic="opinion" onclick="setTopic('opinion',this)">Opinion</button>
+  <button class="pill" data-topic="argument" onclick="setTopic('argument',this)">Argument</button>
+  <button class="pill" data-topic="work" onclick="setTopic('work',this)">Work</button>
+  <button class="pill" data-topic="emotion" onclick="setTopic('emotion',this)">Emotion</button>
+  <button class="pill" data-topic="society" onclick="setTopic('society',this)">Society</button>
+  <button class="pill" data-topic="travel" onclick="setTopic('travel',this)">Travel</button>
+</div>
+
+<!-- Mode tabs -->
+<div class="mode-bar">
+  <button class="mode-tab active" onclick="setMode('translate',this)">→ Translate</button>
+  <button class="mode-tab" onclick="setMode('gapfill',this)">Gap Fill</button>
+  <button class="mode-tab" onclick="setMode('listen',this)">Hear &amp; Write</button>
+  <button class="mode-tab" onclick="setMode('freewrite',this)">Free Write</button>
+</div>
+
+<!-- Stats -->
+<div class="stats">
+  <div><strong id="stat-seen">0</strong> Seen</div>
+  <div><strong id="stat-correct">0</strong> Correct</div>
+  <div><strong id="stat-streak">0</strong> Streak</div>
+  <div><strong id="stat-pool">0</strong> In pool</div>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+
+<!-- Main card -->
+<div class="card" id="main-card">
+  <div id="drill-area"><!-- populated by JS --></div>
+</div>
+
+<footer>
+  Press <kbd>Enter</kbd> to check · <kbd>→</kbd> to skip · Browser speech synthesis for audio.<br>
+  Sentences cover TCF B1–B2 range. Swap the <code>SENTENCE_BANK</code> array for API data when ready.
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════════
+// DATA LAYER — replace getSentences() with an API call to swap to live data
+// ═══════════════════════════════════════════════════════════════════════════════
+
+/*
+  Each sentence object:
+  {
+    fr:      string  — the French sentence (full, correct)
+    en:      string  — English equivalent (natural, not word-for-word)
+    tense:   string  — tense label
+    topic:   string  — topic label
+    verb:    string  — main verb (infinitive)
+    gap:     string  — the word(s) to blank out in gap-fill mode
+    note:    string  — grammar note shown after answer
+    prompt:  string  — free-write prompt (shown instead of English in free-write mode)
+  }
+*/
+
+const SENTENCE_BANK = [
+
+  // ── PRÉSENT ─────────────────────────────────────────────────────────────────
+  { fr:"Il ne sait pas de quoi il parle.", en:"He doesn't know what he's talking about.", tense:"présent", topic:"argument", verb:"savoir", gap:"sait", note:"<strong>Savoir</strong> (to know a fact/how). <em>Ne … pas</em> wraps the verb. <em>De quoi</em> = 'what' in indirect questions." },
+  { fr:"Ça ne m'étonne pas du tout.", en:"That doesn't surprise me at all.", tense:"présent", topic:"opinion", verb:"étonner", gap:"m'étonne", note:"<strong>Étonner</strong> is used impersonally here. <em>Du tout</em> intensifies the negation — 'not at all'." },
+  { fr:"Tu te rends compte de ce que tu dis ?", en:"Do you realise what you're saying?", tense:"présent", topic:"argument", verb:"se rendre compte", gap:"rends compte", note:"<strong>Se rendre compte de</strong> = to realise. Reflexive — the <em>te</em> agrees with the subject." },
+  { fr:"On s'en fiche complètement.", en:"We couldn't care less.", tense:"présent", topic:"opinion", verb:"se ficher", gap:"fiche", note:"<strong>S'en ficher</strong> = not to care. <em>En</em> replaces the thing you don't care about. Very common in spoken French." },
+  { fr:"Elle tient à ce que tout soit parfait.", en:"She insists that everything be perfect.", tense:"présent", topic:"work", verb:"tenir", gap:"tient", note:"<strong>Tenir à ce que</strong> triggers the <em>subjonctif</em> in the subordinate clause (soit)." },
+  { fr:"Je me demande si c'est vraiment nécessaire.", en:"I wonder if that's really necessary.", tense:"présent", topic:"opinion", verb:"se demander", gap:"demande", note:"<strong>Se demander si</strong> introduces an indirect yes/no question — no inversion needed." },
+  { fr:"Ça dépend du contexte, bien sûr.", en:"It depends on the context, of course.", tense:"présent", topic:"opinion", verb:"dépendre", gap:"dépend", note:"<strong>Dépendre de</strong> — <em>de + le</em> contracts to <em>du</em> before a masculine noun." },
+  { fr:"Nous n'avons pas les moyens de faire ça.", en:"We can't afford to do that.", tense:"présent", topic:"daily life", verb:"avoir", gap:"avons", note:"<strong>Avoir les moyens de</strong> = to be able to afford. Lit. 'to have the means to.'" },
+  { fr:"Il faut qu'on en parle sérieusement.", en:"We need to talk about it seriously.", tense:"présent", topic:"daily life", verb:"falloir", gap:"faut", note:"<strong>Il faut que</strong> always triggers subjonctif. <em>On</em> is used casually for 'we' in speech." },
+  { fr:"Je n'y crois pas une seconde.", en:"I don't believe it for a second.", tense:"présent", topic:"argument", verb:"croire", gap:"crois", note:"<strong>Y croire</strong> — <em>y</em> replaces <em>à + thing</em>. <em>Ne … pas une seconde</em> is a strong negation." },
+  { fr:"Elle finit toujours par avoir raison.", en:"She always ends up being right.", tense:"présent", topic:"argument", verb:"finir", gap:"finit", note:"<strong>Finir par + infinitif</strong> = to end up doing something. Very useful structure." },
+  { fr:"Tu as l'air épuisé ce matin.", en:"You look exhausted this morning.", tense:"présent", topic:"daily life", verb:"avoir", gap:"as", note:"<strong>Avoir l'air + adjectif</strong> = to look/seem. The adjective agrees with the subject." },
+
+  // ── PASSÉ COMPOSÉ ───────────────────────────────────────────────────────────
+  { fr:"Il n'a rien dit pendant toute la réunion.", en:"He didn't say anything throughout the entire meeting.", tense:"passé composé", topic:"work", verb:"dire", gap:"dit", note:"<strong>Ne … rien</strong> wraps the auxiliary. With passé composé, <em>rien</em> goes between auxiliary and past participle." },
+  { fr:"Elle s'est rendu compte de son erreur trop tard.", en:"She realised her mistake too late.", tense:"passé composé", topic:"emotion", verb:"se rendre compte", gap:"rendu compte", note:"Reflexive verbs use <em>être</em> as auxiliary. Past participle of <em>se rendre compte</em> does NOT agree here (indirect reflexive)." },
+  { fr:"On a failli rater le train.", en:"We almost missed the train.", tense:"passé composé", topic:"travel", verb:"faillir", gap:"failli", note:"<strong>Faillir + infinitif</strong> = to almost do something. <em>Rater</em> = to miss (informal). <em>Manquer</em> is more formal." },
+  { fr:"Ils ont mis du temps à comprendre.", en:"It took them a while to understand.", tense:"passé composé", topic:"daily life", verb:"mettre", gap:"mis", note:"<strong>Mettre du temps à</strong> = to take time to. <em>Mis</em> is the irregular past participle of <em>mettre</em>." },
+  { fr:"Je lui ai dit ce que je pensais.", en:"I told him/her what I thought.", tense:"passé composé", topic:"argument", verb:"dire", gap:"ai dit", note:"<em>Lui</em> = indirect object (to him/her). <em>Ce que</em> introduces an embedded clause." },
+  { fr:"Nous avons décidé de prendre les choses en main.", en:"We decided to take matters into our own hands.", tense:"passé composé", topic:"work", verb:"décider", gap:"décidé", note:"<strong>Prendre en main</strong> = to take charge of. <em>Décider de + infinitif</em> is the standard construction." },
+  { fr:"Elle a eu du mal à s'en remettre.", en:"She had a hard time getting over it.", tense:"passé composé", topic:"emotion", verb:"avoir", gap:"eu", note:"<strong>Avoir du mal à</strong> = to have difficulty. <em>S'en remettre</em> = to recover from something (from <em>se remettre de</em>)." },
+  { fr:"Le gouvernement a pris des mesures insuffisantes.", en:"The government took insufficient measures.", tense:"passé composé", topic:"society", verb:"prendre", gap:"pris", note:"<em>Pris</em> is the irregular past participle of <em>prendre</em>. <em>Des mesures</em> uses the partitive article." },
+  { fr:"Il m'a regardé sans dire un mot.", en:"He looked at me without saying a word.", tense:"passé composé", topic:"emotion", verb:"regarder", gap:"regardé", note:"<strong>Sans + infinitif</strong> = without doing. Note: <em>regardé</em> does NOT agree because the direct object (<em>me</em>) comes before, but it refers back — standard rule: agree only when DO precedes." },
+  { fr:"On s'est disputés pour rien.", en:"We argued over nothing.", tense:"passé composé", topic:"argument", verb:"se disputer", gap:"disputés", note:"Reflexive verbs use <em>être</em>. <em>Disputés</em> agrees with <em>on</em> (treated as plural here). <em>Pour rien</em> = over nothing / for nothing." },
+  { fr:"Elle est revenue les mains vides.", en:"She came back empty-handed.", tense:"passé composé", topic:"daily life", verb:"revenir", gap:"revenue", note:"<em>Revenir</em> uses <em>être</em> → past participle agrees with feminine subject: <em>revenue</em>." },
+  { fr:"J'ai failli lui dire la vérité.", en:"I almost told him the truth.", tense:"passé composé", topic:"emotion", verb:"faillir", gap:"failli", note:"<strong>Faillir + infinitif</strong> in passé composé. <em>Lui dire</em> = to tell him/her (indirect object)." },
+
+  // ── IMPARFAIT ───────────────────────────────────────────────────────────────
+  { fr:"Quand j'étais enfant, on n'avait pas tout ça.", en:"When I was a child, we didn't have all of this.", tense:"imparfait", topic:"daily life", verb:"être", gap:"étais", note:"Imparfait for habitual past states. <em>On n'avait pas</em> = we didn't have. Notice <em>tout ça</em> = all of this/that." },
+  { fr:"Il parlait sans s'arrêter.", en:"He was talking non-stop.", tense:"imparfait", topic:"argument", verb:"parler", gap:"parlait", note:"Imparfait for ongoing past action. <em>Sans s'arrêter</em> = without stopping. Literally 'without stopping himself'." },
+  { fr:"On aurait dit qu'elle n'avait rien à faire.", en:"You'd have thought she had nothing to do.", tense:"imparfait", topic:"opinion", verb:"avoir", gap:"avait", note:"<strong>On aurait dit que</strong> = it seemed like / you'd have thought. <em>N'avait rien à faire</em> = had nothing to do." },
+  { fr:"Elle savait très bien ce qu'elle faisait.", en:"She knew very well what she was doing.", tense:"imparfait", topic:"work", verb:"savoir", gap:"savait", note:"<em>Savoir</em> is usually in imparfait (state of knowing), not passé composé, unless there's a sudden realization." },
+  { fr:"Ils n'arrêtaient pas de se contredire.", en:"They kept contradicting each other.", tense:"imparfait", topic:"argument", verb:"arrêter", gap:"arrêtaient", note:"<strong>Ne pas arrêter de + infinitif</strong> = to keep doing (repeated/annoying action). <em>Se contredire</em> = to contradict each other." },
+  { fr:"La situation devenait de plus en plus compliquée.", en:"The situation was becoming more and more complicated.", tense:"imparfait", topic:"society", verb:"devenir", gap:"devenait", note:"<strong>De plus en plus + adjectif</strong> = more and more. Imparfait shows gradual change." },
+  { fr:"Je ne m'y attendais vraiment pas.", en:"I really wasn't expecting that.", tense:"imparfait", topic:"emotion", verb:"s'attendre", gap:"attendais", note:"<strong>S'attendre à</strong> = to expect. <em>Y</em> replaces <em>à + thing</em>. <em>Ne … vraiment pas</em> = really not." },
+  { fr:"On vivait comme si tout allait bien.", en:"We were living as if everything was fine.", tense:"imparfait", topic:"daily life", verb:"vivre", gap:"vivait", note:"<strong>Comme si + imparfait</strong> = as if (contrary to reality). Both verbs in imparfait." },
+
+  // ── FUTUR ───────────────────────────────────────────────────────────────────
+  { fr:"On verra bien ce que ça donnera.", en:"We'll see how it turns out.", tense:"futur", topic:"opinion", verb:"voir", gap:"verra", note:"<strong>On verra</strong> is extremely common — dismissive or expectant. <em>Ce que ça donnera</em> = what it'll come to." },
+  { fr:"Il finira par comprendre, tôt ou tard.", en:"He'll eventually understand, sooner or later.", tense:"futur", topic:"opinion", verb:"finir", gap:"finira", note:"<strong>Finir par + infinitif</strong> in the future = will eventually. <em>Tôt ou tard</em> = sooner or later." },
+  { fr:"Ça ne changera rien à la situation.", en:"It won't change anything about the situation.", tense:"futur", topic:"argument", verb:"changer", gap:"changera", note:"<em>Ne … rien</em> with future: the negation wraps the conjugated verb. <em>À la situation</em> = regarding the situation." },
+  { fr:"Vous devrez justifier votre décision.", en:"You will have to justify your decision.", tense:"futur", topic:"work", verb:"devoir", gap:"devrez", note:"<em>Devoir</em> in future = will have to / must. Used to express obligation in the future." },
+  { fr:"Elle saura s'en sortir, j'en suis sûr.", en:"She'll manage, I'm sure of it.", tense:"futur", topic:"emotion", verb:"savoir", gap:"saura", note:"<strong>Savoir + infinitif</strong> = to know how to / to be able to. <em>S'en sortir</em> = to manage / get out of a situation." },
+  { fr:"Les prix vont continuer à augmenter.", en:"Prices are going to keep rising.", tense:"futur", topic:"society", verb:"aller", gap:"vont", note:"<strong>Futur proche</strong>: aller + infinitif. Used for near future or certain outcomes. Common in speech over futur simple." },
+  { fr:"Ça ne se passera pas comme ça.", en:"It won't go down like that.", tense:"futur", topic:"argument", verb:"se passer", gap:"passera", note:"<strong>Se passer</strong> = to happen/go. <em>Comme ça</em> = like that. Strong expression of refusal or prediction." },
+
+  // ── CONDITIONNEL ────────────────────────────────────────────────────────────
+  { fr:"À ta place, j'aurais réagi différemment.", en:"If I were you, I would have reacted differently.", tense:"conditionnel", topic:"argument", verb:"réagir", gap:"aurais réagi", note:"<strong>À ta place</strong> = if I were you. <em>Aurais réagi</em> = conditionnel passé (would have + past participle)." },
+  { fr:"Ce serait bien de s'expliquer calmement.", en:"It would be good to talk things through calmly.", tense:"conditionnel", topic:"argument", verb:"être", gap:"serait", note:"<strong>Ce serait bien de + infinitif</strong> = it would be good to. Polite suggestion using conditionnel." },
+  { fr:"Il faudrait qu'on revoit nos priorités.", en:"We would need to reconsider our priorities.", tense:"conditionnel", topic:"work", verb:"falloir", gap:"faudrait", note:"<strong>Il faudrait que</strong> + subjonctif. Softer than <em>il faut que</em> — suggests rather than demands." },
+  { fr:"J'aurais préféré qu'elle m'en parle avant.", en:"I would have preferred she told me beforehand.", tense:"conditionnel", topic:"emotion", verb:"préférer", gap:"aurais préféré", note:"<strong>Conditionnel passé</strong> expresses regret. <em>Qu'elle m'en parle</em> = subjonctif in the subordinate clause." },
+  { fr:"Ça pourrait être bien pire, tu sais.", en:"It could be a lot worse, you know.", tense:"conditionnel", topic:"opinion", verb:"pouvoir", gap:"pourrait", note:"<strong>Pourrait</strong> = conditionnel of pouvoir. <em>Bien pire</em> = much worse. <em>Tu sais</em> softens the remark." },
+  { fr:"On devrait en discuter avec toute l'équipe.", en:"We should discuss it with the whole team.", tense:"conditionnel", topic:"work", verb:"devoir", gap:"devrait", note:"<em>Devrait</em> = conditionnel of devoir = should. More polite/advisive than the indicative <em>doit</em>." },
+  { fr:"Sans ton aide, je n'y serais jamais arrivé.", en:"Without your help, I never would have managed.", tense:"conditionnel", topic:"emotion", verb:"arriver", gap:"serais arrivé", note:"<strong>Sans + nom</strong> replaces a si-clause. <em>Y arriver</em> = to manage/succeed at it." },
+
+  // ── SUBJONCTIF ──────────────────────────────────────────────────────────────
+  { fr:"Je doute qu'il soit vraiment sincère.", en:"I doubt he's genuinely sincere.", tense:"subjonctif", topic:"opinion", verb:"être", gap:"soit", note:"<strong>Douter que</strong> triggers subjonctif. <em>Soit</em> = subjonctif of <em>être</em>. Express doubt → subjonctif." },
+  { fr:"Il est important qu'on se comprenne.", en:"It's important that we understand each other.", tense:"subjonctif", topic:"argument", verb:"comprendre", gap:"comprenne", note:"<strong>Il est important que</strong> + subjonctif. <em>Se comprendre</em> = to understand each other. <em>Comprenne</em> = subjonctif of comprendre." },
+  { fr:"Je veux qu'il sache ce que j'en pense.", en:"I want him to know what I think about it.", tense:"subjonctif", topic:"argument", verb:"savoir", gap:"sache", note:"<strong>Vouloir que</strong> + subjonctif. <em>Sache</em> = subjonctif of savoir. <em>Ce que j'en pense</em> = what I think of it." },
+  { fr:"Bien qu'elle soit fatiguée, elle continue.", en:"Even though she's tired, she keeps going.", tense:"subjonctif", topic:"work", verb:"être", gap:"soit", note:"<strong>Bien que</strong> always triggers subjonctif — a concession. <em>Soit</em> = subjonctif of être." },
+  { fr:"C'est la meilleure décision qu'on ait prise.", en:"It's the best decision we've made.", tense:"subjonctif", topic:"work", verb:"prendre", gap:"ait prise", note:"After a superlative, subjonctif is expected. <em>Ait prise</em> = passé du subjonctif of <em>prendre</em>." },
+  { fr:"Il faut que tu le fasses maintenant.", en:"You have to do it now.", tense:"subjonctif", topic:"daily life", verb:"faire", gap:"fasses", note:"<strong>Il faut que</strong> + subjonctif. <em>Fasses</em> = subjonctif of <em>faire</em>. Very common obligation pattern." },
+  { fr:"Je ne crois pas qu'il ait compris.", en:"I don't think he understood.", tense:"subjonctif", topic:"opinion", verb:"comprendre", gap:"ait compris", note:"Negative <em>croire que</em> triggers subjonctif. <em>Ait compris</em> = passé du subjonctif — past event viewed with doubt." },
+
+  // ── PLUS-QUE-PARFAIT ────────────────────────────────────────────────────────
+  { fr:"Elle avait déjà pris sa décision avant qu'on parle.", en:"She had already made up her mind before we spoke.", tense:"plus-que-parfait", topic:"work", verb:"prendre", gap:"avait pris", note:"Plus-que-parfait = had + past participle. Used for an action completed <em>before</em> another past action." },
+  { fr:"Il n'avait jamais vu ça de sa vie.", en:"He had never seen anything like it in his life.", tense:"plus-que-parfait", topic:"emotion", verb:"voir", gap:"avait vu", note:"<em>Ne … jamais</em> with plus-que-parfait: wraps the auxiliary. <em>De sa vie</em> = in his life (emphatic)." },
+  { fr:"On s'était mis d'accord, pourtant.", en:"We had agreed, though.", tense:"plus-que-parfait", topic:"argument", verb:"se mettre", gap:"s'était mis", note:"<strong>Se mettre d'accord</strong> = to agree/reach agreement. Reflexive → <em>être</em> as auxiliary. <em>Pourtant</em> = yet/though." },
+  { fr:"Si j'avais su, j'aurais agi autrement.", en:"If I had known, I would have acted differently.", tense:"plus-que-parfait", topic:"emotion", verb:"savoir", gap:"avais su", note:"Classic <strong>si + plus-que-parfait → conditionnel passé</strong> structure. Expresses regret about the past." },
+  { fr:"Ils n'avaient pas prévu que ça tournerait si mal.", en:"They hadn't anticipated it would turn out so badly.", tense:"plus-que-parfait", topic:"society", verb:"prévoir", gap:"avaient prévu", note:"<em>Prévoir</em> → past participle <em>prévu</em>. <em>Que + conditionnel</em> in the subordinate clause for future-in-the-past." },
+
+  // ── MORE PRÉSENT (opinions/society) ─────────────────────────────────────────
+  { fr:"Ce n'est pas aussi simple que tu le crois.", en:"It's not as simple as you think.", tense:"présent", topic:"argument", verb:"être", gap:"crois", note:"<strong>Aussi … que</strong> = as … as. <em>Que tu le crois</em> = than you think (le is a neuter pronoun referring to the idea)." },
+  { fr:"La plupart des gens ne s'en rendent pas compte.", en:"Most people don't realise it.", tense:"présent", topic:"society", verb:"se rendre compte", gap:"rendent compte", note:"<strong>La plupart de</strong> takes a plural verb. <em>Ne s'en rendent pas compte</em> — <em>en</em> replaces <em>de ça</em>." },
+  { fr:"Ça ne me regarde pas, mais quand même…", en:"It's none of my business, but even so…", tense:"présent", topic:"opinion", verb:"regarder", gap:"regarde", note:"<strong>Ça ne me regarde pas</strong> = it's not my concern. <em>Quand même</em> = even so / still (very versatile word)." },
+  { fr:"On n'a pas le droit de se taire.", en:"We have no right to stay silent.", tense:"présent", topic:"society", verb:"avoir", gap:"a", note:"<strong>Avoir le droit de</strong> = to have the right to. <em>Se taire</em> = to be quiet/silent (reflexive, irregular)." },
+  { fr:"Je suis tout à fait d'accord avec vous.", en:"I completely agree with you.", tense:"présent", topic:"opinion", verb:"être", gap:"suis", note:"<strong>Être d'accord avec</strong> = to agree with. <em>Tout à fait</em> = completely, absolutely. Formal register." },
+  { fr:"Il ne s'agit pas de ça du tout.", en:"That's not what this is about at all.", tense:"présent", topic:"argument", verb:"s'agir", gap:"s'agit", note:"<strong>Il s'agit de</strong> = it's about / it concerns. Always impersonal (always <em>il</em>). <em>Du tout</em> = at all." },
+  { fr:"On a tendance à oublier les détails importants.", en:"We tend to forget the important details.", tense:"présent", topic:"daily life", verb:"avoir", gap:"a", note:"<strong>Avoir tendance à + infinitif</strong> = to tend to. Very common in discussion and argumentation." },
+  { fr:"Ça vaut la peine d'essayer, non ?", en:"It's worth trying, isn't it?", tense:"présent", topic:"opinion", verb:"valoir", gap:"vaut", note:"<strong>Valoir la peine de + infinitif</strong> = to be worth doing. <em>Non ?</em> as a tag question, common in speech." },
+
+  // ── TRAVEL ──────────────────────────────────────────────────────────────────
+  { fr:"On a mis trois heures pour arriver à destination.", en:"It took us three hours to reach our destination.", tense:"passé composé", topic:"travel", verb:"mettre", gap:"mis", note:"<strong>Mettre + time + pour + infinitif</strong> = to take (time) to do. <em>À destination</em> = to the destination." },
+  { fr:"Je n'aurais jamais pensé que c'était si loin.", en:"I would never have thought it was so far.", tense:"conditionnel", topic:"travel", verb:"penser", gap:"aurais pensé", note:"<strong>Conditionnel passé</strong> expresses surprise or counterfactual. <em>Si loin</em> = so far." },
+  { fr:"Il faut réserver à l'avance si on veut un bon tarif.", en:"You need to book in advance if you want a good rate.", tense:"présent", topic:"travel", verb:"falloir", gap:"faut", note:"<strong>Il faut + infinitif</strong> = one must / you need to. <em>À l'avance</em> = in advance. <em>Tarif</em> = fare/rate." },
+
+];
+
+// ── API SWAP POINT ────────────────────────────────────────────────────────────
+// To replace with an API, implement this function:
+//
+// async function getSentences(tenseFilter, topicFilter) {
+//   const res = await fetch('/api/sentences', {
+//     method: 'POST',
+//     body: JSON.stringify({ tense: tenseFilter, topic: topicFilter, count: 20 })
+//   });
+//   return await res.json(); // must return array matching schema above
+// }
+//
+// Then call it in loadQuestion() instead of getFilteredBank().
+
+function getFilteredBank(tense, topic) {
+  return SENTENCE_BANK.filter(s =>
+    (tense === 'all' || s.tense === tense) &&
+    (topic === 'all' || s.topic === topic)
+  );
+}
+// ═════════════════════════════════════════════════════════════════════════════
+
+// ── STATE ──────────────────────────────────────────────────────────────────
+let currentMode  = 'translate';
+let currentTense = 'all';
+let currentTopic = 'all';
+let currentSentence = null;
+let stats = { seen: 0, correct: 0, streak: 0 };
+let pool = [];
+let checked = false;
+
+// ── UTIL ───────────────────────────────────────────────────────────────────
+function speak(text) {
+  if (!window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'fr-FR'; utt.rate = 0.82;
+  const voices = speechSynthesis.getVoices();
+  const fr = voices.find(v => v.lang.startsWith('fr'));
+  if (fr) utt.voice = fr;
+  speechSynthesis.speak(utt);
+}
+
+function normalise(s) {
+  return s.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/['']/g,"'").replace(/\s+/g,' ').replace(/[.,!?;:]/g,'').trim();
+}
+
+function shuffled(arr) {
+  const a = [...arr]; for (let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a;
+}
+
+function flashCard(type) {
+  const card = document.getElementById('main-card');
+  card.classList.remove('flash-correct','flash-wrong');
+  void card.offsetWidth;
+  card.classList.add('flash-'+type);
+  setTimeout(()=>card.classList.remove('flash-'+type), 600);
+}
+
+function updateStats() {
+  document.getElementById('stat-seen').textContent    = stats.seen;
+  document.getElementById('stat-correct').textContent = stats.correct;
+  document.getElementById('stat-streak').textContent  = stats.streak;
+  document.getElementById('stat-pool').textContent    = pool.length;
+  const pct = stats.seen > 0 ? Math.round((stats.correct/stats.seen)*100) : 0;
+  document.getElementById('progress').style.width = pct + '%';
+}
+
+// ── POOL MANAGEMENT ────────────────────────────────────────────────────────
+function refreshPool() {
+  pool = shuffled(getFilteredBank(currentTense, currentTopic));
+  updateStats();
+}
+
+function nextFromPool() {
+  if (pool.length === 0) refreshPool();
+  if (pool.length === 0) return null;
+  return pool.shift();
+}
+
+// ── FILTERS ────────────────────────────────────────────────────────────────
+function setTense(t, el) {
+  currentTense = t;
+  document.querySelectorAll('[data-tense]').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  refreshPool(); loadQuestion();
+}
+function setTopic(t, el) {
+  currentTopic = t;
+  document.querySelectorAll('[data-topic]').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  refreshPool(); loadQuestion();
+}
+function setMode(m, el) {
+  currentMode = m;
+  document.querySelectorAll('.mode-tab').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  loadQuestion();
+}
+
+// ── RENDER ─────────────────────────────────────────────────────────────────
+function loadQuestion() {
+  checked = false;
+  currentSentence = nextFromPool();
+  const area = document.getElementById('drill-area');
+
+  if (!currentSentence) {
+    area.innerHTML = `<div class="empty-state">No sentences match this filter combination.<br>Try selecting "All" for tense or topic.</div>`;
+    return;
+  }
+
+  if (currentMode === 'translate')  renderTranslate(area);
+  if (currentMode === 'gapfill')    renderGapFill(area);
+  if (currentMode === 'listen')     renderListen(area);
+  if (currentMode === 'freewrite')  renderFreeWrite(area);
+}
+
+function metaHTML(s) {
+  return `<div class="meta-row">
+    <span class="tense-tag">${s.tense}</span>
+    <span class="topic-tag">${s.topic}</span>
+    <span class="topic-tag" style="border-color:var(--blue);color:var(--blue)">${s.verb}</span>
+  </div>`;
+}
+
+function controlsHTML(checkId, nextId, showSpeak=true) {
+  const speakBtn = showSpeak ? `<button class="btn-speak" onclick="speak(currentSentence.fr)">
+    <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.97z"/></svg>
+    Hear it
+  </button>` : '';
+  return `<div class="controls">
+    <button class="btn-primary" id="${checkId}" onclick="doCheck()">Check</button>
+    <button class="btn-primary" id="${nextId}" onclick="loadQuestion()" style="display:none">Next →</button>
+    <button class="btn-secondary" onclick="skipQuestion()">Skip</button>
+    <button class="btn-reveal" id="reveal-btn" onclick="revealAnswer()">Reveal Answer</button>
+    ${speakBtn}
+    <span class="kbd-hint"><kbd>Enter</kbd> check · <kbd>→</kbd> skip</span>
+  </div>`;
+}
+
+function revealAnswer() {
+  if (checked) return;
+  checked = true;
+  const badge    = document.getElementById('badge');
+  const block    = document.getElementById('answer-block');
+  const ctEl     = document.getElementById('correct-text');
+  const notesEl  = document.getElementById('notes-text');
+  const checkBtn = document.getElementById('check-btn');
+  const nextBtn  = document.getElementById('next-btn');
+  const revealBtn= document.getElementById('reveal-btn');
+
+  badge.className  = 'result-badge revealed';
+  badge.textContent = '👁 Answer revealed';
+  ctEl.textContent  = currentSentence.fr;
+  notesEl.innerHTML = currentSentence.note || '';
+  block.style.display = 'block';
+  setTimeout(() => block.classList.add('show'), 10);
+  if (checkBtn)  checkBtn.style.display  = 'none';
+  if (revealBtn) revealBtn.style.display = 'none';
+  if (nextBtn)   nextBtn.style.display   = '';
+
+  stats.seen++; stats.streak = 0; updateStats();
+  setTimeout(() => speak(currentSentence.fr), 300);
+}
+
+// ── TRANSLATE MODE ─────────────────────────────────────────────────────────
+function renderTranslate(area) {
+  const s = currentSentence;
+  area.innerHTML = `
+    ${metaHTML(s)}
+    <div class="prompt-label">Translate into French</div>
+    <div class="sentence-display">${s.en}</div>
+    <div class="input-wrap">
+      <input class="type-input" id="main-input" placeholder="Your French translation…" onkeydown="handleKey(event)" autocomplete="off" autocorrect="off" spellcheck="false"/>
+    </div>
+    <div class="result-badge" id="badge"></div>
+    <div class="answer-block" id="answer-block">
+      <div class="correct-fr" id="correct-text"></div>
+      <div class="notes" id="notes-text"></div>
+    </div>
+    ${controlsHTML('check-btn','next-btn')}`;
+  document.getElementById('main-input').focus();
+}
+
+// ── GAP FILL MODE ──────────────────────────────────────────────────────────
+function renderGapFill(area) {
+  const s = currentSentence;
+  const gapRx = new RegExp(`(${escapeRegex(s.gap)})`, 'i');
+  const display = s.fr.replace(gapRx, `<input class="gap-input" id="gap-input" autocomplete="off" autocorrect="off" spellcheck="false" onkeydown="handleKey(event)" placeholder="…"/>`);
+  area.innerHTML = `
+    ${metaHTML(s)}
+    <div class="prompt-label">Complete the sentence</div>
+    <div class="sentence-display" style="font-style:normal;line-height:2">${display}</div>
+    <div style="margin-top:8px;"><em class="hint-box">English: ${s.en}</em></div>
+    <div class="result-badge" id="badge"></div>
+    <div class="answer-block" id="answer-block">
+      <div class="correct-fr" id="correct-text"></div>
+      <div class="notes" id="notes-text"></div>
+    </div>
+    ${controlsHTML('check-btn','next-btn')}`;
+  const gi = document.getElementById('gap-input');
+  if (gi) gi.focus();
+}
+
+// ── LISTEN MODE ────────────────────────────────────────────────────────────
+function renderListen(area) {
+  const s = currentSentence;
+  area.innerHTML = `
+    ${metaHTML(s)}
+    <div class="prompt-label">Listen, then write what you hear in French</div>
+    <div style="text-align:center;margin:20px 0 24px;">
+      <button class="btn-speak" onclick="speak(currentSentence.fr)" style="font-size:0.9rem;padding:14px 28px;">
+        <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.97z"/></svg>
+        ▶ Play Sentence
+      </button>
+    </div>
+    <div class="input-wrap">
+      <input class="type-input" id="main-input" placeholder="Write what you heard…" onkeydown="handleKey(event)" autocomplete="off" autocorrect="off" spellcheck="false"/>
+    </div>
+    <div class="result-badge" id="badge"></div>
+    <div class="answer-block" id="answer-block">
+      <div class="correct-fr" id="correct-text"></div>
+      <div class="notes" id="notes-text"></div>
+    </div>
+    ${controlsHTML('check-btn','next-btn', false)}`;
+  document.getElementById('main-input').focus();
+  setTimeout(() => speak(s.fr), 600);
+}
+
+// ── FREE WRITE MODE ────────────────────────────────────────────────────────
+function renderFreeWrite(area) {
+  const s = currentSentence;
+  const prompt = s.prompt || `Use the verb <em>${s.verb}</em> (${s.tense}) to express: "${s.en}"`;
+  area.innerHTML = `
+    ${metaHTML(s)}
+    <div class="prompt-label">Write your own sentence</div>
+    <div class="free-prompt">${prompt}</div>
+    <div class="free-context">Try using: <strong>${s.verb}</strong> · tense: <strong>${s.tense}</strong></div>
+    <div class="input-wrap">
+      <input class="type-input" id="main-input" placeholder="Écrivez votre phrase ici…" onkeydown="handleKey(event)" autocomplete="off" autocorrect="off" spellcheck="false"/>
+    </div>
+    <div class="result-badge" id="badge"></div>
+    <div class="answer-block" id="answer-block">
+      <div class="correct-fr" id="correct-text"></div>
+      <div class="notes" id="notes-text"></div>
+    </div>
+    <div class="controls">
+      <button class="btn-primary" id="check-btn" onclick="doCheck()">Compare</button>
+      <button class="btn-primary" id="next-btn" onclick="loadQuestion()" style="display:none">Next →</button>
+      <button class="btn-secondary" onclick="skipQuestion()">Skip</button>
+      <span class="kbd-hint"><kbd>Enter</kbd> compare</span>
+    </div>`;
+  document.getElementById('main-input').focus();
+}
+
+// ── CHECKING ───────────────────────────────────────────────────────────────
+function doCheck() {
+  if (checked) { loadQuestion(); return; }
+  checked = true;
+  if (currentMode === 'translate') checkTranslate();
+  else if (currentMode === 'gapfill') checkGapFill();
+  else if (currentMode === 'listen') checkListen();
+  else if (currentMode === 'freewrite') checkFreeWrite();
+}
+
+function showAnswer(isCorrect, userAns, label='') {
+  const badge  = document.getElementById('badge');
+  const block  = document.getElementById('answer-block');
+  const ctEl   = document.getElementById('correct-text');
+  const notesEl= document.getElementById('notes-text');
+  const checkBtn = document.getElementById('check-btn');
+  const nextBtn  = document.getElementById('next-btn');
+
+  badge.className = 'result-badge ' + (isCorrect ? 'correct' : 'wrong');
+  badge.textContent = isCorrect ? '✓ Correct!' : (label || '✗ Not quite');
+  ctEl.textContent = currentSentence.fr;
+  notesEl.innerHTML = currentSentence.note || '';
+  block.style.display = 'block';
+  setTimeout(() => block.classList.add('show'), 10);
+  if (checkBtn) checkBtn.style.display = 'none';
+  if (nextBtn)  nextBtn.style.display = '';
+
+  stats.seen++;
+  if (isCorrect) { stats.correct++; stats.streak++; flashCard('correct'); }
+  else { stats.streak = 0; flashCard('wrong'); }
+  updateStats();
+  if (isCorrect) setTimeout(() => speak(currentSentence.fr), 300);
+}
+
+function checkTranslate() {
+  const val = document.getElementById('main-input')?.value || '';
+  if (!val.trim()) return;
+  const isCorrect = normalise(val) === normalise(currentSentence.fr);
+  showAnswer(isCorrect, val, `✗ Answer: ${currentSentence.fr}`);
+  if (!isCorrect) setTimeout(() => speak(currentSentence.fr), 400);
+}
+
+function checkGapFill() {
+  const gi = document.getElementById('gap-input');
+  const val = gi ? gi.value : '';
+  if (!val.trim()) return;
+  const isCorrect = normalise(val) === normalise(currentSentence.gap);
+  if (gi) { gi.disabled = true; gi.style.borderColor = isCorrect ? 'var(--green)' : 'var(--red)'; }
+  showAnswer(isCorrect, val, `✗ Was: ${currentSentence.gap}`);
+}
+
+function checkListen() {
+  const val = document.getElementById('main-input')?.value || '';
+  if (!val.trim()) return;
+  const isCorrect = normalise(val) === normalise(currentSentence.fr);
+  showAnswer(isCorrect, val);
+  if (!isCorrect) setTimeout(() => speak(currentSentence.fr), 400);
+}
+
+function checkFreeWrite() {
+  const val = document.getElementById('main-input')?.value || '';
+  if (!val.trim()) return;
+  // Free write: always show model answer, mark as "compare" not wrong
+  const badge   = document.getElementById('badge');
+  const block   = document.getElementById('answer-block');
+  const ctEl    = document.getElementById('correct-text');
+  const notesEl = document.getElementById('notes-text');
+  const checkBtn = document.getElementById('check-btn');
+  const nextBtn  = document.getElementById('next-btn');
+
+  badge.className = 'result-badge partial';
+  badge.textContent = '↔ Compare with model';
+  ctEl.textContent  = currentSentence.fr;
+  notesEl.innerHTML = currentSentence.note || '';
+  block.style.display = 'block';
+  setTimeout(() => block.classList.add('show'), 10);
+  if (checkBtn) checkBtn.style.display = 'none';
+  if (nextBtn)  nextBtn.style.display = '';
+  stats.seen++; updateStats();
+  setTimeout(() => speak(currentSentence.fr), 400);
+}
+
+function skipQuestion() {
+  stats.streak = 0; updateStats(); loadQuestion();
+}
+
+// ── KEYBOARD ───────────────────────────────────────────────────────────────
+function handleKey(e) {
+  if (e.key === 'Enter') { e.preventDefault(); doCheck(); }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' && !['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) {
+    skipQuestion();
+  }
+});
+
+// ── REGEX UTIL ─────────────────────────────────────────────────────────────
+function escapeRegex(s) { return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+
+// ── INIT ───────────────────────────────────────────────────────────────────
+window.speechSynthesis && (window.speechSynthesis.onvoiceschanged = () => {});
+window.onload = () => { refreshPool(); setTimeout(loadQuestion, 200); };
+</script>
+</body>
+</html>

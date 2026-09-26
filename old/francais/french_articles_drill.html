@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Les Articles — French Drill</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1209;--paper:#f5efe0;--aged:#e8dcc8;--red:#c0392b;--gold:#b8860b;--faded:#8a7a5e;--green:#2d6a4f;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--paper);min-height:100vh;}
+.wrap{font-family:'Courier Prime',monospace;background:var(--paper);color:var(--ink);padding:1.5rem 1rem;background-image:repeating-linear-gradient(0deg,transparent,transparent 27px,rgba(180,160,120,0.15) 28px);max-width:700px;margin:0 auto;}
+.page-wrap{display:flex;flex-direction:column;align-items:center;padding:32px 20px 60px;}
+.header{text-align:center;margin-bottom:1.5rem;border-bottom:2px solid var(--gold);padding-bottom:1.25rem;}
+.header h1{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,4vw,2.4rem);font-style:italic;letter-spacing:-0.02em;color:var(--ink);}
+.header p{color:var(--faded);font-size:0.78rem;letter-spacing:0.15em;text-transform:uppercase;margin-top:5px;}
+.noble-intro{background:var(--ink);color:var(--paper);padding:1.25rem 1.5rem;margin-bottom:1.5rem;border-radius:2px;}
+.noble-intro h2{font-family:'Playfair Display',serif;font-size:1.05rem;font-style:italic;color:var(--gold);margin-bottom:10px;}
+.noble-intro p{font-size:0.78rem;line-height:1.8;color:rgba(245,239,224,0.82);margin-bottom:6px;}
+.noble-intro p:last-child{margin-bottom:0;}
+.noble-intro strong{color:var(--paper);}
+.tier-group{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-bottom:1.25rem;}
+.tier-btn{font-family:'Courier Prime',monospace;font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;padding:7px 16px;border:1.5px solid var(--faded);background:transparent;color:var(--faded);cursor:pointer;transition:all 0.2s;border-radius:2px;}
+.tier-btn:hover{border-color:var(--ink);color:var(--ink);background:var(--aged);}
+.tier-btn.active{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.tier-btn.mix.active{background:var(--gold);border-color:var(--gold);color:var(--paper);}
+.prog-bar{height:3px;background:var(--aged);margin-bottom:1rem;border-radius:2px;overflow:hidden;}
+.prog-fill{height:3px;background:var(--gold);transition:width 0.4s ease;}
+.stats{display:flex;gap:20px;justify-content:center;margin-bottom:1rem;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--faded);}
+.stats strong{color:var(--ink);font-size:1rem;display:block;font-family:'Playfair Display',serif;}
+.ref-section{margin-bottom:1.25rem;}
+.ref-title{font-size:0.68rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:0.14em;border-bottom:1px solid var(--aged);padding-bottom:5px;margin-bottom:8px;}
+.ref-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:5px;}
+.ref-chip{background:white;border:1px solid var(--aged);padding:6px 9px;font-size:0.75rem;}
+.ref-fr{font-family:'Playfair Display',serif;font-style:italic;color:var(--red);display:block;margin-bottom:1px;}
+.ref-en{color:var(--faded);font-size:0.68rem;}
+.card{background:white;border:1px solid var(--aged);padding:1.75rem 1.5rem 1.5rem;box-shadow:4px 4px 0 var(--aged);position:relative;margin-bottom:1.25rem;}
+.card::before{content:'';position:absolute;top:10px;left:10px;right:-10px;bottom:-10px;border:1px solid var(--aged);z-index:-1;}
+@keyframes flash-correct{0%{background:white;}30%{background:#d4f5e2;}100%{background:white;}}
+@keyframes flash-wrong{0%{background:white;}30%{background:#fde8e8;}100%{background:white;}}
+.card.flash-correct{animation:flash-correct 0.5s ease;}
+.card.flash-wrong{animation:flash-wrong 0.5s ease;}
+.item-meta{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+.item-counter{font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--faded);}
+.rule-tag{font-family:'Courier Prime',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;background:var(--aged);color:var(--faded);padding:2px 8px;border-radius:1px;}
+.rule-tag.revealed{background:var(--ink);color:var(--paper);}
+.say-aloud{font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:10px;}
+.prompt-en{font-family:'Playfair Display',serif;font-size:clamp(1rem,2.8vw,1.25rem);font-style:italic;color:var(--ink);margin-bottom:1.25rem;line-height:1.5;}
+.focus-hint{font-size:0.75rem;color:var(--faded);font-style:italic;margin-bottom:1rem;border-left:2px solid var(--aged);padding-left:10px;}
+.answer-row{display:flex;align-items:center;gap:10px;}
+.answer-area{flex:1;min-height:48px;border:none;border-bottom:2px solid var(--aged);padding:0.5rem 0.25rem;font-family:'Courier Prime',monospace;font-size:0.95rem;color:var(--ink);background:transparent;cursor:pointer;display:flex;align-items:center;transition:border-color 0.2s;}
+.answer-area:hover{border-color:var(--ink);}
+.answer-area.revealed{cursor:default;border-color:var(--gold);}
+.answer-hint{font-size:0.8rem;color:var(--aged);font-style:italic;}
+.answer-text{font-family:'Playfair Display',serif;font-size:clamp(1rem,2.8vw,1.2rem);font-style:italic;color:var(--red);}
+.audio-btn{flex-shrink:0;display:inline-flex;align-items:center;gap:6px;font-family:'Courier Prime',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;padding:8px 14px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;transition:all 0.2s;border-radius:2px;}
+.audio-btn:hover{background:var(--ink);color:var(--paper);}
+.audio-btn:disabled{opacity:0.25;cursor:not-allowed;}
+.audio-btn.speaking{background:var(--red);color:white;border-color:var(--red);}
+.audio-btn svg{width:13px;height:13px;fill:currentColor;}
+.breakdown{background:var(--aged);padding:14px 16px;margin-top:14px;font-size:0.8rem;line-height:1.9;}
+.bd-row{display:flex;gap:8px;align-items:baseline;margin-bottom:3px;flex-wrap:wrap;}
+.bd-fr{font-family:'Playfair Display',serif;font-style:italic;color:var(--red);min-width:120px;font-size:0.88rem;}
+.bd-en{color:var(--faded);font-size:0.78rem;}
+.tip{margin-top:12px;padding:12px 14px;background:#fdf8ef;border-left:3px solid var(--gold);font-size:0.78rem;color:var(--faded);line-height:1.7;font-style:italic;}
+.tip strong{color:var(--ink);font-style:normal;}
+.contrast{margin-top:10px;padding:12px 14px;background:white;border:1px solid var(--gold);font-size:0.78rem;line-height:1.9;}
+.contrast strong{color:var(--ink);}
+.cfrm{font-family:'Playfair Display',serif;font-style:italic;color:var(--red);}
+.controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:1.25rem;padding-top:1.1rem;border-top:1px solid var(--aged);}
+.primary-btn{font-family:'Courier Prime',monospace;font-size:0.78rem;letter-spacing:0.12em;text-transform:uppercase;padding:12px 24px;background:var(--ink);color:var(--paper);border:none;cursor:pointer;transition:all 0.2s;border-radius:2px;flex:1;min-width:120px;}
+.primary-btn:hover{background:var(--red);}
+.secondary-btn{font-family:'Courier Prime',monospace;font-size:0.78rem;letter-spacing:0.12em;text-transform:uppercase;padding:12px 18px;background:transparent;color:var(--ink);border:1.5px solid var(--ink);cursor:pointer;transition:all 0.2s;border-radius:2px;}
+.secondary-btn:hover{background:var(--aged);}
+.done-card{background:white;border:1px solid var(--aged);padding:2.5rem 1.5rem;box-shadow:4px 4px 0 var(--aged);text-align:center;position:relative;}
+.done-card::before{content:'';position:absolute;top:10px;left:10px;right:-10px;bottom:-10px;border:1px solid var(--aged);z-index:-1;}
+.done-title{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,5vw,2rem);font-style:italic;color:var(--ink);margin-bottom:10px;}
+.done-sub{font-size:0.8rem;color:var(--faded);line-height:1.9;margin-bottom:1.5rem;}
+.done-sub strong{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--ink);font-style:italic;display:block;margin-bottom:6px;}
+.done-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.tier-label{font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;padding:2px 8px;border-radius:1px;font-family:'Courier Prime',monospace;}
+.tier-1{background:#e8f4fd;color:#1a5276;}
+.tier-2{background:#fef9e7;color:#7d6608;}
+.tier-3{background:#fdedec;color:#922b21;}
+.back-home{display:inline-flex;align-items:center;gap:7px;font-family:'Courier Prime',monospace;font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--faded);text-decoration:none;padding:8px 0;border-bottom:1px solid transparent;transition:color 0.2s,border-color 0.2s;margin-bottom:20px;}
+.back-home:hover{color:var(--ink);border-bottom-color:var(--ink);}
+.back-home svg{width:12px;height:12px;fill:currentColor;}
+</style>
+</head>
+<body>
+<div class="page-wrap">
+<a href="f-index.html" class="back-home"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Home</a>
+<div class="wrap" id="root">
+<div class="header">
+  <h1>Les Articles</h1>
+  <p>à, au, de, du, des &amp; beyond — Noble Method</p>
+</div>
+<div class="noble-intro">
+  <h2>How this works...</h2>
+  <p>French articles are <strong>not random</strong> — but the same letters do different jobs depending on context. Du can mean <strong>of the</strong> (contracted de + le) or <strong>some</strong> (partitive). Des can mean <strong>of the / from the</strong> or <strong>some</strong>. The trick is learning to recognise which job each one is doing.</p>
+  <p>Every card tells you <strong>which rule is at play</strong> after you reveal — so you're always building understanding, not just memorising. <strong>Say each sentence out loud.</strong></p>
+  <p>Start with <strong>Tier 1</strong> to build the foundation, then work up. Use <strong>Mix</strong> once you feel ready to be tested without labels.</p>
+</div>
+<div class="tier-group" id="tier-group"></div>
+<div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+<div class="stats">
+  <div><strong id="stat-seen">0</strong>Seen</div>
+  <div><strong id="stat-correct">0</strong>Correct</div>
+  <div><strong id="stat-streak">0</strong>Streak</div>
+</div>
+<div id="ref-area"></div>
+<div id="card-area"></div>
+<div id="done-area"></div>
+</div>
+</div>
+<script>
+// ── VOICE ────────────────────────────────────────────────────────────────────
+let frVoice=null;
+function loadVoice(){const v=speechSynthesis.getVoices();frVoice=v.find(x=>x.lang.startsWith('fr'))||null;}
+if('speechSynthesis'in window){speechSynthesis.onvoiceschanged=loadVoice;loadVoice();}
+function speak(text){
+  if(!('speechSynthesis'in window))return;
+  speechSynthesis.cancel();
+  const utt=new SpeechSynthesisUtterance(text);
+  utt.lang='fr-FR';utt.rate=0.88;
+  if(frVoice)utt.voice=frVoice;
+  const btn=document.getElementById('audio-btn');
+  if(btn){btn.classList.add('speaking');utt.onend=()=>btn.classList.remove('speaking');utt.onerror=()=>btn.classList.remove('speaking');}
+  speechSynthesis.speak(utt);
+}
+
+// ── DATA ─────────────────────────────────────────────────────────────────────
+const TIERS=[
+{
+  id:'t1', label:'Tier 1 — Foundation',
+  short:'Tier 1',
+  note:'The basic forms in clear, simple sentences. One rule per card. Focus on getting a feel for when \u00e0 contracts and when de contracts \u2014 and on the difference between definite (the) and partitive (some).',
+  ref:[
+    ['\u00e0 + la \u2192 \u00e0 la','at/to (fem. noun)'],
+    ['\u00e0 + le \u2192 au','at/to (masc. noun)'],
+    ['\u00e0 + les \u2192 aux','at/to (plural noun)'],
+    ['\u00e0 + l\u2019 \u2192 \u00e0 l\u2019','at/to (vowel noun)'],
+    ['de + la \u2192 de la','of/from (fem. noun)'],
+    ['de + le \u2192 du','of/from (masc. noun)'],
+    ['de + les \u2192 des','of/from (plural noun)'],
+    ['du / de la / de l\u2019','some (partitive \u2014 unspecified qty)'],
+    ['un / une','a/an (indefinite)'],
+    ['le / la / l\u2019 / les','the (definite)'],
+  ],
+  items:[
+    {rule:'\u00e0 + le \u2192 au',en:"I'm going to the market.",fr:"Je vais au march\u00e9.",parts:[["Je vais","I'm going"],["au march\u00e9","to the market"]],tip:"<strong>\u00e0 + le = au</strong>. March\u00e9 is masculine, so \u00e0 + le march\u00e9 contracts to au march\u00e9. You can never say \u00e0 le \u2014 it must contract."},
+    {rule:'\u00e0 + la',en:"I'm going to the post office.",fr:"Je vais \u00e0 la poste.",parts:[["Je vais","I'm going"],["\u00e0 la poste","to the post office"]],tip:"<strong>\u00e0 + la</strong> stays as \u00e0 la \u2014 no contraction for feminine nouns. La poste is feminine, so no change needed."},
+    {rule:'\u00e0 + l\u2019',en:"She works at the hospital.",fr:"Elle travaille \u00e0 l'h\u00f4pital.",parts:[["Elle travaille","she works"],["à l'h\u00f4pital","at the hospital"]],tip:"<strong>\u00e0 + l\u2019</strong> \u2014 when the noun starts with a vowel or silent h, le/la both become l\u2019. So \u00e0 l\u2019h\u00f4pital regardless of gender. H\u00f4pital is masculine, but you'd never say \u00e0 le h\u00f4pital."},
+    {rule:'\u00e0 + les \u2192 aux',en:"I'm going to the shops.",fr:"Je vais aux magasins.",parts:[["Je vais","I'm going"],["aux magasins","to the shops"]],tip:"<strong>\u00e0 + les = aux</strong>. This contraction applies to all plural nouns regardless of gender. Aux is one of the most common words in French."},
+    {rule:'Partitive du (some \u2014 masc.)',en:"I\u2019d like some bread.",fr:"Je voudrais du pain.",parts:[["Je voudrais","I would like"],["du pain","some bread"]],tip:"<strong>du = de + le (partitive)</strong>. Pain is masculine, and you\u2019re asking for an unspecified quantity \u2014 not a specific loaf. Du signals \u2018some\u2019. Compare: Je veux le pain (the specific bread, e.g. that loaf there)."},
+    {rule:'Partitive de la (some \u2014 fem.)',en:"She\u2019s drinking some water.",fr:"Elle boit de l'eau.",parts:[["Elle boit","she is drinking"],["de l'eau","some water"]],tip:"<strong>de l\u2019</strong> before a vowel \u2014 de la + eau contracts to de l\u2019eau. Water is uncountable so you can\u2019t say une eau. De l\u2019eau = some water (unspecified amount)."},
+    {rule:'Partitive de la (some \u2014 fem.)',en:"I need some patience.",fr:"Il me faut de la patience.",parts:[["Il me faut","I need (lit. it needs to me)"],["de la patience","some patience"]],tip:"<strong>de la + feminine noun</strong>. Abstract nouns like patience, courage, libert\u00e9 are often used with the partitive when you mean \u2018some degree of\u2019 that quality."},
+    {rule:'Partitive des (some \u2014 plural)',en:"We bought some apples.",fr:"Nous avons achet\u00e9 des pommes.",parts:[["Nous avons achet\u00e9","we bought"],["des pommes","some apples"]],tip:"<strong>des = some (plural partitive)</strong>. When English says \u2018some apples\u2019 or just \u2018apples\u2019 (no article), French uses des. You can\u2019t say just pommes on its own."},
+    {rule:'Definite le / la',en:"I love the smell of coffee.",fr:"J'aime l'odeur du caf\u00e9.",parts:[["J'aime","I love"],["l'odeur","the smell"],["du caf\u00e9","of coffee"]],tip:"Two articles here: <strong>l\u2019odeur</strong> (the smell \u2014 definite, feminine, vowel) and <strong>du caf\u00e9</strong> (of the coffee \u2014 contracted de + le). Odeur is feminine but starts with a vowel, so la \u2192 l\u2019."},
+    {rule:'Definite les (plural)',en:"The children are in the garden.",fr:"Les enfants sont dans le jardin.",parts:[["Les enfants","the children"],["sont dans","are in"],["le jardin","the garden"]],tip:"<strong>les</strong> = the (plural, any gender). <strong>le jardin</strong> = the garden (masculine). Jardin starts with a consonant so le stays as le."},
+    {rule:'Indefinite un / une',en:"She has a cat and a dog.",fr:"Elle a un chat et un chien.",parts:[["Elle a","she has"],["un chat","a cat"],["et un chien","and a dog"]],tip:"<strong>un</strong> = a/an (masculine). Both chat and chien are masculine. If they were feminine: une chatte, une chienne."},
+    {rule:'de + le \u2192 du (of the)',en:"It\u2019s the director\u2019s decision.",fr:"C'est la d\u00e9cision du directeur.",parts:[["C'est","it is"],["la d\u00e9cision","the decision"],["du directeur","of the director"]],tip:"<strong>du = de + le (possession/belonging)</strong>. This is the contracted article, not partitive. Du directeur = of the director. D\u00e9cision is feminine (la), directeur is masculine (du)."},
+    {rule:'de + les \u2192 des (of the)',en:"The results of the exams were good.",fr:"Les r\u00e9sultats des examens \u00e9taient bons.",parts:[["Les r\u00e9sultats","the results"],["des examens","of the exams"],["étaient bons","were good"]],tip:"<strong>des = de + les (of the \u2014 plural)</strong>. This looks identical to the partitive des, but here it means \u2018of the\u2019 (belonging). Context tells you which: des r\u00e9sultats = some results (partitive), r\u00e9sultats des examens = results of the exams (possession)."},
+    {rule:'\u00e0 la (at/to \u2014 fem.)',en:"She studies at the library every evening.",fr:"Elle \u00e9tudie \u00e0 la biblioth\u00e8que tous les soirs.",parts:[["Elle \u00e9tudie","she studies"],["\u00e0 la biblioth\u00e8que","at the library"],["tous les soirs","every evening"]],tip:"<strong>\u00e0 la</strong> for feminine nouns. Biblioth\u00e8que is feminine. Tous les soirs = every evening (les for all/every with plural noun)."},
+    {rule:'au (at/to \u2014 masc.)',en:"He has an appointment at the dentist.",fr:"Il a un rendez-vous chez le dentiste... or: Il va au cabinet du dentiste.",parts:[["Il a un rendez-vous","he has an appointment"],["au cabinet","at the surgery"],["du dentiste","of the dentist"]],tip:"Two contractions: <strong>au cabinet</strong> (\u00e0 + le) and <strong>du dentiste</strong> (de + le). Both cabinet and dentiste are masculine. Note: for professions French often uses chez le dentiste (at the dentist\u2019s place)."},
+  ]
+},
+{
+  id:'t2', label:'Tier 2 — Intermediate',
+  short:'Tier 2',
+  note:'Now the overlaps start. Du and des are doing two different jobs \u2014 contraction and partitive \u2014 and sentences start mixing article types. Negation collapses articles. This is where most learners get tangled.',
+  ref:[
+    ['pas de / jamais de','no / not any (negation \u2014 article collapses)'],
+    ['du (partitive)','some \u2014 Je bois du vin'],
+    ['du (contracted)','of the \u2014 le prix du vin'],
+    ['des (partitive)','some \u2014 des amis'],
+    ['des (contracted)','of the \u2014 les noms des \u00e9tudiants'],
+    ['\u00e0 + masc. \u2192 au','Je vais au cin\u00e9ma'],
+    ['\u00e0 + pl. \u2192 aux','Je pense aux cons\u00e9quences'],
+    ['de + masc. \u2192 du','Je parle du probl\u00e8me'],
+    ['de + pl. \u2192 des','Je me souviens des vacances'],
+    ['general vs specific','le vin en g\u00e9n\u00e9ral vs du vin ce soir'],
+  ],
+  items:[
+    {rule:'Negation: pas de (article collapse)',en:"I don't have any bread.",fr:"Je n'ai pas de pain.",parts:[["Je n'ai pas","I don't have"],["de pain","any bread"]],tip:"<strong>Negation collapses the article to just de</strong>. J\u2019ai du pain (I have some bread) \u2192 Je n\u2019ai pas de pain. The du disappears \u2014 it becomes plain de. This applies to du, de la, de l\u2019, des: all collapse to de after negation.",contrast:"<span class='cfrm'>Il y a du lait.</span> There is some milk.<br><span class='cfrm'>Il n\u2019y a pas de lait.</span> There is no milk."},
+    {rule:'Negation: pas de (article collapse)',en:"She doesn't drink wine.",fr:"Elle ne boit pas de vin.",parts:[["Elle ne boit pas","she doesn't drink"],["de vin","wine"]],tip:"<strong>De la \u2192 de after negation</strong>. Elle boit de la bi\u00e8re (she drinks some beer) \u2192 Elle ne boit pas de bi\u00e8re. The de la collapses to de.",contrast:"<span class='cfrm'>Elle boit de la bi\u00e8re.</span> She drinks beer.<br><span class='cfrm'>Elle ne boit pas de bi\u00e8re.</span> She doesn\u2019t drink beer."},
+    {rule:'Negation: jamais de',en:"He never eats meat.",fr:"Il ne mange jamais de viande.",parts:[["Il ne mange jamais","he never eats"],["de viande","meat"]],tip:"<strong>jamais de</strong> works the same as pas de \u2014 the article collapses. Il mange de la viande \u2192 Il ne mange jamais de viande. Any negation word (plus, rien, jamais) triggers the same collapse."},
+    {rule:'du: partitive vs contracted',en:"I\u2019m talking about the problem.",fr:"Je parle du probl\u00e8me.",parts:[["Je parle","I am talking"],["du probl\u00e8me","about the problem"]],tip:"<strong>du here = de + le (contracted) \u2014 NOT partitive</strong>. Parler de = talk about, and probl\u00e8me is masculine \u2192 de + le = du. This du means \u2018of the / about the\u2019, not \u2018some\u2019. Context is everything.",contrast:"<span class='cfrm'>Je bois du caf\u00e9.</span> I drink some coffee. (partitive \u2014 du = some)<br><span class='cfrm'>Je parle du caf\u00e9.</span> I\u2019m talking about the coffee. (contracted \u2014 du = of the)"},
+    {rule:'des: partitive vs contracted',en:"I remember the holidays.",fr:"Je me souviens des vacances.",parts:[["Je me souviens","I remember"],["des vacances","the holidays"]],tip:"<strong>des here = de + les (contracted)</strong>. Se souvenir de = remember, and vacances is plural \u2192 de + les = des. This des means \u2018of the\u2019, not \u2018some\u2019.",contrast:"<span class='cfrm'>J\u2019ai des amis \u00e0 Paris.</span> I have some friends in Paris. (partitive \u2014 des = some)<br><span class='cfrm'>Je me souviens des amis.</span> I remember the friends. (contracted \u2014 des = of the)"},
+    {rule:'General vs specific (definite vs partitive)',en:"I love wine. \u2014 I\u2019ll have some wine tonight.",fr:"J'aime le vin. \u2014 Je vais prendre du vin ce soir.",parts:[["J'aime le vin","I love wine (in general)"],["Je vais prendre du vin ce soir","I'll have some wine tonight"]],tip:"<strong>le vin = wine in general</strong> (definite \u2014 a concept). <strong>du vin = some wine</strong> (partitive \u2014 a portion). This is one of the most important distinctions: J\u2019aime le fromage = I love cheese (as a concept). Je mange du fromage = I\u2019m eating some cheese (right now, a portion).",contrast:"<span class='cfrm'>J\u2019aime le chocolat.</span> I love chocolate. (general concept)<br><span class='cfrm'>Je mange du chocolat.</span> I\u2019m eating some chocolate. (a portion, right now)"},
+    {rule:'aux (talking about / thinking about \u2014 plural)',en:"Have you thought about the consequences?",fr:"Tu as pens\u00e9 aux cons\u00e9quences\u00a0?",parts:[["Tu as pens\u00e9","have you thought"],["aux cons\u00e9quences","about the consequences"]],tip:"<strong>aux = \u00e0 + les</strong>. Penser \u00e0 = think about, and cons\u00e9quences is plural \u2192 \u00e0 + les = aux. The same contraction that applies to destinations (Je vais aux magasins) also applies to verbs that take \u00e0."},
+    {rule:'du (de + le \u2014 after verb taking de)',en:"She\u2019s afraid of the dog.",fr:"Elle a peur du chien.",parts:[["Elle a peur","she is afraid"],["du chien","of the dog"]],tip:"<strong>avoir peur de + le = du</strong>. Avoir peur de = be afraid of, and chien is masculine \u2192 de + le = du. The same rule that applies to possession (la d\u00e9cision du directeur) applies here."},
+    {rule:'de la (after verb taking de \u2014 fem.)',en:"She took advantage of the situation.",fr:"Elle a profit\u00e9 de la situation.",parts:[["Elle a profit\u00e9","she took advantage"],["de la situation","of the situation"]],tip:"<strong>profiter de + la = de la</strong>. Situation is feminine \u2192 de + la stays as de la (no contraction for feminine). Compare: Elle a profit\u00e9 du soleil (profiter de + le soleil \u2192 du)."},
+    {rule:'Mixed: partitive + contracted in one sentence',en:"The smell of bread always makes me hungry.",fr:"L'odeur du pain me donne toujours faim.",parts:[["L'odeur","the smell"],["du pain","of the bread"],["me donne toujours faim","always makes me hungry"]],tip:"<strong>l\u2019odeur</strong> = the smell (definite, feminine, vowel \u2192 l\u2019). <strong>du pain</strong> = of the bread (contracted de + le \u2014 possession/origin, not partitive here). Two different article jobs in one sentence."},
+    {rule:'Negation with de + vowel',en:"There\u2019s no water left.",fr:"Il n'y a plus d'eau.",parts:[["Il n'y a plus","there is no more"],["d'eau","water"]],tip:"<strong>Negation collapses de l\u2019 to d\u2019</strong> before a vowel. Il y a de l\u2019eau \u2192 Il n\u2019y a plus d\u2019eau. Plus (no more) is a negation word, triggering the same collapse as pas."},
+    {rule:'\u00e0 la vs au: choosing correctly',en:"He goes to the cinema and she goes to the library.",fr:"Il va au cin\u00e9ma et elle va \u00e0 la biblioth\u00e8que.",parts:[["Il va au cin\u00e9ma","he goes to the cinema"],["et elle va","and she goes"],["à la biblioth\u00e8que","to the library"]],tip:"<strong>au cin\u00e9ma</strong> (\u00e0 + le \u2014 cin\u00e9ma is masculine) vs <strong>\u00e0 la biblioth\u00e8que</strong> (\u00e0 + la \u2014 biblioth\u00e8que is feminine). Both are destinations, but the contraction depends on the gender of the noun."},
+    {rule:'des after negation collapses to de',en:"He has no friends here.",fr:"Il n'a pas d'amis ici.",parts:[["Il n'a pas","he doesn't have"],["d'amis","any friends"],["ici","here"]],tip:"<strong>des \u2192 de after negation</strong>, and d\u2019 before a vowel. Il a des amis \u2192 Il n\u2019a pas d\u2019amis. The plural partitive des collapses just like du and de la."},
+    {rule:'du in a recipe / quantity context',en:"You need some butter and some flour.",fr:"Il faut du beurre et de la farine.",parts:[["Il faut","you need"],["du beurre","some butter"],["et de la farine","and some flour"]],tip:"<strong>du beurre</strong> (masc. partitive) and <strong>de la farine</strong> (fem. partitive). Cooking instructions are a classic partitive context \u2014 you\u2019re talking about unspecified quantities of uncountable things."},
+    {rule:'Specific quantity overrides partitive',en:"I bought a kilo of flour.",fr:"J'ai achet\u00e9 un kilo de farine.",parts:[["J'ai achet\u00e9","I bought"],["un kilo de farine","a kilo of flour"]],tip:"<strong>Quantity expression + de (no article)</strong>. Once you specify a quantity (un kilo, un litre, une bouteille, beaucoup, etc.), the article disappears entirely. Un kilo de farine, NOT un kilo de la farine."},
+  ]
+},
+{
+  id:'t3', label:'Tier 3 — Advanced',
+  short:'Tier 3',
+  note:'The real traps. Quantity expressions that kill the article. Verbs that change everything. General vs specific distinctions. Sentences where two or three article rules are at play simultaneously \u2014 you have to keep track of all of them.',
+  ref:[
+    ['beaucoup de / trop de / assez de','quantity + de (no article after)'],
+    ['un peu de / une bouteille de','a little / a bottle of (same rule)'],
+    ['c\u2019est + article','c\u2019est un m\u00e9decin vs il est m\u00e9decin'],
+    ['en + country names','en France, en Angleterre (no article)'],
+    ['au + masc. country','au Japon, au Portugal'],
+    ['aux + pl. country','aux \u00c9tats-Unis'],
+    ['de + country (coming from)','je viens de France / du Japon'],
+    ['jouer au / jouer du','sport vs instrument'],
+    ['partir de / arriver \u00e0','from / to (with correct article)'],
+  ],
+  items:[
+    {rule:'beaucoup de (no article)',en:"She reads a lot of books.",fr:"Elle lit beaucoup de livres.",parts:[["Elle lit","she reads"],["beaucoup de livres","a lot of books"]],tip:"<strong>beaucoup de + noun \u2014 no article</strong>. After any quantity expression the article vanishes: beaucoup de, peu de, trop de, assez de, plein de. NOT beaucoup des livres or beaucoup de les livres. Just de."},
+    {rule:'trop de / pas assez de (no article)',en:"There\u2019s too much noise and not enough light.",fr:"Il y a trop de bruit et pas assez de lumi\u00e8re.",parts:[["Il y a","there is"],["trop de bruit","too much noise"],["et pas assez de lumi\u00e8re","and not enough light"]],tip:"<strong>trop de</strong> and <strong>pas assez de</strong> follow the same rule \u2014 quantity + de, no article. Bruit and lumi\u00e8re are both uncountable here, but the rule applies to countable nouns too: trop de gens = too many people."},
+    {rule:'un peu de (no article)',en:"Add a little salt and a little butter.",fr:"Ajoutez un peu de sel et un peu de beurre.",parts:[["Ajoutez","add"],["un peu de sel","a little salt"],["et un peu de beurre","and a little butter"]],tip:"<strong>un peu de</strong> = a little (quantity) + de, no article. This applies even though un peu has un in it \u2014 it\u2019s a quantity expression as a unit, so the article still disappears after de."},
+    {rule:'Countries: en (fem.) vs au (masc.)',en:"She lives in France but he lives in Japan.",fr:"Elle habite en France mais il habite au Japon.",parts:[["Elle habite en France","she lives in France"],["mais il habite au Japon","but he lives in Japan"]],tip:"<strong>en + feminine country</strong> (France, Espagne, Angleterre \u2014 most countries ending in -e are feminine). <strong>au + masculine country</strong> (Japon, Portugal, Canada \u2014 masculine). En swallows the article entirely. Au is the normal \u00e0 + le contraction.",contrast:"<span class='cfrm'>en France, en Italie, en Chine</span> (feminine)<br><span class='cfrm'>au Japon, au Mexique, au Br\u00e9sil</span> (masculine)"},
+    {rule:'Countries: aux (plural)',en:"Have you ever been to the United States?",fr:"Tu es d\u00e9j\u00e0 all\u00e9 aux \u00c9tats-Unis\u00a0?",parts:[["Tu es d\u00e9j\u00e0 all\u00e9","have you ever been"],["aux \u00c9tats-Unis","to the United States"]],tip:"<strong>aux = \u00e0 + les</strong> for plural country/place names. \u00c9tats-Unis is plural (les \u00c9tats-Unis), so \u00e0 + les = aux. Same rule as aux magasins \u2014 no exception for countries."},
+    {rule:'Coming from countries: de / du / des',en:"She\u2019s just back from Japan. He\u2019s from France.",fr:"Elle revient du Japon. Il vient de France.",parts:[["Elle revient du Japon","she is just back from Japan"],["Il vient de France","he is from France"]],tip:"<strong>From masculine country: du</strong> (de + le Japon \u2192 du Japon). <strong>From feminine country: de</strong> with no article (de France, d\u2019Italie \u2014 the article disappears with feminine countries).",contrast:"<span class='cfrm'>Il vient du Japon.</span> (masc. \u2014 du)<br><span class='cfrm'>Elle vient de France.</span> (fem. \u2014 de, no article)<br><span class='cfrm'>Ils viennent des \u00c9tats-Unis.</span> (plural \u2014 des)"},
+    {rule:'c\u2019est un/une vs il/elle est',en:"He is a doctor. \u2014 He is a good doctor.",fr:"Il est m\u00e9decin. \u2014 C'est un bon m\u00e9decin.",parts:[["Il est m\u00e9decin","he is a doctor (no article)"],["C'est un bon m\u00e9decin","he is a good doctor (with article)"]],tip:"<strong>After \u00eatre + profession: no article</strong>. Il est m\u00e9decin (no un). BUT: add any adjective, and c\u2019est replaces il est and un comes back: C\u2019est un bon m\u00e9decin. This is one of the most common advanced traps.",contrast:"<span class='cfrm'>Elle est professeure.</span> (no article \u2014 profession alone)<br><span class='cfrm'>C\u2019est une excellente professeure.</span> (article returns with adjective)"},
+    {rule:'jouer au vs jouer du',en:"My son plays football but my daughter plays the violin.",fr:"Mon fils joue au foot mais ma fille joue du violon.",parts:[["Mon fils joue au foot","my son plays football"],["mais ma fille joue du violon","but my daughter plays the violin"]],tip:"<strong>jouer \u00e0 + sport/game</strong>: \u00e0 + le = au, \u00e0 + la stays, \u00e0 + les = aux. <strong>jouer de + instrument</strong>: de + le = du, de + la stays, de + les = des. The preposition changes and so does the article.",contrast:"<span class='cfrm'>Il joue au tennis / \u00e0 la p\u00e9tanque / aux \u00e9checs.</span><br><span class='cfrm'>Elle joue du piano / de la guitare / des percussions.</span>"},
+    {rule:'Mixed: quantity + partitive + contracted',en:"I drink a lot of coffee but I don\u2019t drink the coffee from the machine.",fr:"Je bois beaucoup de caf\u00e9 mais je ne bois pas le caf\u00e9 de la machine.",parts:[["Je bois beaucoup de caf\u00e9","I drink a lot of coffee"],["mais je ne bois pas","but I don't drink"],["le caf\u00e9 de la machine","the coffee from the machine"]],tip:"Three rules: <strong>beaucoup de</strong> (quantity \u2014 no article), <strong>je ne bois pas le</strong> (negation with definite article \u2014 no collapse when the noun is specific/identified), <strong>de la machine</strong> (de + la \u2014 contracted, meaning \u2018of the\u2019). Negation only collapses du/de la/des \u2014 NOT le/la/les when the noun is specific."},
+    {rule:'Partitive with abstract nouns',en:"You need courage and patience to do this job.",fr:"Il faut du courage et de la patience pour faire ce travail.",parts:[["Il faut","you need"],["du courage","courage / some courage"],["et de la patience","and patience"],["pour faire ce travail","to do this job"]],tip:"<strong>du + masculine abstract noun, de la + feminine abstract noun</strong>. Courage is masculine, patience is feminine. Abstract nouns used in a non-general sense often take the partitive. Compare: Le courage est rare (courage as a concept \u2014 definite) vs Il faut du courage (some degree of courage \u2014 partitive)."},
+    {rule:'No collapse with specific negation',en:"I don\u2019t like the film they\u2019re showing tonight.",fr:"Je n'aime pas le film qu'ils passent ce soir.",parts:[["Je n'aime pas","I don't like"],["le film","the film"],["qu'ils passent ce soir","they're showing tonight"]],tip:"<strong>Negation does NOT collapse le/la/les</strong>. Only du/de la/de l\u2019/des collapse after negation. Here, le film is specific (a particular identified film), so the definite article stays. Je n\u2019aime pas le film (not pas de film)."},
+    {rule:'de after adjective + des',en:"She has beautiful eyes.",fr:"Elle a de beaux yeux.",parts:[["Elle a","she has"],["de beaux yeux","beautiful eyes"]],tip:"<strong>des \u2192 de when an adjective precedes the noun</strong>. Elle a des yeux (she has eyes \u2014 no adj) \u2192 Elle a de beaux yeux (she has beautiful eyes). When an adjective comes before the plural noun, des becomes de. Beau/beaux is irregular: beau (masc. sing.), bel (before vowel), beaux (plural)."},
+    {rule:'partir de / arriver \u00e0 (with correct articles)',en:"The train leaves Paris at eight and arrives in Lyon at ten.",fr:"Le train part de Paris \u00e0 huit heures et arrive \u00e0 Lyon \u00e0 dix heures.",parts:[["Le train","the train"],["part de Paris","leaves Paris"],["à huit heures","at eight"],["et arrive à Lyon","and arrives in Lyon"],["à dix heures","at ten"]],tip:"City names take <strong>no article</strong> in French (unlike country names). So \u00e0 Paris, de Paris, \u00e0 Lyon \u2014 no le/la/les. But countries need articles: elle arrive en France, elle revient du Japon."},
+    {rule:'\u00e0 + abstract noun (no contraction)',en:"Pay attention to the details.",fr:"Faites attention aux d\u00e9tails.",parts:[["Faites attention","pay attention"],["aux d\u00e9tails","to the details"]],tip:"<strong>aux = \u00e0 + les</strong> even with abstract/non-place nouns. Faire attention \u00e0 = pay attention to. D\u00e9tails is plural \u2192 \u00e0 + les = aux. The contraction rule has no exceptions."},
+    {rule:'Complex: multiple article types',en:"The president spoke about the results of the negotiations with the unions.",fr:"Le pr\u00e9sident a parl\u00e9 des r\u00e9sultats des n\u00e9gociations avec les syndicats.",parts:[["Le pr\u00e9sident","the president"],["a parl\u00e9 des r\u00e9sultats","spoke about the results"],["des n\u00e9gociations","of the negotiations"],["avec les syndicats","with the unions"]],tip:"Three article uses: <strong>le pr\u00e9sident</strong> (definite), <strong>des r\u00e9sultats</strong> (de + les \u2014 parler de = talk about, results is plural), <strong>des n\u00e9gociations</strong> (de + les \u2014 possession/relation), <strong>les syndicats</strong> (definite plural). Both des are contracted, not partitive."},
+  ]
+}
+];
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+let currentTier='t1', queue=[], qIdx=0, revealed=false;
+let stats={seen:0,correct:0,streak:0};
+
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function buildQueue(id){
+  if(id==='mix'){
+    const all=[];
+    TIERS.forEach(t=>t.items.forEach(item=>all.push({...item,_tierId:t.id})));
+    return shuffle(all);
+  }
+  const t=TIERS.find(t=>t.id===id);
+  return t?[...t.items]:[];
+}
+
+function setTier(id){
+  currentTier=id;
+  document.querySelectorAll('.tier-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tb-'+id).classList.add('active');
+  queue=buildQueue(id);
+  qIdx=0;revealed=false;
+  stats={seen:0,correct:0,streak:0};
+  updateStats();
+  renderRef();
+  renderCard();
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function renderButtons(){
+  const g=document.getElementById('tier-group');
+  let html='';
+  TIERS.forEach(t=>{
+    html+=`<button class="tier-btn${t.id===currentTier?' active':''}" id="tb-${t.id}" onclick="setTier('${t.id}')">${t.short}</button>`;
+  });
+  html+=`<button class="tier-btn mix${currentTier==='mix'?' active':''}" id="tb-mix" onclick="setTier('mix')">&#127922; Mix</button>`;
+  g.innerHTML=html;
+}
+
+function tierLabelHtml(id){
+  const map={t1:'Tier 1',t2:'Tier 2',t3:'Tier 3'};
+  const cls={t1:'tier-1',t2:'tier-2',t3:'tier-3'};
+  if(!map[id])return'';
+  return`<span class="tier-label ${cls[id]}">${map[id]}</span>`;
+}
+
+function renderRef(){
+  const area=document.getElementById('ref-area');
+  if(currentTier==='mix'){area.innerHTML='';return;}
+  const t=TIERS.find(t=>t.id===currentTier);
+  if(!t){area.innerHTML='';return;}
+  let html=`<div class="ref-section"><p class="ref-title">Quick reference \u2014 ${t.short}</p><p style="font-size:0.78rem;color:var(--faded);font-style:italic;border-left:3px solid var(--gold);padding-left:10px;margin-bottom:10px;line-height:1.7">${t.note}</p><div class="ref-grid">`;
+  t.ref.forEach(([fr,en])=>{
+    html+=`<div class="ref-chip"><span class="ref-fr">${fr}</span><span class="ref-en">${en}</span></div>`;
+  });
+  html+=`</div></div>`;
+  area.innerHTML=html;
+}
+
+function renderCard(){
+  const ca=document.getElementById('card-area');
+  document.getElementById('done-area').innerHTML='';
+  if(qIdx>=queue.length){ca.innerHTML='';renderDone();return;}
+  const item=queue[qIdx];
+  const isMix=currentTier==='mix';
+  const tierObj=isMix?TIERS.find(t=>t.id===item._tierId):TIERS.find(t=>t.id===currentTier);
+  const prog=Math.round((qIdx/queue.length)*100);
+  document.getElementById('prog-fill').style.width=prog+'%';
+
+  let html=`<div class="card" id="main-card">`;
+  html+=`<div class="item-meta">`;
+  html+=`<span class="item-counter">Sentence ${qIdx+1} of ${queue.length}</span>`;
+  if(isMix&&revealed&&tierObj)html+=tierLabelHtml(tierObj.id);
+  if(revealed)html+=`<span class="rule-tag revealed">${item.rule}</span>`;
+  else html+=`<span class="rule-tag">Rule hidden</span>`;
+  html+=`</div>`;
+  html+=`<p class="say-aloud">&#9654; say out loud</p>`;
+  html+=`<p class="prompt-en">${item.en}</p>`;
+  html+=`<div class="answer-row">`;
+  if(!revealed){
+    html+=`<div class="answer-area" onclick="doReveal()"><span class="answer-hint">\u2014 tap to reveal \u2014</span></div>`;
+    html+=`<button class="audio-btn" disabled><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.97z"/></svg>Hear</button>`;
+  } else {
+    const safeText=item.fr.replace(/'/g,"\\'").replace(/"/g,'&quot;');
+    html+=`<div class="answer-area revealed"><span class="answer-text">${item.fr}</span></div>`;
+    html+=`<button class="audio-btn" id="audio-btn" onclick="speak('${safeText}')"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.97z"/></svg>Hear</button>`;
+  }
+  html+=`</div>`;
+  if(revealed){
+    html+=`<div class="breakdown">`;
+    item.parts.forEach(([fr,en])=>{html+=`<div class="bd-row"><span class="bd-fr">${fr}</span><span class="bd-en">= ${en}</span></div>`;});
+    html+=`</div>`;
+    if(item.tip)html+=`<div class="tip"><strong>Rule:</strong> ${item.tip}</div>`;
+    if(item.contrast)html+=`<div class="contrast">${item.contrast}</div>`;
+  }
+  html+=`<div class="controls">`;
+  if(!revealed){
+    html+=`<button class="secondary-btn" onclick="doReveal()">Reveal</button>`;
+  } else {
+    html+=`<button class="primary-btn" onclick="mark(true)">&#10003; Got it</button>`;
+    html+=`<button class="secondary-btn" onclick="mark(false)">Recycle \u2014 see again</button>`;
+  }
+  html+=`</div></div>`;
+  ca.innerHTML=html;
+  if(revealed)setTimeout(()=>{speak(item.fr);},200);
+}
+
+function doReveal(){
+  revealed=true;stats.seen++;updateStats();renderCard();
+}
+
+function mark(ok){
+  const c=document.getElementById('main-card');
+  if(c)c.classList.add(ok?'flash-correct':'flash-wrong');
+  if(ok){stats.correct++;stats.streak++;}
+  else{stats.streak=0;queue.push(queue[qIdx]);}
+  updateStats();qIdx++;revealed=false;
+  setTimeout(renderCard,100);
+}
+
+function updateStats(){
+  document.getElementById('stat-seen').textContent=stats.seen;
+  document.getElementById('stat-correct').textContent=stats.correct;
+  document.getElementById('stat-streak').textContent=stats.streak;
+  if(stats.seen>0)document.getElementById('prog-fill').style.width=Math.min(100,Math.round((stats.correct/stats.seen)*100))+'%';
+}
+
+function renderDone(){
+  const p=stats.seen>0?Math.round((stats.correct/stats.seen)*100):0;
+  const msg=p>=85?'The article rules are becoming instinctive \u2014 that\u2019s exactly the goal.':p>=65?'Good progress. The advanced tier traps are the hardest \u2014 run it again.':'These patterns take real repetition to internalise. Each run it clicks a little more.';
+  document.getElementById('done-area').innerHTML=`<div class="done-card"><p class="done-title">Drill complete!</p><div class="done-sub"><strong>${stats.correct} / ${stats.seen} \u2014 ${p}%</strong>${msg}</div><div class="done-actions"><button class="primary-btn" onclick="setTier('${currentTier}')">Run again</button><button class="secondary-btn" onclick="setTier('mix')">&#127922; Try the mix</button></div></div>`;
+  document.getElementById('prog-fill').style.width='100%';
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+renderButtons();
+setTier('t1');
+</script>
+</body>
+</html>

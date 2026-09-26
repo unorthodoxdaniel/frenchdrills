@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les Comparaisons — French Degree Drill</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1209;
+    --paper: #f5efe0;
+    --aged: #e8dcc8;
+    --red: #c0392b;
+    --gold: #b8860b;
+    --faded: #8a7a5e;
+    --green: #2d6a4f;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Courier Prime', monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px 60px;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(180,160,120,0.15) 28px),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 40px;
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 24px;
+    width: 100%;
+    max-width: 700px;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-style: italic;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  header p {
+    color: var(--faded);
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  .noble-intro {
+    background: var(--ink);
+    color: var(--paper);
+    max-width: 700px;
+    width: 100%;
+    padding: 28px 32px;
+    margin-bottom: 28px;
+  }
+
+  .noble-intro h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-style: italic;
+    margin-bottom: 12px;
+    color: var(--gold);
+  }
+
+  .noble-intro p {
+    font-size: 0.82rem;
+    line-height: 1.8;
+    color: rgba(245,239,224,0.78);
+    margin-bottom: 6px;
+  }
+
+  .noble-intro strong { color: var(--paper); }
+
+  .mode-selector {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 16px;
+    max-width: 700px;
+    width: 100%;
+  }
+
+  .mode-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 8px 18px;
+    border: 1.5px solid var(--faded);
+    background: transparent;
+    color: var(--faded);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+
+  .mode-btn:hover { border-color: var(--ink); color: var(--ink); background: var(--aged); }
+  .mode-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  .pattern-pills {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 700px;
+    width: 100%;
+    margin-bottom: 28px;
+    min-height: 32px;
+  }
+
+  .pill {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    padding: 4px 12px;
+    border: 1px solid var(--aged);
+    border-radius: 20px;
+    color: var(--faded);
+    background: white;
+    font-style: italic;
+  }
+
+  .stats {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    max-width: 700px;
+    width: 100%;
+    margin-bottom: 20px;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--faded);
+  }
+
+  .stats strong {
+    color: var(--ink);
+    font-size: 1.1rem;
+    display: block;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .progress-bar {
+    max-width: 700px;
+    width: 100%;
+    height: 3px;
+    background: var(--aged);
+    margin-bottom: 24px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--gold);
+    transition: width 0.4s ease;
+    border-radius: 2px;
+  }
+
+  .card {
+    background: white;
+    border: 1px solid var(--aged);
+    max-width: 700px;
+    width: 100%;
+    padding: 40px 40px 32px;
+    box-shadow: 4px 4px 0 var(--aged);
+    position: relative;
+    margin-bottom: 24px;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 12px; left: 12px;
+    right: -12px; bottom: -12px;
+    border: 1px solid var(--aged);
+    z-index: -1;
+  }
+
+  .noble-hint {
+    font-style: italic;
+    color: var(--faded);
+    font-size: 0.88rem;
+    line-height: 1.7;
+    border-left: 3px solid var(--gold);
+    padding-left: 16px;
+    margin-bottom: 28px;
+    min-height: 44px;
+  }
+
+  .pattern-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--faded);
+    margin-bottom: 6px;
+  }
+
+  .pattern-badge {
+    display: inline-block;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--red);
+    background: rgba(192,57,43,0.07);
+    border: 1px solid rgba(192,57,43,0.2);
+    padding: 4px 14px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+
+  .english-sentence {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    line-height: 1.35;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .question-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--faded);
+    margin-bottom: 28px;
+    display: block;
+  }
+
+  .answer-reveal {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.4rem, 3.5vw, 2rem);
+    font-style: italic;
+    color: var(--red);
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+
+  .answer-reveal.show { opacity: 1; }
+
+  .cmp {
+    background: rgba(184,134,11,0.12);
+    color: var(--gold);
+    font-style: normal;
+    padding: 1px 5px;
+    border-radius: 2px;
+    border-bottom: 1.5px solid var(--gold);
+    font-size: 0.92em;
+  }
+
+  .breakdown {
+    background: var(--aged);
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    font-size: 0.85rem;
+    line-height: 1.85;
+    opacity: 0;
+    display: none;
+    transition: opacity 0.3s;
+  }
+
+  .breakdown.show { opacity: 1; display: block; }
+  .breakdown .chunk { color: var(--red); font-style: italic; }
+  .breakdown .rule  { color: var(--green); font-weight: bold; }
+
+  .controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--aged);
+  }
+
+  .primary-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 13px 30px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+    flex: 1;
+    min-width: 150px;
+  }
+
+  .primary-btn:hover { background: var(--red); }
+
+  .secondary-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 13px 20px;
+    background: transparent;
+    color: var(--ink);
+    border: 1.5px solid var(--ink);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+
+  .secondary-btn:hover { background: var(--aged); }
+
+  .audio-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    border: 1.5px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+
+  .audio-btn:hover { background: var(--ink); color: var(--paper); }
+  .audio-btn svg { width: 13px; height: 13px; fill: currentColor; }
+
+  .feedback-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 14px;
+  }
+
+  .btn-correct {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 22px;
+    border: 1.5px solid var(--green);
+    background: transparent;
+    color: var(--green);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+
+  .btn-correct:hover { background: var(--green); color: var(--paper); }
+
+  .btn-wrong {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 22px;
+    border: 1.5px solid var(--red);
+    background: transparent;
+    color: var(--red);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+
+  .btn-wrong:hover { background: var(--red); color: var(--paper); }
+
+  @keyframes flash-correct {
+    0%   { background: white; }
+    30%  { background: #d4f5e2; }
+    100% { background: white; }
+  }
+
+  @keyframes flash-wrong {
+    0%   { background: white; }
+    30%  { background: #fde8e8; }
+    100% { background: white; }
+  }
+
+  .card.flash-correct { animation: flash-correct 0.5s ease; }
+  .card.flash-wrong   { animation: flash-wrong 0.5s ease; }
+
+  footer {
+    max-width: 700px;
+    width: 100%;
+    text-align: center;
+    margin-top: 24px;
+    color: var(--faded);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    line-height: 1.8;
+    border-top: 1px solid var(--aged);
+    padding-top: 20px;
+  }
+
+.back-home{display:inline-flex;align-items:center;gap:7px;font-family:"Courier Prime",monospace;font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--faded);text-decoration:none;padding:8px 0;border-bottom:1px solid transparent;transition:color 0.2s,border-color 0.2s;margin-bottom:20px;align-self:flex-start;}
+.back-home:hover{color:var(--ink);border-bottom-color:var(--ink);}
+.back-home svg{width:12px;height:12px;fill:currentColor;}
+</style>
+</head>
+<body>
+<a href="f-index.html" class="back-home"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Home</a>
+
+<header>
+  <h1>Les Comparaisons</h1>
+  <p>Degree &amp; Comparison Drill — Noble Method</p>
+</header>
+
+<div class="noble-intro">
+  <h2>The three levers...</h2>
+  <p>French comparisons use just three words to do almost everything: <strong>plus</strong> (more), <strong>moins</strong> (less), and <strong>aussi</strong> (as). Master the feel of those three, and the superlative, intensity, and quantity structures all fall into place.</p>
+  <p>The key pattern to spot: <strong>plus/moins/aussi… que</strong> — the adjective or adverb lives between them, and <em>que</em> always introduces what you're comparing to. For quantities, <strong>plus de / moins de</strong> replaces the adjective with a noun.</p>
+  <p>Comparison words highlighted in <span style="background:rgba(184,134,11,0.2);color:#b8860b;padding:1px 6px;border-bottom:1.5px solid #b8860b;font-size:0.9em;font-style:italic;">gold</span> — look for the structure, not just the words.</p>
+</div>
+
+<div class="mode-selector">
+  <button class="mode-btn active" id="tab-stage1" onclick="setStage('stage1')">Stage 1 — Core</button>
+  <button class="mode-btn" id="tab-stage2" onclick="setStage('stage2')">Stage 2 — Superlatives &amp; Quantity</button>
+  <button class="mode-btn" id="tab-stage3" onclick="setStage('stage3')">Stage 3 — Intensity &amp; Nuance</button>
+  <button class="mode-btn" id="tab-mix" onclick="setStage('mix')">🎲 All Mixed</button>
+</div>
+
+<div class="pattern-pills" id="pattern-pills"></div>
+
+<div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+
+<div class="stats">
+  <div><strong id="stat-seen">0</strong> Seen</div>
+  <div><strong id="stat-correct">0</strong> Correct</div>
+  <div><strong id="stat-streak">0</strong> Streak</div>
+</div>
+
+<div class="card" id="main-card">
+  <div class="noble-hint" id="noble-hint">Loading your first sentence...</div>
+
+  <div class="pattern-label">Pattern</div>
+  <div class="pattern-badge" id="pattern-badge">plus… que</div>
+
+  <div class="english-sentence" id="english-sentence">—</div>
+  <span class="question-label">English — what's the French?</span>
+
+  <div class="answer-reveal" id="answer-reveal"></div>
+  <div class="breakdown" id="breakdown"></div>
+
+  <div style="text-align:center; margin-bottom:4px;">
+    <button class="audio-btn" id="audio-btn" onclick="speakFrench()" style="display:none">
+      <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.97z"/></svg>
+      Hear it
+    </button>
+  </div>
+
+  <div class="controls">
+    <button class="secondary-btn" id="reveal-btn" onclick="revealAnswer()">Reveal</button>
+    <button class="primary-btn" id="next-btn" onclick="nextQ()" style="display:none">Next →</button>
+    <button class="secondary-btn" id="breakdown-btn" onclick="toggleBreakdown()" style="display:none">Break it down</button>
+  </div>
+
+  <div class="feedback-row" id="feedback-row" style="display:none">
+    <button class="btn-correct" onclick="mark(true)">✓ Got it</button>
+    <button class="btn-wrong" onclick="mark(false)">✗ Missed it</button>
+  </div>
+</div>
+
+<footer>
+  Audio uses your browser's speech synthesis (French voice).<br>
+  Comparison words highlighted in <span style="background:rgba(184,134,11,0.15);color:var(--gold);padding:1px 5px;border-bottom:1.5px solid var(--gold);font-size:0.85em;">gold</span> — spot the structure every time.
+</footer>
+
+<script>
+const stages = {
+
+  stage1: {
+    label: 'Stage 1 — Core',
+    patterns: ['plus… que', 'moins… que', 'aussi… que', 'de plus en plus', 'de moins en moins'],
+    cards: [
+
+      // ── plus… que ──────────────────────────────────────────────────────────
+      { pattern: 'plus… que', en: "He is taller than me.",
+        fr: "Il est plus grand que moi.",
+        cmp: ['plus', 'que'],
+        hint: "The backbone of French comparison: plus + adjective + que. The adjective grand sits between the two halves. Think of plus…que as brackets — the thing being compared lives inside them.",
+        breakdown: "Il est <span class='chunk'>plus</span> grand <span class='chunk'>que</span> moi. Plus before, que after — the adjective is always sandwiched." },
+
+      { pattern: 'plus… que', en: "Paris is more expensive than Lyon.",
+        fr: "Paris est plus cher que Lyon.",
+        cmp: ['plus', 'que'],
+        hint: "Plus cher que — more expensive than. Cher (expensive/dear) sits between plus and que. The cities being compared go on either side of the whole structure.",
+        breakdown: "Paris est <span class='chunk'>plus</span> cher <span class='chunk'>que</span> Lyon. The adjective cher stays between plus and que regardless of what's being compared." },
+
+      { pattern: 'plus… que', en: "She works harder than her brother.",
+        fr: "Elle travaille plus que son frère.",
+        cmp: ['plus', 'que'],
+        hint: "When there's no adjective — just an adverb or plain comparison — plus stays before que. Elle travaille plus que son frère — she works more than her brother.",
+        breakdown: "Elle travaille <span class='chunk'>plus</span> <span class='chunk'>que</span> son frère. Without an adjective, plus and que come together. The verb carries the meaning." },
+
+      { pattern: 'plus… que', en: "This film is more interesting than the last one.",
+        fr: "Ce film est plus intéressant que le dernier.",
+        cmp: ['plus', 'que'],
+        hint: "Longer adjectives work exactly the same way — plus intéressant que. French never needs a separate word like 'more' vs '-er' in English. Plus always does the job.",
+        breakdown: "<span class='chunk'>plus</span> intéressant <span class='chunk'>que</span> le dernier. Plus works for any adjective — short or long, the structure never changes." },
+
+      { pattern: 'plus… que', en: "He runs faster than I expected.",
+        fr: "Il court plus vite que je ne le pensais.",
+        cmp: ['plus', 'que'],
+        hint: "A subtle one: after que in a clause comparison, French often inserts a ne expletif — a ne with no negative meaning. Il court plus vite que je ne le pensais. The ne here is purely stylistic, not a negation.",
+        breakdown: "<span class='chunk'>plus</span> vite <span class='chunk'>que</span> je ne le pensais. The ne expletif appears in formal French after que when a clause follows — it doesn't negate anything." },
+
+      { pattern: 'plus… que', en: "Learning French is easier than I thought.",
+        fr: "Apprendre le français est plus facile que je ne le croyais.",
+        cmp: ['plus', 'que'],
+        hint: "Same ne expletif after que — je ne le croyais. In everyday speech people often drop it: plus facile que je croyais. In writing and formal speech, it appears.",
+        breakdown: "<span class='chunk'>plus</span> facile <span class='chunk'>que</span> je ne le croyais. Ne expletif = ne without pas. It signals a comparison clause, not negation." },
+
+      // ── moins… que ─────────────────────────────────────────────────────────
+      { pattern: 'moins… que', en: "She is less fast than you.",
+        fr: "Elle est moins rapide que toi.",
+        cmp: ['moins', 'que'],
+        hint: "Swap plus for moins and you flip the comparison. Moins…que is the mirror image — same structure, same position, just less instead of more.",
+        breakdown: "Elle est <span class='chunk'>moins</span> rapide <span class='chunk'>que</span> toi. Moins slots in exactly where plus would go. The adjective stays between the two words." },
+
+      { pattern: 'moins… que', en: "This restaurant is less expensive than the other one.",
+        fr: "Ce restaurant est moins cher que l'autre.",
+        cmp: ['moins', 'que'],
+        hint: "Moins cher que — less expensive than. The whole structure mirrors plus cher que exactly. French comparison is beautifully symmetrical.",
+        breakdown: "Ce restaurant est <span class='chunk'>moins</span> cher <span class='chunk'>que</span> l'autre. The adjective cher is sandwiched identically to the plus construction." },
+
+      { pattern: 'moins… que', en: "He sleeps less than his sister.",
+        fr: "Il dort moins que sa sœur.",
+        cmp: ['moins', 'que'],
+        hint: "No adjective — just moins que. Il dort moins que sa sœur. The verb does the work, moins que handles the comparison. Clean and simple.",
+        breakdown: "Il dort <span class='chunk'>moins</span> <span class='chunk'>que</span> sa sœur. Same pattern as plus que without an adjective — moins and que come directly together." },
+
+      { pattern: 'moins… que', en: "She speaks French less fluently than her colleague.",
+        fr: "Elle parle français moins couramment que son collègue.",
+        cmp: ['moins', 'que'],
+        hint: "Moins couramment que — adverbs work exactly like adjectives in this structure. Plus or moins, adverb or adjective, the frame is always the same.",
+        breakdown: "Elle parle français <span class='chunk'>moins</span> couramment <span class='chunk'>que</span> son collègue. Adverbs slot in between moins and que just like adjectives do." },
+
+      { pattern: 'moins… que', en: "There's less traffic than yesterday.",
+        fr: "Il y a moins de circulation que hier.",
+        cmp: ['moins de', 'que'],
+        hint: "When comparing quantities — things you can count or measure — moins becomes moins de. Il y a moins de circulation que hier. The de signals you're comparing a noun, not an adjective.",
+        breakdown: "Il y a <span class='chunk'>moins de</span> circulation <span class='chunk'>que</span> hier. Moins de + noun is the quantity comparison. The adjective version is moins + adjective." },
+
+      // ── aussi… que ─────────────────────────────────────────────────────────
+      { pattern: 'aussi… que', en: "I'm as tired as you.",
+        fr: "Je suis aussi fatigué que toi.",
+        cmp: ['aussi', 'que'],
+        hint: "Aussi…que is equality: as…as. The adjective sits between aussi and que, exactly as with plus and moins. Same frame, three interchangeable words.",
+        breakdown: "Je suis <span class='chunk'>aussi</span> fatigué <span class='chunk'>que</span> toi. Aussi = as, que = as. The adjective fatigué lives between them." },
+
+      { pattern: 'aussi… que', en: "This book is as good as the film.",
+        fr: "Ce livre est aussi bon que le film.",
+        cmp: ['aussi', 'que'],
+        hint: "Aussi bon que — as good as. Note that bon (good) is irregular: its superlative is meilleur, but in aussi…que it stays as bon. No irregularity here.",
+        breakdown: "Ce livre est <span class='chunk'>aussi</span> bon <span class='chunk'>que</span> le film. Bon stays bon in aussi…que — the irregular meilleur only appears in superlatives." },
+
+      { pattern: 'aussi… que', en: "She works as hard as her colleagues.",
+        fr: "Elle travaille aussi dur que ses collègues.",
+        cmp: ['aussi', 'que'],
+        hint: "Aussi dur que — as hard as. Dur as an adverb means hard/intensely. Same frame as the adjective version. The structure never changes regardless of what word fills the middle.",
+        breakdown: "Elle travaille <span class='chunk'>aussi</span> dur <span class='chunk'>que</span> ses collègues. Aussi…que wraps adverbs in exactly the same way as adjectives." },
+
+      { pattern: 'aussi… que', en: "He's not as tall as his father.",
+        fr: "Il n'est pas aussi grand que son père.",
+        cmp: ['aussi', 'que'],
+        hint: "Negating aussi…que — you use ne…pas around the verb as normal, and aussi stays in place. In English we'd say 'not as tall as' — French keeps the structure identical and just adds negation around the verb.",
+        breakdown: "Il n'est pas <span class='chunk'>aussi</span> grand <span class='chunk'>que</span> son père. Negation wraps the verb; aussi…que stays untouched." },
+
+      { pattern: 'aussi… que', en: "It's not as cold as I thought.",
+        fr: "Il ne fait pas aussi froid que je le pensais.",
+        cmp: ['aussi', 'que'],
+        hint: "Il ne fait pas aussi froid que — the weather expression faire froid, negated, with aussi…que intact. Notice no ne expletif here — that only appears after que with plus and moins, not aussi.",
+        breakdown: "Il ne fait pas <span class='chunk'>aussi</span> froid <span class='chunk'>que</span> je le pensais. No ne expletif after aussi — that's a plus/moins-only feature." },
+
+      // ── de plus en plus ────────────────────────────────────────────────────
+      { pattern: 'de plus en plus', en: "He's becoming more and more impatient.",
+        fr: "Il devient de plus en plus impatient.",
+        cmp: ['de plus en plus'],
+        hint: "De plus en plus — more and more. A fixed phrase that expresses a growing degree. It wraps around the adjective exactly like plus…que, but without a que at the end — no comparison is being made, just a trend.",
+        breakdown: "Il devient <span class='chunk'>de plus en plus</span> impatient. No que needed — de plus en plus describes a direction, not a comparison to something else." },
+
+      { pattern: 'de plus en plus', en: "The situation is getting more and more complicated.",
+        fr: "La situation devient de plus en plus compliquée.",
+        cmp: ['de plus en plus'],
+        hint: "De plus en plus compliquée — note the agreement: compliquée agrees with la situation (feminine). De plus en plus works like plus — the adjective still needs to agree.",
+        breakdown: "La situation devient <span class='chunk'>de plus en plus</span> compliquée. The adjective after de plus en plus agrees in gender and number as normal." },
+
+      { pattern: 'de plus en plus', en: "People are travelling more and more.",
+        fr: "Les gens voyagent de plus en plus.",
+        cmp: ['de plus en plus'],
+        hint: "With a verb rather than an adjective — de plus en plus follows the verb. No adjective needed. It simply intensifies the action itself.",
+        breakdown: "Les gens voyagent <span class='chunk'>de plus en plus</span>. When modifying a verb, de plus en plus comes after it. With adjectives, it comes before." },
+
+      { pattern: 'de plus en plus', en: "She's finding it harder and harder to concentrate.",
+        fr: "Elle a de plus en plus de mal à se concentrer.",
+        cmp: ['de plus en plus de'],
+        hint: "De plus en plus de mal — de plus en plus de before a noun (mal = difficulty). The de before the noun is the quantity marker, exactly like plus de in comparisons.",
+        breakdown: "Elle a <span class='chunk'>de plus en plus de</span> mal à se concentrer. De plus en plus de + noun describes an increasing quantity." },
+
+      // ── de moins en moins ──────────────────────────────────────────────────
+      { pattern: 'de moins en moins', en: "I eat less and less sugar.",
+        fr: "Je mange de moins en moins de sucre.",
+        cmp: ['de moins en moins de'],
+        hint: "The mirror of de plus en plus: de moins en moins means less and less. Before a noun, add de — de moins en moins de sucre. The quantity is shrinking.",
+        breakdown: "Je mange <span class='chunk'>de moins en moins de</span> sucre. De moins en moins de + noun for quantities. De moins en moins + adjective for qualities." },
+
+      { pattern: 'de moins en moins', en: "He's becoming less and less motivated.",
+        fr: "Il devient de moins en moins motivé.",
+        cmp: ['de moins en moins'],
+        hint: "De moins en moins motivé — less and less motivated. The adjective comes right after, just like de plus en plus. A declining trend, cleanly expressed.",
+        breakdown: "Il devient <span class='chunk'>de moins en moins</span> motivé. De moins en moins + adjective — the adjective still agrees with the subject." },
+
+      { pattern: 'de moins en moins', en: "People are reading less and less.",
+        fr: "Les gens lisent de moins en moins.",
+        cmp: ['de moins en moins'],
+        hint: "After a verb — de moins en moins follows it. People read less and less. The phrase expresses a declining frequency or intensity of the action.",
+        breakdown: "Les gens lisent <span class='chunk'>de moins en moins</span>. After the verb with no noun or adjective — de moins en moins stands alone." },
+    ]
+  },
+
+  stage2: {
+    label: 'Stage 2 — Superlatives & Quantity',
+    patterns: ['le/la/les plus…', 'le/la/les moins…', 'plus de… que', 'moins de… que', 'autant de…', 'le plus de…', 'le moins de…'],
+    cards: [
+
+      // ── le/la/les plus… ────────────────────────────────────────────────────
+      { pattern: 'le/la/les plus…', en: "This is the most interesting film.",
+        fr: "C'est le film le plus intéressant.",
+        cmp: ['le plus'],
+        hint: "The superlative: le/la/les plus + adjective. The article (le/la/les) agrees with the noun. Notice the word order: le film le plus intéressant — the article appears twice, once with the noun, once with plus.",
+        breakdown: "le film <span class='chunk'>le plus</span> intéressant. The noun comes first, then le/la/les plus + adjective. This double article pattern is distinctly French." },
+
+      { pattern: 'le/la/les plus…', en: "She is the most talented student in the class.",
+        fr: "C'est l'étudiante la plus talentueuse de la classe.",
+        cmp: ['la plus'],
+        hint: "La plus talentueuse — la because étudiante is feminine. The adjective agrees too. After the superlative, 'in' translates as de, not dans.",
+        breakdown: "l'étudiante <span class='chunk'>la plus</span> talentueuse de la classe. De = in/of after superlatives — de la classe, not dans la classe." },
+
+      { pattern: 'le/la/les plus…', en: "These are the most expensive shoes.",
+        fr: "Ce sont les chaussures les plus chères.",
+        cmp: ['les plus'],
+        hint: "Plural — les plus chères. Both the article and the adjective are plural and feminine. The double-article pattern works in plural too: les chaussures les plus chères.",
+        breakdown: "les chaussures <span class='chunk'>les plus</span> chères. Plural superlative: les plus + adjective (plural and agreeing)." },
+
+      { pattern: 'le/la/les plus…', en: "It's the best restaurant in the city.",
+        fr: "C'est le meilleur restaurant de la ville.",
+        cmp: ['meilleur'],
+        hint: "Bon is irregular — its superlative is le meilleur, not le plus bon. Meilleur already contains the superlative meaning, so no plus is needed. Similarly, mauvais → le pire (not le plus mauvais).",
+        breakdown: "C'est <span class='chunk'>le meilleur</span> restaurant de la ville. Meilleur = the best. Le plus bon does not exist — meilleur replaces it entirely." },
+
+      { pattern: 'le/la/les plus…', en: "He's the fastest runner on the team.",
+        fr: "C'est le coureur le plus rapide de l'équipe.",
+        cmp: ['le plus'],
+        hint: "Le plus rapide de l'équipe — de again for 'in' or 'on' after a superlative. The group you're the best within is always introduced by de.",
+        breakdown: "le coureur <span class='chunk'>le plus</span> rapide de l'équipe. De introduces the group after any superlative — de la classe, du monde, de l'équipe." },
+
+      // ── le/la/les moins… ───────────────────────────────────────────────────
+      { pattern: 'le/la/les moins…', en: "This is the least expensive city.",
+        fr: "C'est la ville la moins chère.",
+        cmp: ['la moins'],
+        hint: "Le/la/les moins — the least. Mirror of le/la/les plus. La ville la moins chère — la because ville is feminine. The structure is identical, just moins instead of plus.",
+        breakdown: "la ville <span class='chunk'>la moins</span> chère. Same double-article pattern as the superlative of superiority — just avec moins." },
+
+      { pattern: 'le/la/les moins…', en: "He is the least experienced candidate.",
+        fr: "C'est le candidat le moins expérimenté.",
+        cmp: ['le moins'],
+        hint: "Le moins expérimenté — least experienced. Le because candidat is masculine. The adjective agrees as always. De follows if you name the group he's least experienced within.",
+        breakdown: "le candidat <span class='chunk'>le moins</span> expérimenté. Noun first, then le/la/les moins + adjective." },
+
+      { pattern: 'le/la/les moins…', en: "These are the least popular options.",
+        fr: "Ce sont les options les moins populaires.",
+        cmp: ['les moins'],
+        hint: "Plural feminine — les moins populaires. Both article and adjective are plural feminine. The structure scales perfectly from singular to plural.",
+        breakdown: "les options <span class='chunk'>les moins</span> populaires. Plural superlative of inferiority — les moins + plural adjective." },
+
+      // ── plus de… que ───────────────────────────────────────────────────────
+      { pattern: 'plus de… que', en: "I have more work than you.",
+        fr: "J'ai plus de travail que toi.",
+        cmp: ['plus de', 'que'],
+        hint: "When comparing quantities of things — nouns — use plus de rather than plus alone. J'ai plus de travail que toi — more work than you. De before the noun signals it's a quantity comparison.",
+        breakdown: "J'ai <span class='chunk'>plus de</span> travail <span class='chunk'>que</span> toi. Plus de + noun + que = more [noun] than. The de is essential — without it you'd be comparing adjectives." },
+
+      { pattern: 'plus de… que', en: "There are more people here than yesterday.",
+        fr: "Il y a plus de monde ici qu'hier.",
+        cmp: ['plus de', "qu'"],
+        hint: "Plus de monde que hier — more people than yesterday. Que shortens to qu' before a vowel. Monde (people/world) is a mass noun — uncountable — so it takes de without an article.",
+        breakdown: "Il y a <span class='chunk'>plus de</span> monde ici <span class='chunk'>qu'</span>hier. Que becomes qu' before a vowel. Monde as 'people' takes no article after de." },
+
+      { pattern: 'plus de… que', en: "She has more patience than her brother.",
+        fr: "Elle a plus de patience que son frère.",
+        cmp: ['plus de', 'que'],
+        hint: "Plus de patience que — patience is abstract and uncountable, so no article after de. If it were countable — plus de livres que — the noun would be plural but still no article after de.",
+        breakdown: "Elle a <span class='chunk'>plus de</span> patience <span class='chunk'>que</span> son frère. Abstract nouns after de in comparisons take no article." },
+
+      // ── moins de… que ──────────────────────────────────────────────────────
+      { pattern: 'moins de… que', en: "There are fewer people than usual.",
+        fr: "Il y a moins de monde que d'habitude.",
+        cmp: ['moins de', 'que'],
+        hint: "Moins de monde que d'habitude — fewer people than usual. D'habitude (usually/than usual) is a fixed phrase. Moins de mirrors plus de exactly.",
+        breakdown: "Il y a <span class='chunk'>moins de</span> monde <span class='chunk'>que</span> d'habitude. D'habitude = than usual, a common fixed phrase after que." },
+
+      { pattern: 'moins de… que', en: "He earns less money than his sister.",
+        fr: "Il gagne moins d'argent que sa sœur.",
+        cmp: ["moins d'", 'que'],
+        hint: "Moins d'argent — de elides to d' before the vowel in argent. Moins d'argent que sa sœur. The elision rule applies throughout French whenever de meets a vowel.",
+        breakdown: "Il gagne <span class='chunk'>moins d'</span>argent <span class='chunk'>que</span> sa sœur. De + vowel = d'. Same elision rule as all other de constructions." },
+
+      { pattern: 'moins de… que', en: "I have less time than I thought.",
+        fr: "J'ai moins de temps que je ne le croyais.",
+        cmp: ['moins de', 'que'],
+        hint: "Moins de temps que je ne le croyais — the ne expletif appears again in the comparison clause. In formal French, que triggers this ne whenever a conjugated verb follows.",
+        breakdown: "J'ai <span class='chunk'>moins de</span> temps <span class='chunk'>que</span> je ne le croyais. Ne expletif in the comparison clause — not a negation, a stylistic marker." },
+
+      // ── autant de… ─────────────────────────────────────────────────────────
+      { pattern: 'autant de…', en: "I have as much work as you.",
+        fr: "J'ai autant de travail que toi.",
+        cmp: ['autant de', 'que'],
+        hint: "Autant de is the quantity equal of aussi. Aussi works with adjectives (aussi grand), autant de works with nouns (autant de travail). Same meaning — as much/as many — different grammatical context.",
+        breakdown: "J'ai <span class='chunk'>autant de</span> travail <span class='chunk'>que</span> toi. Autant de + noun + que. Compare: aussi + adjective + que. Two parallel structures." },
+
+      { pattern: 'autant de…', en: "There are as many people as last year.",
+        fr: "Il y a autant de monde que l'année dernière.",
+        cmp: ['autant de', 'que'],
+        hint: "Autant de monde que l'année dernière — as many people as last year. Autant de handles both countable and uncountable nouns — as much or as many, French makes no distinction.",
+        breakdown: "Il y a <span class='chunk'>autant de</span> monde <span class='chunk'>que</span> l'année dernière. French autant de covers both 'as much' and 'as many' — one structure does both." },
+
+      { pattern: 'autant de…', en: "She reads as many books as her teacher.",
+        fr: "Elle lit autant de livres que son professeur.",
+        cmp: ['autant de', 'que'],
+        hint: "Autant de livres que son professeur — countable plural, but still autant de, not autant des. After quantity expressions, de replaces du/de la/des entirely.",
+        breakdown: "Elle lit <span class='chunk'>autant de</span> livres <span class='chunk'>que</span> son professeur. De after quantity words always replaces du/de la/des — no article needed." },
+
+      // ── le plus de… / le moins de… ─────────────────────────────────────────
+      { pattern: 'le plus de…', en: "She is the person with the most luck.",
+        fr: "C'est la personne qui a le plus de chance.",
+        cmp: ['le plus de'],
+        hint: "Le plus de — the most of something. Unlike the adjective superlative (le plus grand), this is le plus de + noun. Le doesn't agree here — it's fixed as le, regardless of gender.",
+        breakdown: "la personne qui a <span class='chunk'>le plus de</span> chance. Le plus de + noun — le is invariable here, it's not an article for the noun, it fixes the superlative." },
+
+      { pattern: 'le plus de…', en: "Who made the most mistakes?",
+        fr: "Qui a fait le plus de fautes ?",
+        cmp: ['le plus de'],
+        hint: "Le plus de fautes — the most mistakes. Le is invariable — not le/la/les here, just le. It's functioning as a fixed superlative marker for quantities.",
+        breakdown: "Qui a fait <span class='chunk'>le plus de</span> fautes ? Le plus de is always le — it doesn't agree with the noun that follows." },
+
+      { pattern: 'le moins de…', en: "This is the student with the least homework.",
+        fr: "C'est l'étudiant qui a le moins de devoirs.",
+        cmp: ['le moins de'],
+        hint: "Le moins de — the least of something. Again, le is fixed and invariable. Le moins de devoirs — the least homework. The same invariable le rule applies as with le plus de.",
+        breakdown: "l'étudiant qui a <span class='chunk'>le moins de</span> devoirs. Le moins de + noun — le invariable, same rule as le plus de." },
+
+      { pattern: 'le moins de…', en: "She has the least experience.",
+        fr: "C'est elle qui a le moins d'expérience.",
+        cmp: ['le moins d''],
+        hint: "Le moins d'expérience — de elides before the vowel in expérience. Le remains fixed and invariable, d' does the elision work.",
+        breakdown: "elle qui a <span class='chunk'>le moins d'</span>expérience. De elides to d' before a vowel — le stays fixed as le regardless." },
+    ]
+  },
+
+  stage3: {
+    label: 'Stage 3 — Intensity & Nuance',
+    patterns: ['tellement / si', 'tant de…', 'plusieurs fois / autant de fois', 'à peine… que', 'de plus près / de moins près'],
+    cards: [
+
+      // ── tellement / si ─────────────────────────────────────────────────────
+      { pattern: 'tellement / si', en: "He's so kind.",
+        fr: "Il est tellement gentil.",
+        cmp: ['tellement'],
+        hint: "Tellement means 'so' when intensifying an adjective. Il est tellement gentil. It can often swap with si — both mean 'so' — but tellement also works with verbs and nouns in ways si cannot.",
+        breakdown: "Il est <span class='chunk'>tellement</span> gentil. Tellement + adjective = so [adjective]. Interchangeable with si in this context." },
+
+      { pattern: 'tellement / si', en: "This pizza is so good.",
+        fr: "Cette pizza est si bonne.",
+        cmp: ['si'],
+        hint: "Si bonne — si works before adjectives and adverbs. It's slightly more formal or literary than tellement in this use. Si can't intensify verbs or nouns — that's where tellement takes over.",
+        breakdown: "Cette pizza est <span class='chunk'>si</span> bonne. Si + adjective. Cannot be used before verbs or nouns — for those, use tellement." },
+
+      { pattern: 'tellement / si', en: "I was so tired I fell asleep immediately.",
+        fr: "J'étais tellement fatigué que je me suis endormi tout de suite.",
+        cmp: ['tellement', 'que'],
+        hint: "Tellement…que = so…that. The consequence follows que. J'étais tellement fatigué que — I was so tired that. Si can also introduce this structure: si fatigué que.",
+        breakdown: "J'étais <span class='chunk'>tellement</span> fatigué <span class='chunk'>que</span> je me suis endormi. Tellement/si…que = so…that. The consequence clause follows que." },
+
+      { pattern: 'tellement / si', en: "He works so much that he has no time for anything.",
+        fr: "Il travaille tellement qu'il n'a pas le temps pour rien.",
+        cmp: ['tellement', "qu'"],
+        hint: "Tellement with a verb — he works so much. Si cannot do this. Il travaille tellement qu'il — tellement alone after the verb, then qu' + consequence. This is uniquely tellement's territory.",
+        breakdown: "Il travaille <span class='chunk'>tellement</span> <span class='chunk'>qu'</span>il n'a pas le temps. Tellement after a verb = so much. Si cannot be used this way." },
+
+      { pattern: 'tellement / si', en: "She speaks so quickly that I can't understand her.",
+        fr: "Elle parle si vite que je ne la comprends pas.",
+        cmp: ['si', 'que'],
+        hint: "Si vite que — so quickly that. Si works with adverbs just as well as adjectives. Vite (quickly/fast) is one of the common adverbs that pairs naturally with si.",
+        breakdown: "Elle parle <span class='chunk'>si</span> vite <span class='chunk'>que</span> je ne la comprends pas. Si + adverb + que + consequence. Clean and common structure." },
+
+      { pattern: 'tellement / si', en: "There were so many people that we couldn't get in.",
+        fr: "Il y avait tellement de monde qu'on ne pouvait pas entrer.",
+        cmp: ['tellement de', "qu'"],
+        hint: "Tellement de monde — so many people. Before nouns, tellement takes de, not si. This is exclusively tellement's role — si de doesn't exist. Tellement de + noun = so much/many.",
+        breakdown: "Il y avait <span class='chunk'>tellement de</span> monde <span class='chunk'>qu'</span>on ne pouvait pas entrer. Tellement de + noun. Si de is not possible." },
+
+      // ── tant de… ──────────────────────────────────────────────────────────
+      { pattern: 'tant de…', en: "There are so many people here.",
+        fr: "Il y a tant de monde ici.",
+        cmp: ['tant de'],
+        hint: "Tant de means 'so much / so many' before a noun. It's more literary than tellement de, but very common in writing and formal speech. Tant de monde — so many people.",
+        breakdown: "Il y a <span class='chunk'>tant de</span> monde ici. Tant de + noun = so much/many [noun]. More formal register than tellement de." },
+
+      { pattern: 'tant de…', en: "She has so much courage.",
+        fr: "Elle a tant de courage.",
+        cmp: ['tant de'],
+        hint: "Tant de courage — so much courage. Abstract uncountable noun, so no article after de. Tant de works identically whether the noun is countable (tant de livres) or uncountable (tant de courage).",
+        breakdown: "Elle a <span class='chunk'>tant de</span> courage. Tant de + uncountable noun — no article. Same rule as all quantity expressions with de." },
+
+      { pattern: 'tant de…', en: "I've never seen so many stars.",
+        fr: "Je n'ai jamais vu tant d'étoiles.",
+        cmp: ["tant d'"],
+        hint: "Tant d'étoiles — de elides before the vowel in étoiles. Je n'ai jamais vu tant d'étoiles. A beautiful, slightly literary sentence — tant de is at home in elevated registers.",
+        breakdown: "Je n'ai jamais vu <span class='chunk'>tant d'</span>étoiles. De + vowel = d'. Tant de contracts exactly as tellement de or moins de would." },
+
+      { pattern: 'tant de…', en: "There's so much to learn.",
+        fr: "Il y a tant à apprendre.",
+        cmp: ['tant'],
+        hint: "Tant without de — when followed directly by à + infinitive rather than a noun. Il y a tant à apprendre. This use of tant alone is more literary and feels elegant.",
+        breakdown: "Il y a <span class='chunk'>tant</span> à apprendre. Tant without de when followed by à + infinitive. No noun, so no de needed." },
+
+      // ── plusieurs fois / autant de fois ────────────────────────────────────
+      { pattern: 'plusieurs fois / autant de fois', en: "I've seen this film several times.",
+        fr: "J'ai vu ce film plusieurs fois.",
+        cmp: ['plusieurs fois'],
+        hint: "Plusieurs fois — several times. Fois is the word for 'times' in frequency. Plusieurs (several) never changes — it has no masculine/feminine distinction.",
+        breakdown: "J'ai vu ce film <span class='chunk'>plusieurs fois</span>. Plusieurs = several (invariable). Fois = times. Together they express a repeated frequency." },
+
+      { pattern: 'plusieurs fois / autant de fois', en: "He practises fewer times per week.",
+        fr: "Il s'entraîne moins de fois par semaine.",
+        cmp: ['moins de fois'],
+        hint: "Moins de fois — fewer times. Fois (times/occasions) is treated as a quantity noun, so moins de applies. Par semaine = per week. The quantity comparison structure works for frequency too.",
+        breakdown: "Il s'entraîne <span class='chunk'>moins de fois</span> par semaine. Fois as a countable noun takes moins de — same quantity rule as moins de travail or moins de monde." },
+
+      { pattern: 'plusieurs fois / autant de fois', en: "She calls me as many times as before.",
+        fr: "Elle m'appelle autant de fois qu'avant.",
+        cmp: ['autant de fois', "qu'"],
+        hint: "Autant de fois — as many times as. Fois takes autant de for equality comparisons, just as any other quantity noun would. Qu'avant = than before — avant after que needs no extra word.",
+        breakdown: "Elle m'appelle <span class='chunk'>autant de fois</span> <span class='chunk'>qu'</span>avant. Autant de + fois + que. The equality comparison for frequency." },
+
+      { pattern: 'plusieurs fois / autant de fois', en: "I've told you this more times than I can count.",
+        fr: "Je te l'ai dit plus de fois que je ne peux le compter.",
+        cmp: ['plus de fois', 'que'],
+        hint: "Plus de fois que — more times than. And again, the ne expletif appears in the clause after que: je ne peux le compter. Formal but very natural in careful speech.",
+        breakdown: "Je te l'ai dit <span class='chunk'>plus de fois</span> <span class='chunk'>que</span> je ne peux le compter. Plus de fois + que — and ne expletif in the following clause." },
+
+      // ── à peine… que ──────────────────────────────────────────────────────
+      { pattern: 'à peine… que', en: "Hardly had he arrived when he left again.",
+        fr: "À peine arrivé, il est reparti.",
+        cmp: ['À peine'],
+        hint: "À peine means 'hardly / barely.' When used with a participle at the start, it inverts — À peine arrivé, il est reparti. The comma replaces que in this short form. Formal and literary.",
+        breakdown: "<span class='chunk'>À peine</span> arrivé, il est reparti. À peine + participle at sentence start causes implicit inversion. The comma stands in for que." },
+
+      { pattern: 'à peine… que', en: "She had barely sat down when the phone rang.",
+        fr: "À peine s'était-elle assise que le téléphone a sonné.",
+        cmp: ['À peine', 'que'],
+        hint: "The full à peine…que with subject-verb inversion: À peine s'était-elle assise que — barely had she sat down when. This structure is literary but you'll encounter it in books and quality journalism.",
+        breakdown: "<span class='chunk'>À peine</span> s'était-elle assise <span class='chunk'>que</span> le téléphone a sonné. Full form: à peine + inverted verb + que + consequence." },
+
+      { pattern: 'à peine… que', en: "He had barely spoken when the room fell silent.",
+        fr: "À peine avait-il parlé que la salle s'est tue.",
+        cmp: ['À peine', 'que'],
+        hint: "À peine avait-il parlé que — barely had he spoken when. The tense in the à peine clause is pluperfect (avait parlé), and the consequence is in the passé composé. A precise literary tense sequence.",
+        breakdown: "<span class='chunk'>À peine</span> avait-il parlé <span class='chunk'>que</span> la salle s'est tue. Pluperfect in the à peine clause, passé composé in the consequence." },
+
+      // ── de plus près / de moins près ──────────────────────────────────────
+      { pattern: 'de plus près / de moins près', en: "Look more closely.",
+        fr: "Regarde de plus près.",
+        cmp: ['de plus près'],
+        hint: "De plus près — more closely. Près (close) is an adverb of distance. De more is used before comparative adverbs of this type. Regarde de plus près — look from closer, look more carefully.",
+        breakdown: "Regarde <span class='chunk'>de plus près</span>. De + plus + adverb of manner/distance. Compare: de plus loin (from further away), de plus haut (from higher up)." },
+
+      { pattern: 'de plus près / de moins près', en: "I need to look at this more closely.",
+        fr: "Je dois examiner ça de plus près.",
+        cmp: ['de plus près'],
+        hint: "Examiner de plus près — examine more closely. The de plus près structure works with any verb of perception or examination. It expresses both physical proximity and careful attention.",
+        breakdown: "Je dois examiner ça <span class='chunk'>de plus près</span>. De plus près follows the verb as an adverbial phrase — it modifies how the action is done." },
+
+      { pattern: 'de plus près / de moins près', en: "Seen from further away, it looks better.",
+        fr: "Vu de plus loin, c'est plus joli.",
+        cmp: ['de plus loin'],
+        hint: "De plus loin — from further away. The same de + comparative adverb structure applies to loin (far), haut (high), bas (low), tôt (early), tard (late). One pattern, many adverbs.",
+        breakdown: "Vu <span class='chunk'>de plus loin</span>, c'est plus joli. De + plus/moins + adverb of space or time. A productive pattern: de plus tôt, de plus tard, de plus haut..." },
+    ]
+  }
+};
+
+// ─────────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────────
+
+let stage = 'stage1';
+let currentQ = null;
+let stats = { seen: 0, correct: 0, streak: 0 };
+let queues = { stage1: [], stage2: [], stage3: [] };
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function getNext(s) {
+  if (!queues[s] || queues[s].length === 0) queues[s] = shuffle(stages[s].cards);
+  return queues[s].pop();
+}
+
+// ─────────────────────────────────────────────
+//  HIGHLIGHT
+// ─────────────────────────────────────────────
+
+function smartHighlight(fr, cmpWords) {
+  let result = fr;
+  const sorted = [...cmpWords].sort((a, b) => b.length - a.length);
+  sorted.forEach(w => {
+    const idx = result.toLowerCase().indexOf(w.toLowerCase());
+    if (idx !== -1) {
+      const actual = result.slice(idx, idx + w.length);
+      result = result.slice(0, idx) + `<span class="cmp">${actual}</span>` + result.slice(idx + w.length);
+    }
+  });
+  return result;
+}
+
+// ─────────────────────────────────────────────
+//  RENDER
+// ─────────────────────────────────────────────
+
+function loadQ() {
+  const s = stage === 'mix'
+    ? ['stage1', 'stage2', 'stage3'][Math.floor(Math.random() * 3)]
+    : stage;
+  currentQ = getNext(s);
+  currentQ._stage = s;
+
+  document.getElementById('noble-hint').textContent = currentQ.hint;
+  document.getElementById('pattern-badge').textContent = currentQ.pattern;
+  document.getElementById('english-sentence').textContent = currentQ.en;
+
+  const ar = document.getElementById('answer-reveal');
+  ar.innerHTML = smartHighlight(currentQ.fr, currentQ.cmp);
+  ar.classList.remove('show');
+
+  const bd = document.getElementById('breakdown');
+  bd.classList.remove('show');
+  bd.style.display = 'none';
+
+  document.getElementById('reveal-btn').style.display = '';
+  document.getElementById('next-btn').style.display = 'none';
+  document.getElementById('breakdown-btn').style.display = 'none';
+  document.getElementById('audio-btn').style.display = 'none';
+  document.getElementById('feedback-row').style.display = 'none';
+}
+
+function revealAnswer() {
+  document.getElementById('answer-reveal').classList.add('show');
+  document.getElementById('reveal-btn').style.display = 'none';
+  document.getElementById('next-btn').style.display = '';
+  document.getElementById('breakdown-btn').style.display = '';
+  document.getElementById('audio-btn').style.display = 'inline-flex';
+  document.getElementById('feedback-row').style.display = 'flex';
+  stats.seen++;
+  updateStats();
+  setTimeout(speakFrench, 350);
+}
+
+function toggleBreakdown() {
+  const bd = document.getElementById('breakdown');
+  if (bd.classList.contains('show')) {
+    bd.classList.remove('show');
+    setTimeout(() => { bd.style.display = 'none'; }, 300);
+    return;
+  }
+  bd.innerHTML = currentQ.breakdown;
+  bd.style.display = 'block';
+  setTimeout(() => bd.classList.add('show'), 10);
+}
+
+function mark(correct) {
+  if (correct) { stats.correct++; stats.streak++; flashCard('correct'); }
+  else { stats.streak = 0; flashCard('wrong'); }
+  updateStats();
+  setTimeout(nextQ, 420);
+}
+
+function nextQ() { loadQ(); }
+
+function flashCard(type) {
+  const card = document.getElementById('main-card');
+  card.classList.remove('flash-correct', 'flash-wrong');
+  void card.offsetWidth;
+  card.classList.add('flash-' + type);
+  setTimeout(() => card.classList.remove('flash-' + type), 600);
+}
+
+function updateStats() {
+  document.getElementById('stat-seen').textContent = stats.seen;
+  document.getElementById('stat-correct').textContent = stats.correct;
+  document.getElementById('stat-streak').textContent = stats.streak;
+  const pct = stats.seen > 0 ? (stats.correct / stats.seen) * 100 : 0;
+  document.getElementById('progress').style.width = pct + '%';
+}
+
+function setStage(s) {
+  stage = s;
+  ['stage1', 'stage2', 'stage3', 'mix'].forEach(id => {
+    document.getElementById('tab-' + id).classList.remove('active');
+  });
+  document.getElementById('tab-' + s).classList.add('active');
+
+  const pills = document.getElementById('pattern-pills');
+  if (s === 'mix') {
+    pills.innerHTML = '<span class="pill">All patterns</span>';
+  } else {
+    pills.innerHTML = stages[s].patterns.map(p => `<span class="pill">${p}</span>`).join('');
+  }
+
+  loadQ();
+}
+
+// ─────────────────────────────────────────────
+//  SPEECH
+// ─────────────────────────────────────────────
+
+function speakFrench() {
+  if (!currentQ || !window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(currentQ.fr);
+  utt.lang = 'fr-FR';
+  utt.rate = 0.82;
+  const voices = speechSynthesis.getVoices();
+  const frVoice = voices.find(v => v.lang.startsWith('fr'));
+  if (frVoice) utt.voice = frVoice;
+  speechSynthesis.speak(utt);
+}
+
+window.speechSynthesis && (window.speechSynthesis.onvoiceschanged = () => {});
+
+window.onload = () => {
+  const pills = document.getElementById('pattern-pills');
+  pills.innerHTML = stages.stage1.patterns.map(p => `<span class="pill">${p}</span>`).join('');
+  setTimeout(loadQ, 200);
+};
+</script>
+</body>
+</html>

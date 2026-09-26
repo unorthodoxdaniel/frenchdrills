@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCF Reflex</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #f5f4ef;
+        color: #171717;
+        min-height: 100vh;
+    }
+
+    button {
+        font: inherit;
+        cursor: pointer;
+    }
+
+    .screen {
+        display: none;
+        min-height: 100vh;
+        padding: 40px 24px;
+    }
+
+    .screen.active {
+        display: flex;
+    }
+
+    /* HOME */
+
+    #home {
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .eyebrow {
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 13px;
+        opacity: 0.5;
+        margin-bottom: 12px;
+    }
+
+    h1 {
+        font-size: clamp(48px, 9vw, 90px);
+        margin: 0 0 50px;
+        letter-spacing: -0.06em;
+    }
+
+    .home-buttons {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .primary-button,
+    .secondary-button {
+        border: 1px solid #171717;
+        padding: 18px 30px;
+        border-radius: 100px;
+        min-width: 190px;
+    }
+
+    .primary-button {
+        background: #171717;
+        color: white;
+    }
+
+    .secondary-button {
+        background: transparent;
+        color: #171717;
+    }
+
+    /* REVIEW */
+
+    #review {
+        flex-direction: column;
+        max-width: 850px;
+        margin: auto;
+    }
+
+    .topbar {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+    }
+
+    .back {
+        border: none;
+        background: none;
+        padding: 0;
+        font-weight: 600;
+    }
+
+    .review-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .review-card {
+        background: white;
+        border-radius: 18px;
+        padding: 22px;
+    }
+
+    .english-small {
+        font-size: 14px;
+        opacity: 0.5;
+        margin-bottom: 8px;
+    }
+
+    .french {
+        font-size: 21px;
+        line-height: 1.4;
+    }
+
+    .play {
+        margin-top: 16px;
+        border: none;
+        background: #ecebe6;
+        padding: 9px 14px;
+        border-radius: 100px;
+    }
+
+    /* PRESSURE */
+
+    #pressure {
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+        position: relative;
+    }
+
+    #pressure .back {
+        position: absolute;
+        top: 35px;
+        left: 35px;
+    }
+
+    .counter {
+        position: absolute;
+        top: 35px;
+        right: 35px;
+        opacity: 0.45;
+    }
+
+    .prompt {
+        font-size: clamp(35px, 6vw, 68px);
+        font-weight: 650;
+        max-width: 950px;
+        line-height: 1.05;
+        letter-spacing: -0.04em;
+    }
+
+    .instruction {
+        margin-top: 24px;
+        opacity: 0.45;
+        font-size: 18px;
+    }
+
+    .timer {
+        font-size: 26px;
+        font-variant-numeric: tabular-nums;
+        margin-top: 35px;
+    }
+
+    .answer {
+        display: none;
+        font-size: clamp(25px, 4vw, 42px);
+        max-width: 850px;
+        line-height: 1.25;
+        margin-top: 40px;
+    }
+
+    .next {
+        display: none;
+        margin-top: 35px;
+        background: #171717;
+        color: white;
+        border: none;
+        border-radius: 100px;
+        padding: 15px 30px;
+    }
+
+</style>
+</head>
+
+<body>
+
+<!-- HOME -->
+
+<section id="home" class="screen active">
+    <div class="eyebrow">French production training</div>
+    <h1>TCF REFLEX</h1>
+
+    <div class="home-buttons">
+        <button class="secondary-button" onclick="showReview()">Review</button>
+        <button class="primary-button" onclick="startPressure()">Pressure Mode</button>
+    </div>
+</section>
+
+
+<!-- REVIEW -->
+
+<section id="review" class="screen">
+    <div class="topbar">
+        <button class="back" onclick="goHome()">← Home</button>
+        <strong>Process / fonctionnement</strong>
+    </div>
+
+    <div id="reviewList" class="review-list"></div>
+</section>
+
+
+<!-- PRESSURE -->
+
+<section id="pressure" class="screen">
+
+    <button class="back" onclick="goHome()">← Exit</button>
+
+    <div id="counter" class="counter"></div>
+
+    <div id="prompt" class="prompt"></div>
+
+    <div id="instruction" class="instruction">
+        Say it in French.
+    </div>
+
+    <div id="timer" class="timer"></div>
+
+    <div id="answer" class="answer"></div>
+
+    <button id="next" class="next" onclick="nextQuestion()">
+        Next →
+    </button>
+
+</section>
+
+
+<script>
+
+const questions = [
+    {
+        english: "How does registration work?",
+        french: "Comment fonctionne l'inscription ?",
+        audio: "audio/registration.mp3"
+    },
+    {
+        english: "How does the training course go?",
+        french: "Comment se passe la formation ?",
+        audio: "audio/formation.mp3"
+    },
+    {
+        english: "How does the interview unfold?",
+        french: "Comment se déroule l'entretien ?",
+        audio: "audio/entretien.mp3"
+    },
+    {
+        english: "How are the work schedules organized?",
+        french: "Comment s'organisent les horaires de travail ?",
+        audio: "audio/horaires.mp3"
+    },
+    {
+        english: "How is payment made?",
+        french: "Comment se fait le paiement ?",
+        audio: "audio/paiement.mp3"
+    },
+    {
+        english: "What does this job involve?",
+        french: "En quoi consiste ce poste ?",
+        audio: "audio/poste.mp3"
+    },
+    {
+        english: "What is a typical day like?",
+        french: "À quoi ressemble une journée typique ?",
+        audio: "audio/journee.mp3"
+    },
+    {
+        english: "How does the reservation system operate?",
+        french: "Quel est le fonctionnement du système de réservation ?",
+        audio: "audio/reservation.mp3"
+    },
+    {
+        english: "Can you explain how the subscription works?",
+        french: "Pouvez-vous m'expliquer le fonctionnement de l'abonnement ?",
+        audio: "audio/abonnement.mp3"
+    },
+    {
+        english: "Can you explain how the activity unfolds?",
+        french: "Pouvez-vous m'expliquer le déroulement de l'activité ?",
+        audio: "audio/activite.mp3"
+    },
+    {
+        english: "Can you tell me how home delivery works?",
+        french: "Pouvez-vous me dire comment fonctionne la livraison à domicile ?",
+        audio: "audio/livraison.mp3"
+    },
+    {
+        english: "What are the different stages of recruitment?",
+        french: "Quelles sont les différentes étapes du recrutement ?",
+        audio: "audio/recrutement.mp3"
+    },
+    {
+        english: "What do you have to do to participate?",
+        french: "Qu'est-ce qu'il faut faire pour participer ?",
+        audio: "audio/participer.mp3"
+    },
+    {
+        english: "What should I know about the accommodation?",
+        french: "Qu'est-ce qu'il faut savoir sur le logement ?",
+        audio: "audio/logement.mp3"
+    }
+];
+
+
+let order = [];
+let position = 0;
+let timerInterval = null;
+let currentAudio = null;
+
+const TIME_LIMIT = 4;
+
+
+function switchScreen(id) {
+    document.querySelectorAll(".screen").forEach(screen => {
+        screen.classList.remove("active");
+    });
+
+    document.getElementById(id).classList.add("active");
+}
+
+
+function goHome() {
+    clearInterval(timerInterval);
+
+    if (currentAudio) {
+        currentAudio.pause();
+    }
+
+    switchScreen("home");
+}
+
+
+function playAudio(path) {
+    if (currentAudio) {
+        currentAudio.pause();
+    }
+
+    currentAudio = new Audio(path);
+    currentAudio.play();
+}
+
+
+/* REVIEW */
+
+function showReview() {
+    const list = document.getElementById("reviewList");
+    list.innerHTML = "";
+
+    questions.forEach(q => {
+        const card = document.createElement("div");
+        card.className = "review-card";
+
+        card.innerHTML = `
+            <div class="english-small">${q.english}</div>
+            <div class="french">${q.french}</div>
+            <button class="play">▶ Play</button>
+        `;
+
+        card.querySelector(".play").onclick = () => playAudio(q.audio);
+
+        list.appendChild(card);
+    });
+
+    switchScreen("review");
+}
+
+
+/* PRESSURE MODE */
+
+function shuffledIndexes() {
+    const indexes = questions.map((_, index) => index);
+
+    for (let i = indexes.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indexes[i], indexes[j]] = [indexes[j], indexes[i]];
+    }
+
+    return indexes;
+}
+
+
+function startPressure() {
+    order = shuffledIndexes();
+    position = 0;
+
+    switchScreen("pressure");
+    loadQuestion();
+}
+
+
+function loadQuestion() {
+    clearInterval(timerInterval);
+
+    const question = questions[order[position]];
+
+    document.getElementById("counter").textContent =
+        `${position + 1} / ${questions.length}`;
+
+    document.getElementById("prompt").textContent = question.english;
+
+    document.getElementById("answer").textContent = question.french;
+    document.getElementById("answer").style.display = "none";
+
+    document.getElementById("next").style.display = "none";
+    document.getElementById("instruction").style.display = "block";
+
+    startTimer(question);
+}
+
+
+function startTimer(question) {
+
+    let remaining = TIME_LIMIT;
+
+    const timer = document.getElementById("timer");
+    timer.textContent = remaining.toFixed(1);
+
+    const started = Date.now();
+
+    timerInterval = setInterval(() => {
+
+        const elapsed = (Date.now() - started) / 1000;
+        remaining = Math.max(0, TIME_LIMIT - elapsed);
+
+        timer.textContent = remaining.toFixed(1);
+
+        if (remaining <= 0) {
+            clearInterval(timerInterval);
+            revealAnswer(question);
+        }
+
+    }, 50);
+}
+
+
+function revealAnswer(question) {
+
+    document.getElementById("instruction").style.display = "none";
+    document.getElementById("answer").style.display = "block";
+    document.getElementById("next").style.display = "inline-block";
+
+    playAudio(question.audio);
+}
+
+
+function nextQuestion() {
+
+    position++;
+
+    if (position >= questions.length) {
+        order = shuffledIndexes();
+        position = 0;
+    }
+
+    loadQuestion();
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCF Tâche 2 — Reference</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f4f0;--surface:#fff;--surface2:#f0efe9;
+  --text:#1a1a18;--text2:#5a5a54;--text3:#9a9a92;
+  --border:rgba(26,26,24,.1);--border2:rgba(26,26,24,.2);
+  --radius:10px;--radius-sm:6px;
+
+  /* move colours */
+  --mq:#1a3f6b;   --mql:#e2eef9;   --mqm:#b8d4f0;   /* question */
+  --mr:#2d5a1e;   --mrl:#e8f5e2;   --mrm:#b8dfa8;   /* reaction */
+  --mf:#7a300a;   --mfl:#fdeee6;   --mfm:#f5c4a0;   /* follow-up */
+  --mt:#3d1a6e;   --mtl:#ede5f8;   --mtm:#ccb8f0;   /* toolkit */
+  --ms:#7a5000;   --msl:#fff8e0;   --msm:#ffd966;   /* scenario */
+  --mg:#1a5a3a;   --mgl:#e0f5ec;   --mgm:#7dcca8;   /* grammar */
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#111110;--surface:#1c1c1a;--surface2:#242422;
+  --text:#eeede6;--text2:#9a9a90;--text3:#606058;
+  --border:rgba(238,237,230,.09);--border2:rgba(238,237,230,.18);
+  --mql:#0e1e32;--mqm:#1c3a60;--mrl:#0e1e0a;--mrm:#1c3814;
+  --mfl:#200e04;--mfm:#3e1a08;--mtl:#160a28;--mtm:#2c1450;
+  --msl:#2a1e00;--msm:#4a3800;--mgl:#081e10;--mgm:#103820;
+}}
+html{scroll-behavior:smooth}
+body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding-bottom:6rem;line-height:1.5}
+
+nav{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border2);padding:0 1.5rem;display:flex;align-items:center;gap:0;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.nav-title{font-size:13px;font-weight:700;color:var(--text3);padding:13px 12px 13px 0;margin-right:8px;border-right:1px solid var(--border2);white-space:nowrap;flex-shrink:0}
+.nav-a{font-size:12px;font-weight:500;padding:13px 11px;color:var(--text2);white-space:nowrap;text-decoration:none;border-bottom:2px solid transparent;transition:color .12s}
+.nav-a:hover{color:var(--text)}
+.nav-a.q{color:var(--mq)}.nav-a.r{color:var(--mr)}.nav-a.f{color:var(--mf)}.nav-a.t{color:var(--mt)}.nav-a.s{color:var(--ms)}
+
+.wrap{max-width:900px;margin:0 auto;padding:2rem 1.5rem 0}
+
+/* section header */
+.sec-head{margin-bottom:1.5rem}
+.sec-num{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2rem}
+.sec-title{font-size:20px;font-weight:700;margin-bottom:.2rem}
+.sec-sub{font-size:13px;color:var(--text2)}
+.sec-num.q{color:var(--mq)}.sec-num.r{color:var(--mr)}.sec-num.f{color:var(--mf)}.sec-num.t{color:var(--mt)}.sec-num.s{color:var(--ms)}.sec-num.g{color:var(--mg)}
+
+/* conversation flow diagram */
+.flow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:2rem}
+@media(max-width:600px){.flow{grid-template-columns:1fr}}
+.flow-box{border-radius:var(--radius);padding:1rem;border:1px solid var(--border2);position:relative}
+.flow-box.q{background:var(--mql);border-color:var(--mqm)}
+.flow-box.r{background:var(--mrl);border-color:var(--mrm)}
+.flow-box.f{background:var(--mfl);border-color:var(--mfm)}
+.flow-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.3rem}
+.flow-box.q .flow-label{color:var(--mq)}.flow-box.r .flow-label{color:var(--mr)}.flow-box.f .flow-label{color:var(--mf)}
+.flow-name{font-size:15px;font-weight:700;margin-bottom:.3rem}
+.flow-desc{font-size:12px;color:var(--text2);line-height:1.5}
+.flow-arrow{display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--text3);padding:0 4px}
+
+/* pill groups */
+.pg{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden;margin-bottom:10px}
+.pg-head{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.45rem .9rem;border-bottom:1px solid var(--border)}
+.pg-head.q{background:var(--mql);color:var(--mq)}
+.pg-head.r{background:var(--mrl);color:var(--mr)}
+.pg-head.f{background:var(--mfl);color:var(--mf)}
+.pg-head.t{background:var(--mtl);color:var(--mt)}
+.pg-head.s{background:var(--msl);color:var(--ms)}
+.pg-head.g{background:var(--mgl);color:var(--mg)}
+.pg-pills{padding:.6rem .8rem;display:flex;flex-wrap:wrap;gap:5px}
+.pill{font-size:12px;padding:3px 9px;border-radius:14px;border:1px solid transparent;display:flex;flex-direction:column;gap:1px;line-height:1.4}
+.pill-fr{font-weight:600}
+.pill-en{font-size:10px;opacity:.72;font-style:italic}
+.pill.q{background:var(--mql);color:var(--mq);border-color:var(--mqm)}
+.pill.r{background:var(--mrl);color:var(--mr);border-color:var(--mrm)}
+.pill.f{background:var(--mfl);color:var(--mf);border-color:var(--mfm)}
+.pill.t{background:var(--mtl);color:var(--mt);border-color:var(--mtm)}
+.pill.s{background:var(--msl);color:var(--ms);border-color:var(--msm)}
+.pill.g{background:var(--mgl);color:var(--mg);border-color:var(--mgm)}
+
+/* two/three col grids */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:1rem}
+@media(max-width:680px){.three-col{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.two-col,.three-col{grid-template-columns:1fr}}
+
+/* table card */
+.tc{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden;margin-bottom:1rem}
+.tc-head{padding:.55rem 1rem;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.tc-head.q{background:var(--mql);color:var(--mq)}
+.tc-head.r{background:var(--mrl);color:var(--mr)}
+.tc-head.f{background:var(--mfl);color:var(--mf)}
+.tc-head.t{background:var(--mtl);color:var(--mt)}
+.tc-head.s{background:var(--msl);color:var(--ms)}
+.tc-head.g{background:var(--mgl);color:var(--mg)}
+.tc table{width:100%;border-collapse:collapse}
+.tc table td,.tc table th{padding:.5rem 1rem;font-size:13px;border-top:1px solid var(--border);vertical-align:top;text-align:left}
+.tc table th{font-size:11px;font-weight:600;color:var(--text3);border-top:none;background:var(--surface2);padding:.35rem 1rem}
+.tc table td:first-child{font-weight:600;min-width:160px}
+.tc table .note{font-size:11px;color:var(--text3);font-style:italic}
+
+/* rule box */
+.rule{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);padding:.9rem 1.1rem;margin-bottom:1.25rem;font-size:13px;color:var(--text2);line-height:1.6}
+.rule strong{color:var(--text)}
+
+/* toolkit big cards */
+.toolkit{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.5rem}
+@media(max-width:580px){.toolkit{grid-template-columns:1fr}}
+.tk-card{border-radius:var(--radius);border:1px solid var(--border2);background:var(--surface);overflow:hidden}
+.tk-card-head{padding:.6rem 1rem;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase}
+.tk-card-head.t{background:var(--mtl);color:var(--mt)}
+.tk-body{padding:.75rem 1rem}
+.tk-trigger{font-size:15px;font-weight:700;margin-bottom:.3rem}
+.tk-en{font-size:11px;color:var(--text3);font-style:italic;margin-bottom:.5rem}
+.tk-note{font-size:12px;color:var(--text2);line-height:1.5}
+
+/* scenario section */
+.scenario-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.5rem}
+@media(max-width:580px){.scenario-grid{grid-template-columns:1fr}}
+.sc-card{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden}
+.sc-card-head{padding:.5rem .9rem;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;background:var(--msl);color:var(--ms);display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.sc-card-head .arrow{font-size:14px;transition:transform .2s}
+.sc-card-head.open .arrow{transform:rotate(45deg)}
+.sc-body{display:none;padding:.6rem .8rem}
+.sc-body.open{display:block}
+
+hr{border:none;border-top:1px solid var(--border);margin:0 0 2.5rem}
+section{margin-bottom:3rem}
+[id]{scroll-margin-top:52px}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-title">T2 Reference</span>
+  <a class="nav-a" href="#overview">Overview</a>
+  <a class="nav-a q" href="#questions">Questions</a>
+  <a class="nav-a r" href="#reactions">Reactions</a>
+  <a class="nav-a f" href="#followups">Follow-ups</a>
+  <a class="nav-a t" href="#toolkit">Toolkit</a>
+  <a class="nav-a s" href="#scenarios">Scenarios</a>
+  <a class="nav-a" href="#grammar">Grammar</a>
+  <a class="nav-a r" href="#anecdotes">Anecdotes</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ══ OVERVIEW ════════════════════════════════════════════════ -->
+<section id="overview">
+<div class="sec-head">
+  <div class="sec-num q">Tâche 2 — EO</div>
+  <div class="sec-title">How the conversation works</div>
+  <div class="sec-sub">T2 is a roleplay. You need to ask questions, react to answers, and keep the exchange going for ~3 minutes. Three moves repeat in a loop.</div>
+</div>
+
+<div class="flow">
+  <div class="flow-box q">
+    <div class="flow-label">Move 1</div>
+    <div class="flow-name">Ask</div>
+    <div class="flow-desc">A question by type — cost, availability, requirements, hypothetical, recommendation, precision. Front the topic first.</div>
+  </div>
+  <div class="flow-box r">
+    <div class="flow-label">Move 2</div>
+    <div class="flow-name">React</div>
+    <div class="flow-desc">Acknowledge → evaluate → pivot. Don't just say <em>d'accord</em>. Show you heard it and respond with a short evaluation before moving on.</div>
+  </div>
+  <div class="flow-box f">
+    <div class="flow-label">Move 3</div>
+    <div class="flow-name">Follow up</div>
+    <div class="flow-desc">Any answer generates a follow-up. Use <em>c'est-à-dire / donc si je comprends bien / et dans ce cas</em> to drill deeper.</div>
+  </div>
+</div>
+
+<div class="rule">
+  <strong>The core principle:</strong> Front the topic, then ask simple. <em>Et pour X, comment ça se passe ?</em> — never build from inside out. Decide the topic, say it first, then ask the simplest question about it.
+</div>
+<div class="rule">
+  <strong>When you blank:</strong> Go to the 4-bucket emergency toolkit in order — Alternatives → Recommendations → Exceptions → Requirements. Any one of them generates 3–4 follow-ups from the answer.
+</div>
+</section>
+
+<!-- ══ QUESTION TYPES ═══════════════════════════════════════════ -->
+<section id="questions">
+<div class="sec-head">
+  <div class="sec-num q">Move 1</div>
+  <div class="sec-title">Question types</div>
+  <div class="sec-sub">Seven types. Know one strong example per type cold. That's enough to cover every scenario.</div>
+</div>
+
+<div class="tc">
+  <div class="tc-head q">The 7 question types — one anchor phrase each</div>
+  <table>
+    <tr><th>Type</th><th>Anchor question</th><th>Pattern</th></tr>
+    <tr><td>Cost</td><td>Quel est le tarif ?</td><td class="note">Then upgrade to: Le prix inclut-il X ? / Y a-t-il des frais supplémentaires ?</td></tr>
+    <tr><td>Availability</td><td>Est-ce disponible à partir de quand ?</td><td class="note">Y a-t-il de la disponibilité pour [date/moment] ?</td></tr>
+    <tr><td>Requirements</td><td>Quelles sont les conditions requises ?</td><td class="note">Works for memberships, rentals, applications, courses.</td></tr>
+    <tr><td>Process</td><td>Comment ça se passe exactement ?</td><td class="note">Et pour X, comment ça se passe ? — front the topic first.</td></tr>
+    <tr><td>Alternatives</td><td>Y a-t-il d'autres options ?</td><td class="note">Use when something doesn't suit — gives you a natural pivot.</td></tr>
+    <tr><td>Hypothetical</td><td>Et si je voulais [changer/annuler/partir plus tôt] ?</td><td class="note">Edge case you're worried about. dans le cas où + conditional.</td></tr>
+    <tr><td>Recommendation</td><td>Qu'est-ce que vous me conseilleriez ?</td><td class="note">Hands the conversation back. Generates content you can react to.</td></tr>
+  </table>
+</div>
+
+<div class="two-col">
+<div>
+<div class="pg">
+  <div class="pg-head q">Cost — upgrade set</div>
+  <div class="pg-pills">
+    <div class="pill q"><span class="pill-fr">Quel est le tarif ?</span><span class="pill-en">What is the price?</span></div>
+    <div class="pill q"><span class="pill-fr">Le prix inclut-il [X] ?</span><span class="pill-en">Does the price include [X]?</span></div>
+    <div class="pill q"><span class="pill-fr">Y a-t-il des frais supplémentaires ?</span><span class="pill-en">Are there additional fees?</span></div>
+    <div class="pill q"><span class="pill-fr">Existe-t-il des réductions pour [groupe] ?</span><span class="pill-en">Are there discounts for [group]?</span></div>
+    <div class="pill q"><span class="pill-fr">Et pour le paiement, comment ça se passe ?</span><span class="pill-en">And for payment, how does it work?</span></div>
+    <div class="pill q"><span class="pill-fr">Et si je devais annuler, que se passerait-il ?</span><span class="pill-en">If I had to cancel, what would happen? — si + imparfait + conditionnel</span></div>
+    <div class="pill q"><span class="pill-fr">Quel budget faut-il prévoir ?</span><span class="pill-en">What budget should I plan for?</span></div>
+  </div>
+</div>
+<div class="pg">
+  <div class="pg-head q">Availability / timing</div>
+  <div class="pg-pills">
+    <div class="pill q"><span class="pill-fr">C'est disponible à partir de quand ?</span><span class="pill-en">When is it available from?</span></div>
+    <div class="pill q"><span class="pill-fr">Y a-t-il de la disponibilité pour [date] ?</span><span class="pill-en">Is there availability for [date]?</span></div>
+    <div class="pill q"><span class="pill-fr">Combien de temps cela prend-il ?</span><span class="pill-en">How long does it take?</span></div>
+    <div class="pill q"><span class="pill-fr">Faut-il réserver à l'avance ?</span><span class="pill-en">Do you need to book in advance?</span></div>
+    <div class="pill q"><span class="pill-fr">Y a-t-il une liste d'attente ?</span><span class="pill-en">Is there a waiting list?</span></div>
+    <div class="pill q"><span class="pill-fr">Les horaires sont-ils flexibles ?</span><span class="pill-en">Are the hours flexible?</span></div>
+  </div>
+</div>
+</div>
+<div>
+<div class="pg">
+  <div class="pg-head q">Requirements / process</div>
+  <div class="pg-pills">
+    <div class="pill q"><span class="pill-fr">Quelles sont les conditions requises ?</span><span class="pill-en">What are the requirements?</span></div>
+    <div class="pill q"><span class="pill-fr">Faut-il fournir des documents ?</span><span class="pill-en">Do documents need to be provided?</span></div>
+    <div class="pill q"><span class="pill-fr">Comment ça se passe exactement ?</span><span class="pill-en">How does it work exactly?</span></div>
+    <div class="pill q"><span class="pill-fr">Est-ce adapté aux débutants ?</span><span class="pill-en">Is it suitable for beginners?</span></div>
+    <div class="pill q"><span class="pill-fr">Y a-t-il un essai possible avant de s'engager ?</span><span class="pill-en">Is a trial possible before committing?</span></div>
+    <div class="pill q"><span class="pill-fr">À qui cela s'adresse-t-il surtout ?</span><span class="pill-en">Who is it mainly aimed at?</span></div>
+    <div class="pill q"><span class="pill-fr">Faut-il signer un contrat ?</span><span class="pill-en">Do you need to sign a contract?</span></div>
+  </div>
+</div>
+<div class="pg">
+  <div class="pg-head q">Hypothetical / edge case</div>
+  <div class="pg-pills">
+    <div class="pill q"><span class="pill-fr">Et si je voulais annuler ?</span><span class="pill-en">What if I wanted to cancel?</span></div>
+    <div class="pill q"><span class="pill-fr">Et si ça ne me convenait pas ?</span><span class="pill-en">What if it didn't suit me?</span></div>
+    <div class="pill q"><span class="pill-fr">Dans le cas où je devrais partir plus tôt…</span><span class="pill-en">In the event that I had to leave earlier…</span></div>
+    <div class="pill q"><span class="pill-fr">Y a-t-il des difficultés à prévoir ?</span><span class="pill-en">Are there difficulties to anticipate?</span></div>
+    <div class="pill q"><span class="pill-fr">Que se passe-t-il en cas de problème ?</span><span class="pill-en">What happens if there's a problem?</span></div>
+    <div class="pill q"><span class="pill-fr">Est-ce que ça marche aussi pour [cas particulier] ?</span><span class="pill-en">Does it also work for [special case]?</span></div>
+  </div>
+</div>
+<div class="pg">
+  <div class="pg-head q">Si + imparfait + conditionnel — full sentences</div>
+  <div class="pg-pills">
+    <div class="pill q"><span class="pill-fr">Si je voulais annuler, est-ce que je pourrais être remboursé(e) ?</span><span class="pill-en">If I wanted to cancel, would I be able to get a refund?</span></div>
+    <div class="pill q"><span class="pill-fr">Si je devais partir plus tôt, est-ce que ce serait possible ?</span><span class="pill-en">If I had to leave earlier, would that be possible?</span></div>
+    <div class="pill q"><span class="pill-fr">Si ça ne me convenait pas, est-ce que je pourrais changer d'option ?</span><span class="pill-en">If it didn't suit me, would I be able to change option?</span></div>
+    <div class="pill q"><span class="pill-fr">Si j'avais un problème, qui est-ce que je devrais contacter ?</span><span class="pill-en">If I had a problem, who would I need to contact?</span></div>
+    <div class="pill q"><span class="pill-fr">Si je voulais amener quelqu'un avec moi, est-ce que ce serait possible ?</span><span class="pill-en">If I wanted to bring someone with me, would that be possible?</span></div>
+    <div class="pill q"><span class="pill-fr">Si je n'étais pas disponible ce jour-là, y aurait-il une autre date ?</span><span class="pill-en">If I wasn't available that day, would there be another date?</span></div>
+    <div class="pill q"><span class="pill-fr">Si le prix était trop élevé, y aurait-il une formule moins chère ?</span><span class="pill-en">If the price were too high, would there be a cheaper option?</span></div>
+    <div class="pill q"><span class="pill-fr">Si je voulais prolonger, est-ce que ce serait envisageable ?</span><span class="pill-en">If I wanted to extend, would that be feasible?</span></div>
+  </div>
+</div>
+</div>
+</div>
+
+<div class="pg">
+  <div class="pg-head q">Universal questions — work in any scenario</div>
+  <div class="pg-pills">
+    <div class="pill q"><span class="pill-fr">Pouvez-vous m'en dire plus ?</span><span class="pill-en">Can you tell me more? — vous</span></div>
+    <div class="pill q"><span class="pill-fr">Tu peux m'en dire plus ?</span><span class="pill-en">Can you tell me more? — tu</span></div>
+    <div class="pill q"><span class="pill-fr">Comment ça fonctionne-t-il ?</span><span class="pill-en">How does it work?</span></div>
+    <div class="pill q"><span class="pill-fr">Quels sont les avantages ?</span><span class="pill-en">What are the advantages?</span></div>
+    <div class="pill q"><span class="pill-fr">Quels sont les inconvénients ?</span><span class="pill-en">What are the disadvantages?</span></div>
+    <div class="pill q"><span class="pill-fr">Qu'est-ce que vous conseillez ?</span><span class="pill-en">What do you recommend? — vous</span></div>
+    <div class="pill q"><span class="pill-fr">Qu'est-ce que tu conseilles ?</span><span class="pill-en">What do you recommend? — tu</span></div>
+    <div class="pill q"><span class="pill-fr">Est-ce que ça vaut la peine ?</span><span class="pill-en">Is it worth it?</span></div>
+    <div class="pill q"><span class="pill-fr">Est-ce pratique au quotidien ?</span><span class="pill-en">Is it practical on a daily basis?</span></div>
+    <div class="pill q"><span class="pill-fr">Y a-t-il des conditions particulières ?</span><span class="pill-en">Are there special conditions?</span></div>
+    <div class="pill q"><span class="pill-fr">Est-ce facile d'accès ?</span><span class="pill-en">Is it easy to access?</span></div>
+    <div class="pill q"><span class="pill-fr">Qu'en pensez-vous ?</span><span class="pill-en">What do you think about it? — vous</span></div>
+    <div class="pill q"><span class="pill-fr">T'en penses quoi ?</span><span class="pill-en">What do you think about it? — tu (casual)</span></div>
+    <div class="pill q"><span class="pill-fr">Cela arrive souvent ?</span><span class="pill-en">Does that happen often?</span></div>
+    <div class="pill q"><span class="pill-fr">Et pour X, comment ça se passe ?</span><span class="pill-en">And for X, how does that work? — front topic first</span></div>
+    <div class="pill q"><span class="pill-fr">Je voudrais savoir si…</span><span class="pill-en">I'd like to know if… — indirect, polite</span></div>
+    <div class="pill q"><span class="pill-fr">Pourriez-vous m'expliquer…</span><span class="pill-en">Could you explain to me… — vous, very formal</span></div>
+    <div class="pill q"><span class="pill-fr">Tu pourrais m'expliquer… ?</span><span class="pill-en">Could you explain to me… — tu</span></div>
+  </div>
+</div>
+</section>
+
+<!-- ══ REACTIONS ════════════════════════════════════════════════ -->
+<section id="reactions">
+<div class="sec-head">
+  <div class="sec-num r">Move 2</div>
+  <div class="sec-title">Reactions — acknowledge → evaluate → pivot</div>
+  <div class="sec-sub">Three-move loop. Don't just say <em>d'accord</em>. Acknowledge what was said, show a reaction to it, then pivot to your next question.</div>
+</div>
+
+<div class="tc">
+  <div class="tc-head r">The three-move loop</div>
+  <table>
+    <tr><th>Move</th><th>What it does</th><th>Example</th></tr>
+    <tr><td>Acknowledge</td><td>Shows you heard it. One word or short phrase.</td><td class="note">Je vois. / D'accord. / C'est bon à savoir.</td></tr>
+    <tr><td>Evaluate</td><td>Shows a reaction — positive, neutral, or questioning.</td><td class="note">Ça me paraît pratique. / C'est un peu cher. / Je n'y avais pas pensé.</td></tr>
+    <tr><td>Pivot</td><td>Move to the next question. Don't wait.</td><td class="note">Et dans ce cas, est-ce que… / J'aurais aussi une question sur…</td></tr>
+  </table>
+</div>
+
+<div class="three-col">
+<div class="pg">
+  <div class="pg-head r">Acknowledge</div>
+  <div class="pg-pills">
+    <div class="pill r"><span class="pill-fr">Je vois.</span><span class="pill-en">I see.</span></div>
+    <div class="pill r"><span class="pill-fr">D'accord.</span><span class="pill-en">Okay.</span></div>
+    <div class="pill r"><span class="pill-fr">C'est bon à savoir.</span><span class="pill-en">That's good to know.</span></div>
+    <div class="pill r"><span class="pill-fr">Je comprends mieux maintenant.</span><span class="pill-en">I understand better now.</span></div>
+    <div class="pill r"><span class="pill-fr">C'est noté, merci.</span><span class="pill-en">That's noted, thank you.</span></div>
+    <div class="pill r"><span class="pill-fr">Je n'y avais pas pensé.</span><span class="pill-en">I hadn't thought about that.</span></div>
+    <div class="pill r"><span class="pill-fr">Merci pour ces renseignements.</span><span class="pill-en">Thank you for the information.</span></div>
+  </div>
+</div>
+<div class="pg">
+  <div class="pg-head r">Evaluate</div>
+  <div class="pg-pills">
+    <div class="pill r"><span class="pill-fr">Ça me paraît pratique.</span><span class="pill-en">That seems practical.</span></div>
+    <div class="pill r"><span class="pill-fr">C'est exactement ce que je recherche.</span><span class="pill-en">That's exactly what I'm looking for.</span></div>
+    <div class="pill r"><span class="pill-fr">Cela pourrait me convenir.</span><span class="pill-en">That could suit me.</span></div>
+    <div class="pill r"><span class="pill-fr">Ça a l'air intéressant.</span><span class="pill-en">That sounds interesting.</span></div>
+    <div class="pill r"><span class="pill-fr">C'est un peu cher.</span><span class="pill-en">That's a bit expensive.</span></div>
+    <div class="pill r"><span class="pill-fr">C'est rassurant.</span><span class="pill-en">That's reassuring.</span></div>
+    <div class="pill r"><span class="pill-fr">Je suis un peu inquiet(e).</span><span class="pill-en">I'm a little worried.</span></div>
+    <div class="pill r"><span class="pill-fr">Donc si je comprends bien…</span><span class="pill-en">So if I understand correctly…</span></div>
+  </div>
+</div>
+<div class="pg">
+  <div class="pg-head r">Pivot / close</div>
+  <div class="pg-pills">
+    <div class="pill r"><span class="pill-fr">J'aurais aussi une question sur…</span><span class="pill-en">I also have a question about…</span></div>
+    <div class="pill r"><span class="pill-fr">Et dans ce cas, est-ce que…</span><span class="pill-en">And in that case, is it…</span></div>
+    <div class="pill r"><span class="pill-fr">Je vais y réfléchir.</span><span class="pill-en">I'll think about it.</span></div>
+    <div class="pill r"><span class="pill-fr">J'en discuterai avec ma famille.</span><span class="pill-en">I'll discuss it with my family.</span></div>
+    <div class="pill r"><span class="pill-fr">Je vous rappellerai.</span><span class="pill-en">I'll call you back. — vous</span></div>
+    <div class="pill r"><span class="pill-fr">Je te rappellerai.</span><span class="pill-en">I'll call you back. — tu</span></div>
+    <div class="pill r"><span class="pill-fr">J'aimerais tenter l'expérience.</span><span class="pill-en">I'd like to try the experience.</span></div>
+    <div class="pill r"><span class="pill-fr">Je vais prendre ma décision rapidement.</span><span class="pill-en">I'll make my decision quickly.</span></div>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- ══ FOLLOW-UPS ═══════════════════════════════════════════════ -->
+<section id="followups">
+<div class="sec-head">
+  <div class="sec-num f">Move 3</div>
+  <div class="sec-title">Follow-up triggers</div>
+  <div class="sec-sub">Every answer generates a follow-up. These phrases attach to what was just said and push deeper without starting a new topic.</div>
+</div>
+
+<div class="two-col">
+<div class="pg">
+  <div class="pg-head f">Clarification triggers</div>
+  <div class="pg-pills">
+    <div class="pill f"><span class="pill-fr">C'est-à-dire ?</span><span class="pill-en">Meaning? / That is to say?</span></div>
+    <div class="pill f"><span class="pill-fr">Donc si je comprends bien…</span><span class="pill-en">So if I understand correctly…</span></div>
+    <div class="pill f"><span class="pill-fr">Vous voulez dire que… ?</span><span class="pill-en">You mean that…? — vous</span></div>
+    <div class="pill f"><span class="pill-fr">Tu veux dire que… ?</span><span class="pill-en">You mean that…? — tu</span></div>
+    <div class="pill f"><span class="pill-fr">Pouvez-vous préciser ?</span><span class="pill-en">Could you be more specific? — vous</span></div>
+    <div class="pill f"><span class="pill-fr">Tu peux préciser ?</span><span class="pill-en">Could you be more specific? — tu</span></div>
+    <div class="pill f"><span class="pill-fr">Et dans ce cas, que se passe-t-il ?</span><span class="pill-en">And in that case, what happens?</span></div>
+    <div class="pill f"><span class="pill-fr">Le tarif est tout compris ?</span><span class="pill-en">The price is all-inclusive?</span></div>
+  </div>
+</div>
+<div class="pg">
+  <div class="pg-head f">Deepening triggers</div>
+  <div class="pg-pills">
+    <div class="pill f"><span class="pill-fr">Et pour [topic], comment ça se passe ?</span><span class="pill-en">And for [topic], how does it work?</span></div>
+    <div class="pill f"><span class="pill-fr">Et si [hypothetical] ?</span><span class="pill-en">And if [hypothetical]?</span></div>
+    <div class="pill f"><span class="pill-fr">Il y a aussi la question de…</span><span class="pill-en">There's also the question of…</span></div>
+    <div class="pill f"><span class="pill-fr">Et par rapport à [topic] ?</span><span class="pill-en">And with regard to [topic]?</span></div>
+    <div class="pill f"><span class="pill-fr">Qu'est-ce qui se passe si… ?</span><span class="pill-en">What happens if…?</span></div>
+    <div class="pill f"><span class="pill-fr">J'aurais aussi besoin de savoir…</span><span class="pill-en">I'd also need to know…</span></div>
+  </div>
+</div>
+</div>
+
+<div class="rule">
+  <strong>Reformulation tool:</strong> <em>Donc si je comprends bien, [restate what you heard] ?</em> — confirms understanding, shows listening, and lets you check comprehension naturally. Use after any complex answer.
+</div>
+</section>
+
+<!-- ══ EMERGENCY TOOLKIT ════════════════════════════════════════ -->
+<section id="toolkit">
+<div class="sec-head">
+  <div class="sec-num t">Emergency toolkit</div>
+  <div class="sec-title">4 buckets — trigger + follow-up tree</div>
+  <div class="sec-sub">Fire the trigger question when you blank. React to their answer using the follow-ups below. Each tree shows what they're likely to say and what you ask next.</div>
+</div>
+
+<div class="rule">
+  <strong>Order:</strong> Alternatives → Recommendations → Exceptions → Requirements. You won't need all four — any answer generates enough to keep going.
+</div>
+
+<!-- BUCKET 1 -->
+<div class="tk-card" style="margin-bottom:10px">
+  <div class="tk-card-head t">Bucket 1 — Alternatives</div>
+  <div class="tk-body">
+    <div class="tk-trigger">Y a-t-il d'autres options ?</div>
+    <div class="tk-en" style="margin-bottom:.75rem">Are there other options?</div>
+    <div class="tk-note" style="margin-bottom:.75rem">Use when something doesn't suit or you're stuck. Generates new content to react to immediately.</div>
+    <table style="width:100%;font-size:13px;border-collapse:collapse">
+      <tr style="background:var(--surface2)"><th style="padding:.35rem .7rem;text-align:left;font-size:11px;color:var(--text3);font-weight:600">They say…</th><th style="padding:.35rem .7rem;text-align:left;font-size:11px;color:var(--text3);font-weight:600">You follow up…</th></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem;color:var(--text2);font-style:italic">Oui, il y a aussi [option B].</td><td style="padding:.45rem .7rem">Et cette option, comment est-ce qu'elle fonctionne exactement ?</td></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem;color:var(--text2);font-style:italic">Oui, on a une formule plus économique.</td><td style="padding:.45rem .7rem">Quelle est la différence avec la première option ?</td></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem;color:var(--text2);font-style:italic">On a aussi une option en ligne.</td><td style="padding:.45rem .7rem">Et ça fonctionnerait aussi bien ? Vous pensez que c'est adapté à ma situation ?</td></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem;color:var(--text2);font-style:italic">Non, c'est la seule option disponible.</td><td style="padding:.45rem .7rem">Je comprends. Et est-ce qu'il serait possible de [adapter / modifier / reporter] ?</td></tr>
+      <tr style="border-top:1px solid var(--border);background:var(--mtl)"><td style="padding:.45rem .7rem;font-weight:600;color:var(--mt)" colspan="2">Universal follow-ups after any alternative is offered</td></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem" colspan="2">Ça me paraît intéressant. Quel est le tarif pour cette option ?</td></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem" colspan="2">Et les conditions sont les mêmes que pour la première option ?</td></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem" colspan="2">Est-ce que je pourrais avoir plus de détails sur cette formule ?</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- BUCKET 2 -->
+<div class="tk-card" style="margin-bottom:10px">
+  <div class="tk-card-head t">Bucket 2 — Recommendations</div>
+  <div class="tk-body">
+    <div class="tk-trigger">Qu'est-ce que vous me conseilleriez ? / Qu'est-ce que tu me conseillerais ?</div>
+    <div class="tk-en" style="margin-bottom:.75rem">What would you recommend? — vous / tu</div>
+    <div class="tk-note" style="margin-bottom:.75rem">Hands the conversation back completely. Whatever they say, you can evaluate and ask for more detail.</div>
+    <table style="width:100%;font-size:13px;border-collapse:collapse">
+      <tr style="background:var(--surface2)"><th style="padding:.35rem .7rem;text-align:left;font-size:11px;color:var(--text3);font-weight:600">They say…</th><th style="padding:.35rem .7rem;text-align:left;font-size:11px;color:var(--text3);font-weight:600">You follow up…</th></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem;color:var(--text2);font-style:italic">Je vous conseillerais [option X].</td><td style="padding:.45rem .7rem">C'est bon à savoir. Et pourquoi cette option plutôt qu'une autre ?</td></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem;color:var(--text2);font-style:italic">Ça dépend de votre budget / situation.</td><td style="padding:.45rem .7rem">Je vois. Et si mon budget est d'environ [X], qu'est-ce qui serait le plus adapté ?</td></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem;color:var(--text2);font-style:italic">Beaucoup de gens choisissent [option].</td><td style="padding:.45rem .7rem">D'accord. Et quels sont les avantages de cette option concrètement ?</td></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem;color:var(--text2);font-style:italic">Je ne suis pas sûr(e), ça dépend de vous.</td><td style="padding:.45rem .7rem">Bien sûr. Personnellement, ce qui m'importe c'est [X]. Dans ce cas, qu'est-ce que vous suggéreriez ?</td></tr>
+      <tr style="border-top:1px solid var(--border);background:var(--mtl)"><td style="padding:.45rem .7rem;font-weight:600;color:var(--mt)" colspan="2">Universal follow-ups after any recommendation</td></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem" colspan="2">Donc si je comprends bien, vous me conseilleriez plutôt [X] que [Y] ?</td></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem" colspan="2">Et est-ce que beaucoup de personnes dans ma situation choisissent cette option ?</td></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem" colspan="2">Ça a l'air intéressant. Est-ce qu'il y a des inconvénients à connaître ?</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- BUCKET 3 -->
+<div class="tk-card" style="margin-bottom:10px">
+  <div class="tk-card-head t">Bucket 3 — Exceptions / problems</div>
+  <div class="tk-body">
+    <div class="tk-trigger">Y a-t-il des difficultés à prévoir ?</div>
+    <div class="tk-en" style="margin-bottom:.75rem">Are there difficulties to anticipate?</div>
+    <div class="tk-note" style="margin-bottom:.75rem">Opens up edge cases, delays, restrictions. Naturally leads to hypotheticals — exactly where Si + imparfait + conditionnel lives.</div>
+    <table style="width:100%;font-size:13px;border-collapse:collapse">
+      <tr style="background:var(--surface2)"><th style="padding:.35rem .7rem;text-align:left;font-size:11px;color:var(--text3);font-weight:600">They say…</th><th style="padding:.35rem .7rem;text-align:left;font-size:11px;color:var(--text3);font-weight:600">You follow up…</th></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem;color:var(--text2);font-style:italic">Il peut y avoir des délais.</td><td style="padding:.45rem .7rem">Je comprends. Si les délais étaient trop longs, est-ce que je pourrais annuler sans frais ?</td></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem;color:var(--text2);font-style:italic">Il faut respecter certaines règles.</td><td style="padding:.45rem .7rem">D'accord. Et si je ne respectais pas une règle par erreur, que se passerait-il ?</td></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem;color:var(--text2);font-style:italic">Ça peut être difficile en haute saison.</td><td style="padding:.45rem .7rem">Je vois. Et si je voulais réserver pour [période], est-ce qu'il resterait de la disponibilité ?</td></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem;color:var(--text2);font-style:italic">Non, normalement ça se passe bien.</td><td style="padding:.45rem .7rem">C'est rassurant. Mais dans le cas où il y aurait un problème, qui est-ce que je devrais contacter ?</td></tr>
+      <tr style="border-top:1px solid var(--border);background:var(--mtl)"><td style="padding:.45rem .7rem;font-weight:600;color:var(--mt)" colspan="2">Universal follow-ups after any problem/exception is mentioned</td></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem" colspan="2">Et dans ce cas, quelle serait la procédure à suivre ?</td></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem" colspan="2">Est-ce que ça arrive souvent ? Je voudrais savoir si c'est un risque réel.</td></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem" colspan="2">Y a-t-il quelque chose que je peux faire pour éviter ce problème ?</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- BUCKET 4 -->
+<div class="tk-card" style="margin-bottom:10px">
+  <div class="tk-card-head t">Bucket 4 — Requirements</div>
+  <div class="tk-body">
+    <div class="tk-trigger">Quelles sont les conditions requises ?</div>
+    <div class="tk-en" style="margin-bottom:.75rem">What are the requirements?</div>
+    <div class="tk-note" style="margin-bottom:.75rem">Works for memberships, contracts, applications, rentals, courses — almost any scenario.</div>
+    <table style="width:100%;font-size:13px;border-collapse:collapse">
+      <tr style="background:var(--surface2)"><th style="padding:.35rem .7rem;text-align:left;font-size:11px;color:var(--text3);font-weight:600">They say…</th><th style="padding:.35rem .7rem;text-align:left;font-size:11px;color:var(--text3);font-weight:600">You follow up…</th></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem;color:var(--text2);font-style:italic">Il faut fournir des documents.</td><td style="padding:.45rem .7rem">Quels documents exactement ? Et dans quel délai faut-il les fournir ?</td></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem;color:var(--text2);font-style:italic">Il faut avoir un certain niveau / une expérience.</td><td style="padding:.45rem .7rem">Je vois. Et comment est-ce qu'on évalue le niveau ? Y a-t-il un test préalable ?</td></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem;color:var(--text2);font-style:italic">Il faut signer un contrat d'engagement.</td><td style="padding:.45rem .7rem">D'accord. Et quelle est la durée minimum d'engagement ? Est-ce qu'on peut résilier avant ?</td></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem;color:var(--text2);font-style:italic">Les conditions dépendent de votre situation.</td><td style="padding:.45rem .7rem">Je comprends. Dans mon cas [brief situation], quelles seraient les conditions qui s'appliqueraient ?</td></tr>
+      <tr style="border-top:1px solid var(--border);background:var(--mtl)"><td style="padding:.45rem .7rem;font-weight:600;color:var(--mt)" colspan="2">Universal follow-ups after any requirement is stated</td></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem" colspan="2">Et si je ne remplissais pas toutes les conditions, est-ce qu'il y aurait des exceptions possibles ?</td></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem" colspan="2">Combien de temps faut-il prévoir pour remplir toutes ces conditions ?</td></tr>
+      <tr style="border-top:1px solid var(--border)"><td style="padding:.45rem .7rem" colspan="2">Y a-t-il des conditions particulières pour les personnes dans ma situation ?</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="rule">
+  <strong>The pattern behind every follow-up:</strong> Acknowledge what they said → reformulate if complex (<em>donc si je comprends bien…</em>) → drill into the detail that matters most to you. You're always one step deeper, never starting over.
+</div>
+</section>
+
+<!-- ══ SCENARIOS ════════════════════════════════════════════════ -->
+<section id="scenarios">
+<div class="sec-head">
+  <div class="sec-num s">Scenario bank</div>
+  <div class="sec-title">Situation-specific questions</div>
+  <div class="sec-sub">Top 6 scenarios by frequency. Click to expand. Universal questions always work — these are the extras specific to each situation.</div>
+</div>
+
+<div class="scenario-grid" id="scenario-grid"></div>
+</section>
+
+<!-- ══ GRAMMAR ══════════════════════════════════════════════════ -->
+<section id="grammar">
+<div class="sec-head">
+  <div class="sec-num g">Grammar</div>
+  <div class="sec-title">Three safe question structures</div>
+  <div class="sec-sub">You never need inversion. These three cover everything.</div>
+</div>
+
+<div class="tc">
+  <div class="tc-head g">Safe structures</div>
+  <table>
+    <tr><th>Structure</th><th>Pattern</th><th>Example</th></tr>
+    <tr><td>Est-ce que</td><td>Est-ce que + subject + verb</td><td class="note">Est-ce que le prix inclut les charges ?</td></tr>
+    <tr><td>Y a-t-il</td><td>Y a-t-il + article + noun ?</td><td class="note">Y a-t-il des réductions pour les étudiants ?</td></tr>
+    <tr><td>Quel est / Quels sont</td><td>Quel(s)/Quelle(s) + être + noun</td><td class="note">Quels sont les documents nécessaires ?</td></tr>
+  </table>
+</div>
+
+<div class="tc">
+  <div class="tc-head g">Topic fronting — the most useful pattern</div>
+  <table>
+    <tr><td>Et pour [topic]</td><td class="note">Et pour le tarif, comment ça se passe ?</td></tr>
+    <tr><td>Et en ce qui concerne [topic]</td><td class="note">Et en ce qui concerne les horaires, c'est flexible ?</td></tr>
+    <tr><td>Et par rapport à [topic]</td><td class="note">Et par rapport aux conditions d'accès ?</td></tr>
+    <tr><td>J'aurais aussi une question sur [topic]</td><td class="note">J'aurais aussi une question sur les délais.</td></tr>
+  </table>
+</div>
+
+<div class="two-col">
+<div class="tc">
+  <div class="tc-head g">pour vs de — quick rule</div>
+  <table>
+    <tr><th>Word</th><th>Use</th><th>Example</th></tr>
+    <tr><td>pour</td><td>for a group or purpose</td><td class="note">une réduction pour les étudiants</td></tr>
+    <tr><td>de</td><td>of / belonging to</td><td class="note">les conditions de location</td></tr>
+  </table>
+</div>
+<div class="tc">
+  <div class="tc-head g">Tense selection</div>
+  <table>
+    <tr><th>Situation</th><th>Tense</th></tr>
+    <tr><td>Current facts / rules</td><td class="note">Present</td></tr>
+    <tr><td>Past experience</td><td class="note">Passé composé</td></tr>
+    <tr><td>Future plans</td><td class="note">Futur proche / futur simple</td></tr>
+    <tr><td>Hypothetical / polite ask</td><td class="note">Conditional: je voudrais / ce serait</td></tr>
+    <tr><td>Edge case worry</td><td class="note">Et si je voulais + conditional</td></tr>
+  </table>
+</div>
+</div>
+
+<div class="pg">
+  <div class="pg-head g">Indirect question starters — polite / formal register</div>
+  <div class="pg-pills">
+    <div class="pill g"><span class="pill-fr">Je voudrais savoir si…</span><span class="pill-en">I'd like to know if…</span></div>
+    <div class="pill g"><span class="pill-fr">Pourriez-vous m'indiquer…</span><span class="pill-en">Could you indicate to me… — vous</span></div>
+    <div class="pill g"><span class="pill-fr">Tu pourrais m'indiquer… ?</span><span class="pill-en">Could you indicate to me… — tu</span></div>
+    <div class="pill g"><span class="pill-fr">J'aimerais comprendre comment…</span><span class="pill-en">I'd like to understand how…</span></div>
+    <div class="pill g"><span class="pill-fr">Pourriez-vous m'expliquer…</span><span class="pill-en">Could you explain to me… — vous</span></div>
+    <div class="pill g"><span class="pill-fr">Tu pourrais m'expliquer… ?</span><span class="pill-en">Could you explain to me… — tu</span></div>
+    <div class="pill g"><span class="pill-fr">Je me demande si…</span><span class="pill-en">I'm wondering if…</span></div>
+  </div>
+</div>
+</section>
+
+<!-- ══ ANECDOTES ════════════════════════════════════════════════ -->
+<section id="anecdotes">
+<div class="sec-head">
+  <div class="sec-num r">Anecdote</div>
+  <div class="sec-title">Personal anecdote — one sentence formula</div>
+  <div class="sec-sub">Adds warmth and personal register. One sentence only — you don't need more. Tense is passé composé.</div>
+</div>
+
+<div class="rule">
+  <strong>The formula:</strong> <em>Dans mon pays / Dans ma ville / Personnellement,</em> + passé composé statement. That's it. One sentence sounds natural. Two sentences sounds rehearsed.
+</div>
+
+<div class="tc">
+  <div class="tc-head r">Openers</div>
+  <table>
+    <tr><td>Dans mon pays…</td><td class="note">In my country… — use for cultural comparisons, habits, systems</td></tr>
+    <tr><td>Dans ma ville…</td><td class="note">In my city/town… — use for local services, transport, sport</td></tr>
+    <tr><td>Personnellement…</td><td class="note">Personally… — use for preferences, experiences, opinions</td></tr>
+    <tr><td>Chez moi…</td><td class="note">Back home / At my place… — use for housing, habits, family</td></tr>
+    <tr><td>Quand j'étais plus jeune…</td><td class="note">When I was younger… — use for sport, school, childhood activities</td></tr>
+  </table>
+</div>
+
+<div class="pg" style="margin-bottom:1rem">
+  <div class="pg-head r">Anecdote by scenario — one per theme</div>
+  <div class="pg-pills">
+    <div class="pill r"><span class="pill-fr">Personnellement, j'ai déjà vécu une situation similaire.</span><span class="pill-en">Personally, I've already been through a similar situation. — universal fallback</span></div>
+    <div class="pill r"><span class="pill-fr">Dans mon pays, les loyers sont beaucoup plus élevés qu'ici.</span><span class="pill-en">In my country, rents are much higher than here. — logement</span></div>
+    <div class="pill r"><span class="pill-fr">Dans ma ville, il n'y a pas beaucoup de transports en commun.</span><span class="pill-en">In my city, there isn't much public transport. — transport</span></div>
+    <div class="pill r"><span class="pill-fr">Personnellement, j'ai suivi des cours de français pendant six mois.</span><span class="pill-en">Personally, I took French classes for six months. — cours / formation</span></div>
+    <div class="pill r"><span class="pill-fr">Quand j'étais plus jeune, je faisais beaucoup de sport.</span><span class="pill-en">When I was younger, I did a lot of sport. — club sportif / activité</span></div>
+    <div class="pill r"><span class="pill-fr">Dans mon pays, on mange différemment — les repas sont plus longs.</span><span class="pill-en">In my country, we eat differently — meals are longer. — restaurant / alimentation</span></div>
+    <div class="pill r"><span class="pill-fr">Personnellement, j'ai déjà gardé les animaux d'un ami.</span><span class="pill-en">Personally, I've looked after a friend's animals before. — animaux</span></div>
+    <div class="pill r"><span class="pill-fr">Chez moi, les événements culturels sont très populaires.</span><span class="pill-en">Back home, cultural events are very popular. — événement / culture</span></div>
+    <div class="pill r"><span class="pill-fr">Dans mon pays, c'est un peu différent — les gens utilisent moins les voitures.</span><span class="pill-en">In my country it's a bit different — people use cars less. — transport / environnement</span></div>
+  </div>
+</div>
+
+<div class="rule">
+  <strong>When to use it:</strong> Once per conversation, naturally — not on every turn. Best placed after an evaluate reaction when you want to show personal connection to the topic before pivoting to your next question.
+</div>
+</section>
+
+</div><!-- /wrap -->
+
+<script>
+const SCENARIOS = [
+  {
+    name:"Logement / Nouvelle ville",
+    freq:"★★★ Most frequent",
+    pills:[
+      ["Est-ce qu'il y a [lieu] à proximité ?","Is there a [place] nearby?"],
+      ["Dans quel quartier se situe l'appartement ?","Which neighbourhood is it in?"],
+      ["Est-il meublé ?","Is it furnished?"],
+      ["Y a-t-il des transports à proximité ?","Is there transport nearby?"],
+      ["Combien faut-il prévoir pour le loyer ?","How much should I budget for rent?"],
+      ["Les charges sont-elles incluses ?","Are utilities included?"],
+      ["Faut-il signer un contrat ?","Do you need to sign a contract?"],
+      ["Y a-t-il des frais d'agence ?","Are there agency fees?"],
+      ["Le quartier est-il calme ?","Is the neighbourhood quiet?"],
+      ["Est-il difficile de trouver un appartement ?","Is it hard to find an apartment?"],
+      ["Quels quartiers conseillez-vous ?","Which neighbourhoods do you recommend? — vous"],
+      ["Tu conseillerais quel quartier ?","Which neighbourhood would you recommend? — tu"],
+    ]
+  },
+  {
+    name:"Club sportif / Activité",
+    freq:"★★★ Most frequent",
+    pills:[
+      ["Y a-t-il un essai possible ?","Is a trial session possible?"],
+      ["Est-ce adapté aux débutants ?","Is it suitable for beginners?"],
+      ["Quels sont les horaires des séances ?","What are the session times?"],
+      ["Y a-t-il une cotisation annuelle ?","Is there an annual membership fee?"],
+      ["Faut-il apporter son équipement ?","Do I need to bring my own equipment?"],
+      ["Y a-t-il des cours pour adultes ?","Are there adult classes?"],
+      ["Comment se déroule une séance type ?","How does a typical session go?"],
+      ["Y a-t-il un vestiaire sur place ?","Is there a changing room on site?"],
+      ["Peut-on suspendre son abonnement ?","Can you pause your membership?"],
+    ]
+  },
+  {
+    name:"Cours / Formation",
+    freq:"★★★ Most frequent",
+    pills:[
+      ["Quel est le niveau requis ?","What level is required?"],
+      ["Les cours ont-ils lieu en présentiel ou en ligne ?","Are courses in-person or online?"],
+      ["Y a-t-il une certification à la fin ?","Is there a certificate at the end?"],
+      ["Combien d'heures par semaine faut-il prévoir ?","How many hours a week are needed?"],
+      ["Le matériel est-il fourni ?","Is the material provided?"],
+      ["Y a-t-il un examen final ?","Is there a final exam?"],
+      ["Peut-on rattraper les cours manqués ?","Can missed classes be made up?"],
+      ["Y a-t-il des bourses disponibles ?","Are there scholarships available?"],
+    ]
+  },
+  {
+    name:"Transport / Voyage",
+    freq:"★★★ Most frequent",
+    pills:[
+      ["Les transports sont-ils ponctuels ?","Is the transport punctual?"],
+      ["Y a-t-il un abonnement mensuel ?","Is there a monthly pass?"],
+      ["Combien de temps dure le trajet ?","How long does the journey take?"],
+      ["Y a-t-il un autre vol disponible ?","Is there another available flight?"],
+      ["Combien de temps vais-je devoir attendre ?","How long will I have to wait?"],
+      ["Existe-t-il une solution alternative ?","Is there an alternative solution?"],
+      ["À quelle fréquence passent les bus ?","How often do the buses run?"],
+      ["Y a-t-il un parking à proximité ?","Is there parking nearby?"],
+    ]
+  },
+  {
+    name:"Garde d'animaux — vous cherchez quelqu'un",
+    freq:"★★ Common — you own the pet",
+    pills:[
+      ["Avez-vous déjà gardé des animaux ?","Have you looked after animals before? — vous"],
+      ["T'as déjà gardé des animaux ?","Have you looked after animals before? — tu (casual)"],
+      ["Êtes-vous disponible tous les jours ?","Are you available every day? — vous"],
+      ["T'es disponible tous les jours ?","Are you available every day? — tu (casual)"],
+      ["Avez-vous des animaux chez vous ?","Do you have animals at home? — vous"],
+      ["T'as des animaux chez toi ?","Do you have animals at home? — tu (casual)"],
+      ["Êtes-vous à l'aise avec les animaux ?","Are you comfortable with animals? — vous"],
+      ["Y a-t-il des enfants chez vous ?","Are there children at home?"],
+      ["Savez-vous comment réagir en cas d'urgence ?","Do you know how to react in an emergency? — vous"],
+      ["Je voudrais quelqu'un de fiable et de disponible.","I'd like someone reliable and available. — stating your need"],
+      ["Y a-t-il un contact d'urgence disponible ?","Is there an emergency contact available?"],
+      ["Mon animal a besoin de [X] — est-ce que ça vous convient ?","My animal needs [X] — does that work for you? — vous"],
+    ]
+  },
+  {
+    name:"Garde d'animaux — vous proposez vos services",
+    freq:"★★ Common — you are the pet sitter",
+    pills:[
+      ["De quel animal s'agit-il exactement ?","What animal is it exactly?"],
+      ["Combien de temps faut-il le garder ?","How long do you need it looked after?"],
+      ["Y a-t-il des problèmes de santé à connaître ?","Are there health issues I should know about?"],
+      ["À quelle fréquence faut-il le promener ?","How often does it need walking?"],
+      ["Comment faut-il le nourrir et à quelle heure ?","How and when should it be fed?"],
+      ["Est-ce qu'il s'entend bien avec d'autres animaux ?","Does it get along well with other animals?"],
+      ["Y a-t-il des médicaments à administrer ?","Are there medications to give?"],
+      ["Est-ce qu'il est habitué à rester seul ?","Is it used to being left alone?"],
+      ["Où est-ce que je peux le contacter en cas d'urgence ?","Where can I reach you in an emergency?"],
+      ["Est-ce qu'il a un vétérinaire habituel ?","Does it have a regular vet?"],
+      ["La litière, il faut la changer à quelle fréquence ?","How often does the litter box need changing?"],
+      ["Est-ce qu'il y a des choses à ne pas faire avec lui ?","Are there things I shouldn't do with it?"],
+    ]
+  },
+  {
+    name:"Restaurant / Événement",
+    freq:"★★ Common",
+    pills:[
+      ["La réservation est-elle nécessaire ?","Is a reservation necessary?"],
+      ["Y a-t-il des menus végétariens ?","Are there vegetarian menus?"],
+      ["Acceptez-vous les groupes ?","Do you accept groups?"],
+      ["Y a-t-il un parking à proximité ?","Is there parking nearby?"],
+      ["Le lieu est-il accessible en fauteuil roulant ?","Is the venue wheelchair accessible?"],
+      ["Y a-t-il une tenue vestimentaire requise ?","Is there a dress code?"],
+      ["Peut-on apporter son propre gâteau ?","Can we bring our own cake?"],
+      ["Quel est le délai pour annuler ?","What is the cancellation deadline?"],
+    ]
+  },
+];
+
+const grid = document.getElementById('scenario-grid');
+SCENARIOS.forEach((sc, i) => {
+  const card = document.createElement('div');
+  card.className = 'sc-card';
+  const head = document.createElement('div');
+  head.className = 'sc-card-head';
+  head.innerHTML = `<span>${sc.name}<br><small style="font-weight:400;font-size:10px;opacity:.7">${sc.freq}</small></span><span class="arrow">+</span>`;
+  const body = document.createElement('div');
+  body.className = 'sc-body';
+  body.innerHTML = '<div class="pg-pills" style="padding:.3rem 0">' +
+    sc.pills.map(([fr,en]) =>
+      `<div class="pill s"><span class="pill-fr">${fr}</span><span class="pill-en">${en}</span></div>`
+    ).join('') + '</div>';
+  head.addEventListener('click', () => {
+    const open = body.classList.toggle('open');
+    head.classList.toggle('open', open);
+  });
+  card.appendChild(head);
+  card.appendChild(body);
+  grid.appendChild(card);
+  // open first two by default
+  if (i < 2) { body.classList.add('open'); head.classList.add('open'); }
+});
+</script>
+</body>
+</html>

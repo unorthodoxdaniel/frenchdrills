@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>French Drills — Noble Method</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1209;
+  --paper: #f5efe0;
+  --aged: #e8dcc8;
+  --red: #c0392b;
+  --gold: #b8860b;
+  --faded: #8a7a5e;
+  --green: #2d6a4f;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Courier Prime', monospace;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px 80px;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(180,160,120,0.15) 28px),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+/* ── HEADER ── */
+header {
+  text-align: center;
+  margin-bottom: 36px;
+  border-bottom: 2px solid var(--gold);
+  padding-bottom: 24px;
+  width: 100%;
+  max-width: 760px;
+}
+
+header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  font-style: italic;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+header p {
+  color: var(--faded);
+  font-size: 0.82rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-top: 7px;
+}
+
+/* ── INTRO BLOCK ── */
+.noble-intro {
+  background: var(--ink);
+  color: var(--paper);
+  max-width: 760px;
+  width: 100%;
+  padding: 30px 36px;
+  margin-bottom: 40px;
+  border-radius: 2px;
+}
+
+.noble-intro h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+.noble-intro p {
+  font-size: 0.8rem;
+  line-height: 1.85;
+  color: rgba(245,239,224,0.82);
+  margin-bottom: 8px;
+}
+
+.noble-intro p:last-child { margin-bottom: 0; }
+.noble-intro strong { color: var(--paper); }
+
+/* ── SECTION ── */
+.section {
+  width: 100%;
+  max-width: 760px;
+  margin-bottom: 44px;
+}
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 6px;
+}
+
+.section-number {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.8rem;
+  font-style: italic;
+  color: var(--aged);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  font-style: italic;
+  color: var(--ink);
+  font-weight: 400;
+}
+
+.section-sub {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--faded);
+  margin-bottom: 14px;
+  padding-left: 0;
+}
+
+.section-rule {
+  height: 1px;
+  background: var(--aged);
+  margin-bottom: 18px;
+  position: relative;
+}
+
+.section-rule::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -1px;
+  width: 40px;
+  height: 2px;
+  background: var(--gold);
+}
+
+/* ── CARD GRID ── */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+/* ── DRILL CARD ── */
+.drill-card {
+  background: white;
+  border: 1px solid var(--aged);
+  padding: 22px 20px 18px;
+  box-shadow: 3px 3px 0 var(--aged);
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.15s, transform 0.15s;
+  cursor: pointer;
+}
+
+.drill-card::before {
+  content: '';
+  position: absolute;
+  top: 8px; left: 8px;
+  right: -8px; bottom: -8px;
+  border: 1px solid var(--aged);
+  z-index: -1;
+  transition: opacity 0.15s;
+}
+
+.drill-card:hover {
+  box-shadow: 5px 5px 0 var(--aged);
+  transform: translate(-1px, -1px);
+}
+
+.drill-card:hover::before { opacity: 0.5; }
+
+.card-tag {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  margin-bottom: 10px;
+  display: inline-block;
+  font-family: 'Courier Prime', monospace;
+  align-self: flex-start;
+}
+
+.tag-numbers   { background: #e8f4fd; color: #1a5276; }
+.tag-pronouns  { background: #f4ecf7; color: #6c3483; }
+.tag-grammar   { background: #e9f7ef; color: #1e8449; }
+.tag-verbs     { background: #fef9e7; color: #7d6608; }
+.tag-tense     { background: #fdedec; color: #922b21; }
+.tag-vocab     { background: #fdf6ec; color: #7d4e1e; }
+
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--ink);
+  margin-bottom: 5px;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+.card-fr {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--red);
+  margin-bottom: 10px;
+}
+
+.card-desc {
+  font-size: 0.75rem;
+  color: var(--faded);
+  line-height: 1.7;
+  flex: 1;
+  margin-bottom: 14px;
+}
+
+.card-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 14px;
+}
+
+.pill {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--aged);
+  color: var(--faded);
+  padding: 2px 7px;
+  border-radius: 1px;
+}
+
+.card-cta {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border-top: 1px solid var(--aged);
+  padding-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.card-cta span { opacity: 0.5; }
+.drill-card:hover .card-cta span { opacity: 1; }
+
+/* ── FOOTER ── */
+footer {
+  max-width: 760px;
+  width: 100%;
+  text-align: center;
+  margin-top: 48px;
+  color: var(--faded);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  line-height: 1.9;
+  border-top: 1px solid var(--aged);
+  padding-top: 20px;
+}
+
+@media (max-width: 500px) {
+  body { padding: 24px 14px 60px; }
+  .noble-intro { padding: 22px 18px; }
+  .card-grid { grid-template-columns: 1fr; }
+  .section-number { font-size: 2rem; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>French Drills</h1>
+  <p>Noble Method — B1 Practice Suite</p>
+</header>
+
+<div class="noble-intro">
+  <h2>How to use this...</h2>
+  <p>Each drill below targets a specific area of French that becomes instinctive through <strong>repeated, contextualised exposure</strong> — not memorisation. That's the Noble method: you encounter real sentences, work out the answer, then see the logic explained.</p>
+  <p>Start wherever you feel weakest. <strong>Numbers</strong> if you still hesitate counting. <strong>Pronouns</strong> if word order trips you up. <strong>Articles</strong> if du/de la/au/aux blur together. Every drill has audio, a recycling queue for missed items, and a score tracker.</p>
+  <p>All drills work offline once loaded. Open one, bookmark it, and come back daily — <strong>ten minutes a day beats two hours once a week</strong>.</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 1 — NUMBERS
+════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-number">01</span>
+    <div>
+      <h2 class="section-title">Numbers</h2>
+    </div>
+  </div>
+  <p class="section-sub">The logical system behind French counting</p>
+  <div class="section-rule"></div>
+  <div class="card-grid">
+
+    <a class="drill-card" href="numbers_drill.html">
+      <span class="card-tag tag-numbers">Numbers</span>
+      <p class="card-title">Les Nombres</p>
+      <p class="card-fr">soixante-dix-neuf, quatre-vingts...</p>
+      <p class="card-desc">Flash cards, type-in, and listen-and-guess modes across five number ranges — from 41–69 up to 1000+. Focuses on the chunking logic that makes French numbers click.</p>
+      <div class="card-pills">
+        <span class="pill">Flash cards</span>
+        <span class="pill">Type-in</span>
+        <span class="pill">Hear &amp; guess</span>
+        <span class="pill">41 → 1,000,000</span>
+      </div>
+      <div class="card-cta">Open drill <span>→</span></div>
+    </a>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 2 — PRONOUNS
+════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-number">02</span>
+    <div>
+      <h2 class="section-title">Pronouns</h2>
+    </div>
+  </div>
+  <p class="section-sub">Where pronouns go, how they stack, and what they replace</p>
+  <div class="section-rule"></div>
+  <div class="card-grid">
+
+    <a class="drill-card" href="pronouns_drill_v2.html">
+      <span class="card-tag tag-pronouns">Pronouns — Start here</span>
+      <p class="card-title">Core Pronouns</p>
+      <p class="card-fr">je, tu, il / le, la, les / lui, leur / y, en</p>
+      <p class="card-desc">The foundation drill. Covers subject, direct object, indirect object pronouns, plus y and en — with a cheat-sheet reference map before each stage.</p>
+      <div class="card-pills">
+        <span class="pill">Subject</span>
+        <span class="pill">Direct obj.</span>
+        <span class="pill">Indirect obj.</span>
+        <span class="pill">y &amp; en</span>
+        <span class="pill">Stacking</span>
+      </div>
+      <div class="card-cta">Open drill <span>→</span></div>
+    </a>
+
+    <a class="drill-card" href="pronoun_drill_26.html">
+      <span class="card-tag tag-pronouns">Pronouns — Intensive</span>
+      <p class="card-title">26-Sentence Pronoun Drill</p>
+      <p class="card-fr">Je le lui donne. / Je ne veux pas y aller.</p>
+      <p class="card-desc">26 targeted sentences drilling direct objects, indirect objects, y, en, stacking, negation with pronouns, and pronouns with infinitives. Harder than the core drill.</p>
+      <div class="card-pills">
+        <span class="pill">Negation</span>
+        <span class="pill">Infinitives</span>
+        <span class="pill">Stacking order</span>
+        <span class="pill">en + quantity</span>
+      </div>
+      <div class="card-cta">Open drill <span>→</span></div>
+    </a>
+
+    <a class="drill-card" href="pronoun_drills_4pack.html">
+      <span class="card-tag tag-pronouns">Pronouns — 4 drills</span>
+      <p class="card-title">Advanced Pronoun Pack</p>
+      <p class="card-fr">moi-même / celui dont / le mien / qui, que, dont</p>
+      <p class="card-desc">Four separate drills in one: stressed pronouns (moi, toi, eux), relative pronouns (qui, que, dont, lequel), demonstratives (celui, celle, ceux), and possessives (le mien, la tienne).</p>
+      <div class="card-pills">
+        <span class="pill">Stressed</span>
+        <span class="pill">Relative</span>
+        <span class="pill">Demonstrative</span>
+        <span class="pill">Possessive</span>
+      </div>
+      <div class="card-cta">Open drill <span>→</span></div>
+    </a>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 3 — GRAMMAR MECHANICS
+════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-number">03</span>
+    <div>
+      <h2 class="section-title">Grammar Mechanics</h2>
+    </div>
+  </div>
+  <p class="section-sub">The rules that hold sentences together</p>
+  <div class="section-rule"></div>
+  <div class="card-grid">
+
+    <a class="drill-card" href="french_articles_drill.html">
+      <span class="card-tag tag-grammar">Articles</span>
+      <p class="card-title">Les Articles</p>
+      <p class="card-fr">au, à la, du, de la, des, pas de...</p>
+      <p class="card-desc">Three difficulty tiers covering à/au/aux, de/du/des, partitive articles (some), article collapse after negation and quantity, and the traps like du doing two different jobs.</p>
+      <div class="card-pills">
+        <span class="pill">Tier 1 — Foundation</span>
+        <span class="pill">Tier 2 — Intermediate</span>
+        <span class="pill">Tier 3 — Advanced</span>
+        <span class="pill">Mix mode</span>
+      </div>
+      <div class="card-cta">Open drill <span>→</span></div>
+    </a>
+
+    <a class="drill-card" href="french_negation_drill.html">
+      <span class="card-tag tag-grammar">Negation</span>
+      <p class="card-title">La Négation</p>
+      <p class="card-fr">ne...pas / jamais / plus / rien / personne</p>
+      <p class="card-desc">Three stages of negation from the essential ne...pas through to advanced patterns. Covers the full family of negation words and how they interact with articles, pronouns, and infinitives.</p>
+      <div class="card-pills">
+        <span class="pill">ne...pas</span>
+        <span class="pill">jamais / plus / rien</span>
+        <span class="pill">personne / que</span>
+        <span class="pill">Advanced patterns</span>
+      </div>
+      <div class="card-cta">Open drill <span>→</span></div>
+    </a>
+
+    <a class="drill-card" href="comparisons_drill.html">
+      <span class="card-tag tag-grammar">Comparisons</span>
+      <p class="card-title">Les Comparaisons</p>
+      <p class="card-fr">plus...que / le plus / tellement / à peine</p>
+      <p class="card-desc">Three stages covering core comparisons (plus/moins/aussi que), superlatives and quantity expressions, then intensity and nuance patterns used in natural spoken French.</p>
+      <div class="card-pills">
+        <span class="pill">plus / moins / aussi</span>
+        <span class="pill">Superlatives</span>
+        <span class="pill">Intensity</span>
+        <span class="pill">Nuance</span>
+      </div>
+      <div class="card-cta">Open drill <span>→</span></div>
+    </a>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 4 — VERBS
+════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-number">04</span>
+    <div>
+      <h2 class="section-title">Verbs</h2>
+    </div>
+  </div>
+  <p class="section-sub">Prepositions, tenses, and the patterns that define fluency</p>
+  <div class="section-rule"></div>
+  <div class="card-grid">
+
+    <a class="drill-card" href="french_verb_preposition_drill.html">
+      <span class="card-tag tag-verbs">Verb Prepositions</span>
+      <p class="card-title">Les Verbes &amp; Prépositions</p>
+      <p class="card-fr">penser à / décider de / jouer au / jouer du</p>
+      <p class="card-desc">110 sentences across four categories: verbs that take à, verbs that take de, verbs with a direct object (no preposition), and verbs whose meaning shifts with the preposition.</p>
+      <div class="card-pills">
+        <span class="pill">À verbs</span>
+        <span class="pill">De verbs</span>
+        <span class="pill">Direct object</span>
+        <span class="pill">Meaning shifts</span>
+        <span class="pill">Mix mode</span>
+      </div>
+      <div class="card-cta">Open drill <span>→</span></div>
+    </a>
+
+    <a class="drill-card" href="tense_drill.html">
+      <span class="card-tag tag-tense">Tenses</span>
+      <p class="card-title">Les Temps</p>
+      <p class="card-fr">J'avais... / J'ai eu... / Je vais... / J'irai...</p>
+      <p class="card-desc">Four key tenses in one drill: imparfait (used to / was doing), passé composé (did / have done), futur proche (going to), and futur simple (will). Stem patterns and participles highlighted in every answer. Three mix modes let you test past, future, or everything at once.</p>
+      <div class="card-pills">
+        <span class="pill">Imparfait</span>
+        <span class="pill">Passé composé</span>
+        <span class="pill">Futur proche</span>
+        <span class="pill">Futur simple</span>
+        <span class="pill">Past mixed</span>
+        <span class="pill">Future mixed</span>
+        <span class="pill">All mixed</span>
+      </div>
+      <div class="card-cta">Open drill <span>→</span></div>
+    </a>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 5 — SENTENCES
+════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-number">05</span>
+    <div>
+      <h2 class="section-title">Sentences</h2>
+    </div>
+  </div>
+  <p class="section-sub">Full sentences across tenses, topics, and structures</p>
+  <div class="section-rule"></div>
+  <div class="card-grid">
+
+    <a class="drill-card" href="f-test/index.html">
+      <span class="card-tag tag-grammar">Sentences — WIP</span>
+      <p class="card-title">Les Phrases</p>
+      <p class="card-fr">Elle travaille depuis lundi. / Il faut que tu viennes.</p>
+      <p class="card-desc">A growing collection of full French sentences spanning multiple tenses and topics. Filter by tense or theme, then practise with flash cards or type-in mode.</p>
+      <div class="card-pills">
+        <span class="pill">Flash cards</span>
+        <span class="pill">Type-in</span>
+        <span class="pill">Tense filter</span>
+        <span class="pill">Topic filter</span>
+      </div>
+      <div class="card-cta">Open drill <span>→</span></div>
+    </a>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 6 — MOOD
+════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-number">06</span>
+    <div>
+      <h2 class="section-title">Mood</h2>
+    </div>
+  </div>
+  <p class="section-sub">The subjunctive — when to use it and how to form it</p>
+  <div class="section-rule"></div>
+  <div class="card-grid">
+
+    <a class="drill-card" href="subjunctive-drill.html">
+      <span class="card-tag tag-grammar">Mood</span>
+      <p class="card-title">Le Subjonctif</p>
+      <p class="card-fr">il faut que tu sois / bien qu'elle aille...</p>
+      <p class="card-desc">55 sentences across eight trigger phrases — il faut que, bien que, pour que, avant que, and more. Regular and irregular verbs mixed, with a per-question conjugation hint and a full reference panel.</p>
+      <div class="card-pills">
+        <span class="pill">Triggers</span>
+        <span class="pill">Regular verbs</span>
+        <span class="pill">Irregulars</span>
+        <span class="pill">Conjugation hints</span>
+        <span class="pill">Progress tracker</span>
+      </div>
+      <div class="card-cta">Open drill <span>→</span></div>
+    </a>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 7 — VOCABULARY
+════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="section-header">
+    <span class="section-number">07</span>
+    <div>
+      <h2 class="section-title">Vocabulary</h2>
+    </div>
+  </div>
+  <p class="section-sub">Patterns that let you predict meaning and gender from word shape</p>
+  <div class="section-rule"></div>
+  <div class="card-grid">
+
+    <a class="drill-card" href="gender-suffix-drill.html">
+      <span class="card-tag tag-vocab">Gender — Suffixes</span>
+      <p class="card-title">Genre &amp; Suffixes</p>
+      <p class="card-fr">la nation / le gouvernement / la chaleur / le miroir…</p>
+      <p class="card-desc">Learn to predict noun gender from suffix patterns — -tion, -ment, -eur, -oire and more. Includes a full reference table and a 20-question drill with four modes: all suffixes, féminins only, masculins only, and tricky exceptions.</p>
+      <div class="card-pills">
+        <span class="pill">Féminins</span>
+        <span class="pill">Masculins</span>
+        <span class="pill">-eur double règle</span>
+        <span class="pill">Pièges</span>
+        <span class="pill">Référence</span>
+      </div>
+      <div class="card-cta">Open drill <span>→</span></div>
+    </a>
+
+    <a class="drill-card" href="tcf-vocab-drill.html">
+      <span class="card-tag tag-vocab">Vocabulary — TCF</span>
+      <p class="card-title">TCF Vocabulaire par Thème</p>
+      <p class="card-fr">le loyer / les émissions de CO₂ / la citoyenneté…</p>
+      <p class="card-desc">500 words across 10 TCF Canada topics — daily life, work, housing, health, environment, society, transport, food, media, and money. Plus a dedicated <em>Mots transversaux</em> category: connectors, discourse markers, and formal register words that appear in every TCF text. Three difficulty tiers. Flash card drill + full scannable glossary with audio.</p>
+      <div class="card-pills">
+        <span class="pill">10 thèmes</span>
+        <span class="pill">500 mots</span>
+        <span class="pill">Essentiel → Avancé</span>
+        <span class="pill">Drill + Glossaire</span>
+        <span class="pill">Audio</span>
+      </div>
+      <div class="card-cta">Open drill <span>→</span></div>
+    </a>
+
+  </div>
+</section>
+
+
+<footer>
+  All drills built in the Paul Noble method &mdash; real sentences, explained logic, spaced repetition through recycling.<br>
+  Audio uses your browser&rsquo;s built-in French voice. Works fully offline once loaded.
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Négation — French Negation Drill</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1209;
+    --paper: #f5efe0;
+    --aged: #e8dcc8;
+    --red: #c0392b;
+    --gold: #b8860b;
+    --faded: #8a7a5e;
+    --green: #2d6a4f;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Courier Prime', monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px 60px;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(180,160,120,0.15) 28px),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 40px;
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 24px;
+    width: 100%;
+    max-width: 700px;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-style: italic;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  header p {
+    color: var(--faded);
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  .noble-intro {
+    background: var(--ink);
+    color: var(--paper);
+    max-width: 700px;
+    width: 100%;
+    padding: 28px 32px;
+    margin-bottom: 28px;
+  }
+
+  .noble-intro h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-style: italic;
+    margin-bottom: 12px;
+    color: var(--gold);
+  }
+
+  .noble-intro p {
+    font-size: 0.82rem;
+    line-height: 1.8;
+    color: rgba(245,239,224,0.78);
+    margin-bottom: 6px;
+  }
+
+  .noble-intro strong { color: var(--paper); }
+
+  /* ── STAGE SELECTOR ── */
+  .mode-selector {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 16px;
+    max-width: 700px;
+    width: 100%;
+  }
+
+  .mode-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 8px 18px;
+    border: 1.5px solid var(--faded);
+    background: transparent;
+    color: var(--faded);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+
+  .mode-btn:hover { border-color: var(--ink); color: var(--ink); background: var(--aged); }
+  .mode-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  /* pattern pills under stage selector */
+  .pattern-pills {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 700px;
+    width: 100%;
+    margin-bottom: 28px;
+    min-height: 32px;
+  }
+
+  .pill {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    padding: 4px 12px;
+    border: 1px solid var(--aged);
+    border-radius: 20px;
+    color: var(--faded);
+    background: white;
+    font-style: italic;
+  }
+
+  /* ── STATS ── */
+  .stats {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    max-width: 700px;
+    width: 100%;
+    margin-bottom: 20px;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--faded);
+  }
+
+  .stats strong {
+    color: var(--ink);
+    font-size: 1.1rem;
+    display: block;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .progress-bar {
+    max-width: 700px;
+    width: 100%;
+    height: 3px;
+    background: var(--aged);
+    margin-bottom: 24px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--gold);
+    transition: width 0.4s ease;
+    border-radius: 2px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: white;
+    border: 1px solid var(--aged);
+    max-width: 700px;
+    width: 100%;
+    padding: 40px 40px 32px;
+    box-shadow: 4px 4px 0 var(--aged);
+    position: relative;
+    margin-bottom: 24px;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 12px; left: 12px;
+    right: -12px; bottom: -12px;
+    border: 1px solid var(--aged);
+    z-index: -1;
+  }
+
+  .noble-hint {
+    font-style: italic;
+    color: var(--faded);
+    font-size: 0.88rem;
+    line-height: 1.7;
+    border-left: 3px solid var(--gold);
+    padding-left: 16px;
+    margin-bottom: 28px;
+    min-height: 44px;
+  }
+
+  .pattern-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--faded);
+    margin-bottom: 6px;
+  }
+
+  /* pattern badge — the ne…pas label */
+  .pattern-badge {
+    display: inline-block;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--red);
+    background: rgba(192,57,43,0.07);
+    border: 1px solid rgba(192,57,43,0.2);
+    padding: 4px 14px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+
+  .english-sentence {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    line-height: 1.35;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .question-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--faded);
+    margin-bottom: 28px;
+    display: block;
+  }
+
+  .answer-reveal {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.4rem, 3.5vw, 2rem);
+    font-style: italic;
+    color: var(--red);
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+
+  .answer-reveal.show { opacity: 1; }
+
+  /* negation words highlighted */
+  .neg {
+    background: rgba(184,134,11,0.12);
+    color: var(--gold);
+    font-style: normal;
+    padding: 1px 5px;
+    border-radius: 2px;
+    border-bottom: 1.5px solid var(--gold);
+    font-size: 0.92em;
+  }
+
+  .breakdown {
+    background: var(--aged);
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    font-size: 0.85rem;
+    line-height: 1.85;
+    opacity: 0;
+    display: none;
+    transition: opacity 0.3s;
+  }
+
+  .breakdown.show { opacity: 1; display: block; }
+  .breakdown .chunk { color: var(--red); font-style: italic; }
+  .breakdown .rule  { color: var(--green); font-weight: bold; }
+
+  /* ── CONTROLS ── */
+  .controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--aged);
+  }
+
+  .primary-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 13px 30px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+    flex: 1;
+    min-width: 150px;
+  }
+
+  .primary-btn:hover { background: var(--red); }
+
+  .secondary-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 13px 20px;
+    background: transparent;
+    color: var(--ink);
+    border: 1.5px solid var(--ink);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+
+  .secondary-btn:hover { background: var(--aged); }
+
+  .audio-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 18px;
+    border: 1.5px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+
+  .audio-btn:hover { background: var(--ink); color: var(--paper); }
+  .audio-btn svg { width: 13px; height: 13px; fill: currentColor; }
+
+  .feedback-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 14px;
+  }
+
+  .btn-correct {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 22px;
+    border: 1.5px solid var(--green);
+    background: transparent;
+    color: var(--green);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+
+  .btn-correct:hover { background: var(--green); color: var(--paper); }
+
+  .btn-wrong {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 10px 22px;
+    border: 1.5px solid var(--red);
+    background: transparent;
+    color: var(--red);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+
+  .btn-wrong:hover { background: var(--red); color: var(--paper); }
+
+  @keyframes flash-correct {
+    0%   { background: white; }
+    30%  { background: #d4f5e2; }
+    100% { background: white; }
+  }
+
+  @keyframes flash-wrong {
+    0%   { background: white; }
+    30%  { background: #fde8e8; }
+    100% { background: white; }
+  }
+
+  .card.flash-correct { animation: flash-correct 0.5s ease; }
+  .card.flash-wrong   { animation: flash-wrong 0.5s ease; }
+
+  footer {
+    max-width: 700px;
+    width: 100%;
+    text-align: center;
+    margin-top: 24px;
+    color: var(--faded);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    line-height: 1.8;
+    border-top: 1px solid var(--aged);
+    padding-top: 20px;
+  }
+
+.back-home{display:inline-flex;align-items:center;gap:7px;font-family:"Courier Prime",monospace;font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--faded);text-decoration:none;padding:8px 0;border-bottom:1px solid transparent;transition:color 0.2s,border-color 0.2s;margin-bottom:20px;align-self:flex-start;}
+.back-home:hover{color:var(--ink);border-bottom-color:var(--ink);}
+.back-home svg{width:12px;height:12px;fill:currentColor;}
+</style>
+</head>
+<body>
+<a href="f-index.html" class="back-home"><svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Home</a>
+
+<header>
+  <h1>La Négation</h1>
+  <p>Negation Drill — Noble Method</p>
+</header>
+
+<div class="noble-intro">
+  <h2>The sandwich rule...</h2>
+  <p>French negation works like a sandwich: <strong>ne</strong> goes before the verb, and the second word (<strong>pas, plus, jamais...</strong>) goes after it. The verb is always the filling.</p>
+  <p>In spoken French, the <strong>ne</strong> often disappears entirely — <em>"Je sais pas"</em> is what you'll actually hear. But you need both halves to write and read properly.</p>
+  <p>The negation words highlighted in <span style="background:rgba(184,134,11,0.2);color:#b8860b;padding:1px 6px;border-bottom:1.5px solid #b8860b;font-size:0.9em;font-style:italic;">gold</span> are the ones doing the work. Learn to spot them and the sentence opens up.</p>
+</div>
+
+<!-- Stage selector -->
+<div class="mode-selector">
+  <button class="mode-btn active" id="tab-stage1" onclick="setStage('stage1')">Stage 1 — Essentials</button>
+  <button class="mode-btn" id="tab-stage2" onclick="setStage('stage2')">Stage 2 — Expanding</button>
+  <button class="mode-btn" id="tab-stage3" onclick="setStage('stage3')">Stage 3 — Advanced</button>
+  <button class="mode-btn" id="tab-mix" onclick="setStage('mix')">🎲 All Mixed</button>
+</div>
+
+<!-- Pattern pills — updated per stage -->
+<div class="pattern-pills" id="pattern-pills"></div>
+
+<div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+
+<div class="stats">
+  <div><strong id="stat-seen">0</strong> Seen</div>
+  <div><strong id="stat-correct">0</strong> Correct</div>
+  <div><strong id="stat-streak">0</strong> Streak</div>
+</div>
+
+<!-- Card -->
+<div class="card" id="main-card">
+  <div class="noble-hint" id="noble-hint">Loading your first sentence...</div>
+
+  <div class="pattern-label">Pattern</div>
+  <div class="pattern-badge" id="pattern-badge">ne…pas</div>
+
+  <div class="english-sentence" id="english-sentence">—</div>
+  <span class="question-label">English — what's the French?</span>
+
+  <div class="answer-reveal" id="answer-reveal"></div>
+  <div class="breakdown" id="breakdown"></div>
+
+  <div style="text-align:center; margin-bottom:4px;">
+    <button class="audio-btn" id="audio-btn" onclick="speakFrench()" style="display:none">
+      <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.97z"/></svg>
+      Hear it
+    </button>
+  </div>
+
+  <div class="controls">
+    <button class="secondary-btn" id="reveal-btn" onclick="revealAnswer()">Reveal</button>
+    <button class="primary-btn" id="next-btn" onclick="nextQ()" style="display:none">Next →</button>
+    <button class="secondary-btn" id="breakdown-btn" onclick="toggleBreakdown()" style="display:none">Break it down</button>
+  </div>
+
+  <div class="feedback-row" id="feedback-row" style="display:none">
+    <button class="btn-correct" onclick="mark(true)">✓ Got it</button>
+    <button class="btn-wrong" onclick="mark(false)">✗ Missed it</button>
+  </div>
+</div>
+
+<footer>
+  Audio uses your browser's speech synthesis (French voice).<br>
+  Negation words highlighted in <span style="background:rgba(184,134,11,0.15);color:var(--gold);padding:1px 5px;border-bottom:1.5px solid var(--gold);font-size:0.85em;">gold</span> — the sandwich is always: <em>ne</em> + verb + second word.
+</footer>
+
+<script>
+// ─────────────────────────────────────────────
+//  HELPERS
+// ─────────────────────────────────────────────
+
+// Wrap specific words/phrases in a sentence with the .neg highlight.
+// negWords: array of strings to highlight (longest first to avoid partial matches)
+function highlight(fr, negWords) {
+  let result = fr;
+  // sort longest first so "plus jamais" matches before "jamais"
+  const sorted = [...negWords].sort((a,b) => b.length - a.length);
+  sorted.forEach(w => {
+    // case-insensitive, whole-word-ish match
+    const esc = w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    result = result.replace(new RegExp(`(?<![\\w''])${esc}(?![\\w''])`, 'gi'), m => `<span class="neg">${m}</span>`);
+  });
+  return result;
+}
+
+// ─────────────────────────────────────────────
+//  DATA
+// ─────────────────────────────────────────────
+
+// Each entry: en, fr, neg (words to highlight), pattern (display label), breakdown text, hint
+
+const stages = {
+
+  stage1: {
+    label: 'Stage 1 — Essentials',
+    patterns: ['ne…pas', 'ne…plus', 'ne…jamais', 'ne…rien', 'ne…personne'],
+    cards: [
+      // ── ne…pas ──────────────────────────────
+      { pattern: 'ne…pas', en: "I don't know.", fr: "Je ne sais pas.", neg: ['ne','pas'],
+        hint: "The simplest sandwich: ne before the verb, pas after it. Je — ne — sais — pas. The verb sais is the filling. Always.",
+        breakdown: "Structure: <span class='chunk'>Je</span> + <span class='chunk'>ne</span> + <span class='chunk'>sais</span> (verb) + <span class='chunk'>pas</span>. The verb is always sandwiched between ne and pas." },
+
+      { pattern: 'ne…pas', en: "She doesn't speak French.", fr: "Elle ne parle pas français.", neg: ['ne','pas'],
+        hint: "Elle ne parle pas. The verb parle sits between ne and pas. It's the same formula regardless of subject or verb.",
+        breakdown: "Elle + <span class='chunk'>ne</span> + parle + <span class='chunk'>pas</span>. Try covering ne and pas — the positive sentence is right there." },
+
+      { pattern: 'ne…pas', en: "We don't have time.", fr: "Nous n'avons pas le temps.", neg: ["n'","pas"],
+        hint: "When the verb starts with a vowel, ne shortens to n'. Nous n'avons pas — the apostrophe does the work ne used to do.",
+        breakdown: "<span class='chunk'>n'</span> (= ne before a vowel) + avons + <span class='chunk'>pas</span>. This elision happens automatically whenever ne meets a vowel." },
+
+      { pattern: 'ne…pas', en: "He doesn't like coffee.", fr: "Il n'aime pas le café.", neg: ["n'","pas"],
+        hint: "Il n'aime pas — ne becomes n' before aime. Your ear will start to hear the rhythm: n' + verb + pas.",
+        breakdown: "Il + <span class='chunk'>n'</span> + aime + <span class='chunk'>pas</span>. The pattern is identical — only the apostrophe changes." },
+
+      { pattern: 'ne…pas', en: "I'm not tired.", fr: "Je ne suis pas fatigué.", neg: ['ne','pas'],
+        hint: "Je ne suis pas — être sandwiched between ne and pas. Adjectives and everything else come after the sandwich, not inside it.",
+        breakdown: "<span class='chunk'>ne</span> + suis + <span class='chunk'>pas</span> + fatigué. The adjective fatigué stays outside — only the verb goes in the middle." },
+
+      { pattern: 'ne…pas', en: "They don't understand.", fr: "Ils ne comprennent pas.", neg: ['ne','pas'],
+        hint: "Same pattern, different verb. Ne + comprennent + pas. The formula never changes — just slot in your verb.",
+        breakdown: "<span class='chunk'>ne</span> + comprennent + <span class='chunk'>pas</span>. Once this sandwich is automatic, every other negation is just swapping the second word." },
+
+      // ── ne…plus ─────────────────────────────
+      { pattern: 'ne…plus', en: "He doesn't smoke anymore.", fr: "Il ne fume plus.", neg: ['ne','plus'],
+        hint: "Swap pas for plus and you get 'not anymore / no longer.' Same sandwich, different filling. Il ne fume plus — he used to, but not now.",
+        breakdown: "<span class='chunk'>ne</span> + fume + <span class='chunk'>plus</span>. Plus here doesn't mean 'more' — it means 'no longer.' The ne makes all the difference." },
+
+      { pattern: 'ne…plus', en: "I don't live here anymore.", fr: "Je n'habite plus ici.", neg: ["n'","plus"],
+        hint: "Je n'habite plus — n' before the vowel in habite. The plus slots in exactly where pas would go.",
+        breakdown: "<span class='chunk'>n'</span> + habite + <span class='chunk'>plus</span> + ici. Ici (here) comes after the negation sandwich, not inside it." },
+
+      { pattern: 'ne…plus', en: "She's no longer hungry.", fr: "Elle n'a plus faim.", neg: ["n'","plus"],
+        hint: "Elle n'a plus faim — avoir in the sandwich, plus doing the 'no longer' work. The avoir expression 'avoir faim' stays intact outside.",
+        breakdown: "<span class='chunk'>n'</span> + a + <span class='chunk'>plus</span> + faim. Avoir faim is the idiom for being hungry — the negation wraps around the verb a, not the whole expression." },
+
+      { pattern: 'ne…plus', en: "We don't go there anymore.", fr: "Nous n'y allons plus.", neg: ["n'y","plus"],
+        hint: "N'y allons plus — the little word y (there) squeezes in between n' and the verb. Object pronouns always hug the verb from the left.",
+        breakdown: "<span class='chunk'>n'y</span> + allons + <span class='chunk'>plus</span>. Pronouns like y, le, la, lui always go between ne and the verb." },
+
+      { pattern: 'ne…plus', en: "He doesn't work anymore.", fr: "Il ne travaille plus.", neg: ['ne','plus'],
+        hint: "Il ne travaille plus. The sandwich is in place — just plus instead of pas. 'He used to work. He doesn't anymore.'",
+        breakdown: "<span class='chunk'>ne</span> + travaille + <span class='chunk'>plus</span>. Clean, simple, and extremely common in everyday French." },
+
+      // ── ne…jamais ───────────────────────────
+      { pattern: 'ne…jamais', en: "I never eat chocolate.", fr: "Je ne mange jamais de chocolat.", neg: ['ne','jamais'],
+        hint: "Jamais means never — but only inside the ne…jamais sandwich. On its own, jamais means 'ever.' The ne gives it its negative power.",
+        breakdown: "<span class='chunk'>ne</span> + mange + <span class='chunk'>jamais</span> + de chocolat. Notice de, not du — after negation, du/de la/des all become de." },
+
+      { pattern: 'ne…jamais', en: "She never complains.", fr: "Elle ne se plaint jamais.", neg: ['ne','jamais'],
+        hint: "Reflexive verbs keep their reflexive pronoun (se) between ne and the verb. Elle ne se plaint jamais — ne, then se, then verb, then jamais.",
+        breakdown: "<span class='chunk'>ne</span> + se + plaint + <span class='chunk'>jamais</span>. Reflexive pronouns join the verb inside the sandwich." },
+
+      { pattern: 'ne…jamais', en: "He has never been to Paris.", fr: "Il n'est jamais allé à Paris.", neg: ["n'","jamais"],
+        hint: "In compound tenses (passé composé), jamais goes between the auxiliary and the past participle — not after the whole thing.",
+        breakdown: "<span class='chunk'>n'</span> + est + <span class='chunk'>jamais</span> + allé. With avoir/être + past participle, the second negation word always slots between them." },
+
+      { pattern: 'ne…jamais', en: "I have never seen that.", fr: "Je n'ai jamais vu ça.", neg: ["n'","jamais"],
+        hint: "Passé composé again: jamais nestles between n'ai and vu. In compound tenses, the negation word always splits the auxiliary from the participle.",
+        breakdown: "<span class='chunk'>n'</span> + ai + <span class='chunk'>jamais</span> + vu. This is a key rule for compound tenses — jamais/plus/rien all go in the same spot." },
+
+      { pattern: 'ne…jamais', en: "We never argue.", fr: "Nous ne nous disputons jamais.", neg: ['ne','jamais'],
+        hint: "Nous ne nous disputons jamais — reflexive pronoun nous sits between ne and the verb, exactly as with simple reflexives.",
+        breakdown: "<span class='chunk'>ne</span> + nous + disputons + <span class='chunk'>jamais</span>. The reflexive nous is part of the verb, so it stays inside the sandwich." },
+
+      // ── ne…rien ─────────────────────────────
+      { pattern: 'ne…rien', en: "I see nothing.", fr: "Je ne vois rien.", neg: ['ne','rien'],
+        hint: "Rien means nothing — but needs ne to be negative. Je ne vois rien — I see nothing. Without ne, rien can stand alone as a response: 'Qu'est-ce que tu vois? Rien.'",
+        breakdown: "<span class='chunk'>ne</span> + vois + <span class='chunk'>rien</span>. As the direct object, rien sits after the verb — just like nothing in English." },
+
+      { pattern: 'ne…rien', en: "She doesn't say anything.", fr: "Elle ne dit rien.", neg: ['ne','rien'],
+        hint: "Ne dit rien — nothing is said. The English 'anything' and 'nothing' both map to rien in the ne…rien structure.",
+        breakdown: "<span class='chunk'>ne</span> + dit + <span class='chunk'>rien</span>. 'Doesn't say anything' and 'says nothing' — same French, two English translations." },
+
+      { pattern: 'ne…rien', en: "I haven't done anything.", fr: "Je n'ai rien fait.", neg: ["n'","rien"],
+        hint: "Compound tense twist: rien leaps before the past participle, not after it. Je n'ai rien fait — rien sandwiches between n'ai and fait.",
+        breakdown: "<span class='chunk'>n'</span> + ai + <span class='chunk'>rien</span> + fait. In compound tenses, rien (like jamais) goes between auxiliary and participle." },
+
+      { pattern: 'ne…rien', en: "He understood nothing.", fr: "Il n'a rien compris.", neg: ["n'","rien"],
+        hint: "Same rule: passé composé, so rien slots between n'a and compris. This is the same pocket as jamais and plus in compound tenses.",
+        breakdown: "<span class='chunk'>n'</span> + a + <span class='chunk'>rien</span> + compris. Rien, jamais, plus all occupy this same slot in compound tenses." },
+
+      { pattern: 'ne…rien', en: "There's nothing to do.", fr: "Il n'y a rien à faire.", neg: ["n'y","rien"],
+        hint: "Il n'y a rien — the extremely common 'there is nothing.' N'y sits before a, rien comes after. This phrase is worth memorising whole.",
+        breakdown: "<span class='chunk'>n'y</span> + a + <span class='chunk'>rien</span> + à faire. 'Il y a' (there is) becomes 'il n'y a rien' (there is nothing)." },
+
+      // ── ne…personne ─────────────────────────
+      { pattern: 'ne…personne', en: "I don't know anyone here.", fr: "Je ne connais personne ici.", neg: ['ne','personne'],
+        hint: "Personne means nobody/no one — and unusually, it comes after the verb even in compound tenses. It behaves differently from rien.",
+        breakdown: "<span class='chunk'>ne</span> + connais + <span class='chunk'>personne</span> + ici. Unlike rien, personne always stays after the full verb group." },
+
+      { pattern: 'ne…personne', en: "She doesn't trust anyone.", fr: "Elle ne fait confiance à personne.", neg: ['ne','personne'],
+        hint: "Personne follows the whole expression 'faire confiance à' — it never jumps into compound tenses like rien does. Personne is stubborn — it stays at the end.",
+        breakdown: "<span class='chunk'>ne</span> + fait confiance à + <span class='chunk'>personne</span>. Personne follows the complete verbal expression, wherever that ends." },
+
+      { pattern: 'ne…personne', en: "I haven't seen anyone.", fr: "Je n'ai vu personne.", neg: ["n'","personne"],
+        hint: "Compound tense — and personne stays after the past participle. Compare: je n'ai rien vu (rien before) vs. je n'ai vu personne (personne after). Different rules!",
+        breakdown: "<span class='chunk'>n'</span> + ai vu + <span class='chunk'>personne</span>. Rien goes before the participle; personne goes after. This contrast is worth noting." },
+
+      { pattern: 'ne…personne', en: "Nobody came.", fr: "Personne n'est venu.", neg: ['Personne','n'],
+        hint: "When personne is the subject, it flips to the front — Personne n'est venu. The ne still wraps the verb, but the order shifts entirely.",
+        breakdown: "<span class='chunk'>Personne</span> (subject) + <span class='chunk'>n'</span> + est venu. As subject, personne leads the sentence and ne contracts before the vowel." },
+    ]
+  },
+
+  stage2: {
+    label: 'Stage 2 — Expanding',
+    patterns: ['ne…que', 'ne…aucun(e)', 'ne…ni…ni', 'pas du tout', 'ne…nulle part', 'plus rien'],
+    cards: [
+      // ── ne…que ──────────────────────────────
+      { pattern: 'ne…que', en: "I only eat vegetables.", fr: "Je ne mange que des légumes.", neg: ['ne','que'],
+        hint: "Ne…que means 'only' — it's a restriction, not a true negation. The que goes right before the thing being restricted. Think: I eat only [vegetables].",
+        breakdown: "<span class='chunk'>ne</span> + mange + <span class='chunk'>que</span> + des légumes. Que positions itself directly before whatever is being restricted." },
+
+      { pattern: 'ne…que', en: "She only has ten euros.", fr: "Elle n'a que dix euros.", neg: ["n'","que"],
+        hint: "Elle n'a que dix euros — que sits before dix. The restriction targets the amount. Move que and you change what's being restricted.",
+        breakdown: "<span class='chunk'>n'</span> + a + <span class='chunk'>que</span> + dix euros. Que is a mobile word — it attaches directly to whatever is limited." },
+
+      { pattern: 'ne…que', en: "I only slept for three hours.", fr: "Je n'ai dormi que trois heures.", neg: ["n'","que"],
+        hint: "Compound tense: que comes after the past participle, right before trois. It restricts the duration, so it positions itself just before that information.",
+        breakdown: "<span class='chunk'>n'</span> + ai dormi + <span class='chunk'>que</span> + trois heures. Unlike rien, que in compound tenses follows the participle." },
+
+      { pattern: 'ne…que', en: "He only thinks about money.", fr: "Il ne pense qu'à l'argent.", neg: ['ne',"qu'"],
+        hint: "Que elides to qu' before a vowel — il ne pense qu'à l'argent. The restriction is on à l'argent (about money).",
+        breakdown: "<span class='chunk'>ne</span> + pense + <span class='chunk'>qu'</span> + à l'argent. Que becomes qu' before vowels, just like ne becomes n'." },
+
+      { pattern: 'ne…que', en: "There's only one left.", fr: "Il n'en reste qu'un.", neg: ["n'","qu'"],
+        hint: "Il n'en reste qu'un — en (of them) sits before reste, qu'un restricts to just one. A compact, very natural-sounding construction.",
+        breakdown: "<span class='chunk'>n'en</span> + reste + <span class='chunk'>qu'</span> + un. En is another pronoun that lodges between ne and the verb." },
+
+      // ── ne…aucun(e) ─────────────────────────
+      { pattern: 'ne…aucun(e)', en: "I have no problem.", fr: "Je n'ai aucun problème.", neg: ["n'","aucun"],
+        hint: "Aucun(e) means 'not any / none.' It's an adjective, so it agrees with what it describes. Aucun problème — problème is masculine, so aucun.",
+        breakdown: "<span class='chunk'>n'</span> + ai + <span class='chunk'>aucun</span> problème. Aucun acts like an adjective — aucun (masc.), aucune (fem.)." },
+
+      { pattern: 'ne…aucun(e)', en: "She has no idea.", fr: "Elle n'a aucune idée.", neg: ["n'","aucune"],
+        hint: "Idée is feminine — so it's aucune. Elle n'a aucune idée. The agreement is with the noun that follows, not the subject.",
+        breakdown: "<span class='chunk'>n'</span> + a + <span class='chunk'>aucune</span> idée. Aucune agrees with idée (feminine). Aucun/aucune is always singular." },
+
+      { pattern: 'ne…aucun(e)', en: "I have no doubt.", fr: "Je n'ai aucun doute.", neg: ["n'","aucun"],
+        hint: "Aucun doute — doute is masculine. The pattern is the same: n' + avoir + aucun/aucune + noun. Very strong, formal-sounding negation.",
+        breakdown: "<span class='chunk'>n'</span> + ai + <span class='chunk'>aucun</span> doute. More emphatic than pas de doute — aucun leaves no room at all." },
+
+      { pattern: 'ne…aucun(e)', en: "There's no solution.", fr: "Il n'y a aucune solution.", neg: ["n'y","aucune"],
+        hint: "Il n'y a aucune solution — aucune because solution is feminine. A very strong way to say there's absolutely no solution.",
+        breakdown: "<span class='chunk'>n'y</span> + a + <span class='chunk'>aucune</span> solution. More emphatic than il n'y a pas de solution." },
+
+      // ── ne…ni…ni ────────────────────────────
+      { pattern: 'ne…ni…ni', en: "I like neither coffee nor tea.", fr: "Je n'aime ni le café ni le thé.", neg: ["n'","ni","ni"],
+        hint: "Ni…ni is the neither…nor construction. The ne goes before the verb as always, and then ni appears before each rejected option. Two ni's, two things rejected.",
+        breakdown: "<span class='chunk'>n'</span> + aime + <span class='chunk'>ni</span> le café + <span class='chunk'>ni</span> le thé. Both ni's come after the verb, each introducing one rejected option." },
+
+      { pattern: 'ne…ni…ni', en: "He speaks neither French nor Spanish.", fr: "Il ne parle ni français ni espagnol.", neg: ['ne','ni','ni'],
+        hint: "Il ne parle ni français ni espagnol — notice no articles before the languages. After ni, articles often drop unless a specific thing is named.",
+        breakdown: "<span class='chunk'>ne</span> + parle + <span class='chunk'>ni</span> français + <span class='chunk'>ni</span> espagnol. Languages after ni tend to drop their articles." },
+
+      { pattern: 'ne…ni…ni', en: "She has neither time nor money.", fr: "Elle n'a ni le temps ni l'argent.", neg: ["n'","ni","ni"],
+        hint: "Ni le temps ni l'argent — when you're talking about specific, defined things, the article stays. Here le temps and l'argent are specific concepts.",
+        breakdown: "<span class='chunk'>n'</span> + a + <span class='chunk'>ni</span> le temps + <span class='chunk'>ni</span> l'argent. Specific things keep their articles after ni." },
+
+      // ── pas du tout ─────────────────────────
+      { pattern: 'pas du tout', en: "I'm not tired at all.", fr: "Je ne suis pas du tout fatigué.", neg: ['ne','pas du tout'],
+        hint: "Pas du tout intensifies negation — 'not at all.' Du tout follows pas directly, turning the ordinary sandwich into an emphatic one.",
+        breakdown: "<span class='chunk'>ne</span> + suis + <span class='chunk'>pas du tout</span> + fatigué. Pas du tout is a fixed phrase — du tout always follows pas." },
+
+      { pattern: 'pas du tout', en: "I don't understand at all.", fr: "Je ne comprends pas du tout.", neg: ['ne','pas du tout'],
+        hint: "Je ne comprends pas du tout — pas du tout follows the verb. The stronger you need the negation, the further du tout pulls it.",
+        breakdown: "<span class='chunk'>ne</span> + comprends + <span class='chunk'>pas du tout</span>. Du tout can also stand alone as a response: 'Pas du tout!' (Not at all!)" },
+
+      { pattern: 'pas du tout', en: "She doesn't like it at all.", fr: "Elle n'aime pas ça du tout.", neg: ["n'","pas","du tout"],
+        hint: "Ça du tout — here du tout follows the object ça rather than sitting tight after pas. In speech, du tout often drifts to the very end.",
+        breakdown: "<span class='chunk'>n'</span> + aime + <span class='chunk'>pas</span> + ça + <span class='chunk'>du tout</span>. Du tout can shift to sentence-end, especially in spoken French." },
+
+      // ── ne…nulle part ───────────────────────
+      { pattern: 'ne…nulle part', en: "I'm not going anywhere this weekend.", fr: "Je ne vais nulle part ce week-end.", neg: ['ne','nulle part'],
+        hint: "Nulle part means 'nowhere / not anywhere.' It replaces a place — it goes where you'd put the destination. Je ne vais nulle part — nowhere is where I'm going.",
+        breakdown: "<span class='chunk'>ne</span> + vais + <span class='chunk'>nulle part</span>. Nulle part is always two words and always follows the verb." },
+
+      { pattern: 'ne…nulle part', en: "She goes nowhere without him.", fr: "Elle ne va nulle part sans lui.", neg: ['ne','nulle part'],
+        hint: "Elle ne va nulle part sans lui — nulle part takes the position of the destination, and sans lui (without him) follows naturally.",
+        breakdown: "<span class='chunk'>ne</span> + va + <span class='chunk'>nulle part</span> + sans lui. Additional information slots in after nulle part." },
+
+      { pattern: 'ne…nulle part', en: "I haven't found it anywhere.", fr: "Je ne l'ai trouvé nulle part.", neg: ['ne','nulle part'],
+        hint: "Compound tense — nulle part follows the past participle trouvé. Unlike rien, nulle part (like personne) stays after the full verb group.",
+        breakdown: "<span class='chunk'>ne</span> + l'ai trouvé + <span class='chunk'>nulle part</span>. Nulle part stays after the participle, like personne — not before it like rien." },
+
+      // ── plus rien ───────────────────────────
+      { pattern: 'plus rien', en: "There's nothing left in the fridge.", fr: "Il n'y a plus rien dans le frigo.", neg: ["n'y","plus","rien"],
+        hint: "Plus rien combines two negatives into one: no longer + nothing = nothing anymore. Both plus and rien come after the verb — the negation is doubled but doesn't cancel out.",
+        breakdown: "<span class='chunk'>n'y</span> + a + <span class='chunk'>plus</span> + <span class='chunk'>rien</span>. Two negation words, one after another — French allows this, unlike English." },
+
+      { pattern: 'plus rien', en: "He says nothing anymore.", fr: "Il ne dit plus rien.", neg: ['ne','plus','rien'],
+        hint: "Il ne dit plus rien — plus and rien stack after the verb. In French, double negatives are additive, not cancelling. They pile up to mean 'absolutely nothing at all anymore.'",
+        breakdown: "<span class='chunk'>ne</span> + dit + <span class='chunk'>plus</span> + <span class='chunk'>rien</span>. This stacking of negatives is perfectly correct in French." },
+
+      { pattern: 'plus rien', en: "There's nothing more to say.", fr: "Il n'y a plus rien à dire.", neg: ["n'y","plus","rien"],
+        hint: "Il n'y a plus rien à dire — a beautifully common phrase. Plus and rien combine to give a sense of finality: nothing left, nothing more.",
+        breakdown: "<span class='chunk'>n'y</span> + a + <span class='chunk'>plus</span> <span class='chunk'>rien</span> + à dire. À dire (to say) follows nulle part / rien as a verbal infinitive complement." },
+    ]
+  },
+
+  stage3: {
+    label: 'Stage 3 — Advanced',
+    patterns: ['ne…guère', 'ne…jamais personne', 'ne…plus jamais', 'ne…aucunement', 'ne…nullement', 'Personne ne…jamais', 'ne…ni l\'un ni l\'autre'],
+    cards: [
+      // ── ne…guère ────────────────────────────
+      { pattern: 'ne…guère', en: "I hardly understand what he's saying.", fr: "Je ne comprends guère ce qu'il dit.", neg: ['ne','guère'],
+        hint: "Guère means 'hardly / scarcely' — it's literary and rather elegant. You'll encounter it in writing and formal speech more than conversation. Same sandwich, refined flavour.",
+        breakdown: "<span class='chunk'>ne</span> + comprends + <span class='chunk'>guère</span>. Guère occupies the same slot as pas — after the verb." },
+
+      { pattern: 'ne…guère', en: "She hardly sleeps.", fr: "Elle ne dort guère.", neg: ['ne','guère'],
+        hint: "Elle ne dort guère — scarcely sleeps. A more elegant alternative to 'ne dort pas beaucoup.' Guère is a word that immediately signals elevated register.",
+        breakdown: "<span class='chunk'>ne</span> + dort + <span class='chunk'>guère</span>. You could swap guère for pas beaucoup — but guère sounds far more refined." },
+
+      { pattern: 'ne…guère', en: "We hardly ever see each other.", fr: "Nous ne nous voyons guère.", neg: ['ne','guère'],
+        hint: "Nous ne nous voyons guère — guère carries a sense of sad infrequency here. It can imply 'barely ever' as well as 'hardly at all.'",
+        breakdown: "<span class='chunk'>ne</span> + nous voyons + <span class='chunk'>guère</span>. With reflexives, the reflexive pronoun stays between ne and the verb." },
+
+      // ── ne…jamais personne ──────────────────
+      { pattern: 'ne…jamais personne', en: "I've never met anyone like him.", fr: "Je n'ai jamais rencontré personne comme lui.", neg: ["n'","jamais","personne"],
+        hint: "Jamais and personne combine: never + anyone. In compound tenses, jamais goes between auxiliary and participle, but personne stubbornly stays after the participle.",
+        breakdown: "<span class='chunk'>n'</span> + ai + <span class='chunk'>jamais</span> + rencontré + <span class='chunk'>personne</span>. Note the split: jamais before the participle, personne after. They follow their own rules." },
+
+      { pattern: 'ne…jamais personne', en: "He has never trusted anyone.", fr: "Il n'a jamais fait confiance à personne.", neg: ["n'","jamais","personne"],
+        hint: "Il n'a jamais fait confiance à personne — jamais between n'a and fait, then personne after the full verbal expression. The two negatives stack.",
+        breakdown: "<span class='chunk'>n'</span> + a + <span class='chunk'>jamais</span> + fait confiance à + <span class='chunk'>personne</span>. Jamais splits the auxiliary; personne follows everything." },
+
+      // ── ne…plus jamais ──────────────────────
+      { pattern: 'ne…plus jamais', en: "I never want to hear that again.", fr: "Je ne veux plus jamais entendre ça.", neg: ['ne','plus jamais'],
+        hint: "Plus jamais together means 'never again' — a powerful combination. Plus and jamais stack after the verb, intensifying each other.",
+        breakdown: "<span class='chunk'>ne</span> + veux + <span class='chunk'>plus jamais</span> + entendre ça. Plus jamais is often used together as a fixed phrase meaning 'never again.'" },
+
+      { pattern: 'ne…plus jamais', en: "I will never come back again.", fr: "Je ne reviendrai plus jamais.", neg: ['ne','plus jamais'],
+        hint: "Je ne reviendrai plus jamais — future tense with double negation. Plus jamais follows the conjugated future verb cleanly.",
+        breakdown: "<span class='chunk'>ne</span> + reviendrai + <span class='chunk'>plus jamais</span>. Works identically across tenses — ne stays before the verb, plus jamais after." },
+
+      { pattern: 'ne…plus jamais', en: "She never wants to go back there again.", fr: "Elle ne veut plus jamais y retourner.", neg: ['ne','plus jamais'],
+        hint: "Plus jamais, then the infinitive after. Y (there) clings to the infinitive here — elle ne veut plus jamais y retourner.",
+        breakdown: "<span class='chunk'>ne</span> + veut + <span class='chunk'>plus jamais</span> + y retourner. When plus jamais precedes an infinitive, y attaches to that infinitive." },
+
+      // ── ne…aucunement ───────────────────────
+      { pattern: 'ne…aucunement', en: "I am in no way responsible.", fr: "Je ne suis aucunement responsable.", neg: ['ne','aucunement'],
+        hint: "Aucunement means 'in no way / not at all' — it's formal and emphatic. Think of it as the adverb form of aucun. Reserved for formal writing and speech.",
+        breakdown: "<span class='chunk'>ne</span> + suis + <span class='chunk'>aucunement</span> + responsable. Aucunement is the adverb — it doesn't agree with anything, unlike aucun/aucune." },
+
+      { pattern: 'ne…aucunement', en: "This is in no way acceptable.", fr: "Cela n'est aucunement acceptable.", neg: ["n'","aucunement"],
+        hint: "Cela n'est aucunement acceptable — formal, firm, and unambiguous. Aucunement is the word for official statements and formal objections.",
+        breakdown: "<span class='chunk'>n'</span> + est + <span class='chunk'>aucunement</span> + acceptable. Cela (this) is more formal than ça — both are correct here." },
+
+      // ── ne…nullement ────────────────────────
+      { pattern: 'ne…nullement', en: "I do not agree at all.", fr: "Je ne suis nullement d'accord.", neg: ['ne','nullement'],
+        hint: "Nullement is a formal synonym of aucunement — 'not at all / in no way.' Both are literary alternatives to pas du tout. You'll see both in formal writing.",
+        breakdown: "<span class='chunk'>ne</span> + suis + <span class='chunk'>nullement</span> + d'accord. Nullement and aucunement are interchangeable in formal register." },
+
+      { pattern: 'ne…nullement', en: "He is in no way obliged.", fr: "Il n'est nullement obligé.", neg: ["n'","nullement"],
+        hint: "Il n'est nullement obligé — formal and clear. Nullement carries a sense of legal or official finality, perfect for contracts and formal letters.",
+        breakdown: "<span class='chunk'>n'</span> + est + <span class='chunk'>nullement</span> + obligé. Same structure as every other negation — only the second word changes." },
+
+      // ── Personne ne…jamais ──────────────────
+      { pattern: 'Personne ne…jamais', en: "Nobody ever knows the truth.", fr: "Personne ne sait jamais la vérité.", neg: ['Personne','ne','jamais'],
+        hint: "When personne is the subject, it moves to the front of the sentence. The ne still follows before the verb, and jamais slots in after.",
+        breakdown: "<span class='chunk'>Personne</span> + <span class='chunk'>ne</span> + sait + <span class='chunk'>jamais</span>. Subject personne leads, ne and jamais form the usual sandwich around the verb." },
+
+      { pattern: 'Personne ne…jamais', en: "Nobody ever comes here.", fr: "Personne ne vient jamais ici.", neg: ['Personne','ne','jamais'],
+        hint: "Personne ne vient jamais — subject at front, ne before the verb, jamais after. The structure is logical once you see personne as a subject pronoun.",
+        breakdown: "<span class='chunk'>Personne</span> (subject) + <span class='chunk'>ne</span> + vient + <span class='chunk'>jamais</span> + ici." },
+
+      // ── ne…ni l'un ni l'autre ───────────────
+      { pattern: "ne…ni l'un ni l'autre", en: "I like neither of them.", fr: "Je n'aime ni l'un ni l'autre.", neg: ["n'","ni l'un","ni l'autre"],
+        hint: "Ni l'un ni l'autre — neither one nor the other. A fixed phrase for dismissing both options at once. Always used as a pair.",
+        breakdown: "<span class='chunk'>n'</span> + aime + <span class='chunk'>ni l'un</span> + <span class='chunk'>ni l'autre</span>. L'un = the one, l'autre = the other. Both are masculine here — they agree with context." },
+
+      { pattern: "ne…ni l'un ni l'autre", en: "She chose neither of them.", fr: "Elle n'a choisi ni l'un ni l'autre.", neg: ["n'","ni l'un","ni l'autre"],
+        hint: "Compound tense — ni l'un ni l'autre follows the past participle choisi. Both ni's stay after the full verb group, just like personne.",
+        breakdown: "<span class='chunk'>n'</span> + a choisi + <span class='chunk'>ni l'un</span> + <span class='chunk'>ni l'autre</span>. After compound verbs, this phrase follows the participle." },
+
+      { pattern: "ne…ni l'un ni l'autre", en: "He trusts neither of them.", fr: "Il ne fait confiance ni à l'un ni à l'autre.", neg: ['ne',"ni à l'un","ni à l'autre"],
+        hint: "With faire confiance à, the preposition à stays attached: ni à l'un, ni à l'autre. The preposition travels with its object even inside ni constructions.",
+        breakdown: "<span class='chunk'>ne</span> + fait confiance + <span class='chunk'>ni à l'un</span> + <span class='chunk'>ni à l'autre</span>. Prepositions stay attached to their objects within ni…ni." },
+    ]
+  }
+};
+
+// ─────────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────────
+
+let stage = 'stage1';
+let currentQ = null;
+let stats = { seen: 0, correct: 0, streak: 0 };
+let queues = { stage1: [], stage2: [], stage3: [] };
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function getNext(s) {
+  if (!queues[s] || queues[s].length === 0) queues[s] = shuffle(stages[s].cards);
+  return queues[s].pop();
+}
+
+// ─────────────────────────────────────────────
+//  RENDER
+// ─────────────────────────────────────────────
+
+function buildHighlighted(fr, negWords) {
+  // escape HTML first
+  let result = fr
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;');
+
+  const sorted = [...negWords].sort((a,b) => b.length - a.length);
+  sorted.forEach(w => {
+    const esc = w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    // match the word with optional leading apostrophe
+    result = result.replace(
+      new RegExp(`(^|[\\s"«(])${esc}(?=[\\s"»),.:!?]|$)`, 'gi'),
+      (match, pre) => `${pre}<span class="neg">${match.trim()}</span>`
+    );
+  });
+  return result;
+}
+
+function smartHighlight(fr, negWords) {
+  // simpler: just find and wrap each negWord literally in the string
+  let result = fr;
+  const sorted = [...negWords].sort((a,b) => b.length - a.length);
+  sorted.forEach(w => {
+    const idx = result.toLowerCase().indexOf(w.toLowerCase());
+    if (idx !== -1) {
+      const actual = result.slice(idx, idx + w.length);
+      result = result.slice(0, idx) + `<span class="neg">${actual}</span>` + result.slice(idx + w.length);
+    }
+  });
+  return result;
+}
+
+function loadQ() {
+  const s = stage === 'mix'
+    ? ['stage1','stage2','stage3'][Math.floor(Math.random()*3)]
+    : stage;
+  currentQ = getNext(s);
+  currentQ._stage = s;
+
+  document.getElementById('noble-hint').textContent = currentQ.hint;
+  document.getElementById('pattern-badge').textContent = currentQ.pattern;
+  document.getElementById('english-sentence').textContent = currentQ.en;
+
+  const ar = document.getElementById('answer-reveal');
+  ar.innerHTML = smartHighlight(currentQ.fr, currentQ.neg);
+  ar.classList.remove('show');
+
+  const bd = document.getElementById('breakdown');
+  bd.classList.remove('show');
+  bd.style.display = 'none';
+
+  document.getElementById('reveal-btn').style.display = '';
+  document.getElementById('next-btn').style.display = 'none';
+  document.getElementById('breakdown-btn').style.display = 'none';
+  document.getElementById('audio-btn').style.display = 'none';
+  document.getElementById('feedback-row').style.display = 'none';
+}
+
+function revealAnswer() {
+  document.getElementById('answer-reveal').classList.add('show');
+  document.getElementById('reveal-btn').style.display = 'none';
+  document.getElementById('next-btn').style.display = '';
+  document.getElementById('breakdown-btn').style.display = '';
+  document.getElementById('audio-btn').style.display = 'inline-flex';
+  document.getElementById('feedback-row').style.display = 'flex';
+  stats.seen++;
+  updateStats();
+  setTimeout(speakFrench, 350);
+}
+
+function toggleBreakdown() {
+  const bd = document.getElementById('breakdown');
+  if (bd.classList.contains('show')) {
+    bd.classList.remove('show');
+    setTimeout(() => { bd.style.display = 'none'; }, 300);
+    return;
+  }
+  bd.innerHTML = currentQ.breakdown;
+  bd.style.display = 'block';
+  setTimeout(() => bd.classList.add('show'), 10);
+}
+
+function mark(correct) {
+  if (correct) { stats.correct++; stats.streak++; flashCard('correct'); }
+  else { stats.streak = 0; flashCard('wrong'); }
+  updateStats();
+  setTimeout(nextQ, 420);
+}
+
+function nextQ() { loadQ(); }
+
+function flashCard(type) {
+  const card = document.getElementById('main-card');
+  card.classList.remove('flash-correct','flash-wrong');
+  void card.offsetWidth;
+  card.classList.add('flash-'+type);
+  setTimeout(() => card.classList.remove('flash-'+type), 600);
+}
+
+function updateStats() {
+  document.getElementById('stat-seen').textContent = stats.seen;
+  document.getElementById('stat-correct').textContent = stats.correct;
+  document.getElementById('stat-streak').textContent = stats.streak;
+  const pct = stats.seen > 0 ? (stats.correct / stats.seen) * 100 : 0;
+  document.getElementById('progress').style.width = pct + '%';
+}
+
+function setStage(s) {
+  stage = s;
+  ['stage1','stage2','stage3','mix'].forEach(id => {
+    document.getElementById('tab-'+id).classList.remove('active');
+  });
+  document.getElementById('tab-'+s).classList.add('active');
+
+  // update pattern pills
+  const pills = document.getElementById('pattern-pills');
+  if (s === 'mix') {
+    pills.innerHTML = '<span class="pill">All patterns</span>';
+  } else {
+    pills.innerHTML = stages[s].patterns.map(p => `<span class="pill">${p}</span>`).join('');
+  }
+
+  loadQ();
+}
+
+// ─────────────────────────────────────────────
+//  SPEECH
+// ─────────────────────────────────────────────
+
+function speakFrench() {
+  if (!currentQ || !window.speechSynthesis) return;
+  speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(currentQ.fr);
+  utt.lang = 'fr-FR';
+  utt.rate = 0.82;
+  const voices = speechSynthesis.getVoices();
+  const frVoice = voices.find(v => v.lang.startsWith('fr'));
+  if (frVoice) utt.voice = frVoice;
+  speechSynthesis.speak(utt);
+}
+
+window.speechSynthesis && (window.speechSynthesis.onvoiceschanged = () => {});
+
+window.onload = () => {
+  // init pills for stage1
+  const pills = document.getElementById('pattern-pills');
+  pills.innerHTML = stages.stage1.patterns.map(p => `<span class="pill">${p}</span>`).join('');
+  setTimeout(loadQ, 200);
+};
+</script>
+</body>
+</html>
